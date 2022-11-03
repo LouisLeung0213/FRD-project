@@ -1,40 +1,57 @@
 import { Injectable } from '@nestjs/common';
-import { User } from './users.model';
-import { Knex } from 'knex';
 import { HTTPError } from 'error';
-import{}
+import { hashPassword } from 'hash';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { InjectKnex, Knex } from 'nestjs-knex';
 
 @Injectable()
 export class UsersService {
-  constructor(private knex: Knex) {}
-  //   users: User[] = [];
-
-  async signUp(
-    username: string,
-    password_hash: string,
-    nickname: string,
-    phone: string,
-    email: string,
-    point: number,
-    is_admin: boolean,
-  ): Promise<any> {
+  //inject knex from nestjs-Knex
+  constructor(@InjectKnex() private readonly knex: Knex) {}
+  async create(createUserDto: CreateUserDto) {
+    let password_hash = await hashPassword(createUserDto.password_hash);
     let checkUser = await this.knex
       .select('username')
       .from('users')
-      .where('username', username);
+      .where('username', createUserDto.username);
     if (checkUser[0]) {
       throw new HTTPError(401, 'username is taken');
     }
-    let result = await this.knex("users")
+
+    let result = await this.knex('users')
       .insert({
-        username,
-        password_hash: hashedPassWord,
-        phone,
-        email,
-        nickname,
-        point,
-        is_admin,
+        username: createUserDto.username,
+        password_hash: password_hash,
+        email: createUserDto.email,
+        nickname: createUserDto.nickname,
+        phone: createUserDto.phone,
+        is_admin: createUserDto.is_admin,
       })
-      .returning("id");
+      .returning('id');
+
+    let row = result[0].id;
+    console.log(row);
+    if (!row) {
+      throw new HTTPError(401, 'Invalid input');
+    }
+
+    return 'This action adds a new user';
+  }
+
+  findAll() {
+    return `This action returns all users`;
+  }
+
+  findOne(id: number) {
+    return `This action returns a #${id} user`;
+  }
+
+  update(id: number, updateUserDto: UpdateUserDto) {
+    return `This action updates a #${id} user`;
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} user`;
   }
 }
