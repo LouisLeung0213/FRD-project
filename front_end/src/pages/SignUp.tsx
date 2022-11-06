@@ -12,7 +12,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { useParams } from "react-router";
+
 import "../pages/Page.css";
 
 const SignUp: React.FC = () => {

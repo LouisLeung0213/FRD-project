@@ -22,6 +22,7 @@ import {
   mailSharp,
   paperPlaneOutline,
   paperPlaneSharp,
+  peopleCircleOutline,
   trashOutline,
   trashSharp,
   warningOutline,
@@ -71,8 +72,8 @@ const appPages: AppPage[] = [
   {
     title: "登記帳號",
     url: "/page/SignUp",
-    iosIcon: warningOutline,
-    mdIcon: warningSharp,
+    iosIcon: peopleCircleOutline,
+    mdIcon: peopleCircleOutline,
   },
 ];
 
@@ -105,17 +106,7 @@ const Menu: React.FC = () => {
                     ios={appPage.iosIcon}
                     md={appPage.mdIcon}
                   />
-                  <IonLabel
-                    onClick={() => {
-                      <IonRouterOutlet id="main">
-                        <Route path={appPage.url} exact={true}>
-                          <Redirect to={appPage.url} />
-                        </Route>
-                      </IonRouterOutlet>;
-                    }}
-                  >
-                    {appPage.title}
-                  </IonLabel>
+                  <IonLabel>{appPage.title}</IonLabel>
                 </IonItem>
               </IonMenuToggle>
             );
