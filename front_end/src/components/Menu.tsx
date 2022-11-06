@@ -8,9 +8,10 @@ import {
   IonMenu,
   IonMenuToggle,
   IonNote,
+  IonRouterOutlet,
 } from "@ionic/react";
 
-import { useLocation } from "react-router-dom";
+import { Redirect, Route, useLocation } from "react-router-dom";
 import {
   archiveOutline,
   archiveSharp,
@@ -104,7 +105,17 @@ const Menu: React.FC = () => {
                     ios={appPage.iosIcon}
                     md={appPage.mdIcon}
                   />
-                  <IonLabel /*onClick={() => {}}*/>{appPage.title}</IonLabel>
+                  <IonLabel
+                    onClick={() => {
+                      <IonRouterOutlet id="main">
+                        <Route path={appPage.url} exact={true}>
+                          <Redirect to={appPage.url} />
+                        </Route>
+                      </IonRouterOutlet>;
+                    }}
+                  >
+                    {appPage.title}
+                  </IonLabel>
                 </IonItem>
               </IonMenuToggle>
             );

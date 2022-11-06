@@ -9,8 +9,8 @@ import {
 } from "@ionic/react";
 import { useParams } from "react-router";
 import ExploreContainer from "../components/ExploreContainer";
+import SignUp from "../components/SignUp";
 import "./Page.css";
-import SignUp from "./signUp/SignUp";
 
 const Page: React.FC = () => {
   const { name } = useParams<{ name: string }>();
@@ -32,8 +32,8 @@ const Page: React.FC = () => {
             <IonTitle size="large">{name}</IonTitle>
           </IonToolbar>
         </IonHeader>
-
-        <ExploreContainer name={name} />
+        hi
+        <SignUp />
       </IonContent>
     </IonPage>
   );
