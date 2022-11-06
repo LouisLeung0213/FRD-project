@@ -13,7 +13,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 
-import "../pages/Page.css";
+import "./SignUp.css";
 
 const SignUp: React.FC = () => {
   return (

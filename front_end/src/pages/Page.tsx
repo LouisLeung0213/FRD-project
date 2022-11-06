@@ -7,10 +7,11 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { Route, useParams } from "react-router";
+import { Redirect, Route, useParams } from "react-router";
 import ExploreContainer from "../components/ExploreContainer";
-import SignUp from "./SignUp";
+import SignUp from "./signUp/SignUp";
 import "./Page.css";
+import MainTabs from "./Tabs/MainTabs";
 
 const Page: React.FC = () => {
   const { name } = useParams<{ name: string }>();
@@ -30,6 +31,7 @@ const Page: React.FC = () => {
         <Route path="/page/SignUp" exact={true}>
           <SignUp />
         </Route>
+        <MainTabs />
       </IonContent>
     </IonPage>
   );
