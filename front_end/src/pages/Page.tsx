@@ -13,6 +13,7 @@ import SignUp from "./signUp/SignUp";
 import "./Page.css";
 import MainTabs from "./Tabs/MainTabs";
 import Login from "./login/Login";
+import Profile from "./profile/Proflie";
 
 const Page: React.FC = () => {
   const { name } = useParams<{ name: string }>();
@@ -34,6 +35,9 @@ const Page: React.FC = () => {
         </Route>
         <Route path="/page/SignUp" exact={true}>
           <SignUp />
+        </Route>
+        <Route path="/page/Profile" exact={true}>
+          <Profile />
         </Route>
         <MainTabs />
       </IonContent>
