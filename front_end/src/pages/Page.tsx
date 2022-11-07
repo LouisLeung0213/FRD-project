@@ -13,7 +13,7 @@ import SignUp from "./signUp/SignUp";
 import "./Page.css";
 import MainTabs from "./Tabs/MainTabs";
 import Login from "./login/Login";
-import Profile from "./profile/Proflie";
+import Profile from "./Tabs/Profile";
 
 const Page: React.FC = () => {
   const { name } = useParams<{ name: string }>();
