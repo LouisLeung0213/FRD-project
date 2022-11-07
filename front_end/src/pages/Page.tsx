@@ -12,6 +12,7 @@ import ExploreContainer from "../components/ExploreContainer";
 import SignUp from "./signUp/SignUp";
 import "./Page.css";
 import MainTabs from "./Tabs/MainTabs";
+import Login from "./login/Login";
 
 const Page: React.FC = () => {
   const { name } = useParams<{ name: string }>();
@@ -28,6 +29,9 @@ const Page: React.FC = () => {
       </IonHeader>
 
       <IonContent fullscreen>
+        <Route path="/page/Login" exact={true}>
+          <Login />
+        </Route>
         <Route path="/page/SignUp" exact={true}>
           <SignUp />
         </Route>

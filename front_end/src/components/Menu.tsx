@@ -64,8 +64,8 @@ const appPages: AppPage[] = [
     mdIcon: archiveSharp,
   },
   {
-    title: "Trash",
-    url: "/page/Trash",
+    title: "登入",
+    url: "/page/Login",
     iosIcon: trashOutline,
     mdIcon: trashSharp,
   },
