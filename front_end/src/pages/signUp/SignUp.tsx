@@ -16,8 +16,12 @@ import {
 import "./SignUp.css";
 
 const SignUp: React.FC = () => {
+  async function handleSubmit() {
+    const res = await fetch("/signUp");
+  }
+
   return (
-    <form className="ion-padding">
+    <form onSubmit={handleSubmit} className="ion-padding">
       <IonItem>
         <IonLabel position="floating">帳號:</IonLabel>
         <IonInput />
