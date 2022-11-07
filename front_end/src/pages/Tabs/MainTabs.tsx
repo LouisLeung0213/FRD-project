@@ -21,26 +21,36 @@ import {
 } from "ionicons/icons";
 import { IonReactRouter } from "@ionic/react-router";
 import Profile from "./Profile";
+import Hot from "./Hot";
+import Trade from "./Trade";
+import Noti from "./Noti";
+import MainPage from "./MainPage";
 
 const MainTabs: React.FC = () => {
   return (
     <IonTabs>
       <IonRouterOutlet>
-        <Route path="/page/Profile" render={() => <Profile />} />
+        <Route path="/page/MainPage" render={() => <MainPage />} />
       </IonRouterOutlet>
       <IonRouterOutlet>
-        <Route path="/page/Post" render={() => <Profile />} />
+        <Route path="/page/Hot" render={() => <Hot />} />
+      </IonRouterOutlet>
+      <IonRouterOutlet>
+        <Route path="/page/Trade" render={() => <Trade />} />
+      </IonRouterOutlet>
+      <IonRouterOutlet>
+        <Route path="/page/Noti" render={() => <Noti />} />
       </IonRouterOutlet>
       <IonRouterOutlet>
         <Route path="/page/Profile" render={() => <Profile />} />
       </IonRouterOutlet>
 
       <IonTabBar slot="bottom">
-        <IonTabButton tab="Main" href="/page/Main">
+        <IonTabButton tab="MainPage" href="/page/MainPage">
           <IonIcon icon={homeOutline} />
           <IonLabel>主頁</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="Hot" href="/page/hot">
+        <IonTabButton tab="Hot" href="/page/Hot">
           <IonIcon icon={heartCircleOutline} />
           <IonLabel>熱門</IonLabel>
         </IonTabButton>
@@ -48,7 +58,7 @@ const MainTabs: React.FC = () => {
           <IonIcon icon={duplicateOutline} />
           <IonLabel>交易</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="Notification" href="/page/Notification">
+        <IonTabButton tab="Noti" href="/page/Noti">
           <IonIcon icon={notificationsOutline} />
           <IonLabel>通知</IonLabel>
         </IonTabButton>

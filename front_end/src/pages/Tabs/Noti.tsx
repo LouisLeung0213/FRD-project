@@ -6,26 +6,26 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import ExploreContainer from "../../components/ExploreContainer";
-import "./Trade.css";
+import "./Noti.css";
 
-const Trade: React.FC = () => {
+const Noti: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab 3</IonTitle>
+          <IonTitle>Tab 2</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Trade</IonTitle>
+            <IonTitle size="large">Tab 2</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer name="Tab 3 page" />
+        <ExploreContainer name="Tab 2 page" />
       </IonContent>
     </IonPage>
   );
 };
 
-export default Trade;
+export default Noti;

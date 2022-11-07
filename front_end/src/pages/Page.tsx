@@ -36,6 +36,18 @@ const Page: React.FC = () => {
         <Route path="/page/SignUp" exact={true}>
           <SignUp />
         </Route>
+        <Route path="/page/MainPage" exact={true}>
+          <Profile />
+        </Route>
+        <Route path="/page/Hot" exact={true}>
+          <Profile />
+        </Route>
+        <Route path="/page/Trade" exact={true}>
+          <Profile />
+        </Route>
+        <Route path="/page/Noti" exact={true}>
+          <Profile />
+        </Route>
         <Route path="/page/Profile" exact={true}>
           <Profile />
         </Route>

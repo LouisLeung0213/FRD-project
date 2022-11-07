@@ -19,7 +19,7 @@ const Profile: React.FC = () => {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">個人資料</IonTitle>
+            <IonTitle size="large">Profile</IonTitle>
           </IonToolbar>
         </IonHeader>
         <ExploreContainer name="Tab 2 page" />
