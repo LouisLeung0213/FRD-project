@@ -13,10 +13,23 @@ export async function up(knex: Knex): Promise<void> {
     table.boolean('is_admin').notNullable().defaultTo(false);
   });
 
+  await knex.schema.createTableIfNotExists('followers', (table) => {
+    table.increments('id');
+    table.integer('follower_id').notNullable().references('users.id');
+    table.integer('followee_id').notNullable().references('users.id');
+  });
+
   await knex.schema.createTableIfNotExists('banned_users', (table) => {
     table.increments('id');
     table.integer('user_id').notNullable().references('users.id');
     table.timestamp('banned_time').notNullable();
+  });
+
+  await knex.schema.createTableIfNotExists('search_histories', (table) => {
+    table.increments('id');
+    table.integer('user_id').notNullable().references('users.id');
+    table.string('content').notNullable();
+    table.timestamp('search_time').notNullable();
   });
 
   await knex.schema.createTableIfNotExists('storages', (table) => {
@@ -48,7 +61,7 @@ export async function up(knex: Knex): Promise<void> {
     table.timestamp('bid_time').notNullable();
   });
 
-  await knex.schema.createTableIfNotExists('histories', (table) => {
+  await knex.schema.createTableIfNotExists('bid_histories', (table) => {
     table.increments('id');
     table.integer('buyer_id').notNullable().references('users.id');
     table.integer('post_id').notNullable().references('posts.id');
@@ -65,17 +78,19 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTableIfNotExists('images', (table) => {
     table.increments('id');
     table.string('src').notNullable();
-    table.integer('post_id').notNullable();
+    table.integer('post_id').notNullable().references('posts.id');
   });
 }
 
 export async function down(knex: Knex): Promise<void> {
+  await knex.schema.dropTableIfExists('search_histories');
+  await knex.schema.dropTableIfExists('followers');
   await knex.schema.dropTableIfExists('images');
   await knex.schema.dropTableIfExists('tags');
-  await knex.schema.dropTableIfExists('histories');
+  await knex.schema.dropTableIfExists('bid_histories');
   await knex.schema.dropTableIfExists('bid_records');
-  await knex.schema.dropTableIfExists('posts');
   await knex.schema.dropTableIfExists('storages');
   await knex.schema.dropTableIfExists('banned_users');
+  await knex.schema.dropTableIfExists('posts');
   await knex.schema.dropTableIfExists('users');
 }
