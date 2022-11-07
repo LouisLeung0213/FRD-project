@@ -18,11 +18,17 @@ import {
   bookmarkOutline,
   heartOutline,
   heartSharp,
+  lockOpenOutline,
+  lockOpenSharp,
   mailOutline,
   mailSharp,
   paperPlaneOutline,
   paperPlaneSharp,
   peopleCircleOutline,
+  personOutline,
+  personSharp,
+  receiptOutline,
+  receiptSharp,
   trashOutline,
   trashSharp,
   warningOutline,
@@ -40,32 +46,32 @@ interface AppPage {
 
 const appPages: AppPage[] = [
   {
-    title: "Inbox",
-    url: "/page/Inbox",
-    iosIcon: mailOutline,
-    mdIcon: mailSharp,
+    title: "設定個人帳號",
+    url: "/page/AccountSetting",
+    iosIcon: personOutline,
+    mdIcon: personSharp,
   },
   {
-    title: "Outbox",
-    url: "/page/Outbox",
+    title: "通知設定",
+    url: "/page/NotificationSetting",
     iosIcon: paperPlaneOutline,
     mdIcon: paperPlaneSharp,
   },
   {
-    title: "Favorites",
-    url: "/page/Favorites",
-    iosIcon: heartOutline,
-    mdIcon: heartSharp,
+    title: "更改密碼",
+    url: "/page/PasswordChange",
+    iosIcon: lockOpenOutline,
+    mdIcon: lockOpenSharp,
   },
   {
-    title: "Archived",
-    url: "/page/Archived",
-    iosIcon: archiveOutline,
-    mdIcon: archiveSharp,
+    title: "電子收據",
+    url: "/page/Receipt",
+    iosIcon: receiptOutline,
+    mdIcon: receiptSharp,
   },
   {
-    title: "Trash",
-    url: "/page/Trash",
+    title: "登入",
+    url: "/page/Login",
     iosIcon: trashOutline,
     mdIcon: trashSharp,
   },
@@ -87,8 +93,7 @@ const Menu: React.FC = () => {
     <IonMenu contentId="main" type="overlay">
       <IonContent>
         <IonList id="inbox-list">
-          <IonListHeader>Username</IonListHeader>
-          <IonNote>hi@ionicframework.com</IonNote>
+          <IonListHeader>設定</IonListHeader>
           {appPages.map((appPage, index) => {
             return (
               <IonMenuToggle key={index} autoHide={false}>

@@ -45,13 +45,14 @@ const App: React.FC = () => {
         <IonSplitPane contentId="main">
           <Menu />
           <IonRouterOutlet id="main">
-            {/* <Route path="/" exact={true}>
-              <Redirect to="/page/Inbox" />
-            </Route> */}
+            <Route path="/" exact={true}>
+              <Redirect to="/page/Main" />
+            </Route>
 
             <Route path="/page/:name" exact={true}>
               <Page />
             </Route>
+            <MainTabs />
           </IonRouterOutlet>
         </IonSplitPane>
       </IonReactRouter>
