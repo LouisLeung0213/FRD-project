@@ -22,7 +22,7 @@ const Profile: React.FC = () => {
             <IonTitle size="large">Profile</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer name="Tab 2 page" />
+        <ExploreContainer name="Tab 5 page" />
       </IonContent>
     </IonPage>
   );
