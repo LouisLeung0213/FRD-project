@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { KnexModule } from 'nestjs-knex';
+import { AuthModule } from './auth/auth.module';
 import * as config from '../knexfile';
 
 @Module({
@@ -12,6 +13,7 @@ import * as config from '../knexfile';
         config: config[process.env.NODE_ENV ?? 'development'],
       }),
     }),
+    AuthModule,
     UsersModule,
   ],
   controllers: [AppController],

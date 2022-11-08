@@ -4,6 +4,7 @@ import { hashPassword } from 'hash';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectKnex, Knex } from 'nestjs-knex';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -43,8 +44,12 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(username: string) {
+    return {
+      id: 1,
+      username: username,
+      password: await bcrypt.hash('123456', 10),
+    };;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
