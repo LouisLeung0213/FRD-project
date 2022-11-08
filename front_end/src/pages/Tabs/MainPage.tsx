@@ -7,6 +7,7 @@ import {
 } from "@ionic/react";
 import ExploreContainer from "../../components/ExploreContainer";
 import "./MainPage.css";
+import MainTabs from "./MainTabs";
 
 const MainPage: React.FC = () => {
   return (
@@ -22,7 +23,7 @@ const MainPage: React.FC = () => {
             <IonTitle size="large">MainPage</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer name="Tab 2 page" />
+        <ExploreContainer name="Tab 1 page" />
       </IonContent>
     </IonPage>
   );

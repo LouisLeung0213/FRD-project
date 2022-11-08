@@ -1,0 +1,9 @@
+.pageHeader {
+  display: flex;
+  flex-direction: row;
+}
+
+.icon {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
