@@ -22,9 +22,12 @@ import Hot from "./Hot";
 import Trade from "./Trade";
 import Noti from "./Noti";
 import MainPage from "./MainPage";
-import Login from "../login/Login";
-import SignUp from "../signUp/SignUp";
+import Login from "../Login/Login";
+import SignUp from "../SignUp/SignUp";
 import UpdateProfile from "../updateProfile/UpdateProfile";
+import Invoice from "../Invoice/Invoice";
+import NotiSetUp from "../NotiSetUp/NotiSetUp";
+import PasswordChange from "../PasswordChange/PasswordChange";
 
 const MainTabs: React.FC = () => {
   const { name } = useParams<{ name: string }>();
@@ -36,16 +39,23 @@ const MainTabs: React.FC = () => {
           exact={true}
           render={() => <UpdateProfile />}
         />
+        <Route
+          path="/page/NotiSetUp"
+          exact={true}
+          render={() => <NotiSetUp />}
+        />
+        <Route
+          path="/page/PasswordChange"
+          exact={true}
+          render={() => <PasswordChange />}
+        />
+        <Route path="/page/Invoice" exact={true} render={() => <Invoice />} />
         <Route path="/page/Login" exact={true} render={() => <Login />} />
         <Route path="/page/SignUp" exact={true} render={() => <SignUp />} />
         <Route path="/page/MainPage" exact={true} render={() => <MainPage />} />
-
         <Route path="/page/Hot" exact={true} render={() => <Hot />} />
-
         <Route path="/page/Trade" exact={true} render={() => <Trade />} />
-
         <Route path="/page/Noti" exact={true} render={() => <Noti />} />
-
         <Route path="/page/Profile" exact={true} render={() => <Profile />} />
         <Redirect to={`/page/${name}`} />
       </IonRouterOutlet>

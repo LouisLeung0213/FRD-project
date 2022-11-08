@@ -1,10 +1,16 @@
-import { IonContent, IonHeader, IonTitle, IonToolbar } from "@ionic/react";
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
 import ExploreContainer from "../../components/ExploreContainer";
 import "./Hot.css";
 
 const Hot: React.FC = () => {
   return (
-    <>
+    <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonTitle>Tab 2 123456789</IonTitle>
@@ -18,7 +24,7 @@ const Hot: React.FC = () => {
         </IonHeader>
         <ExploreContainer name="Tab 2 page" />
       </IonContent>
-    </>
+    </IonPage>
   );
 };
 

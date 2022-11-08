@@ -42,7 +42,7 @@ const appPages: AppPage[] = [
   },
   {
     title: "通知設定",
-    url: "/page/NotificationSetting",
+    url: "/page/NotiSetUp",
     iosIcon: paperPlaneOutline,
     mdIcon: paperPlaneSharp,
   },
@@ -54,7 +54,7 @@ const appPages: AppPage[] = [
   },
   {
     title: "電子收據",
-    url: "/page/Receipt",
+    url: "/page/Invoice",
     iosIcon: receiptOutline,
     mdIcon: receiptSharp,
   },

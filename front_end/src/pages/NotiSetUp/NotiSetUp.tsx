@@ -8,7 +8,7 @@ import {
   IonPage,
 } from "@ionic/react";
 
-const PasswordChange: React.FC = () => {
+const NotiSetUp: React.FC = () => {
   return (
     <IonPage>
       <IonContent fullscreen>
@@ -18,4 +18,4 @@ const PasswordChange: React.FC = () => {
   );
 };
 
-export default PasswordChange;
+export default NotiSetUp;
