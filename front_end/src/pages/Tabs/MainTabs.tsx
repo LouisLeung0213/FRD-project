@@ -27,12 +27,18 @@ import Noti from "./Noti";
 import MainPage from "./MainPage";
 import Login from "../login/Login";
 import SignUp from "../signUp/SignUp";
+import UpdateProfile from "../updateInfo/UpdateProfile";
 
 const MainTabs: React.FC = () => {
   const { name } = useParams<{ name: string }>();
   return (
     <IonTabs>
       <IonRouterOutlet>
+        <Route
+          path="/page/AccountSetting"
+          exact={true}
+          render={() => <UpdateProfile />}
+        />
         <Route path="/page/Login" exact={true} render={() => <Login />} />
         <Route path="/page/SignUp" exact={true} render={() => <SignUp />} />
         <Route path="/page/MainPage" exact={true} render={() => <MainPage />} />

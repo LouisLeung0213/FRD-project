@@ -23,30 +23,30 @@ const ProfileContainer: React.FC<any> = () => {
   return (
     <IonList>
       <IonItem>
-        <IonList className="wholePersonalContainer">
-          <IonList className="personalIconContainer">
+        <IonItem className="wholePersonalContainer">
+          <IonItem className="personalIconContainer">
             <IonImg src={icon} className="personalIcon" />
-            <IonList className="iconContainer">
+            <IonItem className="iconContainer">
               <IonIcon icon={heartOutline} className="chat" />
               <IonIcon icon={chatbubblesOutline} className="chat" />
               <IonIcon icon={ribbonOutline} className="chat" />
-            </IonList>
-          </IonList>
-          <IonList className="personalInfo">
-            <IonList className="nameContainer">
+            </IonItem>
+          </IonItem>
+          <IonItem className="personalInfo">
+            <IonItem className="nameContainer">
               <IonLabel>Nickname</IonLabel>
               <IonLabel>@username</IonLabel>
-            </IonList>
+            </IonItem>
             <IonLabel>Joined since 2022.02.10</IonLabel>
-          </IonList>
-          <IonList className="search">
+          </IonItem>
+          <IonItem className="search">
             <IonIcon className="searchIcon" icon={searchOutline} />
             <IonInput placeholder="搜尋此賣家的產品"></IonInput>
-          </IonList>
-          <IonList className="portfolioContainer">
+          </IonItem>
+          <IonItem className="portfolioContainer">
             <IonLabel>My product</IonLabel>
-          </IonList>
-        </IonList>
+          </IonItem>
+        </IonItem>
       </IonItem>
     </IonList>
   );

@@ -18,11 +18,11 @@ const Profile: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
+        {/* <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle size="large">Profile</IonTitle>
           </IonToolbar>
-        </IonHeader>
+        </IonHeader> */}
         <ProfileContainer />
       </IonContent>
     </IonPage>
