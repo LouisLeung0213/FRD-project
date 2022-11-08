@@ -7,21 +7,13 @@ import {
   IonListHeader,
   IonMenu,
   IonMenuToggle,
-  IonNote,
-  IonRouterOutlet,
 } from "@ionic/react";
 
-import { Redirect, Route, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
-  archiveOutline,
-  archiveSharp,
   bookmarkOutline,
-  heartOutline,
-  heartSharp,
   lockOpenOutline,
   lockOpenSharp,
-  mailOutline,
-  mailSharp,
   paperPlaneOutline,
   paperPlaneSharp,
   peopleCircleOutline,
@@ -31,11 +23,8 @@ import {
   receiptSharp,
   trashOutline,
   trashSharp,
-  warningOutline,
-  warningSharp,
 } from "ionicons/icons";
 import "./Menu.css";
-import { useState } from "react";
 
 interface AppPage {
   url: string;

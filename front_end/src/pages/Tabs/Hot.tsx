@@ -1,10 +1,4 @@
-import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-} from "@ionic/react";
+import { IonContent, IonHeader, IonTitle, IonToolbar } from "@ionic/react";
 import ExploreContainer from "../../components/ExploreContainer";
 import "./Hot.css";
 

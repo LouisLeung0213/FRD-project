@@ -10,16 +10,13 @@ import {
 
 import { Redirect, Route, useParams } from "react-router";
 import {
-  people,
-  informationCircle,
-  location,
   personCircleOutline,
   duplicateOutline,
   homeOutline,
   heartCircleOutline,
   notificationsOutline,
 } from "ionicons/icons";
-import { IonReactRouter } from "@ionic/react-router";
+
 import Profile from "./Profile";
 import Hot from "./Hot";
 import Trade from "./Trade";

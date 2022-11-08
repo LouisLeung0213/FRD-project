@@ -1,15 +1,4 @@
-import {
-  IonButton,
-  IonContent,
-  IonHeader,
-  IonImg,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-} from "@ionic/react";
+import { IonButton, IonImg, IonInput, IonItem, IonLabel } from "@ionic/react";
 // import ExploreContainer from "../../components/ExploreContainer";
 // import ProfileContainer from "../../components/ProfileContainer";
 import icon from "../../image/usericon.png";

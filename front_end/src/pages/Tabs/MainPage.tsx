@@ -7,7 +7,6 @@ import {
 } from "@ionic/react";
 import ExploreContainer from "../../components/ExploreContainer";
 import "./MainPage.css";
-import MainTabs from "./MainTabs";
 
 const MainPage: React.FC = () => {
   return (
