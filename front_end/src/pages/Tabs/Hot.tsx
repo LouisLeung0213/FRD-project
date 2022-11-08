@@ -10,10 +10,10 @@ import "./Hot.css";
 
 const Hot: React.FC = () => {
   return (
-    <IonPage>
+    <>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab 2</IonTitle>
+          <IonTitle>Tab 2 123456789</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -24,7 +24,7 @@ const Hot: React.FC = () => {
         </IonHeader>
         <ExploreContainer name="Tab 2 page" />
       </IonContent>
-    </IonPage>
+    </>
   );
 };
 

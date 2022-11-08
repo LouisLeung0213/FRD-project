@@ -11,7 +11,7 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { Redirect, Route } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import Menu from "./components/Menu";
 import Page from "./pages/Page";
 import SignUp from "./pages/signUp/SignUp";
@@ -35,6 +35,7 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.css";
 import MainTabs from "./pages/Tabs/MainTabs";
+import Login from "./pages/login/Login";
 
 setupIonicReact();
 
@@ -48,10 +49,10 @@ const App: React.FC = () => {
             <Route path="/" exact={true}>
               <Redirect to="/page/Main" />
             </Route>
-
             <Route path="/page/:name" exact={true}>
               <Page />
             </Route>
+
             <MainTabs />
           </IonRouterOutlet>
         </IonSplitPane>
