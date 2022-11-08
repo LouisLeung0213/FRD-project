@@ -2,6 +2,8 @@ import {
   IonButtons,
   IonContent,
   IonHeader,
+  IonIcon,
+  IonList,
   IonMenuButton,
   IonPage,
   IonTitle,
@@ -14,6 +16,8 @@ import "./Page.css";
 import MainTabs from "./Tabs/MainTabs";
 import Login from "./login/Login";
 import Profile from "./Tabs/Profile";
+import { chatbubbleOutline, heartCircleOutline } from "ionicons/icons";
+import Trade from "./Tabs/Trade";
 
 const Page: React.FC = () => {
   const { name } = useParams<{ name: string }>();
@@ -25,7 +29,11 @@ const Page: React.FC = () => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>{name}</IonTitle>
+          <IonList className="pageHeader">
+            <IonTitle>{name}</IonTitle>
+            <IonIcon icon={heartCircleOutline} className="icon" />
+            <IonIcon icon={chatbubbleOutline} className="icon" />
+          </IonList>
         </IonToolbar>
       </IonHeader>
 
@@ -43,7 +51,7 @@ const Page: React.FC = () => {
           <Profile />
         </Route>
         <Route path="/page/Trade" exact={true}>
-          <Profile />
+          <Trade />
         </Route>
         <Route path="/page/Noti" exact={true}>
           <Profile />

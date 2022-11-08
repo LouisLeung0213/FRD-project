@@ -47,6 +47,7 @@ export async function up(knex: Knex): Promise<void> {
     table.text('post_description').notNullable();
     table.integer('original_price').notNullable();
     table.integer('min_price');
+    table.boolean('q_mark').notNullable();
     table.boolean('is_pending_in').notNullable().defaultTo(false);
     table.boolean('is_pending_out').notNullable().defaultTo(false);
     table.boolean('is_sold').notNullable().defaultTo(false);
