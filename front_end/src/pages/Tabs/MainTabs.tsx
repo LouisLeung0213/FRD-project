@@ -27,7 +27,7 @@ import Noti from "./Noti";
 import MainPage from "./MainPage";
 import Login from "../login/Login";
 import SignUp from "../signUp/SignUp";
-import UpdateProfile from "../updateInfo/UpdateProfile";
+import UpdateProfile from "../updateProfile/UpdateProfile";
 
 const MainTabs: React.FC = () => {
   const { name } = useParams<{ name: string }>();

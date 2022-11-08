@@ -10,7 +10,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 // import ExploreContainer from "../../components/ExploreContainer";
-import TradeContainer from "../../components/TradeContainer";
+
 // import "./MainPage.css";
 
 const Trade: React.FC = () => {
@@ -27,7 +27,7 @@ const Trade: React.FC = () => {
             <IonTitle size="large">MainPage</IonTitle>
           </IonToolbar>
         </IonHeader>
-        {/* <TradeContainer /> */}
+
         <IonList>
           <IonItem>
             <IonLabel>Default input</IonLabel>

@@ -1,22 +1,21 @@
 import {
   IonButton,
-  IonButtons,
-  IonCheckbox,
   IonContent,
   IonHeader,
   IonImg,
   IonInput,
   IonItem,
   IonLabel,
-  IonMenuButton,
   IonPage,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import icon from "../image/usericon.png";
-// import "./SignUp.css";
+// import ExploreContainer from "../../components/ExploreContainer";
+// import ProfileContainer from "../../components/ProfileContainer";
+import icon from "../../image/usericon.png";
+// import "./Profile.css";
 
-const UpdateInfo: React.FC = () => {
+const updateProfile: React.FC = () => {
   async function handleSubmit() {
     const res = await fetch("/UpdateUserInfo");
   }
@@ -50,4 +49,4 @@ const UpdateInfo: React.FC = () => {
   );
 };
 
-export default UpdateInfo;
+export default updateProfile;
