@@ -94,7 +94,8 @@ const Profile: React.FC = () => {
                 <IonList>
                   <IonItem className="personalIconContainer">
                     <IonImg src={icon} className="personalIcon" />
-
+                  </IonItem>
+                  <IonItem>
                     <IonIcon icon={heartOutline} className="chat" />
                     <IonIcon icon={chatbubblesOutline} className="chat" />
                     <IonIcon icon={ribbonOutline} className="chat" />
