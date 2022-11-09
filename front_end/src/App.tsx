@@ -1,10 +1,8 @@
 import React from "react";
 import {
   IonApp,
-  IonContent,
   IonIcon,
   IonLabel,
-  IonPage,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
@@ -34,9 +32,6 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 
 import {
-  triangle,
-  ellipse,
-  square,
   homeOutline,
   duplicateOutline,
   heartCircleOutline,
@@ -50,8 +45,7 @@ import Profile from "./pages/Tabs/Profile";
 import Trade from "./pages/Tabs/Trade";
 import { routes } from "../src/routes";
 import Notices from "./pages/Tabs/Notices";
-import { MenuPageWrapper } from "./pages/MenuPageWrapper";
-import UpdateProfile from "./pages/updateProfile/UpdateProfile";
+import UpdateProfile from "./pages/UpdateProfile/UpdateProfile";
 import NoticeSetUp from "./pages/NoticeSetUp/NoticeSetUp";
 import Invoice from "./pages/Invoice/Invoice";
 import PasswordChange from "./pages/PasswordChange/PasswordChange";
