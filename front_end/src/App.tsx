@@ -45,7 +45,7 @@ import Profile from "./pages/Tabs/Profile";
 import Trade from "./pages/Tabs/Trade";
 import { routes } from "../src/routes";
 import Notices from "./pages/Tabs/Notices";
-import UpdateProfile from "./pages/updateProfile/UpdateProfile";
+import UpdateProfile from "./pages/UpdateProfile/UpdateProfile";
 import NoticeSetUp from "./pages/NoticeSetUp/NoticeSetUp";
 import Invoice from "./pages/Invoice/Invoice";
 import PasswordChange from "./pages/PasswordChange/PasswordChange";

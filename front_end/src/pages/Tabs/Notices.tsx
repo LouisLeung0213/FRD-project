@@ -1,11 +1,13 @@
 import {
   IonContent,
   IonHeader,
+  IonItem,
+  IonList,
   IonPage,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import ExploreContainer from "../../components/ExploreContainer";
+
 import "./Notices.css";
 
 const Notices: React.FC = () => {
@@ -13,16 +15,12 @@ const Notices: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab 4</IonTitle>
+          <IonTitle>通知</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 4</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer name="Tab 4 page" />
+      <IonContent className="ion-padding">
+        <IonItem>最新資訊</IonItem>
+        <IonItem>沒有最新消息</IonItem>
       </IonContent>
     </IonPage>
   );
