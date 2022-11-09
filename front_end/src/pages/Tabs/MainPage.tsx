@@ -13,7 +13,7 @@ const MainPage: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab 2</IonTitle>
+          <IonTitle>Main</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -22,7 +22,7 @@ const MainPage: React.FC = () => {
             <IonTitle size="large">MainPage</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer name="Tab 1 page" />
+        <ExploreContainer name="Main page" />
       </IonContent>
     </IonPage>
   );

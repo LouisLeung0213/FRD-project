@@ -57,26 +57,26 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
-        <IonRouterOutlet>
-          <Route exact={true} path="/">
-            <Redirect to={routes.tab.mainPage} />
-          </Route>
-          <Route
-            path="/AccountSetting"
-            render={() => (
-              <MenuPageWrapper
-                title="todo title"
-                id="AccountSettingPage"
-                content={
-                  <IonContent>
-                    <h1>todo</h1>
-                  </IonContent>
-                }
-              />
-            )}
-          ></Route>
-          <Route path="/tab">
-            <IonTabs>
+        <IonTabs>
+          <IonRouterOutlet>
+            <Route exact={true} path="/">
+              <Redirect to={routes.tab.mainPage} />
+            </Route>
+            <Route
+              path="/AccountSetting"
+              render={() => (
+                <MenuPageWrapper
+                  title="todo title"
+                  id="AccountSettingPage"
+                  content={
+                    <IonContent>
+                      <h1>todo</h1>
+                    </IonContent>
+                  }
+                />
+              )}
+            ></Route>
+            <Route path="/tab">
               <IonRouterOutlet>
                 <Route
                   path={routes.tab.mainPage}
@@ -104,31 +104,32 @@ const App: React.FC = () => {
                   render={() => <Profile />}
                 />
               </IonRouterOutlet>
-              <IonTabBar slot="bottom">
-                <IonTabButton tab="MainPage" href="/tab/MainPage">
-                  <IonIcon icon={homeOutline} />
-                  <IonLabel>主頁</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab="Hot" href="/tab/Hot">
-                  <IonIcon icon={heartCircleOutline} />
-                  <IonLabel>熱門</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab="Trade" href="/tab/Trade">
-                  <IonIcon icon={duplicateOutline} />
-                  <IonLabel>交易</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab="Notices" href="/tab/Notices">
-                  <IonIcon icon={notificationsOutline} />
-                  <IonLabel>通知</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab="Profile" href="/tab/Profile">
-                  <IonIcon icon={personCircleOutline} />
-                  <IonLabel>個人資料</IonLabel>
-                </IonTabButton>
-              </IonTabBar>
-            </IonTabs>
-          </Route>
-        </IonRouterOutlet>
+            </Route>
+          </IonRouterOutlet>
+
+          <IonTabBar slot="bottom">
+            <IonTabButton tab="MainPage" href="/tab/MainPage">
+              <IonIcon icon={homeOutline} />
+              <IonLabel>主頁</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="Hot" href="/tab/Hot">
+              <IonIcon icon={heartCircleOutline} />
+              <IonLabel>熱門</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="Trade" href="/tab/Trade">
+              <IonIcon icon={duplicateOutline} />
+              <IonLabel>交易</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="Notices" href="/tab/Notices">
+              <IonIcon icon={notificationsOutline} />
+              <IonLabel>通知</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="Profile" href="/tab/Profile">
+              <IonIcon icon={personCircleOutline} />
+              <IonLabel>個人資料</IonLabel>
+            </IonTabButton>
+          </IonTabBar>
+        </IonTabs>
       </IonReactRouter>
     </IonApp>
   );

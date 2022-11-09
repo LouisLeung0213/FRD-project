@@ -1,5 +1,6 @@
 import {
   IonContent,
+  IonHeader,
   IonIcon,
   IonItem,
   IonLabel,
@@ -7,9 +8,13 @@ import {
   IonListHeader,
   IonMenu,
   IonMenuToggle,
+  IonPage,
+  IonRouterOutlet,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/react";
 
-import { useLocation } from "react-router-dom";
+import { Route, useLocation } from "react-router-dom";
 import {
   bookmarkOutline,
   lockOpenOutline,
@@ -25,99 +30,72 @@ import {
   trashSharp,
 } from "ionicons/icons";
 import "./Menu.css";
-
-interface AppPage {
-  url: string;
-  iosIcon: string;
-  mdIcon: string;
-  title: string;
-}
-
-const appPages: AppPage[] = [
-  {
-    title: "設定個人帳號",
-    url: "/page/AccountSetting",
-    iosIcon: personOutline,
-    mdIcon: personSharp,
-  },
-  {
-    title: "通知設定",
-    url: "/page/NotiSetUp",
-    iosIcon: paperPlaneOutline,
-    mdIcon: paperPlaneSharp,
-  },
-  {
-    title: "更改密碼",
-    url: "/page/PasswordChange",
-    iosIcon: lockOpenOutline,
-    mdIcon: lockOpenSharp,
-  },
-  {
-    title: "電子收據",
-    url: "/page/Invoice",
-    iosIcon: receiptOutline,
-    mdIcon: receiptSharp,
-  },
-  {
-    title: "登入",
-    url: "/page/Login",
-    iosIcon: trashOutline,
-    mdIcon: trashSharp,
-  },
-  {
-    title: "登記帳號",
-    url: "/page/SignUp",
-    iosIcon: peopleCircleOutline,
-    mdIcon: peopleCircleOutline,
-  },
-];
-
-const labels = ["Family", "Friends", "Notes", "Work", "Travel", "Reminders"];
+import Invoice from "../pages/Invoice/Invoice";
+import Login from "../pages/Login/Login";
+import NotiSetUp from "../pages/NoticeSetUp/NoticeSetUp";
+import PasswordChange from "../pages/PasswordChange/PasswordChange";
+import SignUp from "../pages/SignUp/SignUp";
+import UpdateProfile from "../pages/updateProfile/UpdateProfile";
+import NoticeSetUp from "../pages/NoticeSetUp/NoticeSetUp";
 
 const Menu: React.FC = () => {
-  const location = useLocation();
-  //const [currentPage, setCurrentPage] = useState("");
-
   return (
-    <IonMenu contentId="main" type="overlay">
-      <IonContent>
-        <IonList id="inbox-list">
-          <IonListHeader>設定</IonListHeader>
-          {appPages.map((appPage, index) => {
-            return (
-              <IonMenuToggle key={index} autoHide={false}>
-                <IonItem
-                  className={
-                    location.pathname === appPage.url ? "selected" : ""
-                  }
-                  routerLink={appPage.url}
-                  routerDirection="none"
-                  lines="none"
-                  detail={false}
-                >
-                  <IonIcon
-                    slot="start"
-                    ios={appPage.iosIcon}
-                    md={appPage.mdIcon}
-                  />
-                  <IonLabel>{appPage.title}</IonLabel>
-                </IonItem>
-              </IonMenuToggle>
-            );
-          })}
-        </IonList>
+    <>
+      <IonRouterOutlet>
+        <Route
+          path="/AccountSetting"
+          exact={true}
+          render={() => <UpdateProfile />}
+        />
+        <Route
+          path="/NoticeSetUp"
+          exact={true}
+          render={() => <NoticeSetUp />}
+        />
+        <Route
+          path="/PasswordChange"
+          exact={true}
+          render={() => <PasswordChange />}
+        />
+        <Route path="/Invoice" exact={true} render={() => <Invoice />} />
+        <Route path="/Login" exact={true} render={() => <Login />} />
+        <Route path="/SignUp" exact={true} render={() => <SignUp />} />
+      </IonRouterOutlet>
 
-        <IonList id="labels-list">
-          <IonListHeader>Labels</IonListHeader>
-          {labels.map((label, index) => (
-            <IonItem lines="none" key={index}>
-              <IonIcon slot="start" icon={bookmarkOutline} />
-              <IonLabel>{label}</IonLabel>
-            </IonItem>
-          ))}
-        </IonList>
-      </IonContent>
-    </IonMenu>
+      <IonMenu contentId="main-content">
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>設定</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+
+        <IonContent>
+          <IonList>
+            <IonMenuToggle>
+              <IonItem routerLink="/AccountSetting">
+                <IonIcon icon={personOutline} />
+                <IonLabel>設定個人帳號</IonLabel>
+              </IonItem>
+
+              <IonItem routerLink="/NotiSetUp">
+                <IonIcon icon={paperPlaneOutline} />
+                <IonLabel>通知設定</IonLabel>
+              </IonItem>
+
+              <IonItem routerLink="/PasswordChange">
+                <IonIcon icon={lockOpenOutline} />
+                <IonLabel>更改密碼</IonLabel>
+              </IonItem>
+
+              <IonItem routerLink="/Invoice">
+                <IonIcon icon={receiptOutline} />
+                <IonLabel>電子收據</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
+          </IonList>
+        </IonContent>
+      </IonMenu>
+    </>
   );
 };
 

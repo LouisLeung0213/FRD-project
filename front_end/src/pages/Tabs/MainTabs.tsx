@@ -20,13 +20,13 @@ import {
 import Profile from "./Profile";
 import Hot from "./Hot";
 import Trade from "./Trade";
-import Noti from "./Noti";
+import Noti from "./Notices";
 import MainPage from "./MainPage";
 import Login from "../Login/Login";
 import SignUp from "../SignUp/SignUp";
 import UpdateProfile from "../updateProfile/UpdateProfile";
 import Invoice from "../Invoice/Invoice";
-import NotiSetUp from "../NotiSetUp/NotiSetUp";
+import NotiSetUp from "../NoticeSetUp/NoticeSetUp";
 import PasswordChange from "../PasswordChange/PasswordChange";
 
 const MainTabs: React.FC = () => {
@@ -52,6 +52,7 @@ const MainTabs: React.FC = () => {
         <Route path="/page/Invoice" exact={true} render={() => <Invoice />} />
         <Route path="/page/Login" exact={true} render={() => <Login />} />
         <Route path="/page/SignUp" exact={true} render={() => <SignUp />} />
+
         <Route path="/page/MainPage" exact={true} render={() => <MainPage />} />
         <Route path="/page/Hot" exact={true} render={() => <Hot />} />
         <Route path="/page/Trade" exact={true} render={() => <Trade />} />
