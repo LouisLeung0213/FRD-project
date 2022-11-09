@@ -41,14 +41,8 @@ import {
 
 import "./Profile.css";
 import icon from "../../image/usericon.png";
-import Menu from "../../components/Menu";
+
 import { Route, useLocation } from "react-router";
-import Invoice from "../Invoice/Invoice";
-import Login from "../Login/Login";
-import NotiSetUp from "../NoticeSetUp/NoticeSetUp";
-import PasswordChange from "../PasswordChange/PasswordChange";
-import SignUp from "../SignUp/SignUp";
-import UpdateProfile from "../updateProfile/UpdateProfile";
 
 const Profile: React.FC = () => {
   const location = useLocation();
@@ -60,7 +54,7 @@ const Profile: React.FC = () => {
             <IonMenu contentId="profile">
               <IonHeader>
                 <IonToolbar>
-                  <IonTitle>Menu</IonTitle>
+                  <IonTitle>設定</IonTitle>
                 </IonToolbar>
               </IonHeader>
               <IonContent>
@@ -70,7 +64,7 @@ const Profile: React.FC = () => {
                     <IonLabel>設定個人帳號</IonLabel>
                   </IonItem>
 
-                  <IonItem routerLink="/NotiSetUp">
+                  <IonItem routerLink="/NoticeSetUp">
                     <IonIcon icon={paperPlaneOutline} slot="start" />
                     <IonLabel>通知設定</IonLabel>
                   </IonItem>

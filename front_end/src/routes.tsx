@@ -6,4 +6,10 @@ export let routes = {
     notices: "/tab/Notices",
     profile: "/tab/Profile",
   },
+  menu: {
+    accountSetting: "/AccountSetting",
+    noticeSetting: "/NoticeSetUp",
+    passwordChange: "/PasswordChange",
+    invoice: "/Invoice",
+  },
 };
