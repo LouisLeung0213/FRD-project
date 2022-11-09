@@ -35,7 +35,7 @@ import Login from "../pages/Login/Login";
 import NotiSetUp from "../pages/NoticeSetUp/NoticeSetUp";
 import PasswordChange from "../pages/PasswordChange/PasswordChange";
 import SignUp from "../pages/SignUp/SignUp";
-import UpdateProfile from "../pages/updateProfile/UpdateProfile";
+import UpdateProfile from "../pages/UpdateProfile/UpdateProfile";
 import NoticeSetUp from "../pages/NoticeSetUp/NoticeSetUp";
 
 const Menu: React.FC = () => {

@@ -24,7 +24,7 @@ import Noti from "./Notices";
 import MainPage from "./MainPage";
 import Login from "../Login/Login";
 import SignUp from "../SignUp/SignUp";
-import UpdateProfile from "../updateProfile/UpdateProfile";
+import UpdateProfile from "../UpdateProfile/UpdateProfile";
 import Invoice from "../Invoice/Invoice";
 import NotiSetUp from "../NoticeSetUp/NoticeSetUp";
 import PasswordChange from "../PasswordChange/PasswordChange";
