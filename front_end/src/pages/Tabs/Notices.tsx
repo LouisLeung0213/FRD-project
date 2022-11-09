@@ -6,9 +6,9 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import ExploreContainer from "../../components/ExploreContainer";
-import "./Noti.css";
+import "./Notices.css";
 
-const Noti: React.FC = () => {
+const Notices: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
@@ -28,4 +28,4 @@ const Noti: React.FC = () => {
   );
 };
 
-export default Noti;
+export default Notices;

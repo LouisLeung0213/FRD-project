@@ -4,15 +4,13 @@ import {
   IonHeader,
   IonMenuButton,
   IonPage,
-  IonRouterOutlet,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { Redirect, Route, useParams } from "react-router";
-import SignUp from "./signUp/SignUp";
+import { useParams } from "react-router";
+
 import "./Page.css";
 import MainTabs from "./Tabs/MainTabs";
-import Login from "./login/Login";
 
 const Page: React.FC = () => {
   const { name } = useParams<{ name: string }>();

@@ -1,7 +1,21 @@
-import React from "react";
+import {
+  IonButton,
+  IonCheckbox,
+  IonContent,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonPage,
+} from "@ionic/react";
 
-function invoice() {
-  return <div>invoice</div>;
-}
+const Invoice: React.FC = () => {
+  return (
+    <IonPage>
+      <IonContent fullscreen>
+        <IonItem>TODO</IonItem>
+      </IonContent>
+    </IonPage>
+  );
+};
 
-export default invoice;
+export default Invoice;
