@@ -16,23 +16,14 @@ import {
 
 import { Route, useLocation } from "react-router-dom";
 import {
-  bookmarkOutline,
   lockOpenOutline,
-  lockOpenSharp,
   paperPlaneOutline,
-  paperPlaneSharp,
-  peopleCircleOutline,
   personOutline,
-  personSharp,
   receiptOutline,
-  receiptSharp,
-  trashOutline,
-  trashSharp,
 } from "ionicons/icons";
 import "./Menu.css";
 import Invoice from "../pages/Invoice/Invoice";
 import Login from "../pages/Login/Login";
-import NotiSetUp from "../pages/NoticeSetUp/NoticeSetUp";
 import PasswordChange from "../pages/PasswordChange/PasswordChange";
 import SignUp from "../pages/SignUp/SignUp";
 
