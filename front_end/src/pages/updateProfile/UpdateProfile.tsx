@@ -1,4 +1,5 @@
 import {
+  IonBackButton,
   IonButton,
   IonButtons,
   IonContent,
@@ -17,25 +18,14 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import {
-  personOutline,
-  paperPlaneOutline,
-  lockOpenOutline,
-  receiptOutline,
-} from "ionicons/icons";
-import { Route } from "react-router";
-import Menu from "../../components/Menu";
+
 // import ExploreContainer from "../../components/ExploreContainer";
 // import ProfileContainer from "../../components/ProfileContainer";
 import icon from "../../image/usericon.png";
-import Invoice from "../Invoice/Invoice";
-import Login from "../Login/Login";
-import NotiSetUp from "../NoticeSetUp/NoticeSetUp";
-import PasswordChange from "../PasswordChange/PasswordChange";
-import SignUp from "../SignUp/SignUp";
+
 // import "./Profile.css";
 
-const updateProfile: React.FC = () => {
+const UpdateProfile: React.FC = () => {
   async function handleSubmit() {
     const res = await fetch("/UpdateUserInfo");
   }
@@ -46,7 +36,7 @@ const updateProfile: React.FC = () => {
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">
-              <IonMenuButton></IonMenuButton>
+              <IonBackButton></IonBackButton>
             </IonButtons>
             <IonTitle>設定帳號</IonTitle>
           </IonToolbar>
@@ -83,4 +73,4 @@ const updateProfile: React.FC = () => {
   );
 };
 
-export default updateProfile;
+export default UpdateProfile;

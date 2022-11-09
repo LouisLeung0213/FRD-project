@@ -45,12 +45,16 @@ import {
 } from "ionicons/icons";
 import Hot from "./pages/Tabs/Hot";
 import MainPage from "./pages/Tabs/MainPage";
-import Noti from "./pages/Tabs/Notices";
+
 import Profile from "./pages/Tabs/Profile";
 import Trade from "./pages/Tabs/Trade";
 import { routes } from "../src/routes";
 import Notices from "./pages/Tabs/Notices";
 import { MenuPageWrapper } from "./pages/MenuPageWrapper";
+import UpdateProfile from "./pages/updateProfile/UpdateProfile";
+import NoticeSetUp from "./pages/NoticeSetUp/NoticeSetUp";
+import Invoice from "./pages/Invoice/Invoice";
+import PasswordChange from "./pages/PasswordChange/PasswordChange";
 setupIonicReact();
 
 const App: React.FC = () => {
@@ -62,19 +66,24 @@ const App: React.FC = () => {
             <Redirect to={routes.tab.mainPage} />
           </Route>
           <Route
-            path="/AccountSetting"
-            render={() => (
-              <MenuPageWrapper
-                title="todo title"
-                id="AccountSettingPage"
-                content={
-                  <IonContent>
-                    <h1>todo</h1>
-                  </IonContent>
-                }
-              />
-            )}
+            path={routes.menu.accountSetting}
+            render={() => <UpdateProfile />}
           ></Route>
+          <Route
+            path={routes.menu.noticeSetting}
+            exact={true}
+            render={() => <NoticeSetUp />}
+          />
+          <Route
+            path={routes.menu.passwordChange}
+            exact={true}
+            render={() => <PasswordChange />}
+          />
+          <Route
+            path={routes.menu.invoice}
+            exact={true}
+            render={() => <Invoice />}
+          />
           <Route path="/tab">
             <IonTabs>
               <IonRouterOutlet>
