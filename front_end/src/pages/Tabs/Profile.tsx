@@ -36,6 +36,7 @@ import {
   receiptSharp,
   trashOutline,
   trashSharp,
+  logInOutline,
 } from "ionicons/icons";
 // import ExploreContainer from "../../components/ExploreContainer";
 
@@ -76,7 +77,7 @@ const Profile: React.FC = () => {
             </IonItem>
 
             <IonItem routerLink="/Login">
-              <IonIcon icon={receiptOutline} slot="start" />
+              <IonIcon icon={logInOutline} slot="start" />
               <IonLabel>登入</IonLabel>
             </IonItem>
           </IonList>

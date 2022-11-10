@@ -1,6 +1,12 @@
 {
-  "appId": "io.ionic.starter",
+  "appId": "scottTesting.firebaseDemo1",
   "appName": "front_end",
   "webDir": "build",
-  "bundledWebRuntime": false
+  "bundledWebRuntime": false,
+
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    }
+  }
 }

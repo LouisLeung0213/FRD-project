@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   IonApp,
   IonIcon,
@@ -11,6 +11,7 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route, Switch } from "react-router-dom";
+import { PushNotifications } from "@capacitor/push-notifications";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -54,6 +55,14 @@ import Login from "./pages/Login/Login";
 setupIonicReact();
 
 const App: React.FC = () => {
+  useEffect(() => {
+    const addListeners = async () => {
+      await PushNotifications.addListener("registration", (token) => {
+        console.log("Registration token: ", token.value);
+      });
+    };
+    addListeners();
+  }, []);
   return (
     <IonApp>
       <IonReactRouter>
