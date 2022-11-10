@@ -1,0 +1,8 @@
+.invoiceContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.invoiceContainer > * {
+  margin-bottom: 1rem;
+}

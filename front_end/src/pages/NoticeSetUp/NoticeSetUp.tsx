@@ -25,7 +25,10 @@ const NoticeSetUp: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonItem>TODO</IonItem>
+        <IonItem>交易通知</IonItem>
+        <IonItem>新貨通知</IonItem>
+        <IonItem>社區通知</IonItem>
+        <IonItem>APP通知</IonItem>
       </IonContent>
     </IonPage>
   );
