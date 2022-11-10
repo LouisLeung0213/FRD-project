@@ -1,11 +1,16 @@
 import {
+  IonBackButton,
   IonButton,
+  IonButtons,
   IonCheckbox,
   IonContent,
+  IonHeader,
   IonInput,
   IonItem,
   IonLabel,
   IonPage,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/react";
 
 // import "./Login.css";
@@ -13,6 +18,14 @@ import {
 const Login: React.FC = () => {
   return (
     <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton></IonBackButton>
+          </IonButtons>
+          <IonTitle>登入</IonTitle>
+        </IonToolbar>
+      </IonHeader>
       <IonContent fullscreen>
         <form className="ion-padding">
           <IonItem>

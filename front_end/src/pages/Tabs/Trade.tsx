@@ -1,20 +1,29 @@
 import {
-  IonButton,
   IonContent,
   IonHeader,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonList,
   IonPage,
   IonTitle,
   IonToolbar,
+  IonFab,
+  IonFabButton,
+  IonIcon,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonImg,
+  IonActionSheet,
+  IonButton,
 } from "@ionic/react";
-// import ExploreContainer from "../../components/ExploreContainer";
+import { defineCustomElements } from "@ionic/pwa-elements/loader";
+import { camera, trash, close } from "ionicons/icons";
+import { images, square, triangle } from "ionicons/icons";
+import { usePhotoGallery } from "../../hooks/usePhotoGallery";
 
 // import "./MainPage.css";
 
 const Trade: React.FC = () => {
+  const { takePhoto } = usePhotoGallery();
+  defineCustomElements(window);
   return (
     <IonPage>
       <IonHeader>
@@ -24,7 +33,11 @@ const Trade: React.FC = () => {
       </IonHeader>
 
       <IonContent fullscreen>
-        <IonButton>選取相片</IonButton>
+        <IonFab vertical="bottom" horizontal="center" slot="fixed">
+          <IonFabButton onClick={() => takePhoto()}>
+            <IonIcon icon={camera}></IonIcon>
+          </IonFabButton>
+        </IonFab>
       </IonContent>
     </IonPage>
   );

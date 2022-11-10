@@ -50,6 +50,7 @@ import UpdateProfile from "./pages/UpdateProfile/UpdateProfile";
 import NoticeSetUp from "./pages/NoticeSetUp/NoticeSetUp";
 import Invoice from "./pages/Invoice/Invoice";
 import PasswordChange from "./pages/PasswordChange/PasswordChange";
+import Login from "./pages/Login/Login";
 setupIonicReact();
 
 const App: React.FC = () => {
@@ -79,6 +80,12 @@ const App: React.FC = () => {
             exact={true}
             render={() => <Invoice />}
           />
+          <Route
+            path={routes.menu.login}
+            exact={true}
+            render={() => <Login />}
+          />
+
           <Route path="/tab">
             <IonTabs>
               <IonRouterOutlet>
