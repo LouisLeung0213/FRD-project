@@ -58,11 +58,14 @@ export function usePhotoGallery() {
     } else {
       base64Data = await base64FromPath(photo.webPath!);
     }
+
     const savedFile = await Filesystem.writeFile({
       path: fileName,
       data: base64Data,
-      directory: Directory.Data,
+      directory: Directory.Documents,
     });
+
+    //alert(JSON.stringify(savedFile));
 
     if (isPlatform("hybrid")) {
       // Display the new image by rewriting the 'file://' path to HTTP
