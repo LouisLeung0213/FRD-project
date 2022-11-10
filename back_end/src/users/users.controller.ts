@@ -24,9 +24,9 @@ export class UsersController {
   create(@Body() createUserDto: CreateUserDto) {
     try {
       return this.usersService.create(createUserDto);
+      
     } catch (error) {
-      console.log(error);
-      return String(error);
+      return error
     }
   }
 

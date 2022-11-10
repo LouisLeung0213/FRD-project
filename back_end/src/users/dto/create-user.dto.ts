@@ -7,7 +7,7 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  password_hash: string;
+  password: string;
 
   @IsString()
   @IsNotEmpty()
@@ -22,10 +22,10 @@ export class CreateUserDto {
   @IsNotEmpty()
   email: string;
 
-  @IsString()
-  point: string;
+  // @IsString()
+  // point: string;
 
-  @IsBoolean()
-  @IsNotEmpty()
-  is_admin: boolean;
+  // @IsBoolean()
+  // @IsNotEmpty()
+  // is_admin: boolean;
 }
