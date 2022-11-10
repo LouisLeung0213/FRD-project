@@ -1,43 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { HTTPError } from 'error';
-import { hashPassword } from 'hash';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectKnex, Knex } from 'nestjs-knex';
 import * as bcrypt from 'bcrypt';
+import passport from 'passport';
 
 @Injectable()
 export class UsersService {
   //inject knex from nestjs-Knex
   constructor(@InjectKnex() private readonly knex: Knex) {}
   async create(createUserDto: CreateUserDto) {
-    let password_hash = await hashPassword(createUserDto.password_hash);
     let checkUser = await this.knex
-      .select('username')
-      .from('users')
-      .where('username', createUserDto.username);
-    if (checkUser[0]) {
-      throw new HTTPError(401, 'username is taken');
+    .select('username')
+    .from('users')
+    .where('username', createUserDto.username);
+    if (checkUser.length > 0) {
+      throw new HttpException('This username is already used',401);
+    } else {
+      try {
+        await this.knex('users')
+          .insert({
+            username: createUserDto.username,
+            password_hash: await bcrypt.hash(createUserDto.password, 10),
+            email: createUserDto.email,
+            nickname: createUserDto.nickname,
+            phone: createUserDto.phone,
+            // is_admin: createUserDto.is_admin,
+          })
+          .returning('id');
+      } catch (error) {
+        throw new HttpException('Register unsuccessfully',500)
+      }
+  
+      return 'This action adds a new user';
     }
 
-    let result = await this.knex('users')
-      .insert({
-        username: createUserDto.username,
-        password_hash: password_hash,
-        email: createUserDto.email,
-        nickname: createUserDto.nickname,
-        phone: createUserDto.phone,
-        is_admin: createUserDto.is_admin,
-      })
-      .returning('id');
-
-    let row = result[0].id;
-    console.log(row);
-    if (!row) {
-      throw new HTTPError(401, 'Invalid input');
-    }
-
-    return 'This action adds a new user';
   }
 
   findAll() {
@@ -45,11 +43,25 @@ export class UsersService {
   }
 
   async findOne(username: string) {
-    return {
-      id: 1,
-      username: username,
-      password: await bcrypt.hash('123456', 10),
-    };;
+    try {
+      let result = await this.knex
+      .select("id", "username", "password_hash")
+      .from("users")
+      .where("username", username)
+      
+      if (result.length > 0){
+        let user = result[0]
+        return {
+          id: user.id,
+          username: user.username,
+          password: user.password_hash
+        }
+      } else {
+        throw new HTTPError(401, 'Wrong username');
+      }
+    } catch (error) {
+      throw new Error(error)
+    }
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
