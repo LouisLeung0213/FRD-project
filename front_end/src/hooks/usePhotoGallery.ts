@@ -96,6 +96,7 @@ export function usePhotoGallery() {
 
   return {
     photos,
+    setPhotos,
     takePhoto,
   };
 }

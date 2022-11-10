@@ -23,7 +23,8 @@ import { useState } from "react";
 // import "./MainPage.css";
 
 const Trade: React.FC = () => {
-  const { photos, takePhoto } = usePhotoGallery();
+  const { photos, setPhotos, takePhoto } = usePhotoGallery();
+  // const [photoImage, setPhotoImage] = useState(photos);
 
   defineCustomElements(window);
   return (
@@ -38,8 +39,20 @@ const Trade: React.FC = () => {
         <IonGrid>
           <IonRow>
             {photos.map((photo, index) => (
-              <IonCol size="2" key={index}>
-                <IonImg src={photo.webviewPath} />
+              <IonCol size="6" key={index}>
+                <IonImg
+                  src={photo.webviewPath}
+                  onClick={() => {
+                    console.log("123");
+                    console.log(photos);
+                    let newPhotoArr = [
+                      ...photos.filter(
+                        (photo) => photos.indexOf(photo) != index
+                      ),
+                    ];
+                    setPhotos(newPhotoArr);
+                  }}
+                />
               </IonCol>
             ))}
           </IonRow>
