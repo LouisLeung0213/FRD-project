@@ -1,4 +1,5 @@
 import {
+  IonBackButton,
   IonButton,
   IonButtons,
   IonCheckbox,
@@ -22,6 +23,14 @@ const Login: React.FC = () => {
 
   return (
     <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton></IonBackButton>
+          </IonButtons>
+          <IonTitle>登入</IonTitle>
+        </IonToolbar>
+      </IonHeader>
       <IonContent fullscreen>
         <form className="ion-padding">
           <IonItem>

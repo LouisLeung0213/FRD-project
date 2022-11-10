@@ -74,6 +74,11 @@ const Profile: React.FC = () => {
               <IonIcon icon={receiptOutline} slot="start" />
               <IonLabel>電子收據</IonLabel>
             </IonItem>
+
+            <IonItem routerLink="/Login">
+              <IonIcon icon={receiptOutline} slot="start" />
+              <IonLabel>登入</IonLabel>
+            </IonItem>
           </IonList>
         </IonContent>
       </IonMenu>

@@ -11,5 +11,7 @@ export let routes = {
     noticeSetting: "/NoticeSetUp",
     passwordChange: "/PasswordChange",
     invoice: "/Invoice",
+    login: "/Login",
+    signUp: "/SignUp",
   },
 };
