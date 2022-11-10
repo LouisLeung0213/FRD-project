@@ -8,14 +8,19 @@ import {
   IonInput,
   IonItem,
   IonLabel,
+  IonModal,
   IonPage,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+import { useState } from "react";
+import SignUp from "../SignUp/SignUp";
 
 // import "./Login.css";
 
 const Login: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <IonPage>
       <IonHeader>
@@ -44,6 +49,22 @@ const Login: React.FC = () => {
             登入
           </IonButton>
         </form>
+        <IonContent className="ion-padding">
+          <IonButton expand="block" onClick={() => setIsOpen(true)}>
+            註冊
+          </IonButton>
+          <IonModal isOpen={isOpen}>
+            <IonHeader>
+              <IonToolbar>
+                <IonTitle>註冊</IonTitle>
+                <IonButtons slot="end">
+                  <IonButton onClick={() => setIsOpen(false)}>關閉</IonButton>
+                </IonButtons>
+              </IonToolbar>
+            </IonHeader>
+            <SignUp />
+          </IonModal>
+        </IonContent>
       </IonContent>
     </IonPage>
   );
