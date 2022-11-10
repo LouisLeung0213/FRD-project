@@ -37,6 +37,7 @@ import {
   heartCircleOutline,
   notificationsOutline,
   personCircleOutline,
+  options,
 } from "ionicons/icons";
 import Hot from "./pages/Tabs/Hot";
 import MainPage from "./pages/Tabs/MainPage";
