@@ -17,12 +17,14 @@ import {
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
 import { camera, trash, close } from "ionicons/icons";
 import { images, square, triangle } from "ionicons/icons";
-import { usePhotoGallery } from "../../hooks/usePhotoGallery";
+import { usePhotoGallery, UserPhoto } from "../../hooks/usePhotoGallery";
+import { useState } from "react";
 
 // import "./MainPage.css";
 
 const Trade: React.FC = () => {
-  const { takePhoto } = usePhotoGallery();
+  const { photos, takePhoto } = usePhotoGallery();
+
   defineCustomElements(window);
   return (
     <IonPage>
@@ -33,6 +35,16 @@ const Trade: React.FC = () => {
       </IonHeader>
 
       <IonContent fullscreen>
+        <IonGrid>
+          <IonRow>
+            {photos.map((photo, index) => (
+              <IonCol size="2" key={index}>
+                <IonImg src={photo.webviewPath} />
+              </IonCol>
+            ))}
+          </IonRow>
+        </IonGrid>
+
         <IonFab vertical="bottom" horizontal="center" slot="fixed">
           <IonFabButton onClick={() => takePhoto()}>
             <IonIcon icon={camera}></IonIcon>
