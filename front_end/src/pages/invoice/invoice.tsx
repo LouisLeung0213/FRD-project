@@ -14,7 +14,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import "./invoice.css";
+import "./Invoice.css";
 
 const Invoice: React.FC = () => {
   return (
