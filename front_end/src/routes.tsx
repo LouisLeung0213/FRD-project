@@ -5,13 +5,13 @@ export let routes = {
     trade: "/tab/Trade",
     notices: "/tab/Notices",
     profile: "/tab/Profile",
+    login: "/tab/Login",
   },
   menu: {
     accountSetting: "/AccountSetting",
     noticeSetting: "/NoticeSetUp",
     passwordChange: "/PasswordChange",
     invoice: "/Invoice",
-    login: "/Login",
     signUp: "/SignUp",
   },
 };

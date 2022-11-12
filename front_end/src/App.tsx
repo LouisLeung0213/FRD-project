@@ -52,6 +52,7 @@ import NoticeSetUp from "./pages/NoticeSetUp/NoticeSetUp";
 import Invoice from "./pages/Invoice/Invoice";
 import PasswordChange from "./pages/PasswordChange/PasswordChange";
 import Login from "./pages/Login/Login";
+import { useSelector } from "react-redux";
 setupIonicReact();
 
 const App: React.FC = () => {
@@ -63,6 +64,14 @@ const App: React.FC = () => {
     };
     addListeners();
   }, []);
+
+  let jwtKey = useSelector((state: any) => state.jwtKey);
+  let profileHref = "/tab/Profile";
+
+  if (!jwtKey) {
+    profileHref = "/tab/Login";
+  }
+
   return (
     <IonApp>
       <IonReactRouter>
@@ -88,11 +97,6 @@ const App: React.FC = () => {
             path={routes.menu.invoice}
             exact={true}
             render={() => <Invoice />}
-          />
-          <Route
-            path={routes.menu.login}
-            exact={true}
-            render={() => <Login />}
           />
 
           <Route path="/tab">
@@ -123,7 +127,13 @@ const App: React.FC = () => {
                   exact={true}
                   render={() => <Profile />}
                 />
+                <Route
+                  path={routes.tab.login}
+                  exact={true}
+                  render={() => <Login />}
+                />
               </IonRouterOutlet>
+              
               <IonTabBar slot="bottom">
                 <IonTabButton tab="MainPage" href="/tab/MainPage">
                   <IonIcon icon={homeOutline} />
@@ -141,7 +151,7 @@ const App: React.FC = () => {
                   <IonIcon icon={notificationsOutline} />
                   <IonLabel>通知</IonLabel>
                 </IonTabButton>
-                <IonTabButton tab="Profile" href="/tab/Profile">
+                <IonTabButton tab="Profile" href={profileHref}>
                   <IonIcon icon={personCircleOutline} />
                   <IonLabel>個人資料</IonLabel>
                 </IonTabButton>
