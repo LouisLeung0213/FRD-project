@@ -23,13 +23,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { routes } from "../../routes";
 import { Route, useLocation } from "react-router";
 import Profile from "../Tabs/Profile";
+import { login } from "../../redux/user/actions";
+import { LoginState } from "../../redux/user/state";
+import { RootState } from "../../store";
 
 const Login: React.FC = () => {
-  const jwtKey = useSelector((state: any) => state.jwtKey);
+  const jwtKey = useSelector((state: RootState) => state.jwtKey);
   const setJwtKey: any = () => {};
   const dispatch = useDispatch();
 
   let [profileHref, setProfileHref] = useState("/tab/Login");
+  let [isLogin, setIsLogin] = useState(false);
 
   const location = useLocation();
 
@@ -62,11 +66,10 @@ const Login: React.FC = () => {
     let result = await res.json();
     if (result.access_token) {
       console.log("result.access_token: ", result.access_token);
-      dispatch({
-        type: "update_jwt",
-        payload: result.access_token,
-      });
-      console.log("jwtKey: ", jwtKey);
+      dispatch(login(result.access_token));
+      setIsLogin(true);
+
+      console.log("jwtKey: ", jwtKey, "login", isLogin);
       // setProfileHref("/tab/Profile");
     } else {
       alert(JSON.stringify("冇人識你喎...", null, 2));
