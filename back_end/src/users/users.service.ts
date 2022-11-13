@@ -57,7 +57,7 @@ export class UsersService {
           password: user.password_hash
         }
       } else {
-        throw new HTTPError(401, 'Wrong username');
+        throw new HttpException('Wrong username or password',401);
       }
     } catch (error) {
       throw new Error(error)

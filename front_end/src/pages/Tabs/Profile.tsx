@@ -44,8 +44,11 @@ import {
 import icon from "../../image/usericon.png";
 
 import { Route, useLocation } from "react-router";
+import { useSelector } from "react-redux";
 
 const Profile: React.FC = () => {
+  let counter = useSelector((state: any) => state.counter)
+
   return (
     <>
       <IonMenu contentId="profile">
@@ -123,6 +126,9 @@ const Profile: React.FC = () => {
             </IonItem>
             <IonItem className="portfolioContainer">
               <IonLabel>My product</IonLabel>
+            </IonItem>
+            <IonItem className="counter">
+              <IonLabel>counter: {counter}</IonLabel>
             </IonItem>
           </IonList>
         </IonContent>
