@@ -11,6 +11,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('email').notNullable();
     table.string('point').notNullable().defaultTo(0);
     table.boolean('is_admin').notNullable().defaultTo(false);
+    table.timestamp('joinedTime').notNullable().defaultTo(knex.fn.now());
   });
 
   await knex.schema.createTableIfNotExists('followers', (table) => {
@@ -29,15 +30,15 @@ export async function up(knex: Knex): Promise<void> {
     table.increments('id');
     table.integer('user_id').notNullable().references('users.id');
     table.string('content').notNullable();
-    table.timestamp('search_time').notNullable();
+    table.timestamp('search_time').notNullable().defaultTo(knex.fn.now());
   });
 
   await knex.schema.createTableIfNotExists('storages', (table) => {
     table.increments('id');
     table.string('code').notNullable();
     table.integer('seller_id').notNullable().references('users.id');
-    table.timestamp('in_time').notNullable();
-    table.timestamp('out_time').notNullable();
+    table.timestamp('in_time').notNullable().defaultTo(knex.fn.now());
+    table.timestamp('out_time');
   });
 
   await knex.schema.createTableIfNotExists('posts', (table) => {
@@ -59,7 +60,7 @@ export async function up(knex: Knex): Promise<void> {
     table.integer('post_id').notNullable().references('posts.id');
     table.integer('buyer_id').notNullable();
     table.integer('bid_price').notNullable();
-    table.timestamp('bid_time').notNullable();
+    table.timestamp('bid_time').notNullable().defaultTo(knex.fn.now());
   });
 
   await knex.schema.createTableIfNotExists('bid_histories', (table) => {
@@ -67,7 +68,7 @@ export async function up(knex: Knex): Promise<void> {
     table.integer('buyer_id').notNullable().references('users.id');
     table.integer('post_id').notNullable().references('posts.id');
     table.integer('final_price').notNullable();
-    table.timestamp('sold_time').notNullable();
+    table.timestamp('sold_time').notNullable().defaultTo(knex.fn.now());
   });
 
   await knex.schema.createTableIfNotExists('tags', (table) => {

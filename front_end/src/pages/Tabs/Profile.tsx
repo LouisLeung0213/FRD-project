@@ -102,7 +102,7 @@ const Profile: React.FC = () => {
             </IonItem>
             <IonList>
               <IonItem>
-                <IonIcon icon={heartOutline} className="chat" />{" "}
+                <IonIcon icon={heartOutline} className="chat" />
               </IonItem>
               <IonItem>
                 <IonIcon icon={chatbubblesOutline} className="chat" />

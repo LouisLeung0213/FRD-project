@@ -12,11 +12,11 @@ export class UsersService {
   constructor(@InjectKnex() private readonly knex: Knex) {}
   async create(createUserDto: CreateUserDto) {
     let checkUser = await this.knex
-    .select('username')
-    .from('users')
-    .where('username', createUserDto.username);
+      .select('username')
+      .from('users')
+      .where('username', createUserDto.username);
     if (checkUser.length > 0) {
-      throw new HttpException('This username is already used',401);
+      throw new HttpException('This username is already used', 401);
     } else {
       try {
         await this.knex('users')
@@ -30,12 +30,11 @@ export class UsersService {
           })
           .returning('id');
       } catch (error) {
-        throw new HttpException('Register unsuccessfully',500)
+        throw new HttpException('Register unsuccessfully', 500);
       }
-  
+
       return 'This action adds a new user';
     }
-
   }
 
   findAll() {
@@ -45,22 +44,22 @@ export class UsersService {
   async findOne(username: string) {
     try {
       let result = await this.knex
-      .select("id", "username", "password_hash")
-      .from("users")
-      .where("username", username)
-      
-      if (result.length > 0){
-        let user = result[0]
+        .select('id', 'username', 'password_hash')
+        .from('users')
+        .where('username', username);
+
+      if (result.length > 0) {
+        let user = result[0];
         return {
           id: user.id,
           username: user.username,
-          password: user.password_hash
-        }
+          password: user.password_hash,
+        };
       } else {
-        throw new HttpException('Wrong username or password',401);
+        throw new HttpException('Wrong username or password', 401);
       }
     } catch (error) {
-      throw new Error(error)
+      throw new Error(error);
     }
   }
 

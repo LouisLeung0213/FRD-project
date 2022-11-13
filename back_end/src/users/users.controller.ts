@@ -12,21 +12,19 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+// import { get } from 'http';
 
 @Controller('users')
 @UsePipes(ValidationPipe)
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Post('signUp')
   create(@Body() createUserDto: CreateUserDto) {
     try {
       return this.usersService.create(createUserDto);
-      
     } catch (error) {
-      return error
+      return error;
     }
   }
 
@@ -37,7 +35,7 @@ export class UsersController {
 
   @Get(':username')
   findOne(@Param('username') username: string) {
-    return {"msg": "Hi"}
+    return { msg: 'bye' };
     // return this.usersService.findOne(username);
   }
 
@@ -50,6 +48,4 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
-
-
 }
