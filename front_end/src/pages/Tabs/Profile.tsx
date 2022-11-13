@@ -2,6 +2,7 @@ import {
   IonButton,
   IonButtons,
   IonContent,
+  IonDatetime,
   IonHeader,
   IonIcon,
   IonImg,
@@ -45,9 +46,29 @@ import icon from "../../image/usericon.png";
 
 import { Route, useLocation } from "react-router";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import moment from "moment";
+// import { userInfo } from "os";
 
 const Profile: React.FC = () => {
-  let counter = useSelector((state: any) => state.counter)
+  let counter = useSelector((state: any) => state.counter);
+
+  useEffect(() => {
+    const getProfile = async () => {
+      let res = await fetch(`http://localhost:1688/profiles/1`);
+      let result = await res.json();
+      console.log(result);
+      setNickname(result.nickname);
+      setUsername(result.username);
+      setJoinTime(moment(result.joinedTime).format("MMMM Do YYYY"));
+    };
+
+    getProfile();
+  }, []);
+
+  let [nickname, setNickname] = useState("");
+  let [username, setUsername] = useState("");
+  let [joinTime, setJoinTime] = useState("");
 
   return (
     <>
@@ -112,13 +133,13 @@ const Profile: React.FC = () => {
               </IonItem>
             </IonList>
             <IonItem className="personalInfo">
-              <IonLabel>Nickname</IonLabel>
+              <IonLabel>{nickname}</IonLabel>
             </IonItem>
             <IonItem>
-              <IonLabel>@username</IonLabel>
+              <IonLabel>@{username}</IonLabel>
             </IonItem>
             <IonItem>
-              <IonLabel>Joined since 2022.02.10</IonLabel>
+              <IonLabel>Joined since {joinTime}</IonLabel>
             </IonItem>
             <IonItem className="search">
               <IonIcon className="searchIcon" icon={searchOutline} />
