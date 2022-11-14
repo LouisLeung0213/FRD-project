@@ -26,11 +26,13 @@ import Profile from "../Tabs/Profile";
 import { login } from "../../redux/user/actions";
 import { LoginState } from "../../redux/user/state";
 import { RootState } from "../../store";
+import { useHistory } from "react-router-dom";
 
 const Login: React.FC = () => {
   const jwtKey = useSelector((state: RootState) => state.jwtKey);
   const setJwtKey: any = () => {};
   const dispatch = useDispatch();
+  const history = useHistory();
 
   let [profileHref, setProfileHref] = useState("/tab/Login");
   let [isLogin, setIsLogin] = useState(false);
@@ -67,7 +69,7 @@ const Login: React.FC = () => {
     if (result.access_token) {
       console.log("result.access_token: ", result.access_token);
       dispatch(login(result.access_token));
-      setIsLogin(true);
+      history.push(`/tab/Profile`);
 
       console.log("jwtKey: ", jwtKey, "login", isLogin);
       // setProfileHref("/tab/Profile");
