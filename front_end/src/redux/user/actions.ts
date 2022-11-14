@@ -1,7 +1,14 @@
 //action creator
 
-export function login(token: string) {
-  return { type: "update_jwt" as const, payload: token };
+type UserInfo = {
+  newJwtKey: string | null,
+  newUsername: string | null,
+  newNickname: string | null,
+  newJoinedTime: string | null
 }
 
-export type LoginAction = ReturnType<typeof login>;
+export function updateJwt(userInfo: UserInfo) {
+  return { type: "update_jwt" as const, payload: userInfo };
+}
+
+export type UpdateJwtAction = ReturnType<typeof updateJwt>;

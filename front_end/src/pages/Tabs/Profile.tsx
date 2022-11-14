@@ -38,6 +38,7 @@ import {
   trashOutline,
   trashSharp,
   logInOutline,
+  logOutOutline,
 } from "ionicons/icons";
 // import ExploreContainer from "../../components/ExploreContainer";
 
@@ -45,30 +46,49 @@ import {
 import icon from "../../image/usericon.png";
 
 import { Route, useLocation } from "react-router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import moment from "moment";
+import { updateJwt } from "../../redux/user/actions";
+import { RootState } from "../../store";
+import React from "react";
 // import { userInfo } from "os";
 
-const Profile: React.FC = () => {
-  let counter = useSelector((state: any) => state.counter);
+const Profile: React.FC<{ user: string | null }> = (props: {
+  user: string | null;
+}) => {
+  console.log("user: ", props.user);
+
+  let jwtKey = useSelector((state: RootState) => state.jwtKey);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getProfile = async () => {
-      let res = await fetch(`http://localhost:1688/profiles/1`);
+      let res = await fetch(`http://localhost:1688/profiles/${props.user}`);
+      // let res = await fetch(`http://localhost:1688/profiles/2`);
       let result = await res.json();
-      console.log(result);
       setNickname(result.nickname);
       setUsername(result.username);
       setJoinTime(moment(result.joinedTime).format("MMMM Do YYYY"));
     };
 
     getProfile();
-  }, []);
+  }, [jwtKey]);
 
   let [nickname, setNickname] = useState("");
   let [username, setUsername] = useState("");
   let [joinTime, setJoinTime] = useState("");
+
+  function destroyUserInfo() {
+    dispatch(
+      updateJwt({
+        newJwtKey: null,
+        newUsername: null,
+        newNickname: null,
+        newJoinedTime: null,
+      })
+    );
+  }
 
   return (
     <>
@@ -100,10 +120,12 @@ const Profile: React.FC = () => {
               <IonLabel>電子收據</IonLabel>
             </IonItem>
 
-            <IonItem routerLink="/Login">
-              <IonIcon icon={logInOutline} slot="start" />
-              <IonLabel>登入</IonLabel>
-            </IonItem>
+            <IonMenuToggle>
+              <IonItem onClick={destroyUserInfo} routerLink="/tab/Login" routerDirection="root">
+                <IonIcon icon={logOutOutline} slot="start" />
+                <IonLabel>登出</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
           </IonList>
         </IonContent>
       </IonMenu>
@@ -148,9 +170,6 @@ const Profile: React.FC = () => {
             <IonItem className="portfolioContainer">
               <IonLabel>My product</IonLabel>
             </IonItem>
-            <IonItem className="counter">
-              <IonLabel>counter: {counter}</IonLabel>
-            </IonItem>
           </IonList>
         </IonContent>
       </IonPage>
@@ -158,4 +177,4 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile;
+export default React.memo(Profile);

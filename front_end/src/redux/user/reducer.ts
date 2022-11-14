@@ -1,14 +1,18 @@
-import { LoginAction } from "./actions";
-import { initialState, LoginState } from "./state";
+import { UpdateJwtAction } from "./actions";
+import { initialState, UpdateJwtState } from "./state";
 
-export const loginReducer = (
-  state: LoginState = initialState,
-  action: LoginAction
-): LoginState => {
+export const updateJwtReducer = (
+  state: UpdateJwtState = initialState,
+  action: UpdateJwtAction
+): UpdateJwtState => {
   if (action.type === "update_jwt") {
-    let newJwtKey = action.payload;
+    let {newJwtKey, newUsername, newNickname, newJoinedTime} = action.payload;
+
     return {
       jwtKey: newJwtKey,
+      username: newUsername,
+      nickname: newNickname,
+      joinedTime: newJoinedTime
     };
   }
   return state;
