@@ -1,0 +1,15 @@
+{
+	"appId": "scottTesting.firebaseDemo1",
+	"appName": "front_end",
+	"webDir": "build",
+	"bundledWebRuntime": false,
+	"plugins": {
+		"PushNotifications": {
+			"presentationOptions": [
+				"badge",
+				"sound",
+				"alert"
+			]
+		}
+	}
+}

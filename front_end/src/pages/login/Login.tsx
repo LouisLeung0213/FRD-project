@@ -19,14 +19,11 @@ import {
 import { SetStateAction, useEffect, useState } from "react";
 import SignUp from "../SignUp/SignUp";
 import { useForm, Controller } from "react-hook-form";
-import { ErrorMessage } from "@hookform/error-message";
-import { stringify } from "querystring";
 import { useDispatch, useSelector } from "react-redux";
 import { routes } from "../../routes";
 import { Route } from "react-router";
 import Profile from "../Tabs/Profile";
 import { updateJwt } from "../../redux/user/actions";
-import { UpdateJwtState } from "../../redux/user/state";
 import { RootState } from "../../store";
 import { useHistory } from "react-router-dom";
 import { useIonFormState } from "react-use-ionic-form";
@@ -43,16 +40,23 @@ const Login: React.FC = () => {
     password: "",
   };
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: initialValues,
-  });
+  const [isUsernameOk, setIsUsernameOk] = useState(true);
+  const [isPasswordOk, setIsPasswordOk] = useState(true);
 
   const onSubmit = async (data: any) => {
+    if (data.username.length == 0) {
+      setIsUsernameOk(false);
+      return;
+    } else {
+      setIsUsernameOk(true);
+    }
+    if (data.password.length == 0) {
+      setIsPasswordOk(false);
+      return;
+    } else {
+      setIsPasswordOk(true);
+    }
+
     let res = await fetch(`http://localhost:1688/auth/login`, {
       method: "POST",
       headers: {
@@ -114,18 +118,22 @@ const Login: React.FC = () => {
         <IonList className="ion-padding">
           {item({
             name: "username",
-            renderLabel: () => (
-              <IonLabel position="floating">帳號:</IonLabel>
+            renderLabel: () => <IonLabel position="floating">帳號:</IonLabel>,
+            renderContent: (props) => (
+              <IonInput type="text" {...props}></IonInput>
             ),
-            renderContent: (props) => <IonInput {...props}></IonInput>,
           })}
+          <div className="ion-text-center">
+            {!isUsernameOk ? (
+              <IonText color="warning">帳號呢？?</IonText>
+            ) : null}
+          </div>
           {item({
             name: "password",
-            renderLabel: () => (
-              <IonLabel position="floating">密碼:</IonLabel>
-            ),
+            renderLabel: () => <IonLabel position="floating">密碼:</IonLabel>,
             renderContent: (props) => (
               <IonInput
+                type="password"
                 onKeyDown={(e) => {
                   if (e.key == "Enter" && state.password.length > 8) {
                     onSubmit(state);
@@ -136,63 +144,21 @@ const Login: React.FC = () => {
             ),
           })}
           <div className="ion-text-center">
-            {state.password.length < 8 && state.password.length >= 1 ? (
-              <IonText color="warning">
-                Password should consist of at least 8 chars
-              </IonText>
+            {!isPasswordOk ? (
+              <IonText color="warning">密碼呢???</IonText>
             ) : null}
           </div>
-          <IonButton className="ion-margin-top" onClick={() => {onSubmit(state)}} expand="block">
+          <IonButton
+            className="ion-margin-top"
+            onClick={() => {
+              onSubmit(state);
+            }}
+            expand="block"
+          >
             登入
           </IonButton>
         </IonList>
-        <div>我是分隔線</div>
 
-        <form className="ion-padding" onSubmit={handleSubmit(onSubmit)}>
-          <IonItem>
-            <IonLabel position="floating">帳號:</IonLabel>
-            <IonInput
-              {...register("username", { required: "填帳號名呀on9" })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="username"
-              render={({ message }) => (
-                <IonTitle color="warning" size="small">
-                  {message}
-                </IonTitle>
-              )}
-            />
-          </IonItem>
-          <IonItem>
-            <IonLabel position="floating">密碼:</IonLabel>
-            <IonInput
-              type="password"
-              onKeyDown={(e) => {
-                if (e.key == "Enter") {
-                  console.log("s");
-                }
-              }}
-              {...register("password", { required: "傻hi密碼呢" })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="password"
-              render={({ message }) => (
-                <IonTitle color="warning" size="small">
-                  {message}
-                </IonTitle>
-              )}
-            />
-          </IonItem>
-          {/* <IonItem lines="none">
-             <IonLabel>Remember me</IonLabel>
-             <IonCheckbox defaultChecked={true} slot="start" />
-           </IonItem> */}
-          <IonButton className="ion-margin-top" type="submit" expand="block">
-            登入
-          </IonButton>
-        </form>
         <IonContent className="ion-padding">
           <IonButton expand="block" onClick={() => setIsOpen(true)}>
             註冊
