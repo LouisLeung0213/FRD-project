@@ -135,7 +135,7 @@ const Login: React.FC = () => {
               <IonInput
                 type="password"
                 onKeyDown={(e) => {
-                  if (e.key == "Enter" && state.password.length > 8) {
+                  if (e.key == "Enter") {
                     onSubmit(state);
                   }
                 }}
@@ -157,12 +157,12 @@ const Login: React.FC = () => {
           >
             登入
           </IonButton>
+          <IonButton className="ion-margin-top" expand="block" onClick={() => setIsOpen(true)}>
+            註冊
+          </IonButton>
         </IonList>
 
         <IonContent className="ion-padding">
-          <IonButton expand="block" onClick={() => setIsOpen(true)}>
-            註冊
-          </IonButton>
           <IonModal isOpen={isOpen}>
             <IonHeader>
               <IonToolbar>
@@ -172,7 +172,7 @@ const Login: React.FC = () => {
                 </IonButtons>
               </IonToolbar>
             </IonHeader>
-            <SignUp />
+            <SignUp onSignUp={()=>setIsOpen(false)}/>
           </IonModal>
         </IonContent>
       </IonContent>
