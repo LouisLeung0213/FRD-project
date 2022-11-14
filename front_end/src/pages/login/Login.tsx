@@ -8,30 +8,31 @@ import {
   IonInput,
   IonItem,
   IonLabel,
+  IonList,
   IonModal,
   IonPage,
   IonRouterOutlet,
+  IonText,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
 import { SetStateAction, useEffect, useState } from "react";
 import SignUp from "../SignUp/SignUp";
 import { useForm, Controller } from "react-hook-form";
-import { ErrorMessage } from "@hookform/error-message";
-import { stringify } from "querystring";
 import { useDispatch, useSelector } from "react-redux";
 import { routes } from "../../routes";
-import { Route, useLocation } from "react-router";
+import { Route } from "react-router";
 import Profile from "../Tabs/Profile";
+import { updateJwt } from "../../redux/user/actions";
+import { RootState } from "../../store";
+import { useHistory } from "react-router-dom";
+import { useIonFormState } from "react-use-ionic-form";
 
 const Login: React.FC = () => {
-  const jwtKey = useSelector((state: any) => state.jwtKey);
-  const setJwtKey: any = () => {};
+  const jwtKey = useSelector((state: RootState) => state.jwtKey);
+  const nickname = useSelector((state: RootState) => state.nickname);
   const dispatch = useDispatch();
-
-  let [profileHref, setProfileHref] = useState("/tab/Login");
-
-  const location = useLocation();
+  const history = useHistory();
 
   const [isOpen, setIsOpen] = useState(false);
   let initialValues = {
@@ -39,16 +40,23 @@ const Login: React.FC = () => {
     password: "",
   };
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: initialValues,
-  });
+  const [isUsernameOk, setIsUsernameOk] = useState(true);
+  const [isPasswordOk, setIsPasswordOk] = useState(true);
 
   const onSubmit = async (data: any) => {
+    if (data.username.length == 0) {
+      setIsUsernameOk(false);
+      return;
+    } else {
+      setIsUsernameOk(true);
+    }
+    if (data.password.length == 0) {
+      setIsPasswordOk(false);
+      return;
+    } else {
+      setIsPasswordOk(true);
+    }
+
     let res = await fetch(`http://localhost:1688/auth/login`, {
       method: "POST",
       headers: {
@@ -60,18 +68,34 @@ const Login: React.FC = () => {
       }),
     });
     let result = await res.json();
-    if (result.access_token) {
-      console.log("result.access_token: ", result.access_token);
-      dispatch({
-        type: "update_jwt",
-        payload: result.access_token,
+    let token = result.access_token;
+    if (token) {
+      let res2 = await fetch(`http://localhost:1688/auth/profile`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
-      console.log("jwtKey: ", jwtKey);
-      // setProfileHref("/tab/Profile");
+      let userInfo = await res2.json();
+
+      dispatch(
+        updateJwt({
+          newJwtKey: token,
+          newUsername: userInfo.username,
+          newNickname: userInfo.nickname,
+          newJoinedTime: userInfo.joinedTime,
+        })
+      );
+      history.push(`/tab/Profile`);
     } else {
       alert(JSON.stringify("冇人識你喎...", null, 2));
     }
   };
+
+  const { state, item } = useIonFormState({
+    username: "",
+    password: "",
+  });
 
   return (
     <IonPage>
@@ -79,7 +103,7 @@ const Login: React.FC = () => {
         <Route
           path={routes.tab.profile}
           exact={true}
-          render={() => <Profile />}
+          render={() => <Profile user={nickname} />}
         />
       </IonRouterOutlet>
       <IonHeader>
@@ -91,51 +115,50 @@ const Login: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <form className="ion-padding" onSubmit={handleSubmit(onSubmit)}>
-          <IonItem>
-            <IonLabel position="floating">帳號:</IonLabel>
-            <IonInput
-              {...register("username", { required: "填帳號名呀on9" })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="username"
-              render={({ message }) => (
-                <IonTitle color="warning" size="small">
-                  {message}
-                </IonTitle>
-              )}
-            />
-          </IonItem>
-          <IonItem>
-            <IonLabel position="floating">密碼:</IonLabel>
-            <IonInput
-              type="password"
-              {...register("password", { required: "傻hi密碼呢" })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="password"
-              render={({ message }) => (
-                <IonTitle color="warning" size="small">
-                  {message}
-                </IonTitle>
-              )}
-            />
-          </IonItem>
-          {/* <IonItem lines="none">
-             <IonLabel>Remember me</IonLabel>
-             <IonCheckbox defaultChecked={true} slot="start" />
-           </IonItem> */}
+        <IonList className="ion-padding">
+          {item({
+            name: "username",
+            renderLabel: () => <IonLabel position="floating">帳號:</IonLabel>,
+            renderContent: (props) => (
+              <IonInput type="text" {...props}></IonInput>
+            ),
+          })}
+          <div className="ion-text-center">
+            {!isUsernameOk ? (
+              <IonText color="warning">帳號呢？?</IonText>
+            ) : null}
+          </div>
+          {item({
+            name: "password",
+            renderLabel: () => <IonLabel position="floating">密碼:</IonLabel>,
+            renderContent: (props) => (
+              <IonInput
+                type="password"
+                onKeyDown={(e) => {
+                  if (e.key == "Enter" && state.password.length > 8) {
+                    onSubmit(state);
+                  }
+                }}
+                {...props}
+              ></IonInput>
+            ),
+          })}
+          <div className="ion-text-center">
+            {!isPasswordOk ? (
+              <IonText color="warning">密碼呢???</IonText>
+            ) : null}
+          </div>
           <IonButton
             className="ion-margin-top"
-            type="submit"
+            onClick={() => {
+              onSubmit(state);
+            }}
             expand="block"
-            routerLink={profileHref}
           >
             登入
           </IonButton>
-        </form>
+        </IonList>
+
         <IonContent className="ion-padding">
           <IonButton expand="block" onClick={() => setIsOpen(true)}>
             註冊

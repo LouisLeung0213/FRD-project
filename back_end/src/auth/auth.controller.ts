@@ -12,7 +12,6 @@ export class AuthController {
   login(@Request() req) {
     try {
       return this.authService.login(req.user);
-      
     } catch (error) {
       console.log(error);
       return error;
@@ -22,6 +21,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async profile(@Request() req) {
-    return req.user;
+    return this.authService.getUserInfo(req.user.username);
   }
 }

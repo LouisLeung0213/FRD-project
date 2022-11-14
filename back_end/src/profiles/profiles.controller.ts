@@ -17,9 +17,9 @@ export class ProfilesController {
   constructor(private readonly profileService: ProfilesService) {}
 
   @Get(':profile')
-  profile(@Param() id: any) {
-    // console.log(id.profile);
-    let userId = id.profile;
-    return this.profileService.getUserInfo(+userId);
+  profile(@Param() username: any) {
+    // console.log("id: ", id);
+    let userId = username.profile;
+    return this.profileService.getUserInfo(userId);
   }
 }

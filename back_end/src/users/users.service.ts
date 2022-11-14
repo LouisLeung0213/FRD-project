@@ -44,7 +44,7 @@ export class UsersService {
   async findOne(username: string) {
     try {
       let result = await this.knex
-        .select('id', 'username', 'password_hash')
+        .select('id', 'username', 'password_hash', 'nickname', 'joinedTime')
         .from('users')
         .where('username', username);
 
@@ -54,6 +54,8 @@ export class UsersService {
           id: user.id,
           username: user.username,
           password: user.password_hash,
+          nickname: user.nickname,
+          joinedTime: user.joinedTime
         };
       } else {
         throw new HttpException('Wrong username or password', 401);

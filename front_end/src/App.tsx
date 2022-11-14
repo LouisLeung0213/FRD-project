@@ -54,6 +54,7 @@ import Invoice from "./pages/Invoice/Invoice";
 import PasswordChange from "./pages/PasswordChange/PasswordChange";
 import Login from "./pages/Login/Login";
 import { useSelector } from "react-redux";
+import { RootState } from "./store";
 setupIonicReact();
 
 const App: React.FC = () => {
@@ -101,12 +102,17 @@ const App: React.FC = () => {
     addListeners();
   }, []);
 
-  let jwtKey = useSelector((state: any) => state.jwtKey);
-  let profileHref = "/tab/Profile";
-
-  if (!jwtKey) {
-    profileHref = "/tab/Login";
+  let profileHref = "/tab/Login";
+  
+  let jwtKey = useSelector((state: RootState) => state.jwtKey);
+  let nickname = useSelector((state: RootState) => state.nickname);
+  if (!nickname){
+    nickname = ""
   }
+  if (jwtKey) {
+    profileHref = `/tab/Profile`;
+  }
+
 
   return (
     <IonApp>
@@ -161,7 +167,7 @@ const App: React.FC = () => {
                 <Route
                   path={routes.tab.profile}
                   exact={true}
-                  render={() => <Profile />}
+                  render={() => <Profile user={nickname}/>}
                 />
                 <Route
                   path={routes.tab.login}
