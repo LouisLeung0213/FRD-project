@@ -1,7 +1,13 @@
-export interface LoginState {
+export interface UpdateJwtState {
   jwtKey: string | null;
+  username: string | null,
+  nickname: string | null,
+  joinedTime: string | null
 }
 
-export const initialState: LoginState = {
+export const initialState: UpdateJwtState = {
   jwtKey: null,
+  username: null,
+  nickname: null,
+  joinedTime: null
 };

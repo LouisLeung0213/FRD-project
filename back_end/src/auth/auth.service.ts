@@ -29,7 +29,7 @@ export class AuthService {
     
       async login(user: any) {
         try {
-          const payload = { username: user.username, id: user.id };
+          const payload = { username: user.username, sub: user.id };
           if (payload.username){
             return {
               access_token: this.jwtService.sign(payload),
@@ -40,5 +40,9 @@ export class AuthService {
         } catch (error) {
           return error
         }
+      }
+
+      async getUserInfo(username: string){
+        return await this.usersService.findOne(username);
       }
 }

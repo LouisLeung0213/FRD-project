@@ -8,9 +8,11 @@ import {
   IonInput,
   IonItem,
   IonLabel,
+  IonList,
   IonModal,
   IonPage,
   IonRouterOutlet,
+  IonText,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -21,23 +23,19 @@ import { ErrorMessage } from "@hookform/error-message";
 import { stringify } from "querystring";
 import { useDispatch, useSelector } from "react-redux";
 import { routes } from "../../routes";
-import { Route, useLocation } from "react-router";
+import { Route } from "react-router";
 import Profile from "../Tabs/Profile";
-import { login } from "../../redux/user/actions";
-import { LoginState } from "../../redux/user/state";
+import { updateJwt } from "../../redux/user/actions";
+import { UpdateJwtState } from "../../redux/user/state";
 import { RootState } from "../../store";
 import { useHistory } from "react-router-dom";
+import { useIonFormState } from "react-use-ionic-form";
 
 const Login: React.FC = () => {
   const jwtKey = useSelector((state: RootState) => state.jwtKey);
-  const setJwtKey: any = () => {};
+  const nickname = useSelector((state: RootState) => state.nickname);
   const dispatch = useDispatch();
   const history = useHistory();
-
-  let [profileHref, setProfileHref] = useState("/tab/Login");
-  let [isLogin, setIsLogin] = useState(false);
-
-  const location = useLocation();
 
   const [isOpen, setIsOpen] = useState(false);
   let initialValues = {
@@ -66,17 +64,34 @@ const Login: React.FC = () => {
       }),
     });
     let result = await res.json();
-    if (result.access_token) {
-      console.log("result.access_token: ", result.access_token);
-      dispatch(login(result.access_token));
-      history.push(`/tab/Profile`);
+    let token = result.access_token;
+    if (token) {
+      let res2 = await fetch(`http://localhost:1688/auth/profile`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      let userInfo = await res2.json();
 
-      console.log("jwtKey: ", jwtKey, "login", isLogin);
-      // setProfileHref("/tab/Profile");
+      dispatch(
+        updateJwt({
+          newJwtKey: token,
+          newUsername: userInfo.username,
+          newNickname: userInfo.nickname,
+          newJoinedTime: userInfo.joinedTime,
+        })
+      );
+      history.push(`/tab/Profile`);
     } else {
       alert(JSON.stringify("冇人識你喎...", null, 2));
     }
   };
+
+  const { state, item } = useIonFormState({
+    username: "",
+    password: "",
+  });
 
   return (
     <IonPage>
@@ -84,7 +99,7 @@ const Login: React.FC = () => {
         <Route
           path={routes.tab.profile}
           exact={true}
-          render={() => <Profile />}
+          render={() => <Profile user={nickname} />}
         />
       </IonRouterOutlet>
       <IonHeader>
@@ -96,6 +111,43 @@ const Login: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
+        <IonList className="ion-padding">
+          {item({
+            name: "username",
+            renderLabel: () => (
+              <IonLabel position="floating">帳號:</IonLabel>
+            ),
+            renderContent: (props) => <IonInput {...props}></IonInput>,
+          })}
+          {item({
+            name: "password",
+            renderLabel: () => (
+              <IonLabel position="floating">密碼:</IonLabel>
+            ),
+            renderContent: (props) => (
+              <IonInput
+                onKeyDown={(e) => {
+                  if (e.key == "Enter" && state.password.length > 8) {
+                    onSubmit(state);
+                  }
+                }}
+                {...props}
+              ></IonInput>
+            ),
+          })}
+          <div className="ion-text-center">
+            {state.password.length < 8 && state.password.length >= 1 ? (
+              <IonText color="warning">
+                Password should consist of at least 8 chars
+              </IonText>
+            ) : null}
+          </div>
+          <IonButton className="ion-margin-top" onClick={() => {onSubmit(state)}} expand="block">
+            登入
+          </IonButton>
+        </IonList>
+        <div>我是分隔線</div>
+
         <form className="ion-padding" onSubmit={handleSubmit(onSubmit)}>
           <IonItem>
             <IonLabel position="floating">帳號:</IonLabel>
@@ -116,6 +168,11 @@ const Login: React.FC = () => {
             <IonLabel position="floating">密碼:</IonLabel>
             <IonInput
               type="password"
+              onKeyDown={(e) => {
+                if (e.key == "Enter") {
+                  console.log("s");
+                }
+              }}
               {...register("password", { required: "傻hi密碼呢" })}
             />
             <ErrorMessage
@@ -132,12 +189,7 @@ const Login: React.FC = () => {
              <IonLabel>Remember me</IonLabel>
              <IonCheckbox defaultChecked={true} slot="start" />
            </IonItem> */}
-          <IonButton
-            className="ion-margin-top"
-            type="submit"
-            expand="block"
-            routerLink={profileHref}
-          >
+          <IonButton className="ion-margin-top" type="submit" expand="block">
             登入
           </IonButton>
         </form>
