@@ -2,6 +2,7 @@ import UIKit
 import Capacitor
 import Firebase
 
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -48,7 +49,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return ApplicationDelegateProxy.shared.application(application, continue: userActivity, restorationHandler: restorationHandler)
     }
 
-    // new Insert for Firebase push notifications
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().apnsToken = deviceToken
         Messaging.messaging().token(completion: { (token, error) in
@@ -59,5 +59,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     })
     }   
-
 }
