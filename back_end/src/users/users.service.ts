@@ -33,7 +33,7 @@ export class UsersService {
         throw new HttpException('Register unsuccessfully', 500);
       }
 
-      return 'This action adds a new user';
+      return {msg: 'This action adds a new user'};
     }
   }
 
