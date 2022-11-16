@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdatePasswordDto, UpdateUserInfoDto } from './dto/update-user.dto';
 // import { get } from 'http';
 
 @Controller('users')
@@ -39,9 +39,22 @@ export class UsersController {
     // return this.usersService.findOne(username);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @Patch('updateUserInfo/:id')
+  updateUserInfo(@Param('id') id: number, @Body() updateUserInfoDto: UpdateUserInfoDto) {
+    try {
+      return this.usersService.updateUserInfo(+id, updateUserInfoDto);
+    } catch (error) {
+      return error;
+    }
+  }
+
+  @Patch('updatePassword/:id')
+  updatePassword(@Param('id') id: number, @Body() updatePasswordDto: UpdatePasswordDto) {
+    try {
+      return this.usersService.updatePassword(+id, updatePasswordDto);
+    } catch (error) {
+      return error;
+    }
   }
 
   @Delete(':id')

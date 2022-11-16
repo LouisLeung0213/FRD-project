@@ -22,10 +22,4 @@ export class CreateUserDto {
   @IsNotEmpty()
   email: string;
 
-  // @IsString()
-  // point: string;
-
-  // @IsBoolean()
-  // @IsNotEmpty()
-  // is_admin: boolean;
 }

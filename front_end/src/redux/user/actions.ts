@@ -3,7 +3,10 @@
 type UserInfo = {
   newJwtKey: string | null,
   newUsername: string | null,
+  newPassword: string | null,
   newNickname: string | null,
+  newPhone: string | null,
+  newEmail: string | null,
   newJoinedTime: string | null
 }
 
