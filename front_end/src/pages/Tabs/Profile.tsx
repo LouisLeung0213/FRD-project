@@ -57,9 +57,8 @@ import React from "react";
 const Profile: React.FC<{ user: string | null }> = (props: {
   user: string | null;
 }) => {
-  console.log("user: ", props.user);
-
   let jwtKey = useSelector((state: RootState) => state.jwtKey);
+  let currentUsername = useSelector((state: RootState) => state.username);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -84,57 +83,73 @@ const Profile: React.FC<{ user: string | null }> = (props: {
       updateJwt({
         newJwtKey: null,
         newUsername: null,
+        newPassword: null,
         newNickname: null,
+        newPhone: null,
+        newEmail: null,
         newJoinedTime: null,
       })
     );
   }
+  let state = useSelector((state: RootState) => state);
+  function func() {
+    console.log(state);
+    
+  }
 
   return (
     <>
-      <IonMenu contentId="profile">
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>設定</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <IonList>
-            <IonItem routerLink="/AccountSetting">
-              <IonIcon icon={personOutline} slot="start" />
-              <IonLabel>設定個人帳號</IonLabel>
-            </IonItem>
-
-            <IonItem routerLink="/NoticeSetUp">
-              <IonIcon icon={paperPlaneOutline} slot="start" />
-              <IonLabel>通知設定</IonLabel>
-            </IonItem>
-
-            <IonItem routerLink="/PasswordChange">
-              <IonIcon icon={lockOpenOutline} slot="start" />
-              <IonLabel>更改密碼</IonLabel>
-            </IonItem>
-
-            <IonItem routerLink="/Invoice">
-              <IonIcon icon={receiptOutline} slot="start" />
-              <IonLabel>電子收據</IonLabel>
-            </IonItem>
-
-            <IonMenuToggle>
-              <IonItem onClick={destroyUserInfo} routerLink="/tab/Login" routerDirection="root">
-                <IonIcon icon={logOutOutline} slot="start" />
-                <IonLabel>登出</IonLabel>
+        <IonMenu contentId="profile">
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>設定</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            <IonList>
+              <IonItem routerLink="/AccountSetting">
+                <IonIcon icon={personOutline} slot="start" />
+                <IonLabel>設定個人帳號</IonLabel>
               </IonItem>
-            </IonMenuToggle>
-          </IonList>
-        </IonContent>
-      </IonMenu>
+
+              <IonItem routerLink="/NoticeSetUp">
+                <IonIcon icon={paperPlaneOutline} slot="start" />
+                <IonLabel>通知設定</IonLabel>
+              </IonItem>
+
+              <IonItem routerLink="/PasswordChange">
+                <IonIcon icon={lockOpenOutline} slot="start" />
+                <IonLabel>更改密碼</IonLabel>
+              </IonItem>
+
+              <IonItem routerLink="/Invoice">
+                <IonIcon icon={receiptOutline} slot="start" />
+                <IonLabel>電子收據</IonLabel>
+              </IonItem>
+
+              <IonMenuToggle>
+                <IonItem
+                  onClick={destroyUserInfo}
+                  routerLink="/tab/Login"
+                  routerDirection="root"
+                >
+                  <IonIcon icon={logOutOutline} slot="start" />
+                  <IonLabel>登出</IonLabel>
+                </IonItem>
+              </IonMenuToggle>
+            </IonList>
+          </IonContent>
+        </IonMenu>
+      
       <IonPage id="profile">
         <IonHeader>
           <IonToolbar>
-            <IonButtons slot="start">
-              <IonMenuButton></IonMenuButton>
-            </IonButtons>
+            { currentUsername === username ? (
+              <IonButtons slot="start">
+                <IonMenuButton></IonMenuButton>
+              </IonButtons>
+            ): null
+            }
             <IonTitle>個人資料</IonTitle>
           </IonToolbar>
         </IonHeader>
@@ -171,6 +186,7 @@ const Profile: React.FC<{ user: string | null }> = (props: {
               <IonLabel>My product</IonLabel>
             </IonItem>
           </IonList>
+          <IonButton onClick={func}>Show the redux state</IonButton>
         </IonContent>
       </IonPage>
     </>

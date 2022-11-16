@@ -122,7 +122,10 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props:{onSignUp: () => void}
         updateJwt({
           newJwtKey: token,
           newUsername: userInfo.username,
+          newPassword: userInfo.password,
           newNickname: userInfo.nickname,
+          newPhone: userInfo.phone,
+          newEmail: userInfo.email,
           newJoinedTime: userInfo.joinedTime,
         })
       );
