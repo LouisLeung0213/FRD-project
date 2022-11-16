@@ -28,7 +28,6 @@ import { useIonFormState } from "react-use-ionic-form";
 // import ProfileContainer from "../../components/ProfileContainer";
 import icon from "../../image/usericon.png";
 import { updateJwt } from "../../redux/user/actions";
-import { routes } from "../../routes";
 import { RootState } from "../../store";
 
 // import "./Profile.css";
@@ -41,6 +40,7 @@ const UpdateProfile: React.FC = () => {
   const phone = useSelector((state: RootState) => state.phone);
   const email = useSelector((state: RootState) => state.email);
   const joinedTime = useSelector((state: RootState) => state.joinedTime);
+  const isAdmin = useSelector((state: RootState) => state.isAdmin);
   const reduxState = useSelector((state: RootState) => state);
 
   const router = useIonRouter();
@@ -95,6 +95,7 @@ const UpdateProfile: React.FC = () => {
           newPhone: state.phone,
           newEmail: state.email,
           newJoinedTime: joinedTime,
+          newIsAdmin: isAdmin
         })
       );
       console.log("reduxState: ", reduxState);

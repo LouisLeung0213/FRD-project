@@ -6,7 +6,7 @@ export interface UpdateJwtState {
   phone: string | null;
   email: string | null;
   joinedTime: string | null;
-  is_admin: boolean;
+  isAdmin: boolean;
 }
 
 export const initialState: UpdateJwtState = {
@@ -17,5 +17,5 @@ export const initialState: UpdateJwtState = {
   phone: null,
   email: null,
   joinedTime: null,
-  is_admin: false,
+  isAdmin: false,
 };

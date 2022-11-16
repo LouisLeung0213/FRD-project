@@ -25,7 +25,7 @@ export const updateJwtReducer = (
       phone: newPhone,
       email: newEmail,
       joinedTime: newJoinedTime,
-      is_admin: newIsAdmin,
+      isAdmin: newIsAdmin,
     };
   }
   return state;

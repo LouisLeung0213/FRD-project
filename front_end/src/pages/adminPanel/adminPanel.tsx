@@ -35,7 +35,7 @@ const AdminPanel: React.FC = () => {
   }, []);
   console.log("usersInfo:", usersInfo);
 
-  const isAdmin = useSelector((state: RootState) => state.is_admin);
+  const isAdmin = useSelector((state: RootState) => state.isAdmin);
 
   return (
     <div>

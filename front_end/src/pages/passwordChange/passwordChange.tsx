@@ -17,9 +17,8 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useIonFormState } from "react-use-ionic-form";
-import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
 
 const PasswordChange: React.FC = () => {

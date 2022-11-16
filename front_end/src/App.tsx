@@ -110,7 +110,7 @@ const App: React.FC = () => {
     addListeners();
 
     function listenToDeepLinkOpen() {
-      FirebaseDynamicLinks.addListener("deepLinkOpen", (data) => {
+      FirebaseDynamicLinks.addListener("deepLinkOpen", (data: any) => {
         console.log("deeplink:", data);
       });
     }
@@ -129,7 +129,7 @@ const App: React.FC = () => {
     profileHref = `/tab/Profile`;
   }
 
-  const isAdmin = useSelector((state: RootState) => state.is_admin);
+  const isAdmin = useSelector((state: RootState) => state.isAdmin);
 
   return (
     <IonApp>
