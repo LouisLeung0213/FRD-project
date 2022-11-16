@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IonApp,
+  IonBadge,
   IonIcon,
   IonLabel,
   IonRouterOutlet,
@@ -58,7 +59,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "./store";
 import AdminPanel from "./pages/AdminPanel/AdminPanel";
 /* DeepLink Setup */
-import AppUrlListener from "./pages/AppUrlListener";
+// import AppUrlListener from "./pages/AppUrlListener";
+import { FirebaseDynamicLinks } from "@pantrist/capacitor-firebase-dynamic-links";
+
 import PickPhoto from "./PickPhoto/PickPhoto";
 setupIonicReact();
 
@@ -105,6 +108,14 @@ const App: React.FC = () => {
       );
     };
     addListeners();
+
+    function listenToDeepLinkOpen() {
+      FirebaseDynamicLinks.addListener("deepLinkOpen", (data) => {
+        console.log("deeplink:", data);
+      });
+    }
+
+    listenToDeepLinkOpen();
   }, []);
 
   let profileHref = "/tab/Login";
@@ -118,11 +129,13 @@ const App: React.FC = () => {
     profileHref = `/tab/Profile`;
   }
 
+  const isAdmin = useSelector((state: RootState) => state.is_admin);
+
   return (
     <IonApp>
       <IonReactRouter>
         {/*DeepLink Setup start*/}
-        <AppUrlListener></AppUrlListener>
+        {/* <AppUrlListener></AppUrlListener> */}
         {/*DeepLink Setup end */}
         <IonRouterOutlet>
           <Route exact={true} path="/">
@@ -207,6 +220,7 @@ const App: React.FC = () => {
                   <IonLabel>交易</IonLabel>
                 </IonTabButton>
                 <IonTabButton tab="Notices" href="/tab/Notices">
+                  <IonBadge slot="end">1</IonBadge>
                   <IonIcon icon={notificationsOutline} />
                   <IonLabel>通知</IonLabel>
                 </IonTabButton>
@@ -214,10 +228,13 @@ const App: React.FC = () => {
                   <IonIcon icon={personCircleOutline} />
                   <IonLabel>個人資料</IonLabel>
                 </IonTabButton>
-                <IonTabButton tab="AdminPanel" href={routes.tab.adminPanel}>
-                  <IonIcon icon={planetOutline} />
-                  <IonLabel>管理員</IonLabel>
-                </IonTabButton>
+
+                {!!isAdmin ? (
+                  <IonTabButton tab="AdminPanel" href={routes.tab.adminPanel}>
+                    <IonIcon icon={planetOutline} />
+                    <IonLabel>管理員</IonLabel>
+                  </IonTabButton>
+                ) : null}
               </IonTabBar>
             </IonTabs>
           </Route>

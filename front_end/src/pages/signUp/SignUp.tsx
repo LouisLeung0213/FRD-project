@@ -17,7 +17,9 @@ import { useHistory } from "react-router-dom";
 
 import "./SignUp.css";
 
-const SignUp: React.FC<{ onSignUp: () => void }> = (props:{onSignUp: () => void}) => {
+const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
+  onSignUp: () => void;
+}) => {
   const [isUsernameOk, setIsUsernameOk] = useState(true);
   const [isPasswordOk, setIsPasswordOk] = useState(true);
   const [isRePasswordOk, setIsRePasswordOk] = useState(true);
@@ -81,22 +83,22 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props:{onSignUp: () => void}
           password: state.password,
           nickname: state.nickname,
           phone: state.phone,
-          email: state.email
+          email: state.email,
         }),
       });
-      let result = await res.json()
+      let result = await res.json();
       console.log("result.statusCode: ", result.statusCode);
 
-      if (result.statusCode == 401){
+      if (result.statusCode == 401) {
         alert(JSON.stringify("有人用左呢個帳號名喇, 改過啦", null, 2));
-        return
+        return;
       }
-      if (result.statusCode == 400){
+      if (result.statusCode == 400) {
         alert(JSON.stringify("你個email都唔拿係email嚟既", null, 2));
-        return
+        return;
       }
       alert(JSON.stringify("success!", null, 2));
-      
+
       let res2 = await fetch(`http://localhost:1688/auth/login`, {
         method: "POST",
         headers: {
@@ -109,7 +111,7 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props:{onSignUp: () => void}
       });
       let result2 = await res2.json();
       let token = result2.access_token;
-  
+
       let res3 = await fetch(`http://localhost:1688/auth/profile`, {
         method: "GET",
         headers: {
@@ -127,19 +129,16 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props:{onSignUp: () => void}
           newPhone: userInfo.phone,
           newEmail: userInfo.email,
           newJoinedTime: userInfo.joinedTime,
+          newIsAdmin: userInfo.isAdmin,
         })
       );
 
-      props.onSignUp()
+      props.onSignUp();
       history.push(`/tab/Profile`);
-
-
-
     } catch (error) {
       alert(JSON.stringify("sth wrong", null, 2));
     }
-
-  }
+  };
 
   const { state, item } = useIonFormState({
     username: "",
@@ -236,7 +235,13 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props:{onSignUp: () => void}
               <IonText color="warning">電子郵件呢？?</IonText>
             </div>
           ) : null}
-          <IonButton className="ion-margin-top" onClick={() => {register(state)}} expand="block">
+          <IonButton
+            className="ion-margin-top"
+            onClick={() => {
+              register(state);
+            }}
+            expand="block"
+          >
             註冊
           </IonButton>
         </IonList>

@@ -1,11 +1,12 @@
 export interface UpdateJwtState {
   jwtKey: string | null;
-  username: string | null,
-  password: string | null,
-  nickname: string | null,
-  phone: string | null,
-  email: string | null,
-  joinedTime: string | null
+  username: string | null;
+  password: string | null;
+  nickname: string | null;
+  phone: string | null;
+  email: string | null;
+  joinedTime: string | null;
+  is_admin: boolean;
 }
 
 export const initialState: UpdateJwtState = {
@@ -15,5 +16,6 @@ export const initialState: UpdateJwtState = {
   nickname: null,
   phone: null,
   email: null,
-  joinedTime: null
+  joinedTime: null,
+  is_admin: false,
 };

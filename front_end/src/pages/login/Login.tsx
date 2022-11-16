@@ -87,6 +87,7 @@ const Login: React.FC = () => {
           newPhone: userInfo.phone,
           newEmail: userInfo.email,
           newJoinedTime: userInfo.joinedTime,
+          newIsAdmin: userInfo.isAdmin,
         })
       );
       // history.push(`/tab/Profile`);
