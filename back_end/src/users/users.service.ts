@@ -89,8 +89,7 @@ export class UsersService {
         let userId = await this.knex('users')
           .where('id', id)
           .update(
-            {username: updateUserInfoDto.username,
-            nickname: updateUserInfoDto.nickname,
+            {nickname: updateUserInfoDto.nickname,
             phone: updateUserInfoDto.phone,
             email: updateUserInfoDto.email},
           )
@@ -107,29 +106,33 @@ export class UsersService {
     }
   }
   async updatePassword(id: number, updatePasswordDto: UpdatePasswordDto) {
-    try {
+
       let users = await this.knex
-        .select('id')
+        .select('id','password_hash')
         .from('users')
         .where('id', id);
 
       if (users.length > 0) {
-        let userId = await this.knex('users')
-          .where('id', id)
-          .update(
-            {password_hash: await bcrypt.hash(updatePasswordDto.newPassword, 10)},
-          )
-          .returning('id');
+        if (await bcrypt.compare(updatePasswordDto.oldPassword, users[0].password_hash)){
+          let userId = await this.knex('users')
+            .where('id', id)
+            .update(
+              {password_hash: await bcrypt.hash(updatePasswordDto.newPassword, 10)},
+            )
+            .returning('id');
+  
+          return {
+            userId,
+          };
 
-        return {
-          userId,
-        };
+        } else {
+          throw new HttpException('Wrong old password', 401)
+        }
       } else {
         throw new HttpException('No such user', 401);
       }
-    } catch (error) {
-      throw new Error(error);
-    }
+
+    
   }
 
   remove(id: number) {

@@ -106,9 +106,9 @@ const App: React.FC = () => {
   let profileHref = "/tab/Login";
 
   let jwtKey = useSelector((state: RootState) => state.jwtKey);
-  let nickname = useSelector((state: RootState) => state.nickname);
-  if (!nickname) {
-    nickname = "";
+  let id = useSelector((state: RootState) => state.id);
+  if (!id) {
+    id = null;
   }
   if (jwtKey) {
     profileHref = `/tab/Profile`;
@@ -172,7 +172,7 @@ const App: React.FC = () => {
                 <Route
                   path={routes.tab.profile}
                   exact={true}
-                  render={() => <Profile user={nickname} />}
+                  render={() => <Profile user={id} />}
                 />
                 <Route
                   path={routes.tab.login}

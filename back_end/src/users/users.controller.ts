@@ -40,6 +40,7 @@ export class UsersController {
   }
 
   @Patch('updateUserInfo/:id')
+  @UsePipes(ValidationPipe)
   updateUserInfo(@Param('id') id: number, @Body() updateUserInfoDto: UpdateUserInfoDto) {
     try {
       return this.usersService.updateUserInfo(+id, updateUserInfoDto);

@@ -54,11 +54,12 @@ import { RootState } from "../../store";
 import React from "react";
 // import { userInfo } from "os";
 
-const Profile: React.FC<{ user: string | null }> = (props: {
-  user: string | null;
+const Profile: React.FC<{ user: number | null }> = (props: {
+  user: number | null;
 }) => {
   let jwtKey = useSelector((state: RootState) => state.jwtKey);
   let currentUsername = useSelector((state: RootState) => state.username);
+  let reduxNickname = useSelector((state: RootState) => state.nickname);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -72,7 +73,7 @@ const Profile: React.FC<{ user: string | null }> = (props: {
     };
 
     getProfile();
-  }, [jwtKey]);
+  }, [jwtKey, reduxNickname]);
 
   let [nickname, setNickname] = useState("");
   let [username, setUsername] = useState("");
@@ -82,8 +83,8 @@ const Profile: React.FC<{ user: string | null }> = (props: {
     dispatch(
       updateJwt({
         newJwtKey: null,
+        newId: null,
         newUsername: null,
-        newPassword: null,
         newNickname: null,
         newPhone: null,
         newEmail: null,

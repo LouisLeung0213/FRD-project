@@ -4,11 +4,11 @@ import { InjectKnex, Knex } from 'nestjs-knex';
 @Injectable()
 export class ProfilesService {
   constructor(@InjectKnex() private readonly knex: Knex) {}
-  async getUserInfo(username: string) {
+  async getUserInfo(userId: number) {
     let userInfo = await this.knex
       .select('username', 'nickname', 'phone', 'email', 'joinedTime')
       .from('users')
-      .where('username', username);
+      .where('id', userId);
     return userInfo[0];
   }
 }
