@@ -114,16 +114,12 @@ const Login: React.FC = () => {
         <IonList className="ion-padding">
           {item({
             name: "username",
-            renderLabel: () => (
-              <IonLabel position="floating">帳號:</IonLabel>
-            ),
+            renderLabel: () => <IonLabel position="floating">帳號:</IonLabel>,
             renderContent: (props) => <IonInput {...props}></IonInput>,
           })}
           {item({
             name: "password",
-            renderLabel: () => (
-              <IonLabel position="floating">密碼:</IonLabel>
-            ),
+            renderLabel: () => <IonLabel position="floating">密碼:</IonLabel>,
             renderContent: (props) => (
               <IonInput
                 onKeyDown={(e) => {
@@ -142,7 +138,13 @@ const Login: React.FC = () => {
               </IonText>
             ) : null}
           </div>
-          <IonButton className="ion-margin-top" onClick={() => {onSubmit(state)}} expand="block">
+          <IonButton
+            className="ion-margin-top"
+            onClick={() => {
+              onSubmit(state);
+            }}
+            expand="block"
+          >
             登入
           </IonButton>
         </IonList>

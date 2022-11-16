@@ -14,4 +14,5 @@ export let routes = {
     invoice: "/Invoice",
     signUp: "/SignUp",
   },
+  pickPhoto: "/PickPhoto",
 };

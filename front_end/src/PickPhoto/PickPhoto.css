@@ -1,0 +1,21 @@
+/* .photoList {
+} */
+
+.description {
+  height: 35vh;
+  width: 100vw;
+}
+
+.but {
+  color: #4170bd;
+  font-size: large;
+}
+
+.buttonList {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ion-padding-top {
+  padding-top: 16px;
+}
