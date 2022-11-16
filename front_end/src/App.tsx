@@ -40,6 +40,7 @@ import {
   notificationsOutline,
   personCircleOutline,
   options,
+  planetOutline,
 } from "ionicons/icons";
 import Hot from "./pages/Tabs/Hot";
 import MainPage from "./pages/Tabs/MainPage";
@@ -55,6 +56,9 @@ import PasswordChange from "./pages/PasswordChange/PasswordChange";
 import Login from "./pages/Login/Login";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
+import AdminPanel from "./pages/AdminPanel/AdminPanel";
+/* DeepLink Setup */
+import AppUrlListener from "./pages/AppUrlListener";
 setupIonicReact();
 
 const App: React.FC = () => {
@@ -103,20 +107,21 @@ const App: React.FC = () => {
   }, []);
 
   let profileHref = "/tab/Login";
-  
+
   let jwtKey = useSelector((state: RootState) => state.jwtKey);
   let nickname = useSelector((state: RootState) => state.nickname);
-  if (!nickname){
-    nickname = ""
+  if (!nickname) {
+    nickname = "";
   }
   if (jwtKey) {
     profileHref = `/tab/Profile`;
   }
 
-
   return (
     <IonApp>
       <IonReactRouter>
+        {/*DeepLink Setup */}
+        <AppUrlListener></AppUrlListener>
         <IonRouterOutlet>
           <Route exact={true} path="/">
             <Redirect to={routes.tab.mainPage} />
@@ -167,12 +172,17 @@ const App: React.FC = () => {
                 <Route
                   path={routes.tab.profile}
                   exact={true}
-                  render={() => <Profile user={nickname}/>}
+                  render={() => <Profile user={nickname} />}
                 />
                 <Route
                   path={routes.tab.login}
                   exact={true}
                   render={() => <Login />}
+                />
+                <Route
+                  path={routes.tab.adminPanel}
+                  exact={true}
+                  render={() => <AdminPanel />}
                 />
               </IonRouterOutlet>
 
@@ -196,6 +206,10 @@ const App: React.FC = () => {
                 <IonTabButton tab="Profile" href={profileHref}>
                   <IonIcon icon={personCircleOutline} />
                   <IonLabel>個人資料</IonLabel>
+                </IonTabButton>
+                <IonTabButton tab="AdminPanel" href={routes.tab.adminPanel}>
+                  <IonIcon icon={planetOutline} />
+                  <IonLabel>管理員</IonLabel>
                 </IonTabButton>
               </IonTabBar>
             </IonTabs>

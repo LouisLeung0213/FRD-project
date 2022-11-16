@@ -43,6 +43,8 @@ const Login: React.FC = () => {
   const [isUsernameOk, setIsUsernameOk] = useState(true);
   const [isPasswordOk, setIsPasswordOk] = useState(true);
 
+  // const [isBanned, setIsBanned] = useState(false);
+
   const onSubmit = async (data: any) => {
     if (data.username.length == 0) {
       setIsUsernameOk(false);
@@ -157,7 +159,11 @@ const Login: React.FC = () => {
           >
             登入
           </IonButton>
-          <IonButton className="ion-margin-top" expand="block" onClick={() => setIsOpen(true)}>
+          <IonButton
+            className="ion-margin-top"
+            expand="block"
+            onClick={() => setIsOpen(true)}
+          >
             註冊
           </IonButton>
         </IonList>
@@ -172,7 +178,7 @@ const Login: React.FC = () => {
                 </IonButtons>
               </IonToolbar>
             </IonHeader>
-            <SignUp onSignUp={()=>setIsOpen(false)}/>
+            <SignUp onSignUp={() => setIsOpen(false)} />
           </IonModal>
         </IonContent>
       </IonContent>
