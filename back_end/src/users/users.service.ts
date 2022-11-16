@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { HTTPError } from 'error';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdatePasswordDto, UpdateUserInfoDto } from './dto/update-user.dto';
 import { InjectKnex, Knex } from 'nestjs-knex';
 import * as bcrypt from 'bcrypt';
 import passport from 'passport';
@@ -10,6 +10,7 @@ import passport from 'passport';
 export class UsersService {
   //inject knex from nestjs-Knex
   constructor(@InjectKnex() private readonly knex: Knex) {}
+
   async create(createUserDto: CreateUserDto) {
     let checkUser = await this.knex
       .select('username')
@@ -33,7 +34,7 @@ export class UsersService {
         throw new HttpException('Register unsuccessfully', 500);
       }
 
-      return {msg: 'This action adds a new user'};
+      return { msg: 'This action adds a new user' };
     }
   }
 
@@ -44,18 +45,29 @@ export class UsersService {
   async findOne(username: string) {
     try {
       let result = await this.knex
-        .select('id', 'username', 'password_hash', 'nickname', 'joinedTime')
+        .select(
+          'id',
+          'username',
+          'password_hash',
+          'nickname',
+          'phone',
+          'email',
+          'joinedTime',
+        )
         .from('users')
         .where('username', username);
 
       if (result.length > 0) {
         let user = result[0];
+        // console.log("user: ", user)
         return {
           id: user.id,
           username: user.username,
           password: user.password_hash,
           nickname: user.nickname,
-          joinedTime: user.joinedTime
+          phone: user.phone,
+          email: user.email,
+          joinedTime: user.joinedTime,
         };
       } else {
         throw new HttpException('Wrong username or password', 401);
@@ -65,8 +77,59 @@ export class UsersService {
     }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async updateUserInfo(id: number, updateUserInfoDto: UpdateUserInfoDto) {
+    try {
+      
+      let users = await this.knex
+        .select('id')
+        .from('users')
+        .where('id', id);
+
+      if (users.length > 0) {
+        let userId = await this.knex('users')
+          .where('id', id)
+          .update(
+            {username: updateUserInfoDto.username,
+            nickname: updateUserInfoDto.nickname,
+            phone: updateUserInfoDto.phone,
+            email: updateUserInfoDto.email},
+          )
+          .returning('id');
+
+        return {
+          userId,
+        };
+      } else {
+        throw new HttpException('No such user', 401);
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+  async updatePassword(id: number, updatePasswordDto: UpdatePasswordDto) {
+    try {
+      let users = await this.knex
+        .select('id')
+        .from('users')
+        .where('id', id);
+
+      if (users.length > 0) {
+        let userId = await this.knex('users')
+          .where('id', id)
+          .update(
+            {password_hash: await bcrypt.hash(updatePasswordDto.newPassword, 10)},
+          )
+          .returning('id');
+
+        return {
+          userId,
+        };
+      } else {
+        throw new HttpException('No such user', 401);
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   remove(id: number) {

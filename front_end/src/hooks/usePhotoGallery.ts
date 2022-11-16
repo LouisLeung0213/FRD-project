@@ -10,6 +10,7 @@ import {
 import { Filesystem, Directory } from "@capacitor/filesystem";
 import { Preferences } from "@capacitor/preferences";
 import { Capacitor } from "@capacitor/core";
+import { Route } from "workbox-routing";
 
 export interface UserPhoto {
   filepath: string;
@@ -90,6 +91,7 @@ export function usePhotoGallery() {
       source: CameraSource.Camera,
       quality: 100,
     });
+
     const fileName = new Date().getTime() + ".jpeg";
     const savedFileImage = await savePicture(photo, fileName);
     const newPhotos = [savedFileImage, ...photos];
@@ -103,6 +105,7 @@ export function usePhotoGallery() {
     takePhoto,
   };
 }
+
 export async function base64FromPath(path: string): Promise<string> {
   const response = await fetch(path);
   const blob = await response.blob();

@@ -15,6 +15,7 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
+  useIonRouter,
 } from "@ionic/react";
 import { SetStateAction, useEffect, useState } from "react";
 import SignUp from "../SignUp/SignUp";
@@ -33,12 +34,9 @@ const Login: React.FC = () => {
   const nickname = useSelector((state: RootState) => state.nickname);
   const dispatch = useDispatch();
   const history = useHistory();
+  const router = useIonRouter();
 
   const [isOpen, setIsOpen] = useState(false);
-  let initialValues = {
-    username: "",
-    password: "",
-  };
 
   const [isUsernameOk, setIsUsernameOk] = useState(true);
   const [isPasswordOk, setIsPasswordOk] = useState(true);
@@ -79,16 +77,20 @@ const Login: React.FC = () => {
         },
       });
       let userInfo = await res2.json();
-
+      // console.log("userInfo: ", userInfo)
       dispatch(
         updateJwt({
           newJwtKey: token,
           newUsername: userInfo.username,
+          newPassword: userInfo.password,
           newNickname: userInfo.nickname,
+          newPhone: userInfo.phone,
+          newEmail: userInfo.email,
           newJoinedTime: userInfo.joinedTime,
         })
       );
-      history.push(`/tab/Profile`);
+      // history.push(`/tab/Profile`);
+      router.push(routes.tab.profile, "forward", "replace");
     } else {
       alert(JSON.stringify("冇人識你喎...", null, 2));
     }

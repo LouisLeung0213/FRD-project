@@ -59,6 +59,7 @@ import { RootState } from "./store";
 import AdminPanel from "./pages/AdminPanel/AdminPanel";
 /* DeepLink Setup */
 import AppUrlListener from "./pages/AppUrlListener";
+import PickPhoto from "./PickPhoto/PickPhoto";
 setupIonicReact();
 
 const App: React.FC = () => {
@@ -108,8 +109,11 @@ const App: React.FC = () => {
 
   let profileHref = "/tab/Login";
 
+
   let jwtKey = useSelector((state: RootState) => state.jwtKey);
   let nickname = useSelector((state: RootState) => state.nickname);
+  if (!nickname) {
+    nickname = "";
   if (!nickname) {
     nickname = "";
   }
@@ -144,6 +148,11 @@ const App: React.FC = () => {
             path={routes.menu.invoice}
             exact={true}
             render={() => <Invoice />}
+          />
+          <Route
+            path={routes.pickPhoto}
+            exact={true}
+            render={() => <PickPhoto />}
           />
 
           <Route path="/tab">
@@ -195,7 +204,7 @@ const App: React.FC = () => {
                   <IonIcon icon={heartCircleOutline} />
                   <IonLabel>熱門</IonLabel>
                 </IonTabButton>
-                <IonTabButton tab="Trade" href="/tab/Trade">
+                <IonTabButton tab="PickPhoto" href="/PickPhoto">
                   <IonIcon icon={duplicateOutline} />
                   <IonLabel>交易</IonLabel>
                 </IonTabButton>
