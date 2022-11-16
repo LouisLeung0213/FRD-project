@@ -6,6 +6,7 @@ export let routes = {
     notices: "/tab/Notices",
     profile: "/tab/Profile",
     login: "/tab/Login",
+    adminPanel: "/tab/AdminPanel",
   },
   menu: {
     accountSetting: "/AccountSetting",

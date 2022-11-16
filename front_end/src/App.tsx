@@ -40,6 +40,7 @@ import {
   notificationsOutline,
   personCircleOutline,
   options,
+  planetOutline,
 } from "ionicons/icons";
 import Hot from "./pages/Tabs/Hot";
 import MainPage from "./pages/Tabs/MainPage";
@@ -55,6 +56,9 @@ import PasswordChange from "./pages/PasswordChange/PasswordChange";
 import Login from "./pages/Login/Login";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
+import AdminPanel from "./pages/AdminPanel/AdminPanel";
+/* DeepLink Setup */
+import AppUrlListener from "./pages/AppUrlListener";
 import PickPhoto from "./PickPhoto/PickPhoto";
 setupIonicReact();
 
@@ -117,6 +121,9 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
+        {/*DeepLink Setup start*/}
+        <AppUrlListener></AppUrlListener>
+        {/*DeepLink Setup end */}
         <IonRouterOutlet>
           <Route exact={true} path="/">
             <Redirect to={routes.tab.mainPage} />
@@ -179,6 +186,11 @@ const App: React.FC = () => {
                   exact={true}
                   render={() => <Login />}
                 />
+                <Route
+                  path={routes.tab.adminPanel}
+                  exact={true}
+                  render={() => <AdminPanel />}
+                />
               </IonRouterOutlet>
 
               <IonTabBar slot="bottom">
@@ -201,6 +213,10 @@ const App: React.FC = () => {
                 <IonTabButton tab="Profile" href={profileHref}>
                   <IonIcon icon={personCircleOutline} />
                   <IonLabel>個人資料</IonLabel>
+                </IonTabButton>
+                <IonTabButton tab="AdminPanel" href={routes.tab.adminPanel}>
+                  <IonIcon icon={planetOutline} />
+                  <IonLabel>管理員</IonLabel>
                 </IonTabButton>
               </IonTabBar>
             </IonTabs>

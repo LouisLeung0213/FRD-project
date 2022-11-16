@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appID": "79GACPXQYP.scottTesting.firebaseDemo1",
+        "paths": [
+          "*"
+        ]
+      }
+    ]
+  }
+}
