@@ -53,6 +53,7 @@ export class UsersService {
           'phone',
           'email',
           'joinedTime',
+          'is_admin',
         )
         .from('users')
         .where('username', username);
@@ -68,6 +69,7 @@ export class UsersService {
           phone: user.phone,
           email: user.email,
           joinedTime: user.joinedTime,
+          isAdmin: user.is_admin,
         };
       } else {
         throw new HttpException('Wrong username or password', 401);
@@ -79,21 +81,17 @@ export class UsersService {
 
   async updateUserInfo(id: number, updateUserInfoDto: UpdateUserInfoDto) {
     try {
-      
-      let users = await this.knex
-        .select('id')
-        .from('users')
-        .where('id', id);
+      let users = await this.knex.select('id').from('users').where('id', id);
 
       if (users.length > 0) {
         let userId = await this.knex('users')
           .where('id', id)
-          .update(
-            {username: updateUserInfoDto.username,
+          .update({
+            username: updateUserInfoDto.username,
             nickname: updateUserInfoDto.nickname,
             phone: updateUserInfoDto.phone,
-            email: updateUserInfoDto.email},
-          )
+            email: updateUserInfoDto.email,
+          })
           .returning('id');
 
         return {
@@ -108,17 +106,14 @@ export class UsersService {
   }
   async updatePassword(id: number, updatePasswordDto: UpdatePasswordDto) {
     try {
-      let users = await this.knex
-        .select('id')
-        .from('users')
-        .where('id', id);
+      let users = await this.knex.select('id').from('users').where('id', id);
 
       if (users.length > 0) {
         let userId = await this.knex('users')
           .where('id', id)
-          .update(
-            {password_hash: await bcrypt.hash(updatePasswordDto.newPassword, 10)},
-          )
+          .update({
+            password_hash: await bcrypt.hash(updatePasswordDto.newPassword, 10),
+          })
           .returning('id');
 
         return {
