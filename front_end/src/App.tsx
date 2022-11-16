@@ -109,11 +109,8 @@ const App: React.FC = () => {
 
   let profileHref = "/tab/Login";
 
-
   let jwtKey = useSelector((state: RootState) => state.jwtKey);
   let nickname = useSelector((state: RootState) => state.nickname);
-  if (!nickname) {
-    nickname = "";
   if (!nickname) {
     nickname = "";
   }
@@ -124,8 +121,9 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
-        {/*DeepLink Setup */}
+        {/*DeepLink Setup start*/}
         <AppUrlListener></AppUrlListener>
+        {/*DeepLink Setup end */}
         <IonRouterOutlet>
           <Route exact={true} path="/">
             <Redirect to={routes.tab.mainPage} />
