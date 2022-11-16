@@ -41,6 +41,8 @@ const Login: React.FC = () => {
   const [isUsernameOk, setIsUsernameOk] = useState(true);
   const [isPasswordOk, setIsPasswordOk] = useState(true);
 
+  // const [isBanned, setIsBanned] = useState(false);
+
   const onSubmit = async (data: any) => {
     if (data.username.length == 0) {
       setIsUsernameOk(false);
