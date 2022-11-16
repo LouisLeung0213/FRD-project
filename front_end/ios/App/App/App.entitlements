@@ -6,7 +6,7 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:hotbidhkg.com</string>
+		<string>applinks:app.scotttesting.com</string>
 	</array>
 </dict>
 </plist>

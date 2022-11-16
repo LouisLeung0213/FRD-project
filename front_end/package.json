@@ -24,6 +24,7 @@
     "@ionic/react": "^6.0.0",
     "@ionic/react-router": "^6.0.0",
     "@nestjs/mapped-types": "*",
+    "@pantrist/capacitor-firebase-dynamic-links": "^4.0.0",
     "@reduxjs/toolkit": "^1.9.0",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^13.3.0",
@@ -88,6 +89,7 @@
   },
   "devDependencies": {
     "@capacitor/cli": "^4.4.0",
+    "@types/bcrypt": "^5.0.0",
     "react-scripts": "5.0.1"
   },
   "description": "An Ionic project"

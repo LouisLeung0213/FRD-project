@@ -54,11 +54,12 @@ import { RootState } from "../../store";
 import React from "react";
 // import { userInfo } from "os";
 
-const Profile: React.FC<{ user: string | null }> = (props: {
-  user: string | null;
+const Profile: React.FC<{ user: number | null }> = (props: {
+  user: number | null;
 }) => {
   let jwtKey = useSelector((state: RootState) => state.jwtKey);
   let currentUsername = useSelector((state: RootState) => state.username);
+  let reduxNickname = useSelector((state: RootState) => state.nickname);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -72,7 +73,7 @@ const Profile: React.FC<{ user: string | null }> = (props: {
     };
 
     getProfile();
-  }, [jwtKey]);
+  }, [jwtKey, reduxNickname]);
 
   let [nickname, setNickname] = useState("");
   let [username, setUsername] = useState("");
@@ -82,74 +83,73 @@ const Profile: React.FC<{ user: string | null }> = (props: {
     dispatch(
       updateJwt({
         newJwtKey: null,
+        newId: null,
         newUsername: null,
-        newPassword: null,
         newNickname: null,
         newPhone: null,
         newEmail: null,
         newJoinedTime: null,
+        newIsAdmin: false,
       })
     );
   }
   let state = useSelector((state: RootState) => state);
   function func() {
     console.log(state);
-    
   }
 
   return (
     <>
-        <IonMenu contentId="profile">
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>設定</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent>
-            <IonList>
-              <IonItem routerLink="/AccountSetting">
-                <IonIcon icon={personOutline} slot="start" />
-                <IonLabel>設定個人帳號</IonLabel>
-              </IonItem>
+      <IonMenu contentId="profile">
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>設定</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <IonList>
+            <IonItem routerLink="/AccountSetting">
+              <IonIcon icon={personOutline} slot="start" />
+              <IonLabel>設定個人帳號</IonLabel>
+            </IonItem>
 
-              <IonItem routerLink="/NoticeSetUp">
-                <IonIcon icon={paperPlaneOutline} slot="start" />
-                <IonLabel>通知設定</IonLabel>
-              </IonItem>
+            <IonItem routerLink="/NoticeSetUp">
+              <IonIcon icon={paperPlaneOutline} slot="start" />
+              <IonLabel>通知設定</IonLabel>
+            </IonItem>
 
-              <IonItem routerLink="/PasswordChange">
-                <IonIcon icon={lockOpenOutline} slot="start" />
-                <IonLabel>更改密碼</IonLabel>
-              </IonItem>
+            <IonItem routerLink="/PasswordChange">
+              <IonIcon icon={lockOpenOutline} slot="start" />
+              <IonLabel>更改密碼</IonLabel>
+            </IonItem>
 
-              <IonItem routerLink="/Invoice">
-                <IonIcon icon={receiptOutline} slot="start" />
-                <IonLabel>電子收據</IonLabel>
-              </IonItem>
+            <IonItem routerLink="/Invoice">
+              <IonIcon icon={receiptOutline} slot="start" />
+              <IonLabel>電子收據</IonLabel>
+            </IonItem>
 
-              <IonMenuToggle>
-                <IonItem
-                  onClick={destroyUserInfo}
-                  routerLink="/tab/Login"
-                  routerDirection="root"
-                >
-                  <IonIcon icon={logOutOutline} slot="start" />
-                  <IonLabel>登出</IonLabel>
-                </IonItem>
-              </IonMenuToggle>
-            </IonList>
-          </IonContent>
-        </IonMenu>
-      
+            <IonMenuToggle>
+              <IonItem
+                onClick={destroyUserInfo}
+                routerLink="/tab/Login"
+                routerDirection="root"
+              >
+                <IonIcon icon={logOutOutline} slot="start" />
+                <IonLabel>登出</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
+          </IonList>
+        </IonContent>
+      </IonMenu>
+
       <IonPage id="profile">
         <IonHeader>
           <IonToolbar>
-            { currentUsername === username ? (
+            {currentUsername === username ? (
               <IonButtons slot="start">
                 <IonMenuButton></IonMenuButton>
               </IonButtons>
-            ): null
-            }
+            ) : null}
             <IonTitle>個人資料</IonTitle>
           </IonToolbar>
         </IonHeader>

@@ -6,16 +6,26 @@ export const updateJwtReducer = (
   action: UpdateJwtAction
 ): UpdateJwtState => {
   if (action.type === "update_jwt") {
-    let {newJwtKey, newUsername, newPassword, newNickname, newPhone, newEmail, newJoinedTime} = action.payload;
+    let {
+      newJwtKey,
+      newId,
+      newUsername,
+      newNickname,
+      newPhone,
+      newEmail,
+      newJoinedTime,
+      newIsAdmin,
+    } = action.payload;
 
     return {
       jwtKey: newJwtKey,
+      id: newId,
       username: newUsername,
-      password: newPassword,
       nickname: newNickname,
       phone: newPhone,
       email: newEmail,
-      joinedTime: newJoinedTime
+      joinedTime: newJoinedTime,
+      isAdmin: newIsAdmin,
     };
   }
   return state;

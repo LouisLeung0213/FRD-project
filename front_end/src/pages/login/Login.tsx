@@ -31,7 +31,7 @@ import { useIonFormState } from "react-use-ionic-form";
 
 const Login: React.FC = () => {
   const jwtKey = useSelector((state: RootState) => state.jwtKey);
-  const nickname = useSelector((state: RootState) => state.nickname);
+  const id = useSelector((state: RootState) => state.id);
   const dispatch = useDispatch();
   const history = useHistory();
   const router = useIonRouter();
@@ -81,12 +81,13 @@ const Login: React.FC = () => {
       dispatch(
         updateJwt({
           newJwtKey: token,
+          newId: userInfo.id,
           newUsername: userInfo.username,
-          newPassword: userInfo.password,
           newNickname: userInfo.nickname,
           newPhone: userInfo.phone,
           newEmail: userInfo.email,
           newJoinedTime: userInfo.joinedTime,
+          newIsAdmin: userInfo.isAdmin,
         })
       );
       // history.push(`/tab/Profile`);
@@ -107,7 +108,7 @@ const Login: React.FC = () => {
         <Route
           path={routes.tab.profile}
           exact={true}
-          render={() => <Profile user={nickname} />}
+          render={() => <Profile user={id} />}
         />
       </IonRouterOutlet>
       <IonHeader>
