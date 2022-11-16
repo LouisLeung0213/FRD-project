@@ -1,0 +1,28 @@
+{
+  "name": "PantristCapacitorFirebaseDynamicLinks",
+  "version": "0.2.2",
+  "summary": "Capacitor Plugin for Firebase Dynamic Links",
+  "license": "MIT",
+  "homepage": "https://github.com/Pantrist-dev/capacitor-firebase-dynamic-links.git",
+  "authors": "Bharani",
+  "source": {
+    "git": "https://github.com/Pantrist-dev/capacitor-firebase-dynamic-links.git",
+    "tag": "0.2.2"
+  },
+  "source_files": "ios/Plugin/**/*.{swift,h,m,c,cc,mm,cpp}",
+  "platforms": {
+    "ios": "13.0"
+  },
+  "dependencies": {
+    "Capacitor": [
+
+    ],
+    "Firebase/Analytics": [
+
+    ],
+    "Firebase/DynamicLinks": [
+
+    ]
+  },
+  "static_framework": true
+}

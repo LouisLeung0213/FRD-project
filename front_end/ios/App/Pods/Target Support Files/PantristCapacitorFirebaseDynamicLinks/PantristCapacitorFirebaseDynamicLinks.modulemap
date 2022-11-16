@@ -1,0 +1,6 @@
+framework module PantristCapacitorFirebaseDynamicLinks {
+  umbrella header "PantristCapacitorFirebaseDynamicLinks-umbrella.h"
+
+  export *
+  module * { export * }
+}

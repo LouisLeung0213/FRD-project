@@ -8,7 +8,8 @@ type UserInfo = {
   newPhone: string | null,
   newEmail: string | null,
   newJoinedTime: string | null
-}
+  newIsAdmin: boolean;
+};
 
 export function updateJwt(userInfo: UserInfo) {
   return { type: "update_jwt" as const, payload: userInfo };

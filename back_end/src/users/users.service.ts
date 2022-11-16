@@ -53,6 +53,7 @@ export class UsersService {
           'phone',
           'email',
           'joinedTime',
+          'is_admin',
         )
         .from('users')
         .where('username', username);
@@ -68,6 +69,7 @@ export class UsersService {
           phone: user.phone,
           email: user.email,
           joinedTime: user.joinedTime,
+          isAdmin: user.is_admin,
         };
       } else {
         throw new HttpException('Wrong username or password', 401);
@@ -79,11 +81,7 @@ export class UsersService {
 
   async updateUserInfo(id: number, updateUserInfoDto: UpdateUserInfoDto) {
     try {
-      
-      let users = await this.knex
-        .select('id')
-        .from('users')
-        .where('id', id);
+      let users = await this.knex.select('id').from('users').where('id', id);
 
       if (users.length > 0) {
         let userId = await this.knex('users')
@@ -91,8 +89,8 @@ export class UsersService {
           .update(
             {nickname: updateUserInfoDto.nickname,
             phone: updateUserInfoDto.phone,
-            email: updateUserInfoDto.email},
-          )
+            email: updateUserInfoDto.email,
+          })
           .returning('id');
 
         return {
