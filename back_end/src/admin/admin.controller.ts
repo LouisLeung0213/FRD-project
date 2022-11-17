@@ -20,6 +20,12 @@ export class AdminController {
     return this.adminService.create(createAdminDto);
   }
 
+  @Post(':id')
+  bannedUser(@Param('id') id: number, @Body() updateAdminDto: UpdateAdminDto) {
+    this.adminService.bannedUser(id, updateAdminDto);
+    return `${updateAdminDto.userId} is now banned`;
+  }
+
   @Get()
   findAll() {
     return this.adminService.findAll();

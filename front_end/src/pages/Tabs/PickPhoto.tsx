@@ -4,37 +4,25 @@ import {
   IonButton,
   IonButtons,
   IonCheckbox,
-  IonCol,
   IonContent,
   IonFab,
   IonFabButton,
-  IonGrid,
   IonHeader,
   IonIcon,
-  IonImg,
   IonInput,
   IonItem,
   IonLabel,
-  IonList,
   IonModal,
   IonPage,
-  IonRow,
   IonSelect,
   IonSelectOption,
   IonText,
   IonTextarea,
-  IonThumbnail,
   IonToolbar,
 } from "@ionic/react";
-import {
-  camera,
-  cube,
-  imagesOutline,
-  personCircle,
-  trash,
-} from "ionicons/icons";
+import { camera, imagesOutline, trash } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
-import { base64FromPath, usePhotoGallery } from "../hooks/usePhotoGallery";
+import { base64FromPath, usePhotoGallery } from "../../hooks/usePhotoGallery";
 import { selectImage, fileToBase64String } from "@beenotung/tslib/file";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
@@ -50,6 +38,8 @@ import "swiper/swiper.min.css";
 import "@ionic/react/css/ionic-swiper.css";
 import "./PickPhoto.css";
 import { useIonFormState } from "react-use-ionic-form";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 type ImageItem = {
   file: File;
@@ -59,27 +49,80 @@ type ImageItem = {
 const PickPhoto: React.FC = () => {
   const { photos, setPhotos, takePhoto } = usePhotoGallery();
   const [items, setItems] = useState<ImageItem[]>([]);
-  const modal = useRef<HTMLIonModalElement>(null);
-  const [modalShow, setModalShow] = useState(false);
+  const qualityModal = useRef<HTMLIonModalElement>(null);
+  const previewModal = useRef<HTMLIonModalElement>(null);
+  //const [modalShow, setModalShow] = useState(false);
+  const id = useSelector((state: RootState) => state.id);
 
   function dismiss() {
-    modal.current?.dismiss();
-    setModalShow(true);
+    qualityModal.current?.dismiss();
+    previewModal.current?.dismiss();
   }
 
   const tags = ["Disney", "模型", "限量版", "Marvel"];
 
+  const [isTitleOk, setTitleOk] = useState(true);
   const [isDescriptionOk, setIsDescriptionOk] = useState(true);
   const [isStartPriceOk, setStartPriceOk] = useState(true);
+  const [isDealPriceOk, setIsDealPriceOk] = useState(true);
 
   const { state, item } = useIonFormState({
+    title: "",
     description: "",
-    tags: "",
+    tags: [""],
     startPrice: "",
     dealPrice: "",
-    qualityPlan: "",
-    promotion: "",
+    qualityPlan: false,
+    promotion: false,
   });
+
+  const onSubmit = async (data: any) => {
+    console.log(state);
+    if (data.title.length == 0) {
+      setTitleOk(false);
+    } else {
+      setTitleOk(true);
+    }
+    let numReg = /^\d+$/;
+    if (data.description.length == 0) {
+      setIsDescriptionOk(false);
+    } else {
+      setIsDescriptionOk(true);
+    }
+    if (data.startPrice.length == 0 || !data.startPrice.match(numReg)) {
+      setStartPriceOk(false);
+      dismiss();
+    } else {
+      setStartPriceOk(true);
+    }
+    if (data.dealPrice.length > 0 && !data.dealPrice.match(numReg)) {
+      setIsDealPriceOk(false);
+      dismiss();
+      return;
+    } else {
+      setIsDealPriceOk(true);
+    }
+
+    console.log("pass");
+
+    let res = await fetch(`http://localhost:1688/postItem/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: data.title,
+        description: data.description,
+        tags: data.tags,
+        startPrice: data.startPrice,
+        dealPrice: data.dealPrice,
+        qualityPlan: data.qualityPlan,
+        promotion: data.promotion,
+      }),
+    });
+
+    dismiss();
+  };
 
   async function pickImages() {
     let files = await selectImage({
@@ -105,14 +148,37 @@ const PickPhoto: React.FC = () => {
             <IonBackButton defaultHref="/"></IonBackButton>
           </IonButtons>
           <IonButtons slot="end">
-            <IonButton className="but" routerLink="/tab/Trade">
-              繼續
+            <IonButton className="but" id="preview-dialog">
+              發佈
             </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
         <>
+          <IonModal
+            id="preview-modal"
+            ref={previewModal}
+            trigger="preview-dialog"
+          >
+            <IonContent className="ion-padding">
+              <IonText>
+                請再次確認帖文內容。
+                <br />
+                底價在帖文發佈後將不可更改。
+              </IonText>
+            </IonContent>
+
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <IonButton slot="center" onClick={dismiss}>
+                返回
+              </IonButton>
+              <IonButton slot="center" onClick={() => onSubmit(state)}>
+                發佈
+              </IonButton>
+            </div>
+          </IonModal>
+
           <div>
             <IonItem
               className="buttonList"
@@ -201,6 +267,18 @@ const PickPhoto: React.FC = () => {
             </div>
 
             {item({
+              name: "title",
+              renderLabel: () => <IonLabel position="floating">標題</IonLabel>,
+              renderContent: (props) => (
+                <IonInput placeholder="請輸入帖文標題" {...props}></IonInput>
+              ),
+            })}
+            <div className="ion-text-center">
+              {!isTitleOk ? <IonText color="danger">請加入標題</IonText> : null}
+            </div>
+            <br />
+
+            {item({
               name: "description",
 
               renderLabel: () => (
@@ -214,6 +292,11 @@ const PickPhoto: React.FC = () => {
                 ></IonTextarea>
               ),
             })}
+            <div className="ion-text-center">
+              {!isDescriptionOk ? (
+                <IonText color="danger">請輸入產品描述</IonText>
+              ) : null}
+            </div>
             <br />
 
             {item({
@@ -244,6 +327,11 @@ const PickPhoto: React.FC = () => {
                 ></IonInput>
               ),
             })}
+            <div className="ion-text-center">
+              {!isStartPriceOk ? (
+                <IonText color="danger">請輸入有效底價</IonText>
+              ) : null}
+            </div>
             <br />
 
             {item({
@@ -258,7 +346,14 @@ const PickPhoto: React.FC = () => {
                 ></IonInput>
               ),
             })}
+            <IonLabel># 不會在帖文中顯示</IonLabel>
+            <div className="ion-text-center">
+              {!isDealPriceOk ? (
+                <IonText color="danger">請輸入有效目標成交價</IonText>
+              ) : null}
+            </div>
 
+            <br />
             <br />
 
             {item({
@@ -266,16 +361,16 @@ const PickPhoto: React.FC = () => {
               renderLabel: () => <IonLabel>加入認證計劃</IonLabel>,
               renderContent: (props) => (
                 <IonCheckbox
-                  value="qualityPlan"
                   slot="start"
                   id="open-custom-dialog"
+                  {...props}
                 ></IonCheckbox>
               ),
             })}
             <br />
             <IonModal
-              id="example-modal"
-              ref={modal}
+              id="qualityPlan-modal"
+              ref={qualityModal}
               trigger="open-custom-dialog"
             >
               <div className="wrapper">
@@ -298,9 +393,9 @@ const PickPhoto: React.FC = () => {
               renderLabel: () => <IonLabel>自動調整底價</IonLabel>,
               renderContent: (props) => (
                 <IonCheckbox
-                  value="promotion"
                   slot="start"
                   id="open-custom-dialog"
+                  {...props}
                 ></IonCheckbox>
               ),
             })}
