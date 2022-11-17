@@ -47,7 +47,7 @@ import Hot from "./pages/Tabs/Hot";
 import MainPage from "./pages/Tabs/MainPage";
 
 import Profile from "./pages/Tabs/Profile";
-import Trade from "./pages/Tabs/Trade";
+import Trade from "./pages/Trade/Trade";
 import { routes } from "../src/routes";
 import Notices from "./pages/Tabs/Notices";
 import UpdateProfile from "./pages/UpdateProfile/UpdateProfile";
@@ -62,7 +62,7 @@ import AdminPanel from "./pages/AdminPanel/AdminPanel";
 // import AppUrlListener from "./pages/AppUrlListener";
 import { FirebaseDynamicLinks } from "@pantrist/capacitor-firebase-dynamic-links";
 
-import PickPhoto from "./PickPhoto/PickPhoto";
+import PickPhoto from "./pages/Tabs/PickPhoto";
 setupIonicReact();
 
 const App: React.FC = () => {
@@ -160,11 +160,7 @@ const App: React.FC = () => {
             exact={true}
             render={() => <Invoice />}
           />
-          <Route
-            path={routes.pickPhoto}
-            exact={true}
-            render={() => <PickPhoto />}
-          />
+          <Route path={routes.trade} exact={true} render={() => <Trade />} />
 
           <Route path="/tab">
             <IonTabs>
@@ -180,10 +176,11 @@ const App: React.FC = () => {
                   render={() => <Hot />}
                 />
                 <Route
-                  path={routes.tab.trade}
+                  path={routes.tab.pickPhoto}
                   exact={true}
-                  render={() => <Trade />}
+                  render={() => <PickPhoto />}
                 />
+
                 <Route
                   path={routes.tab.notices}
                   exact={true}
@@ -215,7 +212,7 @@ const App: React.FC = () => {
                   <IonIcon icon={heartCircleOutline} />
                   <IonLabel>熱門</IonLabel>
                 </IonTabButton>
-                <IonTabButton tab="PickPhoto" href="/PickPhoto">
+                <IonTabButton tab="PickPhoto" href="/tab/PickPhoto">
                   <IonIcon icon={duplicateOutline} />
                   <IonLabel>交易</IonLabel>
                 </IonTabButton>

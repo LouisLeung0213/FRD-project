@@ -1,26 +1,31 @@
 import { IsNumber, IsNotEmpty, IsString, IsBoolean } from 'class-validator';
 
 export class CreatePostDto {
-  @IsNumber()
-  @IsNotEmpty()
-  user_id: number;
+  // @IsNumber()
+  // @IsNotEmpty()
+  // user_id: number;
 
   @IsString()
   @IsNotEmpty()
-  post_title: string;
+  title: string;
 
   @IsString()
   @IsNotEmpty()
-  post_description: string;
+  description: string;
+
+  @IsString()
+  tags: string;
 
   @IsNumber()
   @IsNotEmpty()
-  original_price: number;
+  startPrice: number;
 
   @IsNumber()
-  min_price: number;
+  dealPrice: number;
 
   @IsBoolean()
-  @IsNotEmpty()
-  q_mark: boolean;
+  qualityPlan: boolean;
+
+  @IsBoolean()
+  promotion: boolean;
 }
