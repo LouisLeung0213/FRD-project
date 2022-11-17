@@ -110,7 +110,7 @@ const App: React.FC = () => {
     addListeners();
 
     function listenToDeepLinkOpen() {
-      FirebaseDynamicLinks.addListener("deepLinkOpen", (data) => {
+      FirebaseDynamicLinks.addListener("deepLinkOpen", (data: any) => {
         console.log("deeplink:", data);
       });
     }
@@ -121,15 +121,15 @@ const App: React.FC = () => {
   let profileHref = "/tab/Login";
 
   let jwtKey = useSelector((state: RootState) => state.jwtKey);
-  let nickname = useSelector((state: RootState) => state.nickname);
-  if (!nickname) {
-    nickname = "";
+  let id = useSelector((state: RootState) => state.id);
+  if (!id) {
+    id = null;
   }
   if (jwtKey) {
     profileHref = `/tab/Profile`;
   }
 
-  const isAdmin = useSelector((state: RootState) => state.is_admin);
+  const isAdmin = useSelector((state: RootState) => state.isAdmin);
 
   return (
     <IonApp>
@@ -192,7 +192,7 @@ const App: React.FC = () => {
                 <Route
                   path={routes.tab.profile}
                   exact={true}
-                  render={() => <Profile user={nickname} />}
+                  render={() => <Profile user={id} />}
                 />
                 <Route
                   path={routes.tab.login}

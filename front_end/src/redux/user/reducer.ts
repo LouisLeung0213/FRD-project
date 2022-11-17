@@ -8,8 +8,8 @@ export const updateJwtReducer = (
   if (action.type === "update_jwt") {
     let {
       newJwtKey,
+      newId,
       newUsername,
-      newPassword,
       newNickname,
       newPhone,
       newEmail,
@@ -19,13 +19,13 @@ export const updateJwtReducer = (
 
     return {
       jwtKey: newJwtKey,
+      id: newId,
       username: newUsername,
-      password: newPassword,
       nickname: newNickname,
       phone: newPhone,
       email: newEmail,
       joinedTime: newJoinedTime,
-      is_admin: newIsAdmin,
+      isAdmin: newIsAdmin,
     };
   }
   return state;

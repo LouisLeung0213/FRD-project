@@ -1,13 +1,13 @@
 //action creator
 
 type UserInfo = {
-  newJwtKey: string | null;
-  newUsername: string | null;
-  newPassword: string | null;
-  newNickname: string | null;
-  newPhone: string | null;
-  newEmail: string | null;
-  newJoinedTime: string | null;
+  newJwtKey: string | null,
+  newId: number | null,
+  newUsername: string | null,
+  newNickname: string | null,
+  newPhone: string | null,
+  newEmail: string | null,
+  newJoinedTime: string | null
   newIsAdmin: boolean;
 };
 

@@ -30,10 +30,6 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  async function handleSubmit() {
-    const res = await fetch("/signUp");
-  }
-
   const register = async (data: any) => {
     if (data.username.length == 0) {
       setIsUsernameOk(false);
@@ -123,8 +119,8 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
       dispatch(
         updateJwt({
           newJwtKey: token,
+          newId: userInfo.id,
           newUsername: userInfo.username,
-          newPassword: userInfo.password,
           newNickname: userInfo.nickname,
           newPhone: userInfo.phone,
           newEmail: userInfo.email,

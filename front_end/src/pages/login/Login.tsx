@@ -31,7 +31,7 @@ import { useIonFormState } from "react-use-ionic-form";
 
 const Login: React.FC = () => {
   const jwtKey = useSelector((state: RootState) => state.jwtKey);
-  const nickname = useSelector((state: RootState) => state.nickname);
+  const id = useSelector((state: RootState) => state.id);
   const dispatch = useDispatch();
   const history = useHistory();
   const router = useIonRouter();
@@ -40,6 +40,7 @@ const Login: React.FC = () => {
 
   const [isUsernameOk, setIsUsernameOk] = useState(true);
   const [isPasswordOk, setIsPasswordOk] = useState(true);
+  const [isUserCorrect, setIsUserCorrect] = useState(true);
 
   // const [isBanned, setIsBanned] = useState(false);
 
@@ -70,6 +71,7 @@ const Login: React.FC = () => {
     let result = await res.json();
     let token = result.access_token;
     if (token) {
+      setIsUserCorrect(true)
       let res2 = await fetch(`http://localhost:1688/auth/profile`, {
         method: "GET",
         headers: {
@@ -81,8 +83,8 @@ const Login: React.FC = () => {
       dispatch(
         updateJwt({
           newJwtKey: token,
+          newId: userInfo.id,
           newUsername: userInfo.username,
-          newPassword: userInfo.password,
           newNickname: userInfo.nickname,
           newPhone: userInfo.phone,
           newEmail: userInfo.email,
@@ -93,7 +95,8 @@ const Login: React.FC = () => {
       // history.push(`/tab/Profile`);
       router.push(routes.tab.profile, "forward", "replace");
     } else {
-      alert(JSON.stringify("冇人識你喎...", null, 2));
+      setIsUserCorrect(false)
+      // alert(JSON.stringify("冇人識你喎...", null, 2));
     }
   };
 
@@ -108,7 +111,7 @@ const Login: React.FC = () => {
         <Route
           path={routes.tab.profile}
           exact={true}
-          render={() => <Profile user={nickname} />}
+          render={() => <Profile user={id} />}
         />
       </IonRouterOutlet>
       <IonHeader>
@@ -133,6 +136,7 @@ const Login: React.FC = () => {
               <IonText color="warning">帳號呢？?</IonText>
             ) : null}
           </div>
+
           {item({
             name: "password",
             renderLabel: () => <IonLabel position="floating">密碼:</IonLabel>,
@@ -162,6 +166,11 @@ const Login: React.FC = () => {
           >
             登入
           </IonButton>
+          <div className="ion-text-center">
+            {!isUserCorrect ? (
+              <IonText color="warning">冇人識你喎...</IonText>
+            ) : null}
+          </div>
           <IonButton
             className="ion-margin-top"
             expand="block"

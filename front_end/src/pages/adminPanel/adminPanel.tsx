@@ -21,7 +21,8 @@ const AdminPanel: React.FC = () => {
 
   let [usersInfo, setUsersInfo] = useState([]);
 
-  const isAdmin = useSelector((state: RootState) => state.is_admin);
+  const isAdmin = useSelector((state: RootState) => state.isAdmin);
+
   useEffect(() => {
     const getAllUser = async () => {
       let res = await fetch(`http://localhost:1688/admin`);
