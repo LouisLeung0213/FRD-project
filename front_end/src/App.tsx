@@ -63,6 +63,7 @@ import AdminPanel from "./pages/AdminPanel/AdminPanel";
 import { FirebaseDynamicLinks } from "@pantrist/capacitor-firebase-dynamic-links";
 
 import PickPhoto from "./PickPhoto/PickPhoto";
+import Storages from "./pages/Storages/Storages";
 setupIonicReact();
 
 const App: React.FC = () => {
@@ -165,7 +166,11 @@ const App: React.FC = () => {
             exact={true}
             render={() => <PickPhoto />}
           />
-
+          <Route
+            path={routes.storages}
+            exact={true}
+            render={() => <Storages />}
+          />
           <Route path="/tab">
             <IonTabs>
               <IonRouterOutlet>

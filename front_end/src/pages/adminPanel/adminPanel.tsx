@@ -1,17 +1,23 @@
 import {
+  IonButtons,
   IonCard,
   IonContent,
   IonHeader,
+  IonIcon,
   IonItem,
   IonLabel,
   IonList,
   IonPage,
   IonToolbar,
+  useIonRouter,
 } from "@ionic/react";
+import { cubeOutline } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { resultingClientExists } from "workbox-core/_private";
+import { useHistory } from "react-router";
+// import { resultingClientExists } from "workbox-core/_private";
 import { RootState } from "../../store";
+import { routes } from "../../routes";
 
 const AdminPanel: React.FC = () => {
   interface Users {
@@ -22,6 +28,8 @@ const AdminPanel: React.FC = () => {
   let [usersInfo, setUsersInfo] = useState([]);
 
   const isAdmin = useSelector((state: RootState) => state.isAdmin);
+  const currentUserId: any = useSelector((state: RootState) => state.id);
+  const router = useIonRouter();
 
   useEffect(() => {
     const getAllUser = async () => {
@@ -39,6 +47,17 @@ const AdminPanel: React.FC = () => {
 
   async function banUser(e: any) {
     console.log("e:", e);
+    let res = await fetch(`http://localhost:1688/admin/${currentUserId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: +e.id,
+      }),
+    });
+    let result = await res.text();
+    console.log(result);
   }
 
   return (
@@ -46,7 +65,15 @@ const AdminPanel: React.FC = () => {
       {!!isAdmin ? (
         <IonPage>
           <IonHeader>
-            <IonToolbar>熱拍管理處</IonToolbar>
+            <IonToolbar>
+              熱拍管理處
+              <IonButtons slot="end">
+                <IonIcon
+                  icon={cubeOutline}
+                  onClick={() => router.push(routes.storages, "forward", "pop")}
+                ></IonIcon>
+              </IonButtons>
+            </IonToolbar>
           </IonHeader>
           <IonContent>
             <IonList>
@@ -54,7 +81,7 @@ const AdminPanel: React.FC = () => {
               <div>
                 {usersInfo.map((e: Users) => {
                   return (
-                    <IonCard onClick={() => banUser(e)}>
+                    <IonCard key={e.id} onClick={() => banUser(e)}>
                       {e.id}:{e.nickname}
                     </IonCard>
                   );

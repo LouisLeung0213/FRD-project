@@ -16,4 +16,5 @@ export let routes = {
     signUp: "/SignUp",
   },
   pickPhoto: "/PickPhoto",
+  storages: "/Storages",
 };

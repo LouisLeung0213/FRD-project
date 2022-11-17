@@ -23,7 +23,7 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTableIfNotExists('banned_users', (table) => {
     table.increments('id');
     table.integer('user_id').notNullable().references('users.id');
-    table.timestamp('banned_time').notNullable();
+    table.timestamp('banned_time').defaultTo(knex.fn.now());
   });
 
   await knex.schema.createTableIfNotExists('search_histories', (table) => {
