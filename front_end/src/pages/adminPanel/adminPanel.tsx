@@ -21,11 +21,13 @@ const AdminPanel: React.FC = () => {
 
   let [usersInfo, setUsersInfo] = useState([]);
 
+  const isAdmin = useSelector((state: RootState) => state.isAdmin);
+
   useEffect(() => {
     const getAllUser = async () => {
       let res = await fetch(`http://localhost:1688/admin`);
       let result = await res.json();
-      console.log(result);
+      // console.log(result);
       setUsersInfo(result);
       // for (let user of result) {
       //   setUsersInfo([...usersInfo, { id: user.id, nickname: user.nickname }]);
@@ -33,9 +35,11 @@ const AdminPanel: React.FC = () => {
     };
     getAllUser();
   }, []);
-  console.log("usersInfo:", usersInfo);
+  // console.log("usersInfo:", usersInfo);
 
-  const isAdmin = useSelector((state: RootState) => state.isAdmin);
+  async function banUser(e: any) {
+    console.log("e:", e);
+  }
 
   return (
     <div>
@@ -45,21 +49,18 @@ const AdminPanel: React.FC = () => {
             <IonToolbar>熱拍管理處</IonToolbar>
           </IonHeader>
           <IonContent>
-            <div>
-              {usersInfo.map((e: Users) => {
-                return (
-                  <IonCard>
-                    {e.id}:{e.nickname}
-                  </IonCard>
-                );
-              })}
-            </div>
             <IonList>
               <IonLabel> HOTBID 用戶清單</IonLabel>
-              {/* {usersInfo.map((user) => {
-                return(<div> id:{user}</div>) 
-              })} */}
-              被檢舉的用戶
+              <div>
+                {usersInfo.map((e: Users) => {
+                  return (
+                    <IonCard onClick={() => banUser(e)}>
+                      {e.id}:{e.nickname}
+                    </IonCard>
+                  );
+                })}
+              </div>
+              <IonLabel>被檢舉的用戶</IonLabel>
               <IonItem>Scott</IonItem>
               被檢舉的貨品
               <IonItem>IronMan Mark 42</IonItem>
