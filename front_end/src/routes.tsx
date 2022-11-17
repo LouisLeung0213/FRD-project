@@ -2,7 +2,8 @@ export let routes = {
   tab: {
     mainPage: "/tab/MainPage",
     hot: "/tab/Hot",
-    trade: "/tab/Trade",
+    pickPhoto: "/tab/PickPhoto",
+
     notices: "/tab/Notices",
     profile: "/tab/Profile",
     login: "/tab/Login",
@@ -15,6 +16,6 @@ export let routes = {
     invoice: "/Invoice",
     signUp: "/SignUp",
   },
-  pickPhoto: "/PickPhoto",
   storages: "/Storages",
+  trade: "/Trade",
 };
