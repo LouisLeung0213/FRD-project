@@ -64,6 +64,8 @@ import { FirebaseDynamicLinks } from "@pantrist/capacitor-firebase-dynamic-links
 
 import PickPhoto from "./pages/Tabs/PickPhoto";
 import Storages from "./pages/Storages/Storages";
+import Blacklist from "./pages/Blacklist/Blacklist";
+
 setupIonicReact();
 
 const App: React.FC = () => {
@@ -166,6 +168,11 @@ const App: React.FC = () => {
             path={routes.storages}
             exact={true}
             render={() => <Storages />}
+          />
+          <Route
+            path={routes.blacklist}
+            exact={true}
+            render={() => <Blacklist />}
           />
           <Route path="/tab">
             <IonTabs>

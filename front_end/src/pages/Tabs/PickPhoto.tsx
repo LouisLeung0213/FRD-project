@@ -22,7 +22,7 @@ import {
 } from "@ionic/react";
 import { camera, imagesOutline, trash } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
-import { base64FromPath, usePhotoGallery } from "../../hooks/usePhotoGallery";
+import { usePhotoGallery } from "../../hooks/usePhotoGallery";
 import { selectImage, fileToBase64String } from "@beenotung/tslib/file";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
@@ -47,7 +47,7 @@ type ImageItem = {
 };
 
 const PickPhoto: React.FC = () => {
-  const { photos, setPhotos, takePhoto } = usePhotoGallery();
+  const { blobData, photos, setPhotos, takePhoto } = usePhotoGallery();
   const [items, setItems] = useState<ImageItem[]>([]);
   const qualityModal = useRef<HTMLIonModalElement>(null);
   const previewModal = useRef<HTMLIonModalElement>(null);
@@ -60,22 +60,45 @@ const PickPhoto: React.FC = () => {
   }
 
   const tags = ["Disney", "模型", "限量版", "Marvel"];
+  const locationSelections = ["荃灣西"];
 
+  const [isQualityPlan, setIsQualityPlan] = useState(false);
   const [isTitleOk, setTitleOk] = useState(true);
   const [isDescriptionOk, setIsDescriptionOk] = useState(true);
   const [isStartPriceOk, setStartPriceOk] = useState(true);
-  const [isDealPriceOk, setIsDealPriceOk] = useState(true);
 
   const { state, item } = useIonFormState({
     title: "",
     description: "",
     tags: [""],
     startPrice: "",
-    dealPrice: "",
+    location: "",
     qualityPlan: false,
     promotion: false,
   });
 
+  function formAppend(data: any) {
+    let formData = new FormData();
+
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("tags", data.tags);
+    formData.append("startPrice", data.startPrice);
+    formData.append("location", data.location);
+    formData.append("qualityPlan", data.qualityPlan);
+    formData.append("promotion", data.promotion);
+    if (blobData.length > 0) {
+      blobData.forEach((blobPhoto) => formData.append("photo", blobPhoto));
+    }
+    if (items.length > 0) {
+      items.forEach((image) => {
+        formData.append("image", image.dataUrl);
+      });
+    }
+
+    return formData;
+  }
+  console.log(items);
   const onSubmit = async (data: any) => {
     console.log(state);
     if (data.title.length == 0) {
@@ -95,31 +118,19 @@ const PickPhoto: React.FC = () => {
     } else {
       setStartPriceOk(true);
     }
-    if (data.dealPrice.length > 0 && !data.dealPrice.match(numReg)) {
-      setIsDealPriceOk(false);
-      dismiss();
-      return;
-    } else {
-      setIsDealPriceOk(true);
-    }
 
     console.log("pass");
+
+    let formData = formAppend(state);
 
     let res = await fetch(`http://localhost:1688/postItem/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        title: data.title,
-        description: data.description,
-        tags: data.tags,
-        startPrice: data.startPrice,
-        dealPrice: data.dealPrice,
-        qualityPlan: data.qualityPlan,
-        promotion: data.promotion,
-      }),
+      body: formData,
     });
+    console.log(res);
 
     dismiss();
   };
@@ -162,11 +173,12 @@ const PickPhoto: React.FC = () => {
             trigger="preview-dialog"
           >
             <IonContent className="ion-padding">
-              <IonText>
-                請再次確認帖文內容。
+              <ul>
+                <li>請再次確認帖文內容。</li>
                 <br />
-                底價在帖文發佈後將不可更改。
-              </IonText>
+                <li>被投標後，否決投標前價格將不可更改。</li>
+                <br />
+              </ul>
             </IonContent>
 
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -334,26 +346,6 @@ const PickPhoto: React.FC = () => {
             </div>
             <br />
 
-            {item({
-              name: "dealPrice",
-              renderLabel: () => (
-                <IonLabel position="floating">目標價</IonLabel>
-              ),
-              renderContent: (props) => (
-                <IonInput
-                  placeholder="請輸入目標成交價 ( 港幣 )"
-                  {...props}
-                ></IonInput>
-              ),
-            })}
-            <IonLabel># 不會在帖文中顯示</IonLabel>
-            <div className="ion-text-center">
-              {!isDealPriceOk ? (
-                <IonText color="danger">請輸入有效目標成交價</IonText>
-              ) : null}
-            </div>
-
-            <br />
             <br />
 
             {item({
@@ -368,6 +360,7 @@ const PickPhoto: React.FC = () => {
               ),
             })}
             <br />
+
             <IonModal
               id="qualityPlan-modal"
               ref={qualityModal}
@@ -376,9 +369,33 @@ const PickPhoto: React.FC = () => {
               <div className="wrapper">
                 <IonItem className="ion-padding">
                   <IonText>
-                    將產品存放於門市倉庫，經公司認證產品狀況，給予買家信心。
-                    <br />
-                    帖子將於遞交後進入審批狀態，並於賣家把產品交予公司檢查後才發怖。
+                    <ul>
+                      <li>
+                        將產品存放於門市倉庫，經公司認證產品狀況，給予買家信心。
+                      </li>
+                      <br />
+                      <li>
+                        帖子將於遞交後進入審批狀態，並於賣家把產品交予公司檢查後才發怖。
+                      </li>
+                      <br />
+                      <li>
+                        如選擇認證計劃，將默認接受以下規條：
+                        <ol>
+                          <li>賣家需把貨品交予門市檢查後帖子才會公佈。</li>
+                          <li>更改產品描述需等待批核。</li>
+                          <li>貨品在一個月後將會根據重量收取存倉費。</li>
+                          <ul>
+                            <li> ＜1kg: 每月$20 </li>
+                            <li> ＜3kg: 每月$40 </li>
+                            <li> ＜5kg: 每月$70 </li>
+                            <li> ＞5kg: 每月$150 </li>
+                          </ul>
+                          <li>
+                            被投標後，投標需於3日內確認成交與否，3日後投標將會失效！
+                          </li>
+                        </ol>
+                      </li>
+                    </ul>
                   </IonText>
                 </IonItem>
 
@@ -387,6 +404,28 @@ const PickPhoto: React.FC = () => {
                 </IonButton>
               </div>
             </IonModal>
+
+            {state.qualityPlan === true ? (
+              item({
+                name: "location",
+                renderLabel: () => (
+                  <IonLabel position="floating">請選擇存放於門市:</IonLabel>
+                ),
+                renderContent: (props) => (
+                  <IonSelect {...props}>
+                    {locationSelections.map((location) => (
+                      <IonSelectOption key={location} value={location}>
+                        {location}
+                      </IonSelectOption>
+                    ))}
+                  </IonSelect>
+                ),
+              })
+            ) : (
+              <div></div>
+            )}
+
+            <br />
 
             {item({
               name: "promotion",
@@ -399,7 +438,7 @@ const PickPhoto: React.FC = () => {
                 ></IonCheckbox>
               ),
             })}
-            <IonLabel># 如產品於7日內無投標活動, 將底價調低5%</IonLabel>
+            <IonLabel># 如產品於7日內無投標活動，將自動底價調低5%</IonLabel>
           </div>
         </>
       </IonContent>
