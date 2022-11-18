@@ -10,6 +10,8 @@ export const config: { [key: string]: Knex.Config } = {
       database: env.DB_NAME,
       user: env.DB_USER,
       password: env.DB_PASSWORD,
+      host: env.HOST,
+
     },
 
     pool: {
