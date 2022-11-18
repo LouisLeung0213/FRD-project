@@ -19,11 +19,7 @@ import {
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
 import { camera, trash, close } from "ionicons/icons";
 import { images, square, triangle } from "ionicons/icons";
-import {
-  base64FromPath,
-  usePhotoGallery,
-  UserPhoto,
-} from "../../hooks/usePhotoGallery";
+import { usePhotoGallery, UserPhoto } from "../../hooks/usePhotoGallery";
 import { useEffect, useState } from "react";
 import {
   LibraryItem,
@@ -52,7 +48,6 @@ const Trade: React.FC = () => {
             ) {
               // ID of the photo
               // console.log(libraryItem.id);
-
               // console.log(photoData);
               // Cross-platform access to thumbnail
               // console.log(libraryItem.thumbnailURL);
@@ -62,11 +57,10 @@ const Trade: React.FC = () => {
               // console.log(libraryItem.creationDate);
               // console.log(libraryItem.latitude);
               // console.log(libraryItem.longitude);
-
               // array of ids of appropriate AlbumItem, only of includeAlbumsData was used
               // console.log(libraryItem.albumIds);
               // Cross-platform access to photo
-              return await base64FromPath(libraryItem.photoURL);
+              // return await base64FromPath(libraryItem.photoURL);
             });
             setPhotoImage([...photoImage, photoData]);
             console.log(photoImage);
