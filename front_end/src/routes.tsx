@@ -18,4 +18,5 @@ export let routes = {
   },
   storages: "/Storages",
   trade: "/Trade",
+  blacklist: "/Blacklist",
 };

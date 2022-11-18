@@ -1,4 +1,6 @@
 import {
+  IonAccordion,
+  IonAccordionGroup,
   IonButtons,
   IonCard,
   IonContent,
@@ -11,7 +13,12 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import { cubeOutline } from "ionicons/icons";
+import {
+  checkmarkOutline,
+  closeOutline,
+  cubeOutline,
+  skullOutline,
+} from "ionicons/icons";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
@@ -20,44 +27,37 @@ import { RootState } from "../../store";
 import { routes } from "../../routes";
 
 const AdminPanel: React.FC = () => {
-  interface Users {
-    id: number;
-    nickname: string;
-  }
-
-  let [usersInfo, setUsersInfo] = useState([]);
+  let [reqPosts, setReqPosts] = useState([]);
 
   const isAdmin = useSelector((state: RootState) => state.isAdmin);
-  const currentUserId: any = useSelector((state: RootState) => state.id);
   const router = useIonRouter();
-
   useEffect(() => {
-    const getAllUser = async () => {
-      let res = await fetch(`http://localhost:1688/admin`);
+    const getProductReq = async () => {
+      let res = await fetch(`http://localhost:1688/posts`);
       let result = await res.json();
-      // console.log(result);
-      setUsersInfo(result);
-      // for (let user of result) {
-      //   setUsersInfo([...usersInfo, { id: user.id, nickname: user.nickname }]);
-      // }
+
+      setReqPosts(result);
     };
-    getAllUser();
+    getProductReq();
   }, []);
   // console.log("usersInfo:", usersInfo);
 
-  async function banUser(e: any) {
-    console.log("e:", e);
-    let res = await fetch(`http://localhost:1688/admin/${currentUserId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: +e.id,
-      }),
-    });
-    let result = await res.text();
-    console.log(result);
+  async function acceptReq(e: any) {
+    return e;
+    // let res = await fetch(`http://localhost:1688/posts`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     sellerId: e.id,
+    //     receiptCode:
+    //   }),
+    // });
+  }
+
+  function denialReq() {
+    return "no";
   }
 
   return (
@@ -69,6 +69,12 @@ const AdminPanel: React.FC = () => {
               熱拍管理處
               <IonButtons slot="end">
                 <IonIcon
+                  icon={skullOutline}
+                  onClick={() =>
+                    router.push(routes.blacklist, "forward", "pop")
+                  }
+                ></IonIcon>
+                <IonIcon
                   icon={cubeOutline}
                   onClick={() => router.push(routes.storages, "forward", "pop")}
                 ></IonIcon>
@@ -77,20 +83,35 @@ const AdminPanel: React.FC = () => {
           </IonHeader>
           <IonContent>
             <IonList>
-              <IonLabel> HOTBID 用戶清單</IonLabel>
-              <div>
-                {usersInfo.map((e: Users) => {
-                  return (
-                    <IonCard key={e.id} onClick={() => banUser(e)}>
-                      {e.id}:{e.nickname}
-                    </IonCard>
-                  );
-                })}
-              </div>
-              <IonLabel>被檢舉的用戶</IonLabel>
-              <IonItem>Scott</IonItem>
-              被檢舉的貨品
-              <IonItem>IronMan Mark 42</IonItem>
+              <IonAccordionGroup>
+                <IonAccordion value="first">
+                  <IonItem slot="header" color="light">
+                    <IonLabel>HOTBID 等待驗證貨品清單</IonLabel>
+                  </IonItem>
+                  <div className="ion-padding" slot="content">
+                    {reqPosts.map((e: any) => {
+                      return (
+                        <IonItem key={e.id}>
+                          貨品ID：{e.id}， 用戶ID：{e.user_id}， 貨品標題：
+                          {e.post_title}， 貨品描述：{e.post_description}，
+                          價錢：
+                          {e.original_price}， 最低價：{e.min_price}。
+                          <IonIcon
+                            icon={checkmarkOutline}
+                            size="large"
+                            onClick={() => acceptReq(e)}
+                          ></IonIcon>
+                          <IonIcon
+                            icon={closeOutline}
+                            size="large"
+                            onClick={() => denialReq()}
+                          ></IonIcon>
+                        </IonItem>
+                      );
+                    })}
+                  </div>
+                </IonAccordion>
+              </IonAccordionGroup>
             </IonList>
           </IonContent>
         </IonPage>
