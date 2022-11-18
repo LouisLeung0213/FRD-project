@@ -21,7 +21,6 @@ import {
 } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router";
 // import { resultingClientExists } from "workbox-core/_private";
 import { RootState } from "../../store";
 import { routes } from "../../routes";
@@ -29,6 +28,7 @@ import { routes } from "../../routes";
 const AdminPanel: React.FC = () => {
   let [reqPosts, setReqPosts] = useState([]);
 
+  let date = Date.now();
   const isAdmin = useSelector((state: RootState) => state.isAdmin);
   const router = useIonRouter();
   useEffect(() => {
@@ -43,17 +43,20 @@ const AdminPanel: React.FC = () => {
   // console.log("usersInfo:", usersInfo);
 
   async function acceptReq(e: any) {
-    return e;
-    // let res = await fetch(`http://localhost:1688/posts`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     sellerId: e.id,
-    //     receiptCode:
-    //   }),
-    // });
+    // console.log("e:", e);
+    // console.log("HOTB" + date + e.id);
+    let res = await fetch(`http://localhost:1688/storages`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        sellerId: +e.user_id,
+        receiptCode: "HOTB" + date + e.id,
+      }),
+    });
+    let result = await res.json();
+    console.log("result:", result);
   }
 
   function denialReq() {

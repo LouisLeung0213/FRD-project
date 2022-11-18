@@ -9,6 +9,7 @@ export let env = {
   DB_USER: '',
   DB_PASSWORD: '',
   PORT: '',
+  HOST: '',
 };
 
 populateEnv(env, { mode: 'halt' });
