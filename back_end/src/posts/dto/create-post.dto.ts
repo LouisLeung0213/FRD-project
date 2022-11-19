@@ -1,4 +1,10 @@
-import { IsNumber, IsNotEmpty, IsString, IsBoolean } from 'class-validator';
+import {
+  IsNumber,
+  IsNotEmpty,
+  IsString,
+  IsBoolean,
+  IsArray,
+} from 'class-validator';
 
 export class CreatePostDto {
   // @IsNumber()
@@ -13,15 +19,14 @@ export class CreatePostDto {
   @IsNotEmpty()
   description: string;
 
-  @IsString()
-  tags: string;
+  tags: Array<string>;
 
   @IsNumber()
   @IsNotEmpty()
   startPrice: number;
 
-  @IsNumber()
-  dealPrice: number;
+  @IsString()
+  location: string;
 
   @IsBoolean()
   qualityPlan: boolean;
