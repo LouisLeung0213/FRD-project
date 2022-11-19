@@ -33,14 +33,6 @@ export async function up(knex: Knex): Promise<void> {
     table.timestamp('search_time').notNullable().defaultTo(knex.fn.now());
   });
 
-  await knex.schema.createTableIfNotExists('storages', (table) => {
-    table.increments('id');
-    table.string('receipt_code').notNullable();
-    table.integer('seller_id').notNullable().references('users.id');
-    table.timestamp('in_time').notNullable().defaultTo(knex.fn.now());
-    table.timestamp('out_time');
-  });
-
   await knex.schema.createTableIfNotExists('store_location', (table) => {
     table.increments('id');
     table.string('location').notNullable();
@@ -61,6 +53,14 @@ export async function up(knex: Knex): Promise<void> {
     table.boolean('auto_adjust_plan').defaultTo(false);
   });
 
+  await knex.schema.createTableIfNotExists('storages', (table) => {
+    table.increments('id');
+    table.string('receipt_code').notNullable();
+    table.integer('product_id').notNullable().references('posts.id');
+    table.integer('seller_id').notNullable().references('users.id');
+    table.timestamp('in_time').notNullable().defaultTo(knex.fn.now());
+    table.timestamp('out_time');
+  });
   await knex.schema.createTableIfNotExists('bid_records', (table) => {
     table.increments('id');
     table.integer('post_id').notNullable().references('posts.id');
@@ -99,7 +99,7 @@ export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTableIfExists('bid_records');
   await knex.schema.dropTableIfExists('storages');
   await knex.schema.dropTableIfExists('banned_users');
-  await knex.schema.dropTableIfExists('store_location');
   await knex.schema.dropTableIfExists('posts');
+  await knex.schema.dropTableIfExists('store_location');
   await knex.schema.dropTableIfExists('users');
 }

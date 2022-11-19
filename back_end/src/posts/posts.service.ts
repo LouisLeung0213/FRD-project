@@ -22,7 +22,14 @@ export class PostsService {
     return `This action returns a #${id} post`;
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
+  async update(id: number, updatePostDto: UpdatePostDto) {
+    let updatePostInfo = await this.knex('posts')
+      .update({
+        post_title: updatePostDto.postTitle,
+        post_description: updatePostDto.postDescription,
+        is_pending_out: true,
+      })
+      .where('id', updatePostDto.postId);
     return `This action updates a #${id} post`;
   }
 

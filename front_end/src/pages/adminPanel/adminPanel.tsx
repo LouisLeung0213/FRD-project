@@ -27,6 +27,7 @@ import { routes } from "../../routes";
 
 const AdminPanel: React.FC = () => {
   let [reqPosts, setReqPosts] = useState([]);
+  let [acceptRequest, setAcceptRequest] = useState(false);
 
   let date = Date.now();
   const isAdmin = useSelector((state: RootState) => state.isAdmin);
@@ -39,7 +40,8 @@ const AdminPanel: React.FC = () => {
       setReqPosts(result);
     };
     getProductReq();
-  }, []);
+    setAcceptRequest(false);
+  }, [acceptRequest]);
   // console.log("usersInfo:", usersInfo);
 
   async function acceptReq(e: any) {
@@ -52,11 +54,13 @@ const AdminPanel: React.FC = () => {
       },
       body: JSON.stringify({
         sellerId: +e.user_id,
+        productId: +e.id,
         receiptCode: "HOTB" + date + e.id,
       }),
     });
     let result = await res.json();
     console.log("result:", result);
+    setAcceptRequest(true);
   }
 
   function denialReq() {
