@@ -7,6 +7,9 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
   IonLabel,
   IonList,
   IonPage,
@@ -115,26 +118,33 @@ const AdminPanel: React.FC = () => {
                       .filter((reqPost) => reqPost.username.includes(query))
                       .map((e: any) => {
                         return (
-                          <IonItem key={e.id}>
-                            {/* <IonSlides pager={true} options={slideOpts}> */}
-                            {/* <IonSlide> */}
-                            貨品ID：{e.id}， 帳號名稱：{e.username}， 貨品標題：
-                            {e.post_title}， 貨品描述：{e.post_description}，
-                            價錢：
-                            {e.original_price}。
-                            <IonIcon
-                              icon={checkmarkOutline}
-                              size="large"
-                              onClick={() => acceptReq(e)}
-                            ></IonIcon>
-                            <IonIcon
-                              icon={closeOutline}
-                              size="large"
-                              onClick={() => denialReq()}
-                            ></IonIcon>
-                            {/* </IonSlide> */}
-                            {/* </IonSlides> */}
-                          </IonItem>
+                          <IonItemSliding>
+                            <IonItemOptions side="start">
+                              <IonItemOption color="danger">
+                                <IonIcon
+                                  icon={closeOutline}
+                                  size="large"
+                                  onClick={() => denialReq()}
+                                ></IonIcon>
+                              </IonItemOption>
+                            </IonItemOptions>
+                            <IonItem key={e.id}>
+                              貨品ID：{e.id}， 帳號名稱：{e.username}，
+                              貨品標題：
+                              {e.post_title}， 貨品描述：{e.post_description}，
+                              價錢：
+                              {e.original_price}。
+                            </IonItem>
+                            <IonItemOptions side="end">
+                              <IonItemOption color="success">
+                                <IonIcon
+                                  icon={checkmarkOutline}
+                                  size="large"
+                                  onClick={() => acceptReq(e)}
+                                ></IonIcon>
+                              </IonItemOption>
+                            </IonItemOptions>
+                          </IonItemSliding>
                         );
                       })}
                   </div>

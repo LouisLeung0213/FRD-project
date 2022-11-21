@@ -9,6 +9,9 @@ import {
   IonIcon,
   IonInput,
   IonItem,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
   IonLabel,
   IonList,
   IonModal,
@@ -17,7 +20,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { expandOutline } from "ionicons/icons";
+import { closeOutline, expandOutline } from "ionicons/icons";
 // import { checkmarkOutline, closeOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -32,6 +35,7 @@ const Storages: React.FC = () => {
   const isAdmin = useSelector((state: RootState) => state.isAdmin);
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [query2, setQuery2] = useState("");
   let [productList, setProductList] = useState<[any]>([] as any);
   let [productDescription, setProductDescription] = useState("");
   let [sellerId, setSellerId] = useState("");
@@ -165,16 +169,31 @@ const Storages: React.FC = () => {
                 <IonLabel>HOTBID 貨倉清單</IonLabel>
               </IonItem>
               <div className="ion-padding" slot="content">
-                {productList.map((e: any) => {
-                  return (
-                    <IonItem key={e.product_id}>
-                      賣家名稱：{e.nickname}，EMAIl：
-                      {e.email}，電話號碼：{e.phone}，電子收據號碼：
-                      {e.receipt_code}，入倉時間：
-                      {moment(e.in_time).format("MMMM Do YYYY, h:mm:ss a")}
-                    </IonItem>
-                  );
-                })}
+                <IonSearchbar
+                  debounce={1000}
+                  onIonChange={(ev: any) => setQuery2(ev.target.value)}
+                ></IonSearchbar>
+                {productList
+                  .filter((productList) =>
+                    productList.receipt_code.includes(query2)
+                  )
+                  .map((e: any) => {
+                    return (
+                      <IonItemSliding>
+                        <IonItem key={e.product_id}>
+                          賣家名稱：{e.nickname}，EMAIl：
+                          {e.email}，電話號碼：{e.phone}，電子收據號碼：
+                          {e.receipt_code}，入倉時間：
+                          {moment(e.in_time).format("MMMM Do YYYY, h:mm:ss a")}
+                        </IonItem>
+                        <IonItemOptions>
+                          <IonItemOption color="danger">
+                            <IonIcon icon={closeOutline} size="large"></IonIcon>
+                          </IonItemOption>
+                        </IonItemOptions>
+                      </IonItemSliding>
+                    );
+                  })}
               </div>
             </IonAccordion>
           </IonAccordionGroup>
