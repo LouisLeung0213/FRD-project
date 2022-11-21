@@ -12,13 +12,23 @@ export class PostsService {
 
   async findAll() {
     let findAllTruePosts = await this.knex
-      .select('*')
+      .select(
+        'posts.id',
+        'user_id',
+        'post_title',
+        'post_description',
+        'original_price',
+        'is_pending_in',
+        'location_id',
+        'username',
+      )
       .from('posts')
+      .join('users', 'user_id', 'users.id')
       .where('is_pending_in', true);
     return findAllTruePosts;
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return `This action returns a #${id} post`;
   }
 

@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package scottTesting.firebaseDemo1;
 
 import com.getcapacitor.BridgeActivity;
 

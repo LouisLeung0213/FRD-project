@@ -39,6 +39,12 @@ export async function seed(knex: Knex): Promise<void> {
       },
     ]);
 
+    await txn('store_location').insert([
+      {
+        location: '荃灣西',
+      },
+    ]);
+
     await txn.commit();
     return;
   } catch (error) {

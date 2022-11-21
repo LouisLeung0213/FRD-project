@@ -14,9 +14,26 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 import "./Invoice.css";
+import moment from "moment";
 
 const Invoice: React.FC = () => {
+  const userId = useSelector((state: RootState) => state.id);
+  let [invoiceList, setInvoiceList] = useState([]);
+  useEffect(() => {
+    const getInvoice = async () => {
+      let res = await fetch(`http://localhost:1688/invoice/${userId}`);
+      let result = await res.json();
+      setInvoiceList(result);
+      console.log("invoice:", result);
+    };
+
+    getInvoice();
+  }, []);
+
   return (
     <IonPage>
       <IonHeader>
@@ -31,10 +48,24 @@ const Invoice: React.FC = () => {
         <IonAccordionGroup>
           <IonAccordion value="first">
             <IonItem slot="header" color="light">
-              <IonLabel>電子收據 - 2022-03-01</IonLabel>
+              <IonLabel>存貨電子收據</IonLabel>
             </IonItem>
             <div className="ion-padding invoiceContainer" slot="content">
-              <IonLabel className="invoiceNumber">YOUBUYTHISITEM0301</IonLabel>
+              {invoiceList.map((e: any) => {
+                return (
+                  <IonItem key={e.product_id}>
+                    收據號碼：
+                    <IonLabel>{e.receipt_code}</IonLabel>
+                    貨品名稱：
+                    <IonLabel>{e.post_title}</IonLabel>
+                    存倉時間：
+                    <IonLabel>
+                      {moment(e.in_time).format("MMMM Do YYYY, h:mm:ss a")}
+                    </IonLabel>
+                  </IonItem>
+                );
+              })}
+              {/* <IonLabel className="invoiceNumber"></IonLabel>
               賣家：
               <IonLabel className="sellerName">Louis</IonLabel>
               買家：
@@ -44,12 +75,12 @@ const Invoice: React.FC = () => {
               成交金額：
               <IonLabel className="soldPrice">$8964</IonLabel>
               成交日期：
-              <IonLabel className="soldTime">2022-03-01 03:33 am</IonLabel>
+              <IonLabel className="soldTime">2022-03-01 03:33 am</IonLabel> */}
             </div>
           </IonAccordion>
           <IonAccordion value="second">
             <IonItem slot="header" color="light">
-              <IonLabel>電子收據 - 2022-02-01</IonLabel>
+              <IonLabel>已成交電子收據</IonLabel>
             </IonItem>
             <div className="ion-padding invoiceContainer" slot="content">
               <IonLabel className="invoiceNumber">YOUBUYTHISITEM0201</IonLabel>
@@ -63,24 +94,6 @@ const Invoice: React.FC = () => {
               <IonLabel className="soldPrice">$8963</IonLabel>
               成交日期：
               <IonLabel className="soldTime">2022-02-01 02:22 am</IonLabel>
-            </div>
-          </IonAccordion>
-          <IonAccordion value="third">
-            <IonItem slot="header" color="light">
-              <IonLabel>電子收據 - 2022-01-01</IonLabel>
-            </IonItem>
-            <div className="ion-padding invoiceContainer" slot="content">
-              <IonLabel className="invoiceNumber">YOUBUYTHISITEM0101</IonLabel>
-              賣家：
-              <IonLabel className="sellerName">Louis</IonLabel>
-              買家：
-              <IonLabel className="buyerName">Scott</IonLabel>
-              拍賣物品：
-              <IonLabel>[HotToy] IronMan-Mark-41</IonLabel>
-              成交金額：
-              <IonLabel className="soldPrice">$8961</IonLabel>
-              成交日期：
-              <IonLabel className="soldTime">2022-01-01 01:11 am</IonLabel>
             </div>
           </IonAccordion>
         </IonAccordionGroup>

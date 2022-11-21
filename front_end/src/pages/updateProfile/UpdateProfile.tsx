@@ -95,7 +95,7 @@ const UpdateProfile: React.FC = () => {
           newPhone: state.phone,
           newEmail: state.email,
           newJoinedTime: joinedTime,
-          newIsAdmin: isAdmin
+          newIsAdmin: isAdmin,
         })
       );
       console.log("reduxState: ", reduxState);
