@@ -109,30 +109,34 @@ const PickPhoto: React.FC = () => {
   //console.log(items);
   const submitForm = async (data: any) => {
     console.log(state.title);
-    if (data.title.length == 0) {
-      setTitleOk(false);
-    } else {
-      setTitleOk(true);
-    }
-    let numReg = /^\d+$/;
-    if (data.description.length == 0) {
-      setIsDescriptionOk(false);
-    } else {
-      setIsDescriptionOk(true);
-    }
-    if (data.qualityPlan == true && !data.location) {
-      setIsLocationOk(false);
-      dismiss();
-    } else {
-      setIsLocationOk(true);
-    }
+    let ok = false;
+    function checkStatus() {
+      if (data.title.length == 0) {
+        setTitleOk(false);
+      } else {
+        setTitleOk(true);
+      }
+      let numReg = /^\d+$/;
+      if (data.description.length == 0) {
+        setIsDescriptionOk(false);
+      } else {
+        setIsDescriptionOk(true);
+      }
+      if (data.qualityPlan == true && !data.location) {
+        setIsLocationOk(false);
+      } else {
+        setIsLocationOk(true);
+      }
 
-    if (data.startPrice.length == 0 || !data.startPrice.match(numReg)) {
-      setStartPriceOk(false);
+      if (data.startPrice.length == 0 || !data.startPrice.match(numReg)) {
+        setStartPriceOk(false);
+      } else {
+        setStartPriceOk(true);
+      }
       dismiss();
-    } else {
-      setStartPriceOk(true);
+      return;
     }
+    checkStatus();
 
     console.log("pass");
 
@@ -210,27 +214,6 @@ const PickPhoto: React.FC = () => {
             </div>
           </IonModal>
 
-          {/* <div className="image-list-container">
-            <div className="image-list">
-              {photos.map((photo) => (
-                <div
-                  className="image-box preview-box"
-                  key={photo.id}
-                  style={{ backgroundImage: "url(" + photo.dataUrl + ")" }}
-                >
-                  <IonIcon
-                    icon={trash}
-                    color="danger"
-                    onClick={() => setPhotos(photos.filter((p) => p != photo))}
-                  ></IonIcon>
-                </div>
-              ))}
-              <div className="image-box add-box" onClick={takePhoto}>
-                <IonIcon icon={add}></IonIcon>
-              </div>
-            </div>
-          </div> */}
-
           <div>
             <div className="photoButtonDiv ">
               <IonButton slot="start" onClick={() => takePhoto()}>
@@ -250,42 +233,39 @@ const PickPhoto: React.FC = () => {
                 effect={"fade"}
                 className="slide"
               >
-                {photos.length > 0 ? (
-                  photos.map((photo, index) => {
-                    return (
-                      <SwiperSlide key={index} className="image-box">
-                        <img src={photo.dataUrl} key={index} />
-                        <IonFab
-                          slot="fixed"
-                          vertical="bottom"
-                          horizontal="center"
+                {photos.map((photo, index) => {
+                  return (
+                    <SwiperSlide key={index} className="image-box">
+                      <img src={photo.dataUrl} key={index} />
+                      <IonFab
+                        slot="fixed"
+                        vertical="bottom"
+                        horizontal="center"
+                      >
+                        <IonFabButton
+                          className="preview-box"
+                          onClick={() => {
+                            console.log("456");
+                            setPhotos(photos.filter((p) => p != photo));
+                            // let newPhotoArr = [
+                            //   ...photos.filter(
+                            //     (photo) => photos.indexOf(photo) !== index
+                            //   ),
+                            // ];
+                            // setPhotos(newPhotoArr);
+                          }}
+                          color="danger"
+                          size="small"
                         >
-                          <IonFabButton
-                            className="preview-box"
-                            onClick={() => {
-                              console.log("456");
-                              setPhotos(photos.filter((p) => p != photo));
-                              // let newPhotoArr = [
-                              //   ...photos.filter(
-                              //     (photo) => photos.indexOf(photo) !== index
-                              //   ),
-                              // ];
-                              // setPhotos(newPhotoArr);
-                            }}
-                            color="danger"
-                            size="small"
-                          >
-                            <IonIcon src={trash}></IonIcon>
-                          </IonFabButton>
-                        </IonFab>
-                      </SwiperSlide>
-                    );
-                  })
-                ) : (
-                  <div className="image-box add-box" onClick={takePhoto}>
-                    <IonIcon icon={add}></IonIcon>
-                  </div>
-                )}
+                          <IonIcon src={trash}></IonIcon>
+                        </IonFabButton>
+                      </IonFab>
+                    </SwiperSlide>
+                  );
+                })}
+                <SwiperSlide className="image-box add-box" onClick={takePhoto}>
+                  <IonIcon icon={add}></IonIcon>
+                </SwiperSlide>
               </Swiper>
             </div>
             {item({

@@ -15,8 +15,11 @@ import { selectImage } from "@beenotung/tslib/file";
 import { KB } from "@beenotung/tslib/size";
 import {
   compressImage,
+  compressImageToBlob,
   compressMobilePhoto,
   dataURItoBlob,
+  resizeImage,
+  toImage,
 } from "@beenotung/tslib/image";
 
 export interface UserPhoto {
@@ -37,10 +40,19 @@ export function useImageFiles() {
   const takePhoto = async () => {
     const files = await selectImage({ multiple: true, accept: "image/*" });
     for (let file of files) {
-      let dataUrl = await compressMobilePhoto({
-        image: file,
-        maximumSize: 200 * KB,
-      });
+      // let dataUrl = await compressMobilePhoto({
+      //   image: file,
+      //   maximumSize: 500 * KB,
+      //   quality: 0.5,
+      // });
+      // let blob = await compressImageToBlob({
+      //   image: await toImage(file),
+      //   mimeType: "image/jpeg",
+      //   quality: 0.5,
+      //   maximumSize: 200 * KB,
+      // });
+      let image = await toImage(file);
+      let dataUrl = resizeImage(image, 400, 600, "image/jpeg", 0.5);
       let blob = dataURItoBlob(dataUrl);
       file = new File([blob], file.name, {
         lastModified: file.lastModified,

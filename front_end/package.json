@@ -6,7 +6,7 @@
     "@awesome-cordova-plugins/core": "^6.2.0",
     "@awesome-cordova-plugins/fcm": "^6.2.0",
     "@awesome-cordova-plugins/photo-library": "^6.2.0",
-    "@beenotung/tslib": "^20.1.4",
+    "@beenotung/tslib": "^20.2.0",
     "@capacitor/android": "^4.4.0",
     "@capacitor/app": "^4.1.0",
     "@capacitor/camera": "^4.1.3",
