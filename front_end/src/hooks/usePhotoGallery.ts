@@ -29,6 +29,7 @@ const PHOTO_STORAGE = "photos";
 export interface ImageFile {
   file: File;
   dataUrl: string;
+  id: number;
 }
 
 export function useImageFiles() {
@@ -45,7 +46,14 @@ export function useImageFiles() {
         lastModified: file.lastModified,
         type: blob.type,
       });
-      setPhotos((photos) => [...photos, { file, dataUrl }]);
+      setPhotos((photos) => [
+        ...photos,
+        {
+          file,
+          dataUrl,
+          id: photos.reduce((acc, c) => Math.max(acc, c.id), 0) + 1,
+        },
+      ]);
     }
   };
   return {

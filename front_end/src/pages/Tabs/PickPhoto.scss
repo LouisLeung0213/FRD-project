@@ -75,3 +75,33 @@ ion-modal#preview-modal ion-icon {
 ion-modal#preview-modal .wrapper {
   margin-bottom: 10px;
 }
+
+.PickPhoto {
+  .photoButtonDiv {
+    display: flex;
+    align-items: center;
+    width: 50%;
+    justify-content: space-between;
+  }
+  .slide {
+    width: 100%;
+  }
+  .image-box {
+    border: 1px solid gray;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 7rem;
+    height: 8rem;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 0.18rem;
+  }
+  .preview-box ion-icon {
+    font-size: 1rem;
+  }
+  .add-box ion-icon {
+    font-size: 3rem;
+  }
+}

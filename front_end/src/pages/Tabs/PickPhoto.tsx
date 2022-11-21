@@ -21,7 +21,7 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import { camera, imagesOutline, trash } from "ionicons/icons";
+import { add, camera, imagesOutline, trash } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import { useImageFiles, usePhotoGallery } from "../../hooks/usePhotoGallery";
 import { selectImage, fileToBase64String } from "@beenotung/tslib/file";
@@ -37,7 +37,7 @@ import "swiper/css/zoom";
 import "@ionic/react/css/ionic-swiper.css";
 import "swiper/swiper.min.css";
 import "@ionic/react/css/ionic-swiper.css";
-import "./PickPhoto.css";
+import "./PickPhoto.scss";
 import { useIonFormState } from "react-use-ionic-form";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -171,7 +171,7 @@ const PickPhoto: React.FC = () => {
 
   defineCustomElements(window);
   return (
-    <IonPage>
+    <IonPage className="PickPhoto">
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
@@ -210,88 +210,84 @@ const PickPhoto: React.FC = () => {
             </div>
           </IonModal>
 
-          <div>
-            <IonButton slot="start" onClick={() => takePhoto()}>
-              <IonIcon icon={imagesOutline}></IonIcon>
-            </IonButton>
+          {/* <div className="image-list-container">
+            <div className="image-list">
+              {photos.map((photo) => (
+                <div
+                  className="image-box preview-box"
+                  key={photo.id}
+                  style={{ backgroundImage: "url(" + photo.dataUrl + ")" }}
+                >
+                  <IonIcon
+                    icon={trash}
+                    color="danger"
+                    onClick={() => setPhotos(photos.filter((p) => p != photo))}
+                  ></IonIcon>
+                </div>
+              ))}
+              <div className="image-box add-box" onClick={takePhoto}>
+                <IonIcon icon={add}></IonIcon>
+              </div>
+            </div>
+          </div> */}
 
-            <div className="ion-padding">
+          <div>
+            <div className="photoButtonDiv ">
+              <IonButton slot="start" onClick={() => takePhoto()}>
+                <IonIcon icon={imagesOutline}></IonIcon>
+              </IonButton>
+              <IonLabel className="label">加入物品照片</IonLabel>
+            </div>
+            <div>
               <Swiper
                 modules={[Autoplay, Keyboard, Pagination, Scrollbar, Zoom]}
                 autoplay={true}
                 keyboard={true}
-                // pagination={true}
+                //pagination={true}
                 slidesPerView={3}
                 scrollbar={true}
                 zoom={true}
                 effect={"fade"}
+                className="slide"
               >
-                {items.map((item, index) => {
-                  return (
-                    <SwiperSlide
-                      key={index}
-                      style={{ width: "120px", height: "120px" }}
-                    >
-                      <img src={item.dataUrl} key={index} />
-                      <IonFab
-                        slot="fixed"
-                        vertical="bottom"
-                        horizontal="center"
-                      >
-                        <IonFabButton
-                          onClick={() => {
-                            console.log("123");
-                            let newItemArr = [
-                              ...items.filter(
-                                (item) => items.indexOf(item) !== index
-                              ),
-                            ];
-                            setItems(newItemArr);
-                          }}
-                          color="danger"
-                          size="small"
+                {photos.length > 0 ? (
+                  photos.map((photo, index) => {
+                    return (
+                      <SwiperSlide key={index} className="image-box">
+                        <img src={photo.dataUrl} key={index} />
+                        <IonFab
+                          slot="fixed"
+                          vertical="bottom"
+                          horizontal="center"
                         >
-                          <IonIcon src={trash}></IonIcon>
-                        </IonFabButton>
-                      </IonFab>
-                    </SwiperSlide>
-                  );
-                })}
-
-                {photos.map((photo, index) => {
-                  return (
-                    <SwiperSlide
-                      key={index}
-                      style={{ width: "120px", height: "120px" }}
-                    >
-                      <img src={photo.dataUrl} key={index} />
-                      <IonFab
-                        slot="fixed"
-                        vertical="bottom"
-                        horizontal="center"
-                      >
-                        <IonFabButton
-                          onClick={() => {
-                            console.log("456");
-                            let newPhotoArr = [
-                              ...photos.filter(
-                                (photo) => photos.indexOf(photo) !== index
-                              ),
-                            ];
-                            setPhotos(newPhotoArr);
-                          }}
-                          color="danger"
-                          size="small"
-                        >
-                          <IonIcon src={trash}></IonIcon>
-                        </IonFabButton>
-                      </IonFab>
-                    </SwiperSlide>
-                  );
-                })}
+                          <IonFabButton
+                            className="preview-box"
+                            onClick={() => {
+                              console.log("456");
+                              setPhotos(photos.filter((p) => p != photo));
+                              // let newPhotoArr = [
+                              //   ...photos.filter(
+                              //     (photo) => photos.indexOf(photo) !== index
+                              //   ),
+                              // ];
+                              // setPhotos(newPhotoArr);
+                            }}
+                            color="danger"
+                            size="small"
+                          >
+                            <IonIcon src={trash}></IonIcon>
+                          </IonFabButton>
+                        </IonFab>
+                      </SwiperSlide>
+                    );
+                  })
+                ) : (
+                  <div className="image-box add-box" onClick={takePhoto}>
+                    <IonIcon icon={add}></IonIcon>
+                  </div>
+                )}
               </Swiper>
             </div>
-
             {item({
               name: "title",
               renderLabel: () => <IonLabel position="floating">標題</IonLabel>,
@@ -303,7 +299,6 @@ const PickPhoto: React.FC = () => {
               {!isTitleOk ? <IonText color="danger">請加入標題</IonText> : null}
             </div>
             <br />
-
             {item({
               name: "description",
 
@@ -324,7 +319,6 @@ const PickPhoto: React.FC = () => {
               ) : null}
             </div>
             <br />
-
             {item({
               name: "tags",
               label: "tags",
@@ -342,7 +336,6 @@ const PickPhoto: React.FC = () => {
               ),
             })}
             <br />
-
             {item({
               name: "startPrice",
               renderLabel: () => <IonLabel position="floating">底價</IonLabel>,
@@ -359,9 +352,7 @@ const PickPhoto: React.FC = () => {
               ) : null}
             </div>
             <br />
-
             <br />
-
             {item({
               name: "qualityPlan",
               renderLabel: () => <IonLabel>加入認證計劃</IonLabel>,
@@ -374,7 +365,6 @@ const PickPhoto: React.FC = () => {
               ),
             })}
             <br />
-
             <IonModal
               id="qualityPlan-modal"
               ref={qualityModal}
@@ -418,7 +408,6 @@ const PickPhoto: React.FC = () => {
                 </IonButton>
               </div>
             </IonModal>
-
             {state.qualityPlan === true ? (
               item({
                 name: "location",
@@ -443,9 +432,7 @@ const PickPhoto: React.FC = () => {
                 <IonText color="danger">請選擇門市</IonText>
               ) : null}
             </div>
-
             <br />
-
             {item({
               name: "promotion",
               renderLabel: () => <IonLabel>自動調整底價</IonLabel>,
