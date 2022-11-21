@@ -39,9 +39,11 @@ export async function seed(knex: Knex): Promise<void> {
       },
     ]);
 
-    let store_location = await txn('store_location').insert({
-      location: '荃灣西',
-    });
+    await txn('store_location').insert([
+      {
+        location: '荃灣西',
+      },
+    ]);
 
     await txn.commit();
     return;

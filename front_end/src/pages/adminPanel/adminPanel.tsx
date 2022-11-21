@@ -10,6 +10,7 @@ import {
   IonLabel,
   IonList,
   IonPage,
+  IonSearchbar,
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
@@ -27,8 +28,9 @@ import { routes } from "../../routes";
 import { API_ORIGIN } from "../../api";
 
 const AdminPanel: React.FC = () => {
-  let [reqPosts, setReqPosts] = useState([]);
+  let [reqPosts, setReqPosts] = useState<[any]>([] as any);
   let [acceptRequest, setAcceptRequest] = useState(false);
+  const [query, setQuery] = useState("");
 
   let date = Date.now();
   const isAdmin = useSelector((state: RootState) => state.isAdmin);
@@ -39,6 +41,7 @@ const AdminPanel: React.FC = () => {
       let result = await res.json();
 
       setReqPosts(result);
+      console.log("result", result);
     };
     getProductReq();
     setAcceptRequest(false);
@@ -97,26 +100,32 @@ const AdminPanel: React.FC = () => {
                     <IonLabel>HOTBID 等待驗證貨品清單</IonLabel>
                   </IonItem>
                   <div className="ion-padding" slot="content">
-                    {reqPosts.map((e: any) => {
-                      return (
-                        <IonItem key={e.id}>
-                          貨品ID：{e.id}， 用戶ID：{e.user_id}， 貨品標題：
-                          {e.post_title}， 貨品描述：{e.post_description}，
-                          價錢：
-                          {e.original_price}， 最低價：{e.min_price}。
-                          <IonIcon
-                            icon={checkmarkOutline}
-                            size="large"
-                            onClick={() => acceptReq(e)}
-                          ></IonIcon>
-                          <IonIcon
-                            icon={closeOutline}
-                            size="large"
-                            onClick={() => denialReq()}
-                          ></IonIcon>
-                        </IonItem>
-                      );
-                    })}
+                    <IonSearchbar
+                      debounce={1000}
+                      onIonChange={(ev: any) => setQuery(ev.target.value)}
+                    ></IonSearchbar>
+                    {reqPosts
+                      .filter((reqPost) => reqPost.username.includes(query))
+                      .map((e: any) => {
+                        return (
+                          <IonItem key={e.id}>
+                            貨品ID：{e.id}， 帳號名稱：{e.username}， 貨品標題：
+                            {e.post_title}， 貨品描述：{e.post_description}，
+                            價錢：
+                            {e.original_price}。
+                            <IonIcon
+                              icon={checkmarkOutline}
+                              size="large"
+                              onClick={() => acceptReq(e)}
+                            ></IonIcon>
+                            <IonIcon
+                              icon={closeOutline}
+                              size="large"
+                              onClick={() => denialReq()}
+                            ></IonIcon>
+                          </IonItem>
+                        );
+                      })}
                   </div>
                 </IonAccordion>
               </IonAccordionGroup>

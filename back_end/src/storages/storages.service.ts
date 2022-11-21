@@ -36,7 +36,6 @@ export class StoragesService {
         'phone',
         'email',
         'post_title',
-        'post_description',
       )
       .from('storages')
       .join('users', 'seller_id', 'users.id')
@@ -44,8 +43,21 @@ export class StoragesService {
     return productDetails;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} storage`;
+  async findOne(id: number) {
+    let productDetail = await this.knex
+      .select(
+        'product_id',
+        'seller_id',
+        'nickname',
+        'post_title',
+        'post_description',
+        'receipt_code',
+      )
+      .from('storages')
+      .join('users', 'seller_id', 'users.id')
+      .join('posts', 'product_id', 'posts.id')
+      .where('product_id', id);
+    return productDetail[0];
   }
 
   update(id: number, updateStorageDto: UpdateStorageDto) {

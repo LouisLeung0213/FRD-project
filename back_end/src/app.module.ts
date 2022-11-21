@@ -7,6 +7,7 @@ import { ProfilesModule } from './profiles/profiles.module';
 import { PostsModule } from './posts/posts.module';
 import { AdminModule } from './admin/admin.module';
 import { StoragesModule } from './storages/storages.module';
+import { InvoiceModule } from './invoice/invoice.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { StoragesModule } from './storages/storages.module';
     PostsModule,
     AdminModule,
     StoragesModule,
+    InvoiceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
