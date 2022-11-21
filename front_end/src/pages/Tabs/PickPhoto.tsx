@@ -22,7 +22,7 @@ import {
 } from "@ionic/react";
 import { camera, imagesOutline, trash } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
-import { usePhotoGallery } from "../../hooks/usePhotoGallery";
+import { useImageFiles, usePhotoGallery } from "../../hooks/usePhotoGallery";
 import { selectImage, fileToBase64String } from "@beenotung/tslib/file";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
@@ -40,6 +40,7 @@ import "./PickPhoto.css";
 import { useIonFormState } from "react-use-ionic-form";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
+import { API_ORIGIN } from "../../api";
 
 type ImageItem = {
   file: File;
@@ -47,7 +48,8 @@ type ImageItem = {
 };
 
 const PickPhoto: React.FC = () => {
-  const { blobData, photos, setPhotos, takePhoto } = usePhotoGallery();
+  // const { blobData, photos, setPhotos, takePhoto } = usePhotoGallery();
+  const { photos, setPhotos, takePhoto } = useImageFiles();
   const [items, setItems] = useState<ImageItem[]>([]);
   const qualityModal = useRef<HTMLIonModalElement>(null);
   const previewModal = useRef<HTMLIonModalElement>(null);
@@ -66,6 +68,7 @@ const PickPhoto: React.FC = () => {
   const [isTitleOk, setTitleOk] = useState(true);
   const [isDescriptionOk, setIsDescriptionOk] = useState(true);
   const [isStartPriceOk, setStartPriceOk] = useState(true);
+  const [isLocationOk, setIsLocationOk] = useState(true);
 
   const { state, item } = useIonFormState({
     title: "",
@@ -77,30 +80,33 @@ const PickPhoto: React.FC = () => {
     promotion: false,
   });
 
-  function formAppend(data: any) {
+  function formAppend() {
+    let data = state;
     let formData = new FormData();
 
     formData.append("title", data.title);
     formData.append("description", data.description);
-    formData.append("tags", data.tags);
-    formData.append("startPrice", data.startPrice);
-    formData.append("location", data.location);
-    formData.append("qualityPlan", data.qualityPlan);
-    formData.append("promotion", data.promotion);
-    if (blobData.length > 0) {
-      blobData.forEach((blobPhoto) => formData.append("photo", blobPhoto));
-    }
-    if (items.length > 0) {
-      items.forEach((image) => {
-        formData.append("image", image.dataUrl);
+    if (data.tags.length > 0) {
+      data.tags.forEach((tag: string) => {
+        formData.append("tags", tag);
       });
     }
+    formData.append("startPrice", data.startPrice);
+    formData.append("location", data.location);
+    formData.append("qualityPlan", data.qualityPlan ? "t" : "f");
+    formData.append("promotion", data.promotion ? "t" : "f");
 
+    for (let photo of photos) {
+      formData.append("photo", photo.file);
+    }
+
+    console.log("Form Data: ", formData);
     return formData;
   }
-  console.log(items);
-  const onSubmit = async (data: any) => {
-    console.log(state);
+
+  //console.log(items);
+  const submitForm = async (data: any) => {
+    console.log(state.title);
     if (data.title.length == 0) {
       setTitleOk(false);
     } else {
@@ -112,6 +118,13 @@ const PickPhoto: React.FC = () => {
     } else {
       setIsDescriptionOk(true);
     }
+    if (data.qualityPlan == true && !data.location) {
+      setIsLocationOk(false);
+      dismiss();
+    } else {
+      setIsLocationOk(true);
+    }
+
     if (data.startPrice.length == 0 || !data.startPrice.match(numReg)) {
       setStartPriceOk(false);
       dismiss();
@@ -121,16 +134,17 @@ const PickPhoto: React.FC = () => {
 
     console.log("pass");
 
-    let formData = formAppend(state);
+    let formDataUpload = formAppend();
 
-    let res = await fetch(`http://localhost:1688/postItem/${id}`, {
+    console.log("state.title =  ", state.title);
+
+    let res = await fetch(`${API_ORIGIN}/posts/postItem`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: formData,
+
+      body: formDataUpload,
     });
-    console.log(res);
+    let result = await res.json();
+    console.log(result);
 
     dismiss();
   };
@@ -185,30 +199,17 @@ const PickPhoto: React.FC = () => {
               <IonButton slot="center" onClick={dismiss}>
                 返回
               </IonButton>
-              <IonButton slot="center" onClick={() => onSubmit(state)}>
+              <IonButton slot="center" onClick={() => submitForm(state)}>
                 發佈
               </IonButton>
             </div>
           </IonModal>
 
           <div>
-            <IonItem
-              className="buttonList"
-              style={{ margin: "0px auto", width: "fit-content" }}
-            >
-              <IonButton
-                style={{ margin: "1.5rem" }}
-                onClick={() => takePhoto()}
-              >
-                <IonIcon icon={camera}></IonIcon>
-              </IonButton>
-              <IonButton
-                style={{ margin: "1.5rem" }}
-                onClick={() => pickImages()}
-              >
-                <IonIcon icon={imagesOutline} />
-              </IonButton>
-            </IonItem>
+            <IonButton slot="start" onClick={() => takePhoto()}>
+              <IonIcon icon={imagesOutline}></IonIcon>
+            </IonButton>
+
             <div className="ion-padding">
               <Swiper
                 modules={[Autoplay, Keyboard, Pagination, Scrollbar, Zoom]}
@@ -227,7 +228,11 @@ const PickPhoto: React.FC = () => {
                       style={{ width: "120px", height: "120px" }}
                     >
                       <img src={item.dataUrl} key={index} />
-                      <IonFab slot="fixed" vertical="bottom" horizontal="end">
+                      <IonFab
+                        slot="fixed"
+                        vertical="bottom"
+                        horizontal="center"
+                      >
                         <IonFabButton
                           onClick={() => {
                             console.log("123");
@@ -254,8 +259,12 @@ const PickPhoto: React.FC = () => {
                       key={index}
                       style={{ width: "120px", height: "120px" }}
                     >
-                      <img src={photo.webviewPath} key={index} />
-                      <IonFab slot="fixed" vertical="bottom" horizontal="end">
+                      <img src={photo.dataUrl} key={index} />
+                      <IonFab
+                        slot="fixed"
+                        vertical="bottom"
+                        horizontal="center"
+                      >
                         <IonFabButton
                           onClick={() => {
                             console.log("456");
@@ -424,6 +433,11 @@ const PickPhoto: React.FC = () => {
             ) : (
               <div></div>
             )}
+            <div className="ion-text-center">
+              {!isLocationOk ? (
+                <IonText color="danger">請選擇門市</IonText>
+              ) : null}
+            </div>
 
             <br />
 

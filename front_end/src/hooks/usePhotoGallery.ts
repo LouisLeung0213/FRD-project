@@ -11,6 +11,13 @@ import { Filesystem, Directory } from "@capacitor/filesystem";
 import { Preferences } from "@capacitor/preferences";
 import { Capacitor } from "@capacitor/core";
 import { Route } from "workbox-routing";
+import { selectImage } from "@beenotung/tslib/file";
+import { KB } from "@beenotung/tslib/size";
+import {
+  compressImage,
+  compressMobilePhoto,
+  dataURItoBlob,
+} from "@beenotung/tslib/image";
 
 export interface UserPhoto {
   filepath: string;
@@ -18,6 +25,35 @@ export interface UserPhoto {
 }
 
 const PHOTO_STORAGE = "photos";
+
+export interface ImageFile {
+  file: File;
+  dataUrl: string;
+}
+
+export function useImageFiles() {
+  const [photos, setPhotos] = useState<ImageFile[]>([]);
+  const takePhoto = async () => {
+    const files = await selectImage({ multiple: true, accept: "image/*" });
+    for (let file of files) {
+      let dataUrl = await compressMobilePhoto({
+        image: file,
+        maximumSize: 200 * KB,
+      });
+      let blob = dataURItoBlob(dataUrl);
+      file = new File([blob], file.name, {
+        lastModified: file.lastModified,
+        type: blob.type,
+      });
+      setPhotos((photos) => [...photos, { file, dataUrl }]);
+    }
+  };
+  return {
+    photos,
+    setPhotos,
+    takePhoto,
+  };
+}
 
 export function usePhotoGallery() {
   const [photos, setPhotos] = useState<UserPhoto[]>([]);

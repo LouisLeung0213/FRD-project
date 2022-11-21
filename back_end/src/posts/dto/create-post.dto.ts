@@ -11,6 +11,10 @@ export class CreatePostDto {
   // @IsNotEmpty()
   // user_id: number;
 
+  // photo: File[];
+
+  // image: string;
+
   @IsString()
   @IsNotEmpty()
   title: string;

@@ -52,6 +52,7 @@ import moment from "moment";
 import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
 import React from "react";
+import { API_ORIGIN } from "../../api";
 // import { userInfo } from "os";
 
 const Profile: React.FC<{ user: number | null }> = (props: {
@@ -64,8 +65,8 @@ const Profile: React.FC<{ user: number | null }> = (props: {
 
   useEffect(() => {
     const getProfile = async () => {
-      let res = await fetch(`http://localhost:1688/profiles/${props.user}`);
-      // let res = await fetch(`http://localhost:1688/profiles/2`);
+      let res = await fetch(`${API_ORIGIN}/profiles/${props.user}`);
+
       let result = await res.json();
       setNickname(result.nickname);
       setUsername(result.username);

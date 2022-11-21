@@ -24,8 +24,9 @@ import { useSelector } from "react-redux";
 import { routes } from "../../routes";
 import { RootState } from "../../store";
 import moment from "moment";
-import { useIonFormState } from "react-use-ionic-form";
-import SignUp from "../SignUp/SignUp";
+// import { useIonFormState } from "react-use-ionic-form";
+// import SignUp from "../SignUp/SignUp";
+import { API_ORIGIN } from "../../api";
 
 const Storages: React.FC = () => {
   const isAdmin = useSelector((state: RootState) => state.isAdmin);
@@ -40,7 +41,7 @@ const Storages: React.FC = () => {
 
   useEffect(() => {
     const getStorages = async () => {
-      let res = await fetch(`http://localhost:1688/storages`);
+      let res = await fetch(`${API_ORIGIN}/storages`);
       let result = await res.json();
 
       setProductList(result);
@@ -49,6 +50,21 @@ const Storages: React.FC = () => {
     getStorages();
   }, []);
 
+  async function acceptReq(e: any) {
+    // console.log("e:", e);
+    // console.log("HOTB" + date + e.id);
+    let res = await fetch(`${API_ORIGIN}/posts/${isAdmin}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postId: e.product.id,
+        postTitle: e.post_title,
+        postDescription: e.post_description,
+      }),
+    });
+  }
   async function openDetail(e: any) {
     let res = await fetch(`http://localhost:1688/storages/${e.product_id}`);
     let result = await res.json();

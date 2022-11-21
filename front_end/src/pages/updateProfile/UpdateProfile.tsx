@@ -23,6 +23,7 @@ import {
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useIonFormState } from "react-use-ionic-form";
+import { API_ORIGIN } from "../../api";
 
 // import ExploreContainer from "../../components/ExploreContainer";
 // import ProfileContainer from "../../components/ProfileContainer";
@@ -71,20 +72,17 @@ const UpdateProfile: React.FC = () => {
     }
     console.log("state: ", state);
     try {
-      let res = await fetch(
-        `http://localhost:1688/users/updateUserInfo/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            nickname: state.nickname,
-            phone: state.phone,
-            email: state.email,
-          }),
-        }
-      );
+      let res = await fetch(`${API_ORIGIN}/users/updateUserInfo/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nickname: state.nickname,
+          phone: state.phone,
+          email: state.email,
+        }),
+      });
       let json = await res.json();
       dispatch(
         updateJwt({
