@@ -9,19 +9,21 @@ export class PostsService {
   constructor(@InjectKnex() private readonly knex: Knex) {}
   async create(createPostDto: CreatePostDto) {
     let quality_plan = false;
-    let pending_in = false;
+    let pending_in = 'selling';
+    let post_time: any = this.knex.fn.now();
+    let locationId: number = 1;
     if (createPostDto.qualityPlan === 't') {
       quality_plan = true;
-      pending_in = true;
+      pending_in = 'pending_in';
+      locationId = await this.knex('store_location')
+        .select('*')
+        .where('location', createPostDto.location)
+        .returning('id');
     }
     let promotion_plan = false;
     if (createPostDto.promotion === 't') {
       promotion_plan = true;
     }
-
-    let locationId = await this.knex('store_location')
-      .select('*')
-      .where({ location: createPostDto.location });
 
     let createPost = await this.knex('posts')
       .insert({
@@ -32,7 +34,8 @@ export class PostsService {
         q_mark: quality_plan,
         auto_adjust_plan: promotion_plan,
         location_id: locationId[0].id,
-        is_pending_in: pending_in,
+        status: pending_in,
+        post_time: post_time,
       })
       .returning('id');
 
@@ -54,13 +57,13 @@ export class PostsService {
         'post_title',
         'post_description',
         'original_price',
-        'is_pending_in',
+        'status',
         'location_id',
         'username',
       )
       .from('posts')
       .join('users', 'user_id', 'users.id')
-      .where('is_pending_in', true);
+      .where('status', 'pending_in');
     return findAllTruePosts;
   }
 
@@ -73,7 +76,7 @@ export class PostsService {
       .update({
         post_title: updatePostDto.postTitle,
         post_description: updatePostDto.postDescription,
-        is_pending_out: true,
+        status: 'selling',
       })
       .where('id', updatePostDto.postId);
     return `This action updates a #${id} post`;

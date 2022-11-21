@@ -17,7 +17,7 @@ export class StoragesService {
 
     if (acceptReq[0]) {
       await this.knex('posts')
-        .update({ is_pending_in: false })
+        .update({ status: 'verifying' })
         .where('id', acceptReq[0].product_id);
     } else {
       return `Insert failed`;
