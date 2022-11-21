@@ -11,6 +11,8 @@ import {
   IonList,
   IonPage,
   IonSearchbar,
+  IonSlide,
+  IonSlides,
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
@@ -26,6 +28,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { routes } from "../../routes";
 import { API_ORIGIN } from "../../api";
+
+// const slideOpts = {
+//   initialSlide: 1,
+//   speed: 400,
+// };
 
 const AdminPanel: React.FC = () => {
   let [reqPosts, setReqPosts] = useState<[any]>([] as any);
@@ -109,6 +116,8 @@ const AdminPanel: React.FC = () => {
                       .map((e: any) => {
                         return (
                           <IonItem key={e.id}>
+                            {/* <IonSlides pager={true} options={slideOpts}> */}
+                            {/* <IonSlide> */}
                             貨品ID：{e.id}， 帳號名稱：{e.username}， 貨品標題：
                             {e.post_title}， 貨品描述：{e.post_description}，
                             價錢：
@@ -123,6 +132,8 @@ const AdminPanel: React.FC = () => {
                               size="large"
                               onClick={() => denialReq()}
                             ></IonIcon>
+                            {/* </IonSlide> */}
+                            {/* </IonSlides> */}
                           </IonItem>
                         );
                       })}
