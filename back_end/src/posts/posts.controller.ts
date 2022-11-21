@@ -38,15 +38,17 @@ export class PostsController {
     @Body() createPostDto: CreatePostDto,
     @UploadedFiles() files: Record<string, Express.Multer.File[]>,
   ) {
+    let post_id = await this.postsService.create(createPostDto);
     console.log('Body:', createPostDto, files);
     for (let file of files.photo || []) {
       let filename = '123-' + file.fieldname + '-' + file.originalname;
-      console.log('saving file', filename);
+
       await writeFile(join('uploads', filename), file.buffer);
-      console.log('todo store to db', filename);
+
+      await this.postsService.createImageLink(filename, post_id[0].id);
     }
-    this.postsService.create(createPostDto);
-    return { message: 'here' };
+
+    return { status: 200, message: 'create post successfully' };
   }
 
   @Get()

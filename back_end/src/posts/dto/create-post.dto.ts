@@ -7,9 +7,8 @@ import {
 } from 'class-validator';
 
 export class CreatePostDto {
-  // @IsNumber()
-  // @IsNotEmpty()
-  // user_id: number;
+  @IsNotEmpty()
+  user_id: string;
 
   // photo: File[];
 
@@ -32,9 +31,9 @@ export class CreatePostDto {
   @IsString()
   location: string;
 
-  @IsBoolean()
-  qualityPlan: boolean;
+  @IsString()
+  qualityPlan: string;
 
-  @IsBoolean()
-  promotion: boolean;
+  @IsString()
+  promotion: string;
 }

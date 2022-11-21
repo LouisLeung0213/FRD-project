@@ -19,6 +19,7 @@ import {
   IonText,
   IonTextarea,
   IonToolbar,
+  useIonRouter,
 } from "@ionic/react";
 import { camera, imagesOutline, trash } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
@@ -42,6 +43,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { API_ORIGIN } from "../../api";
 
+import { routes } from "../../routes";
+
 type ImageItem = {
   file: File;
   dataUrl: string;
@@ -54,8 +57,8 @@ const PickPhoto: React.FC = () => {
   const qualityModal = useRef<HTMLIonModalElement>(null);
   const previewModal = useRef<HTMLIonModalElement>(null);
   //const [modalShow, setModalShow] = useState(false);
-  const id = useSelector((state: RootState) => state.id);
-
+  const userId = useSelector((state: RootState) => state.id);
+  const router = useIonRouter();
   function dismiss() {
     qualityModal.current?.dismiss();
     previewModal.current?.dismiss();
@@ -64,7 +67,6 @@ const PickPhoto: React.FC = () => {
   const tags = ["Disney", "模型", "限量版", "Marvel"];
   const locationSelections = ["荃灣西"];
 
-  const [isQualityPlan, setIsQualityPlan] = useState(false);
   const [isTitleOk, setTitleOk] = useState(true);
   const [isDescriptionOk, setIsDescriptionOk] = useState(true);
   const [isStartPriceOk, setStartPriceOk] = useState(true);
@@ -83,7 +85,7 @@ const PickPhoto: React.FC = () => {
   function formAppend() {
     let data = state;
     let formData = new FormData();
-
+    formData.append("user_id", userId ? userId + "" : "");
     formData.append("title", data.title);
     formData.append("description", data.description);
     if (data.tags.length > 0) {
@@ -145,6 +147,9 @@ const PickPhoto: React.FC = () => {
     });
     let result = await res.json();
     console.log(result);
+    if (result.status === 200) {
+      router.push(routes.tab.mainPage, "forward", "replace");
+    }
 
     dismiss();
   };
