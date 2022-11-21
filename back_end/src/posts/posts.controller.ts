@@ -38,10 +38,14 @@ export class PostsController {
     @Body() createPostDto: CreatePostDto,
     @UploadedFiles() files: Record<string, Express.Multer.File[]>,
   ) {
+    let counter = 0;
+    let timestamp = Date.now();
     let post_id = await this.postsService.create(createPostDto);
     console.log('Body:', createPostDto, files);
     for (let file of files.photo || []) {
-      let filename = '123-' + file.fieldname + '-' + file.originalname;
+      counter++;
+      let filename =
+        '123-' + file.fieldname + '-' + file.originalname + timestamp + counter;
 
       await writeFile(join('uploads', filename), file.buffer);
 
