@@ -34,7 +34,6 @@ const Login: React.FC = () => {
   const jwtKey = useSelector((state: RootState) => state.jwtKey);
   const id = useSelector((state: RootState) => state.id);
   const dispatch = useDispatch();
-  const history = useHistory();
   const router = useIonRouter();
 
   const [isOpen, setIsOpen] = useState(false);
