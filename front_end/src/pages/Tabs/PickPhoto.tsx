@@ -96,17 +96,10 @@ const PickPhoto: React.FC = () => {
     formData.append("qualityPlan", data.qualityPlan ? "t" : "f");
     formData.append("promotion", data.promotion ? "t" : "f");
 
-    // if (blobData.length != 0) {
-    //   blobData.forEach((blobPhoto) => formData.append("photo", blobPhoto));
-    // }
     for (let photo of photos) {
       formData.append("photo", photo.file);
     }
-    // if (items.length != 0) {
-    //   items.forEach((image) => {
-    //     formData.append("image", image.dataUrl);
-    //   });
-    // }
+
     console.log("Form Data: ", formData);
     return formData;
   }
@@ -147,19 +140,8 @@ const PickPhoto: React.FC = () => {
 
     let res = await fetch(`${API_ORIGIN}/posts/postItem`, {
       method: "POST",
-      // headers: {
-      //   "Content-type": "multipart/form-data",
-      // },
+
       body: formDataUpload,
-      // body: JSON.stringify({
-      //   title: state.title,
-      //   description: state.description,
-      //   tags: state.tags,
-      //   startPrice: state.startPrice,
-      //   location: state.location,
-      //   qualityPlan: state.qualityPlan,
-      //   promotion: state.promotion,
-      // }),
     });
     let result = await res.json();
     console.log(result);
@@ -224,23 +206,10 @@ const PickPhoto: React.FC = () => {
           </IonModal>
 
           <div>
-            <IonItem
-              className="buttonList"
-              style={{ margin: "0px auto", width: "fit-content" }}
-            >
-              <IonButton
-                style={{ margin: "1.5rem" }}
-                onClick={() => takePhoto()}
-              >
-                <IonIcon icon={camera}></IonIcon>
-              </IonButton>
-              <IonButton
-                style={{ margin: "1.5rem" }}
-                onClick={() => pickImages()}
-              >
-                <IonIcon icon={imagesOutline} />
-              </IonButton>
-            </IonItem>
+            <IonButton slot="start" onClick={() => takePhoto()}>
+              <IonIcon icon={imagesOutline}></IonIcon>
+            </IonButton>
+
             <div className="ion-padding">
               <Swiper
                 modules={[Autoplay, Keyboard, Pagination, Scrollbar, Zoom]}
@@ -259,7 +228,11 @@ const PickPhoto: React.FC = () => {
                       style={{ width: "120px", height: "120px" }}
                     >
                       <img src={item.dataUrl} key={index} />
-                      <IonFab slot="fixed" vertical="bottom" horizontal="end">
+                      <IonFab
+                        slot="fixed"
+                        vertical="bottom"
+                        horizontal="center"
+                      >
                         <IonFabButton
                           onClick={() => {
                             console.log("123");
@@ -287,7 +260,11 @@ const PickPhoto: React.FC = () => {
                       style={{ width: "120px", height: "120px" }}
                     >
                       <img src={photo.dataUrl} key={index} />
-                      <IonFab slot="fixed" vertical="bottom" horizontal="end">
+                      <IonFab
+                        slot="fixed"
+                        vertical="bottom"
+                        horizontal="center"
+                      >
                         <IonFabButton
                           onClick={() => {
                             console.log("456");

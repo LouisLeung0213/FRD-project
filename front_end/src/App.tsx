@@ -133,6 +133,7 @@ const App: React.FC = () => {
   }
 
   const isAdmin = useSelector((state: RootState) => state.isAdmin);
+  const isLogin = useSelector((state: RootState) => state.id);
 
   return (
     <IonApp>
@@ -224,10 +225,13 @@ const App: React.FC = () => {
                   <IonIcon icon={heartCircleOutline} />
                   <IonLabel>熱門</IonLabel>
                 </IonTabButton>
-                <IonTabButton tab="PickPhoto" href="/tab/PickPhoto">
-                  <IonIcon icon={duplicateOutline} />
-                  <IonLabel>交易</IonLabel>
-                </IonTabButton>
+                {!!isLogin ? (
+                  <IonTabButton tab="PickPhoto" href={routes.tab.pickPhoto}>
+                    <IonIcon icon={duplicateOutline} />
+                    <IonLabel>交易</IonLabel>
+                  </IonTabButton>
+                ) : null}
+
                 <IonTabButton tab="Notices" href="/tab/Notices">
                   <IonBadge slot="end">1</IonBadge>
                   <IonIcon icon={notificationsOutline} />

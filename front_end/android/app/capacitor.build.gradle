@@ -18,10 +18,7 @@ dependencies {
     implementation project(':capacitor-push-notifications')
     implementation project(':capacitor-share')
     implementation project(':capacitor-status-bar')
-<<<<<<< HEAD
-=======
     implementation project(':pantrist-capacitor-firebase-dynamic-links')
->>>>>>> ea89e1c1ba4540f2a6a15b72ed64e283f79728e9
 
 }
 
