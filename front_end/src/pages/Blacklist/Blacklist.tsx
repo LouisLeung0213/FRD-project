@@ -12,6 +12,7 @@ import {
 } from "@ionic/react";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { API_ORIGIN } from "../../api";
 import { routes } from "../../routes";
 import { RootState } from "../../store";
 
@@ -26,7 +27,7 @@ const Blacklist: React.FC = () => {
 
   useEffect(() => {
     const getAllUser = async () => {
-      let res = await fetch(`http://localhost:1688/admin`);
+      let res = await fetch(`${API_ORIGIN}/admin`);
       let result = await res.json();
       // console.log(result);
       setUsersInfo(result);
@@ -38,7 +39,7 @@ const Blacklist: React.FC = () => {
   }, []);
   async function banUser(e: any) {
     console.log("e:", e);
-    let res = await fetch(`http://localhost:1688/admin/${currentUserId}`, {
+    let res = await fetch(`${API_ORIGIN}/admin/${currentUserId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

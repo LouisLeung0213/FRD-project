@@ -16,6 +16,7 @@ import { updateJwt } from "../../redux/user/actions";
 import { useHistory } from "react-router-dom";
 
 import "./SignUp.css";
+import { API_ORIGIN } from "../../api";
 
 const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
   onSignUp: () => void;
@@ -69,7 +70,7 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
     }
 
     try {
-      let res = await fetch(`http://localhost:1688/users/signUp`, {
+      let res = await fetch(`${API_ORIGIN}/users/signUp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +96,7 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
       }
       alert(JSON.stringify("success!", null, 2));
 
-      let res2 = await fetch(`http://localhost:1688/auth/login`, {
+      let res2 = await fetch(`${API_ORIGIN}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -108,7 +109,7 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
       let result2 = await res2.json();
       let token = result2.access_token;
 
-      let res3 = await fetch(`http://localhost:1688/auth/profile`, {
+      let res3 = await fetch(`${API_ORIGIN}/auth/profile`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

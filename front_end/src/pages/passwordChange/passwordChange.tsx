@@ -19,6 +19,7 @@ import {
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useIonFormState } from "react-use-ionic-form";
+import { API_ORIGIN } from "../../api";
 import { RootState } from "../../store";
 
 const PasswordChange: React.FC = () => {
@@ -65,7 +66,7 @@ const PasswordChange: React.FC = () => {
       setIsReNewPasswordSame(true);
     }
 
-    let res = await fetch(`http://localhost:1688/users/updatePassword/${id}`, {
+    let res = await fetch(`${API_ORIGIN}/users/updatePassword/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

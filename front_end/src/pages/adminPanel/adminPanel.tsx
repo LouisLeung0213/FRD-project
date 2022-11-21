@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 // import { resultingClientExists } from "workbox-core/_private";
 import { RootState } from "../../store";
 import { routes } from "../../routes";
+import { API_ORIGIN } from "../../api";
 
 const AdminPanel: React.FC = () => {
   let [reqPosts, setReqPosts] = useState([]);
@@ -34,7 +35,7 @@ const AdminPanel: React.FC = () => {
   const router = useIonRouter();
   useEffect(() => {
     const getProductReq = async () => {
-      let res = await fetch(`http://localhost:1688/posts`);
+      let res = await fetch(`${API_ORIGIN}/posts`);
       let result = await res.json();
 
       setReqPosts(result);
@@ -47,7 +48,7 @@ const AdminPanel: React.FC = () => {
   async function acceptReq(e: any) {
     // console.log("e:", e);
     // console.log("HOTB" + date + e.id);
-    let res = await fetch(`http://localhost:1688/storages`, {
+    let res = await fetch(`${API_ORIGIN}/storages`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -28,6 +28,7 @@ import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
 import { useHistory } from "react-router-dom";
 import { useIonFormState } from "react-use-ionic-form";
+import { API_ORIGIN } from "../../api";
 
 const Login: React.FC = () => {
   const jwtKey = useSelector((state: RootState) => state.jwtKey);
@@ -58,7 +59,7 @@ const Login: React.FC = () => {
       setIsPasswordOk(true);
     }
 
-    let res = await fetch(`http://localhost:1688/auth/login`, {
+    let res = await fetch(`${API_ORIGIN}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -71,8 +72,8 @@ const Login: React.FC = () => {
     let result = await res.json();
     let token = result.access_token;
     if (token) {
-      setIsUserCorrect(true)
-      let res2 = await fetch(`http://localhost:1688/auth/profile`, {
+      setIsUserCorrect(true);
+      let res2 = await fetch(`${API_ORIGIN}/auth/profile`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -95,7 +96,7 @@ const Login: React.FC = () => {
       // history.push(`/tab/Profile`);
       router.push(routes.tab.profile, "forward", "replace");
     } else {
-      setIsUserCorrect(false)
+      setIsUserCorrect(false);
       // alert(JSON.stringify("冇人識你喎...", null, 2));
     }
   };

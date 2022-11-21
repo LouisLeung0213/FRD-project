@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import { routes } from "../../routes";
 import { RootState } from "../../store";
 import moment from "moment";
+import { API_ORIGIN } from "../../api";
 
 const Storages: React.FC = () => {
   let [productList, setProductList] = useState([]);
@@ -27,7 +28,7 @@ const Storages: React.FC = () => {
 
   useEffect(() => {
     const getStorages = async () => {
-      let res = await fetch(`http://localhost:1688/storages`);
+      let res = await fetch(`${API_ORIGIN}/storages`);
       let result = await res.json();
 
       setProductList(result);
@@ -39,7 +40,7 @@ const Storages: React.FC = () => {
   async function acceptReq(e: any) {
     // console.log("e:", e);
     // console.log("HOTB" + date + e.id);
-    let res = await fetch(`http://localhost:1688/posts/${isAdmin}`, {
+    let res = await fetch(`${API_ORIGIN}/posts/${isAdmin}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
