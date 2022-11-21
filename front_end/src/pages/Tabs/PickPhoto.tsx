@@ -66,6 +66,7 @@ const PickPhoto: React.FC = () => {
   const [isTitleOk, setTitleOk] = useState(true);
   const [isDescriptionOk, setIsDescriptionOk] = useState(true);
   const [isStartPriceOk, setStartPriceOk] = useState(true);
+  const [isLocationOk, setIsLocationOk] = useState(true);
 
   const { state, item } = useIonFormState({
     title: "",
@@ -80,27 +81,33 @@ const PickPhoto: React.FC = () => {
   function formAppend(data: any) {
     let formData = new FormData();
 
-    formData.append("title", data.title);
+    formData.append("title", data);
     formData.append("description", data.description);
-    formData.append("tags", data.tags);
+    if (data.tags.length > 0) {
+      data.tags.forEach((tag: string) => {
+        formData.append("tags", tag);
+      });
+    }
     formData.append("startPrice", data.startPrice);
     formData.append("location", data.location);
     formData.append("qualityPlan", data.qualityPlan);
     formData.append("promotion", data.promotion);
-    if (blobData.length > 0) {
+
+    if (blobData.length != 0) {
       blobData.forEach((blobPhoto) => formData.append("photo", blobPhoto));
     }
-    if (items.length > 0) {
+    if (items.length != 0) {
       items.forEach((image) => {
         formData.append("image", image.dataUrl);
       });
     }
-
+    console.log("image & photo: ", formData);
     return formData;
   }
-  console.log(items);
-  const onSubmit = async (data: any) => {
-    console.log(state);
+
+  //console.log(items);
+  const submitForm = async (data: any) => {
+    console.log(state.title);
     if (data.title.length == 0) {
       setTitleOk(false);
     } else {
@@ -112,6 +119,13 @@ const PickPhoto: React.FC = () => {
     } else {
       setIsDescriptionOk(true);
     }
+    if (data.qualityPlan == true && !data.location) {
+      setIsLocationOk(false);
+      dismiss();
+    } else {
+      setIsLocationOk(true);
+    }
+
     if (data.startPrice.length == 0 || !data.startPrice.match(numReg)) {
       setStartPriceOk(false);
       dismiss();
@@ -121,16 +135,28 @@ const PickPhoto: React.FC = () => {
 
     console.log("pass");
 
-    let formData = formAppend(state);
+    let formDataUpload = formAppend(state);
 
-    let res = await fetch(`http://localhost:1688/postItem/${id}`, {
+    console.log("state.title =  ", state.title);
+
+    let res = await fetch(`http://localhost:1688/posts/postItem/${id}`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-type": "multipart/form-data",
       },
-      body: formData,
+      body: formDataUpload,
+      // body: JSON.stringify({
+      //   title: state.title,
+      //   description: state.description,
+      //   tags: state.tags,
+      //   startPrice: state.startPrice,
+      //   location: state.location,
+      //   qualityPlan: state.qualityPlan,
+      //   promotion: state.promotion,
+      // }),
     });
-    console.log(res);
+    let result = await res.json();
+    console.log(result);
 
     dismiss();
   };
@@ -185,7 +211,7 @@ const PickPhoto: React.FC = () => {
               <IonButton slot="center" onClick={dismiss}>
                 返回
               </IonButton>
-              <IonButton slot="center" onClick={() => onSubmit(state)}>
+              <IonButton slot="center" onClick={() => submitForm(state)}>
                 發佈
               </IonButton>
             </div>
@@ -424,6 +450,11 @@ const PickPhoto: React.FC = () => {
             ) : (
               <div></div>
             )}
+            <div className="ion-text-center">
+              {!isLocationOk ? (
+                <IonText color="danger">請選擇門市</IonText>
+              ) : null}
+            </div>
 
             <br />
 
