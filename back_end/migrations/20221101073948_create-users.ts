@@ -45,9 +45,19 @@ export async function up(knex: Knex): Promise<void> {
     table.text('post_description').notNullable();
     table.integer('original_price').notNullable();
     table.boolean('q_mark').notNullable().defaultTo(false);
-    table.boolean('is_pending_in').notNullable().defaultTo(false);
-    table.boolean('is_pending_out').notNullable().defaultTo(false);
-    table.boolean('is_sold').notNullable().defaultTo(false);
+    table
+      .enum('status', [
+        'pending_in', // waiting to store
+        'verifying', // stored but waiting to verify description
+        'deny', // deny due to some reason (eg 18+)
+        'selling', // posted on mainPage
+        'cancel', // seller cancel the post
+        'holding', // sold but buyer still doesn't collect the product
+        'sold&out', // sold and buyer collected the product
+      ])
+      .notNullable()
+      .defaultTo('selling');
+    table.timestamp('post_time');
     table.integer('priority').notNullable().defaultTo(0);
     table.integer('location_id').references('store_location.id');
     table.boolean('auto_adjust_plan').defaultTo(false);

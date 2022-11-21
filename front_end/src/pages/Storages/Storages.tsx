@@ -32,7 +32,7 @@ import moment from "moment";
 import { API_ORIGIN } from "../../api";
 
 const Storages: React.FC = () => {
-  const isAdmin = useSelector((state: RootState) => state.isAdmin);
+  const userId = useSelector((state: RootState) => state.id);
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [query2, setQuery2] = useState("");
@@ -42,6 +42,7 @@ const Storages: React.FC = () => {
   let [sellerNickname, setSellerNickname] = useState("");
   let [productTitle, setProductTitle] = useState("");
   let [receiptCode, setReceiptCode] = useState("");
+  let [productId, setProductId] = useState("");
 
   useEffect(() => {
     const getStorages = async () => {
@@ -54,18 +55,18 @@ const Storages: React.FC = () => {
     getStorages();
   }, []);
 
-  async function acceptReq(e: any) {
+  async function readyToPost(productId: number) {
     // console.log("e:", e);
     // console.log("HOTB" + date + e.id);
-    let res = await fetch(`${API_ORIGIN}/posts/${isAdmin}`, {
+    let res = await fetch(`${API_ORIGIN}/posts/${userId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        postId: e.product.id,
-        postTitle: e.post_title,
-        postDescription: e.post_description,
+        postId: productId,
+        postTitle: productTitle,
+        postDescription: productDescription,
       }),
     });
   }
@@ -78,12 +79,8 @@ const Storages: React.FC = () => {
     setProductTitle(result.post_title);
     setProductDescription(result.post_description);
     setReceiptCode(result.receipt_code);
-
+    setProductId(e.product_id);
     setIsOpen(true);
-  }
-
-  async function readyToPost() {
-    console.log("TODO");
   }
 
   return (
@@ -160,7 +157,9 @@ const Storages: React.FC = () => {
                       }
                     ></IonInput>
                   </IonItem>
-                  <IonButton onClick={() => readyToPost()}>完成驗證</IonButton>
+                  <IonButton onClick={() => readyToPost(+productId)}>
+                    完成驗證
+                  </IonButton>
                 </IonList>
               </IonModal>
             </IonContent>
@@ -181,7 +180,7 @@ const Storages: React.FC = () => {
                     return (
                       <IonItemSliding>
                         <IonItem key={e.product_id}>
-                          賣家名稱：{e.nickname}，EMAIl：
+                          賣家名稱：{e.nickname}，EMAIL：
                           {e.email}，電話號碼：{e.phone}，電子收據號碼：
                           {e.receipt_code}，入倉時間：
                           {moment(e.in_time).format("MMMM Do YYYY, h:mm:ss a")}
