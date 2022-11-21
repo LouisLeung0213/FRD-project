@@ -22,7 +22,7 @@ import {
 } from "@ionic/react";
 import { camera, imagesOutline, trash } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
-import { usePhotoGallery } from "../../hooks/usePhotoGallery";
+import { useImageFiles, usePhotoGallery } from "../../hooks/usePhotoGallery";
 import { selectImage, fileToBase64String } from "@beenotung/tslib/file";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
@@ -40,6 +40,7 @@ import "./PickPhoto.css";
 import { useIonFormState } from "react-use-ionic-form";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
+import { API_ORIGIN } from "../../api";
 
 type ImageItem = {
   file: File;
@@ -47,7 +48,8 @@ type ImageItem = {
 };
 
 const PickPhoto: React.FC = () => {
-  const { blobData, photos, setPhotos, takePhoto } = usePhotoGallery();
+  // const { blobData, photos, setPhotos, takePhoto } = usePhotoGallery();
+  const { photos, setPhotos, takePhoto } = useImageFiles();
   const [items, setItems] = useState<ImageItem[]>([]);
   const qualityModal = useRef<HTMLIonModalElement>(null);
   const previewModal = useRef<HTMLIonModalElement>(null);
@@ -78,10 +80,11 @@ const PickPhoto: React.FC = () => {
     promotion: false,
   });
 
-  function formAppend(data: any) {
+  function formAppend() {
+    let data = state;
     let formData = new FormData();
 
-    formData.append("title", data);
+    formData.append("title", data.title);
     formData.append("description", data.description);
     if (data.tags.length > 0) {
       data.tags.forEach((tag: string) => {
@@ -90,18 +93,21 @@ const PickPhoto: React.FC = () => {
     }
     formData.append("startPrice", data.startPrice);
     formData.append("location", data.location);
-    formData.append("qualityPlan", data.qualityPlan);
-    formData.append("promotion", data.promotion);
+    formData.append("qualityPlan", data.qualityPlan ? "t" : "f");
+    formData.append("promotion", data.promotion ? "t" : "f");
 
-    if (blobData.length != 0) {
-      blobData.forEach((blobPhoto) => formData.append("photo", blobPhoto));
+    // if (blobData.length != 0) {
+    //   blobData.forEach((blobPhoto) => formData.append("photo", blobPhoto));
+    // }
+    for (let photo of photos) {
+      formData.append("photo", photo.file);
     }
-    if (items.length != 0) {
-      items.forEach((image) => {
-        formData.append("image", image.dataUrl);
-      });
-    }
-    console.log("image & photo: ", formData);
+    // if (items.length != 0) {
+    //   items.forEach((image) => {
+    //     formData.append("image", image.dataUrl);
+    //   });
+    // }
+    console.log("Form Data: ", formData);
     return formData;
   }
 
@@ -135,15 +141,15 @@ const PickPhoto: React.FC = () => {
 
     console.log("pass");
 
-    let formDataUpload = formAppend(state);
+    let formDataUpload = formAppend();
 
     console.log("state.title =  ", state.title);
 
-    let res = await fetch(`http://localhost:1688/posts/postItem/${id}`, {
+    let res = await fetch(`${API_ORIGIN}/posts/postItem`, {
       method: "POST",
-      headers: {
-        "Content-type": "multipart/form-data",
-      },
+      // headers: {
+      //   "Content-type": "multipart/form-data",
+      // },
       body: formDataUpload,
       // body: JSON.stringify({
       //   title: state.title,
@@ -280,7 +286,7 @@ const PickPhoto: React.FC = () => {
                       key={index}
                       style={{ width: "120px", height: "120px" }}
                     >
-                      <img src={photo.webviewPath} key={index} />
+                      <img src={photo.dataUrl} key={index} />
                       <IonFab slot="fixed" vertical="bottom" horizontal="end">
                         <IonFabButton
                           onClick={() => {
