@@ -45,6 +45,8 @@ export async function up(knex: Knex): Promise<void> {
     table.text('post_description').notNullable();
     table.integer('original_price').notNullable();
     table.boolean('q_mark').notNullable().defaultTo(false);
+    table.string('admin_title');
+    table.text('admin_comment');
     table
       .enum('status', [
         'pending_in', // waiting to store

@@ -71,14 +71,31 @@ export class PostsService {
     return `This action returns a #${id} post`;
   }
 
+  async showVerify() {
+    let needVerify = await this.knex
+      .select(
+        'post_title',
+        'post_description',
+        'user_id',
+        'receipt_code',
+        'posts.id',
+      )
+      .from('posts')
+      .join('storages', 'posts.id', 'product_id')
+      .where('status', 'verifying');
+
+    return needVerify;
+  }
+
   async update(id: number, updatePostDto: UpdatePostDto) {
     let updatePostInfo = await this.knex('posts')
       .update({
-        post_title: updatePostDto.postTitle,
-        post_description: updatePostDto.postDescription,
+        admin_title: updatePostDto.postTitle,
+        admin_comment: updatePostDto.postDescription,
         status: 'selling',
       })
       .where('id', updatePostDto.postId);
+    console.log(updatePostInfo);
     return `This action updates a #${id} post`;
   }
 

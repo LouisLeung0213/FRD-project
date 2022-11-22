@@ -37,12 +37,14 @@ const Storages: React.FC = () => {
   const [query, setQuery] = useState("");
   const [query2, setQuery2] = useState("");
   let [productList, setProductList] = useState<[any]>([] as any);
+  let [verifyList, setVerifyList] = useState<[any]>([] as any);
   let [productDescription, setProductDescription] = useState("");
   let [sellerId, setSellerId] = useState("");
   let [sellerNickname, setSellerNickname] = useState("");
   let [productTitle, setProductTitle] = useState("");
   let [receiptCode, setReceiptCode] = useState("");
   let [productId, setProductId] = useState("");
+  let [refresh, setFresh] = useState(false);
 
   useEffect(() => {
     const getStorages = async () => {
@@ -50,10 +52,20 @@ const Storages: React.FC = () => {
       let result = await res.json();
 
       setProductList(result);
-      console.log(result);
+      console.log("setProductList:", result);
     };
+
+    const getVerifyList = async () => {
+      let res = await fetch(`${API_ORIGIN}/posts/showVerify`);
+      let result = await res.json();
+
+      setVerifyList(result);
+      console.log("getVerifyList:", result);
+    };
+    getVerifyList();
     getStorages();
-  }, []);
+    setFresh(false);
+  }, [refresh]);
 
   async function readyToPost(productId: number) {
     // console.log("e:", e);
@@ -69,18 +81,25 @@ const Storages: React.FC = () => {
         postDescription: productDescription,
       }),
     });
+
+    if (res.ok) {
+      setIsOpen(false);
+      setFresh(true);
+    }
   }
   async function openDetail(e: any) {
-    let res = await fetch(`${API_ORIGIN}/${e.product_id}`);
+    let res = await fetch(`${API_ORIGIN}/storages/${e.id}`);
     let result = await res.json();
 
+    console.log("opene:", e);
     setSellerId(result.seller_id);
     setSellerNickname(result.nickname);
     setProductTitle(result.post_title);
     setProductDescription(result.post_description);
     setReceiptCode(result.receipt_code);
-    setProductId(e.product_id);
+    setProductId(e.id);
     setIsOpen(true);
+    console.log("productId", productId);
   }
 
   return (
@@ -105,22 +124,22 @@ const Storages: React.FC = () => {
                   debounce={1000}
                   onIonChange={(ev: any) => setQuery(ev.target.value)}
                 ></IonSearchbar>
-                {productList
-                  .filter((productList) =>
-                    productList.receipt_code.includes(query)
+                {verifyList
+                  .filter((verifyList) =>
+                    verifyList.receipt_code.includes(query)
                   )
                   .map((e: any) => {
                     return (
-                      <IonItem key={e.product_id}>
+                      <IonItem key={e.id} onClick={() => openDetail(e)}>
                         <IonLabel>貨品標題：{e.post_title}</IonLabel>
                         <></>
                         <IonLabel>收據號碼：{e.receipt_code}</IonLabel>
-                        <IonIcon
+                        {/* <IonIcon
                           slot="end"
                           icon={expandOutline}
                           size="large"
                           onClick={() => openDetail(e)}
-                        ></IonIcon>
+                        ></IonIcon> */}
                       </IonItem>
                     );
                   })}

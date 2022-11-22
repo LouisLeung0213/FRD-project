@@ -60,9 +60,14 @@ export class PostsController {
     return this.postsService.findAll();
   }
 
-  @Get(':id')
+  @Get('findOne/:id')
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(+id);
+  }
+
+  @Get('showVerify')
+  showVerify() {
+    return this.postsService.showVerify();
   }
 
   @Patch(':id')

@@ -28,18 +28,16 @@ export class StoragesService {
   async findAll() {
     let productDetails = await this.knex
       .select(
-        'product_id',
         'seller_id',
         'receipt_code',
         'in_time',
         'nickname',
         'phone',
         'email',
-        'post_title',
+        'product_id',
       )
       .from('storages')
-      .join('users', 'seller_id', 'users.id')
-      .join('posts', 'product_id', 'posts.id');
+      .join('users', 'seller_id', 'users.id');
     return productDetails;
   }
 
