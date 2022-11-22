@@ -8,6 +8,8 @@ import { PostsModule } from './posts/posts.module';
 import { AdminModule } from './admin/admin.module';
 import { StoragesModule } from './storages/storages.module';
 import { InvoiceModule } from './invoice/invoice.module';
+import { StripeModule } from './stripe/stripe.module';
+import { env } from 'process';
 
 @Module({
   imports: [
@@ -18,6 +20,7 @@ import { InvoiceModule } from './invoice/invoice.module';
     AdminModule,
     StoragesModule,
     InvoiceModule,
+    StripeModule.forRoot(env.STRIPE_KEY, { apiVersion: '2022-11-15' }),
   ],
   controllers: [AppController],
   providers: [AppService],
