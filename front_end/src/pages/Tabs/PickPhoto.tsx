@@ -70,6 +70,7 @@ const PickPhoto: React.FC = () => {
   const [isDescriptionOk, setIsDescriptionOk] = useState(true);
   const [isStartPriceOk, setStartPriceOk] = useState(true);
   const [isLocationOk, setIsLocationOk] = useState(true);
+  const [isBankAccountOk, setIsBankAccountOk] = useState(true);
 
   const { state, item } = useIonFormState({
     title: "",
@@ -77,6 +78,7 @@ const PickPhoto: React.FC = () => {
     tags: "",
     startPrice: "",
     location: "",
+    bankAccount: "",
     qualityPlan: false,
     promotion: false,
   });
@@ -92,6 +94,8 @@ const PickPhoto: React.FC = () => {
 
     formData.append("startPrice", data.startPrice);
     formData.append("location", data.location);
+    formData.append("bankAccount", data.bankAccount);
+
     formData.append("qualityPlan", data.qualityPlan ? "t" : "f");
     formData.append("promotion", data.promotion ? "t" : "f");
 
@@ -124,7 +128,15 @@ const PickPhoto: React.FC = () => {
       } else {
         setIsLocationOk(true);
       }
-
+      if (
+        data.qualityPlan == true &&
+        !data.bankAccount &&
+        !data.bankAccount.match(numReg)
+      ) {
+        setIsBankAccountOk(false);
+      } else {
+        setIsBankAccountOk(true);
+      }
       if (data.startPrice.length == 0 || !data.startPrice.match(numReg)) {
         setStartPriceOk(false);
       } else {
@@ -358,6 +370,10 @@ const PickPhoto: React.FC = () => {
                       </li>
                       <br />
                       <li>
+                        請注意收貨時會檢查圖片是否真實反映貨品狀態，請使用近照，否則將貨品上架及不會收取。
+                      </li>
+                      <br />
+                      <li>
                         如選擇認證拍賣計劃，將默認接受以下規條：
                         <ol>
                           <li>賣家需把貨品交予門市檢查後帖子才會公佈。</li>
@@ -408,6 +424,22 @@ const PickPhoto: React.FC = () => {
               ) : null}
             </div>
             <br />
+            {state.qualityPlan === true ? (
+              item({
+                name: "bankAccount",
+                renderLabel: () => (
+                  <IonLabel position="floating">請輸入銀行戶口:</IonLabel>
+                ),
+                renderContent: (props) => <IonInput {...props}></IonInput>,
+              })
+            ) : (
+              <div></div>
+            )}
+            <div className="ion-text-center">
+              {!isBankAccountOk ? (
+                <IonText color="danger">請輸入有效銀行戶口</IonText>
+              ) : null}
+            </div>
             {item({
               name: "promotion",
               renderLabel: () => <IonLabel>自動調整底價</IonLabel>,

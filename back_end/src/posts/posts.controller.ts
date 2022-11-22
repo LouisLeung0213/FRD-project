@@ -20,6 +20,7 @@ import {
 import { writeFile } from 'fs/promises';
 import { join } from 'path';
 import { mkdirSync } from 'fs';
+import { UpdateStatusDto } from './dto/updateStatus-post.dto';
 
 mkdirSync('uploads', { recursive: true });
 
@@ -60,6 +61,11 @@ export class PostsController {
     return this.postsService.findAll();
   }
 
+  @Get('showAll')
+  showAll() {
+    return this.postsService.showAll();
+  }
+
   @Get('findOne/:id')
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(+id);
@@ -70,9 +76,17 @@ export class PostsController {
     return this.postsService.showVerify();
   }
 
-  @Patch(':id')
+  @Patch('ready/:id')
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.update(+id, updatePostDto);
+  }
+
+  @Patch('updateStatus/:id')
+  updateStatus(
+    @Param('id') id: string,
+    @Body() updateStatusDto: UpdateStatusDto,
+  ) {
+    return this.postsService.updateStatus(+id, updateStatusDto);
   }
 
   @Delete(':id')

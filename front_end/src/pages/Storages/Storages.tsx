@@ -7,6 +7,7 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
+  IonImg,
   IonInput,
   IonItem,
   IonItemOption,
@@ -20,7 +21,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { closeOutline, expandOutline } from "ionicons/icons";
+import { checkmarkOutline, closeOutline, expandOutline } from "ionicons/icons";
 // import { checkmarkOutline, closeOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -45,6 +46,7 @@ const Storages: React.FC = () => {
   let [receiptCode, setReceiptCode] = useState("");
   let [productId, setProductId] = useState("");
   let [refresh, setFresh] = useState(false);
+  let [imageList, setImageList] = useState([]);
 
   useEffect(() => {
     const getStorages = async () => {
@@ -70,7 +72,7 @@ const Storages: React.FC = () => {
   async function readyToPost(productId: number) {
     // console.log("e:", e);
     // console.log("HOTB" + date + e.id);
-    let res = await fetch(`${API_ORIGIN}/posts/${userId}`, {
+    let res = await fetch(`${API_ORIGIN}/posts/ready/${userId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -99,7 +101,42 @@ const Storages: React.FC = () => {
     setReceiptCode(result.receipt_code);
     setProductId(e.id);
     setIsOpen(true);
+    setImageList(e.json_agg);
     console.log("productId", productId);
+  }
+
+  async function cancelOrder(productId: number) {
+    console.log(productId);
+    let res = await fetch(`${API_ORIGIN}/posts/updateStatus/${productId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "cancel",
+      }),
+    });
+
+    if (res.ok) {
+      setFresh(true);
+    }
+  }
+
+  async function soldAndOut(productId: number) {
+    console.log(productId);
+    let res = await fetch(`${API_ORIGIN}/posts/updateStatus/${productId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "sold&out",
+      }),
+    });
+
+    if (res.ok) {
+      setFresh(true);
+    }
   }
 
   return (
@@ -195,10 +232,20 @@ const Storages: React.FC = () => {
                   .filter((productList) =>
                     productList.receipt_code.includes(query2)
                   )
-                  .map((e: any) => {
+                  .map((e: any, index) => {
                     return (
-                      <IonItemSliding>
-                        <IonItem key={e.product_id}>
+                      <IonItemSliding key={e.receipt_code}>
+                        <IonItemOptions side="start">
+                          <IonItemOption color="success">
+                            soldout
+                            <IonIcon
+                              icon={checkmarkOutline}
+                              size="large"
+                              onClick={() => soldAndOut(e.product_id)}
+                            ></IonIcon>
+                          </IonItemOption>
+                        </IonItemOptions>
+                        <IonItem key={index}>
                           賣家名稱：{e.nickname}，EMAIL：
                           {e.email}，電話號碼：{e.phone}，電子收據號碼：
                           {e.receipt_code}，入倉時間：
@@ -206,7 +253,12 @@ const Storages: React.FC = () => {
                         </IonItem>
                         <IonItemOptions>
                           <IonItemOption color="danger">
-                            <IonIcon icon={closeOutline} size="large"></IonIcon>
+                            cancel
+                            <IonIcon
+                              icon={closeOutline}
+                              size="large"
+                              onClick={() => cancelOrder(e.product_id)}
+                            ></IonIcon>
                           </IonItemOption>
                         </IonItemOptions>
                       </IonItemSliding>
