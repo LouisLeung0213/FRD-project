@@ -71,7 +71,7 @@ const Storages: React.FC = () => {
     });
   }
   async function openDetail(e: any) {
-    let res = await fetch(`http://localhost:1688/storages/${e.product_id}`);
+    let res = await fetch(`${API_ORIGIN}/${e.product_id}`);
     let result = await res.json();
 
     setSellerId(result.seller_id);

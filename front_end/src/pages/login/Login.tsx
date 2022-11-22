@@ -44,14 +44,14 @@ const Login: React.FC = () => {
 
   // const [isBanned, setIsBanned] = useState(false);
 
-  const onSubmit = async (data: any) => {
-    if (data.username.length == 0) {
+  const submit = async () => {
+    if (state.username.length == 0) {
       setIsUsernameOk(false);
       return;
     } else {
       setIsUsernameOk(true);
     }
-    if (data.password.length == 0) {
+    if (state.password.length == 0) {
       setIsPasswordOk(false);
       return;
     } else {
@@ -64,8 +64,8 @@ const Login: React.FC = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username: data.username,
-        password: data.password,
+        username: state.username,
+        password: state.password,
       }),
     });
     let result = await res.json();
@@ -101,8 +101,8 @@ const Login: React.FC = () => {
   };
 
   const { state, item } = useIonFormState({
-    username: "",
-    password: "",
+    username: "louis",
+    password: "123",
   });
 
   return (
@@ -145,7 +145,7 @@ const Login: React.FC = () => {
                 type="password"
                 onKeyDown={(e) => {
                   if (e.key == "Enter") {
-                    onSubmit(state);
+                    submit();
                   }
                 }}
                 {...props}
@@ -160,7 +160,7 @@ const Login: React.FC = () => {
           <IonButton
             className="ion-margin-top"
             onClick={() => {
-              onSubmit(state);
+              submit();
             }}
             expand="block"
           >

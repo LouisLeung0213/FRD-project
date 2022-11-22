@@ -42,7 +42,7 @@ import {
 } from "ionicons/icons";
 // import ExploreContainer from "../../components/ExploreContainer";
 
-// import "./Profile.css";
+import "./Profile.css";
 import icon from "../../image/usericon.png";
 
 import { Route, useLocation } from "react-router";
@@ -53,7 +53,6 @@ import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
 import React from "react";
 import { API_ORIGIN } from "../../api";
-// import { userInfo } from "os";
 
 const Profile: React.FC<{ user: number | null }> = (props: {
   user: number | null;
@@ -155,38 +154,40 @@ const Profile: React.FC<{ user: number | null }> = (props: {
           </IonToolbar>
         </IonHeader>
         <IonContent fullscreen>
-          <IonList>
+          <IonList className="personalInfoContainer">
             <IonItem className="personalIconContainer">
               <IonImg src={icon} className="personalIcon" />
             </IonItem>
             <IonList>
-              <IonItem>
-                <IonIcon icon={heartOutline} className="chat" />
+              <IonItem className="personalInfo">
+                <IonLabel>{nickname}</IonLabel>
               </IonItem>
+
               <IonItem>
-                <IonIcon icon={chatbubblesOutline} className="chat" />
-              </IonItem>
-              <IonItem>
-                <IonIcon icon={ribbonOutline} className="chat" />
+                <IonLabel>{joinTime}</IonLabel>
               </IonItem>
             </IonList>
-            <IonItem className="personalInfo">
-              <IonLabel>{nickname}</IonLabel>
+          </IonList>
+          <IonList>
+            <IonItem>
+              <IonIcon icon={heartOutline} className="chat" />
             </IonItem>
             <IonItem>
-              <IonLabel>@{username}</IonLabel>
+              <IonIcon icon={chatbubblesOutline} className="chat" />
             </IonItem>
             <IonItem>
-              <IonLabel>Joined since {joinTime}</IonLabel>
-            </IonItem>
-            <IonItem className="search">
-              <IonIcon className="searchIcon" icon={searchOutline} />
-              <IonInput placeholder="搜尋此賣家的產品"></IonInput>
-            </IonItem>
-            <IonItem className="portfolioContainer">
-              <IonLabel>My product</IonLabel>
+              <IonIcon icon={ribbonOutline} className="chat" />
             </IonItem>
           </IonList>
+
+          <IonItem className="search">
+            <IonIcon className="searchIcon" icon={searchOutline} />
+            <IonInput placeholder="搜尋此賣家的產品"></IonInput>
+          </IonItem>
+          <IonItem className="portfolioContainer">
+            <IonLabel>My product</IonLabel>
+          </IonItem>
+
           <IonButton onClick={func}>Show the redux state</IonButton>
         </IonContent>
       </IonPage>
