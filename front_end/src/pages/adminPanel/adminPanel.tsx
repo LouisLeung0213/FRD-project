@@ -1,21 +1,26 @@
 import {
   IonAccordion,
   IonAccordionGroup,
+  IonButton,
   IonButtons,
   IonCard,
   IonContent,
   IonHeader,
   IonIcon,
+  IonImg,
+  IonInput,
   IonItem,
   IonItemOption,
   IonItemOptions,
   IonItemSliding,
   IonLabel,
   IonList,
+  IonModal,
   IonPage,
   IonSearchbar,
   IonSlide,
   IonSlides,
+  IonTitle,
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
@@ -41,6 +46,14 @@ const AdminPanel: React.FC = () => {
   let [reqPosts, setReqPosts] = useState<[any]>([] as any);
   let [acceptRequest, setAcceptRequest] = useState(false);
   const [query, setQuery] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  let [sellerNickname, setSellerNickname] = useState("");
+  let [productTitle, setProductTitle] = useState("");
+  let [productDescription, setProductDescription] = useState("");
+  let [remark, setRemark] = useState("");
+  let [sellerId, setSellerId] = useState("");
+  let [productId, setProductId] = useState("");
+  let [imageList, setImageList] = useState([]);
 
   let date = Date.now();
   const isAdmin = useSelector((state: RootState) => state.isAdmin);
@@ -58,7 +71,7 @@ const AdminPanel: React.FC = () => {
   }, [acceptRequest]);
   // console.log("usersInfo:", usersInfo);
 
-  async function acceptReq(e: any) {
+  async function acceptReq() {
     // console.log("e:", e);
     // console.log("HOTB" + date + e.id);
     let res = await fetch(`${API_ORIGIN}/storages`, {
@@ -67,18 +80,47 @@ const AdminPanel: React.FC = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        sellerId: +e.user_id,
-        productId: +e.id,
-        receiptCode: "HOTB" + date + e.id,
+        sellerId: sellerId,
+        productId: +productId,
+        receiptCode: "HOTB" + date + sellerId,
       }),
     });
     let result = await res.json();
     console.log("result:", result);
     setAcceptRequest(true);
+    setIsOpen(false);
   }
 
-  function denialReq() {
-    return "no";
+  async function denyReq() {
+    let res = await fetch(`${API_ORIGIN}/posts/updateStatus/${productId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "deny",
+        adminComment: remark,
+      }),
+    });
+
+    let result = res.text();
+    console.log("denyReuslt:", result);
+
+    if (res.ok) {
+      setAcceptRequest(true);
+      setIsOpen(false);
+    }
+  }
+
+  function openReq(e: any) {
+    console.log("e:", e);
+    setSellerNickname(e.username);
+    setProductTitle(e.post_title);
+    setProductDescription(e.post_description);
+    setSellerId(e.user_id);
+    setProductId(e.id);
+    setImageList(e.json_agg);
+    setIsOpen(true);
   }
 
   return (
@@ -116,40 +158,54 @@ const AdminPanel: React.FC = () => {
                     ></IonSearchbar>
                     {reqPosts
                       .filter((reqPost) => reqPost.username.includes(query))
-                      .map((e: any) => {
+                      .map((e: any, index) => {
                         return (
-                          <IonItemSliding>
-                            <IonItemOptions side="start">
-                              <IonItemOption color="danger">
-                                <IonIcon
-                                  icon={closeOutline}
-                                  size="large"
-                                  onClick={() => denialReq()}
-                                ></IonIcon>
-                              </IonItemOption>
-                            </IonItemOptions>
-                            <IonItem key={e.id}>
-                              貨品ID：{e.id}， 帳號名稱：{e.username}，
-                              貨品標題：
-                              {e.post_title}， 貨品描述：{e.post_description}，
-                              價錢：
-                              {e.original_price}。
-                            </IonItem>
-                            <IonItemOptions side="end">
-                              <IonItemOption color="success">
-                                <IonIcon
-                                  icon={checkmarkOutline}
-                                  size="large"
-                                  onClick={() => acceptReq(e)}
-                                ></IonIcon>
-                              </IonItemOption>
-                            </IonItemOptions>
-                          </IonItemSliding>
+                          <IonItem key={index} onClick={() => openReq(e)}>
+                            貨品ID：{e.id}， 帳號名稱：{e.username}， 貨品標題：
+                            {e.post_title}， 貨品描述：{e.post_description}，
+                            價錢：
+                            {e.original_price}。
+                          </IonItem>
                         );
                       })}
                   </div>
                 </IonAccordion>
               </IonAccordionGroup>
+              <IonContent className="ion-padding">
+                <IonModal isOpen={isOpen}>
+                  <IonHeader>
+                    <IonToolbar>
+                      <IonTitle></IonTitle>
+                      <IonButtons slot="end">
+                        <IonButton onClick={() => setIsOpen(false)}>
+                          關閉
+                        </IonButton>
+                      </IonButtons>
+                    </IonToolbar>
+                  </IonHeader>
+                  <IonList>
+                    <IonItem>賣家稱呼：{sellerNickname}</IonItem>
+                    <IonItem>貨品標題：{productTitle}</IonItem>
+                    <IonItem>貨品描述：{productDescription}</IonItem>
+                    <IonItem>
+                      <IonInput
+                        onIonChange={(e: any) => setRemark(e.target.value)}
+                      >
+                        備註：
+                      </IonInput>
+                    </IonItem>
+                    {imageList.map((e: any) => {
+                      return <IonImg src={e} alt="user post image"></IonImg>;
+                    })}
+                    <IonButton color="success" onClick={() => acceptReq()}>
+                      確認驗證
+                    </IonButton>
+                    <IonButton color="danger" onClick={() => denyReq()}>
+                      拒絕驗證
+                    </IonButton>
+                  </IonList>
+                </IonModal>
+              </IonContent>
             </IonList>
           </IonContent>
         </IonPage>

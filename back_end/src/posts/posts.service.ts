@@ -3,6 +3,7 @@ import { InjectKnex, Knex } from 'nestjs-knex';
 import { UsersService } from 'src/users/users.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { UpdateStatusDto } from './dto/updateStatus-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -89,11 +90,38 @@ export class PostsService {
         'status',
         'location_id',
         'username',
+        this.knex.raw('json_agg(src)'),
       )
       .from('posts')
       .join('users', 'user_id', 'users.id')
-      .where('status', 'pending_in');
+      .join('images', 'post_id', 'posts.id')
+      .where('status', 'pending_in')
+      .groupBy('posts.id', 'users.username');
     return findAllTruePosts;
+  }
+
+  async showAll() {
+    let showAllList = await this.knex
+      .select(
+        'posts.id',
+        'user_id',
+        'post_title',
+        'post_description',
+        'original_price',
+        'q_mark',
+        'admin_title',
+        'admin_comment',
+        'post_time',
+        'nickname',
+        'username',
+        this.knex.raw('json_agg(src)'),
+      )
+      .from('posts')
+      .join('users', 'user_id', 'users.id')
+      .join('images', 'posts.id', 'post_id')
+      .where('status', 'selling')
+      .groupBy('posts.id', 'users.username', 'users.nickname');
+    return showAllList;
   }
 
   async findOne(id: number) {
@@ -108,10 +136,13 @@ export class PostsService {
         'user_id',
         'receipt_code',
         'posts.id',
+        this.knex.raw('json_agg(src)'),
       )
       .from('posts')
       .join('storages', 'posts.id', 'product_id')
-      .where('status', 'verifying');
+      .join('images', 'posts.id', 'post_id')
+      .where('status', 'verifying')
+      .groupBy('posts.id', 'storages.receipt_code');
 
     return needVerify;
   }
@@ -126,6 +157,19 @@ export class PostsService {
       .where('id', updatePostDto.postId);
     console.log(updatePostInfo);
     return `This action updates a #${id} post`;
+  }
+
+  async updateStatus(id: number, updateStatusDto: UpdateStatusDto) {
+    console.log(updateStatusDto);
+
+    await this.knex('posts')
+      .update({
+        status: updateStatusDto.status,
+        q_mark: false,
+        admin_comment: updateStatusDto.adminComment,
+      })
+      .where('id', id);
+    return `product ${id} status has been change to ${updateStatusDto.status}`;
   }
 
   remove(id: number) {

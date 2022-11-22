@@ -28,7 +28,7 @@ export class StoragesService {
   async findAll() {
     let productDetails = await this.knex
       .select(
-        'seller_id',
+        'user_id',
         'receipt_code',
         'in_time',
         'nickname',
@@ -36,8 +36,10 @@ export class StoragesService {
         'email',
         'product_id',
       )
-      .from('storages')
-      .join('users', 'seller_id', 'users.id');
+      .from('posts')
+      .join('users', 'user_id', 'users.id')
+      .join('storages', 'posts.id', 'product_id')
+      .where('q_mark', true);
     return productDetails;
   }
 
