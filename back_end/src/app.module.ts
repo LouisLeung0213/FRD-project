@@ -20,7 +20,7 @@ import { env } from 'process';
     AdminModule,
     StoragesModule,
     InvoiceModule,
-    StripeModule.forRoot(env.STRIPE_KEY, { apiVersion: '2022-11-15' }),
+    //StripeModule.forRoot(env.STRIPE_KEY, { apiVersion: '2022-11-15' }),
   ],
   controllers: [AppController],
   providers: [AppService],
