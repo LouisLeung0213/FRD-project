@@ -213,11 +213,6 @@ const Storages: React.FC = () => {
                       }
                     ></IonInput>
                   </IonItem>
-                  <IonItem>
-                    {imageList.map((e: any) => {
-                      return <IonImg src={e} alt="user post image"></IonImg>;
-                    })}
-                  </IonItem>
                   <IonButton onClick={() => readyToPost(+productId)}>
                     完成驗證
                   </IonButton>

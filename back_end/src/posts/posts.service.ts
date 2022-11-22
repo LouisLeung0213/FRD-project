@@ -22,7 +22,21 @@ export class PostsService {
           .where('location', createPostDto.location)
           .returning('id');
         locationId = location[0].id;
+
+        let checkBankAccount = await this.knex('users')
+          .select('bank_account')
+          .where('id', createPostDto.user_id)
+          .returning('bank_account');
+
+        if (!checkBankAccount[0]) {
+          await this.knex('users')
+            .insert({
+              bank_account: createPostDto.bankAccount,
+            })
+            .where('id', createPostDto.user_id);
+        }
       }
+
       let promotion_plan = false;
       if (createPostDto.promotion === 't') {
         promotion_plan = true;
