@@ -22,7 +22,8 @@ export class CreatePostDto {
   @IsNotEmpty()
   description: string;
 
-  tags: Array<string>;
+  @IsString()
+  tags: string;
 
   @IsNumber()
   @IsNotEmpty()

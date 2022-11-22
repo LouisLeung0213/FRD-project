@@ -8,38 +8,67 @@ import { UpdatePostDto } from './dto/update-post.dto';
 export class PostsService {
   constructor(@InjectKnex() private readonly knex: Knex) {}
   async create(createPostDto: CreatePostDto) {
-    let quality_plan = false;
-    let pending_in = 'selling';
-    let post_time: any = this.knex.fn.now();
-    let locationId: number = 1;
-    if (createPostDto.qualityPlan === 't') {
-      quality_plan = true;
-      pending_in = 'pending_in';
-      locationId = await this.knex('store_location')
-        .select('*')
-        .where('location', createPostDto.location)
-        .returning('id');
-    }
-    let promotion_plan = false;
-    if (createPostDto.promotion === 't') {
-      promotion_plan = true;
-    }
-
-    let createPost = await this.knex('posts')
-      .insert({
-        user_id: createPostDto.user_id,
+    try {
+      let quality_plan = false;
+      let pending_in = 'selling';
+      let post_time: any = this.knex.fn.now();
+      let locationId: number = 1;
+      if (createPostDto.qualityPlan === 't') {
+        quality_plan = true;
+        pending_in = 'pending_in';
+        let location = await this.knex('store_location')
+          .select('*')
+          .where('location', createPostDto.location)
+          .returning('id');
+        locationId = location[0].id;
+      }
+      let promotion_plan = false;
+      if (createPostDto.promotion === 't') {
+        promotion_plan = true;
+      }
+      console.log({
+        user_id: +createPostDto.user_id,
         post_title: createPostDto.title,
         post_description: createPostDto.description,
         original_price: createPostDto.startPrice,
         q_mark: quality_plan,
         auto_adjust_plan: promotion_plan,
-        location_id: locationId[0].id,
+        location_id: locationId,
         status: pending_in,
         post_time: post_time,
-      })
-      .returning('id');
+      });
+      let createPost = await this.knex('posts')
+        .insert({
+          user_id: +createPostDto.user_id,
+          post_title: createPostDto.title,
+          post_description: createPostDto.description,
+          original_price: createPostDto.startPrice,
+          q_mark: quality_plan,
+          auto_adjust_plan: promotion_plan,
+          location_id: locationId,
+          status: pending_in,
+          post_time: post_time,
+        })
+        .returning('id');
 
-    return createPost;
+      console.log(createPost);
+      let tags = createPostDto.tags.split('#');
+      console.log(tags);
+      tags.shift();
+
+      console.log(tags);
+      for (let tag of tags) {
+        let createTags = await this.knex('tags').insert({
+          tag_name: tag,
+          post_id: createPost[0].id,
+        });
+      }
+
+      return createPost;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   }
 
   async createImageLink(filename: string, post_id: number) {

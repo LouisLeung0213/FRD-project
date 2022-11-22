@@ -4,6 +4,7 @@
 .description {
   height: 40vh;
   width: 100vw;
+  overflow-y: auto;
 }
 
 .but {
@@ -85,6 +86,7 @@ ion-modal#preview-modal .wrapper {
   }
   .slide {
     width: 100%;
+    margin: 0.5rem 0 0.5rem 0;
   }
   .image-box {
     border: 1px solid gray;
