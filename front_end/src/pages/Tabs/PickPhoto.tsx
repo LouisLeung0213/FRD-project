@@ -64,7 +64,6 @@ const PickPhoto: React.FC = () => {
     previewModal.current?.dismiss();
   }
 
-  const tags = ["Disney", "模型", "限量版", "Marvel"];
   const locationSelections = ["荃灣西"];
 
   const [isTitleOk, setTitleOk] = useState(true);
@@ -75,7 +74,7 @@ const PickPhoto: React.FC = () => {
   const { state, item } = useIonFormState({
     title: "",
     description: "",
-    tags: [""],
+    tags: "",
     startPrice: "",
     location: "",
     qualityPlan: false,
@@ -88,11 +87,9 @@ const PickPhoto: React.FC = () => {
     formData.append("user_id", userId ? userId + "" : "");
     formData.append("title", data.title);
     formData.append("description", data.description);
-    if (data.tags.length > 0) {
-      data.tags.forEach((tag: string) => {
-        formData.append("tags", tag);
-      });
-    }
+
+    formData.append("tags", data.tags);
+
     formData.append("startPrice", data.startPrice);
     formData.append("location", data.location);
     formData.append("qualityPlan", data.qualityPlan ? "t" : "f");
@@ -188,7 +185,7 @@ const PickPhoto: React.FC = () => {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent className="ion-padding" fullscreen={true}>
         <>
           <IonModal
             id="preview-modal"
@@ -231,7 +228,7 @@ const PickPhoto: React.FC = () => {
                 scrollbar={true}
                 zoom={true}
                 effect={"fade"}
-                className="slide"
+                className="slide "
               >
                 {photos.map((photo, index) => {
                   return (
@@ -301,18 +298,16 @@ const PickPhoto: React.FC = () => {
             <br />
             {item({
               name: "tags",
-              label: "tags",
+
               renderLabel: () => (
-                <IonLabel position="floating">加入標籤</IonLabel>
+                <IonLabel position="floating">加入標籤 #</IonLabel>
               ),
               renderContent: (props) => (
-                <IonSelect multiple {...props}>
-                  {tags.map((tag) => (
-                    <IonSelectOption key={tag} value={tag}>
-                      {tag}
-                    </IonSelectOption>
-                  ))}
-                </IonSelect>
+                <IonInput
+                  className="tags"
+                  placeholder="請於標籤前加入#"
+                  {...props}
+                ></IonInput>
               ),
             })}
             <br />
