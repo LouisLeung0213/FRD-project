@@ -330,7 +330,7 @@ const PickPhoto: React.FC = () => {
             <br />
             {item({
               name: "qualityPlan",
-              renderLabel: () => <IonLabel>加入認證計劃</IonLabel>,
+              renderLabel: () => <IonLabel>加入認證拍賣計劃</IonLabel>,
               renderContent: (props) => (
                 <IonCheckbox
                   slot="start"
@@ -358,7 +358,7 @@ const PickPhoto: React.FC = () => {
                       </li>
                       <br />
                       <li>
-                        如選擇認證計劃，將默認接受以下規條：
+                        如選擇認證拍賣計劃，將默認接受以下規條：
                         <ol>
                           <li>賣家需把貨品交予門市檢查後帖子才會公佈。</li>
                           <li>更改產品描述需等待批核。</li>

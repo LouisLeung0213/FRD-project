@@ -154,20 +154,20 @@ const Profile: React.FC<{ user: number | null }> = (props: {
           </IonToolbar>
         </IonHeader>
         <IonContent fullscreen>
-          <IonList className="personalInfoContainer">
-            <IonItem className="personalIconContainer">
-              <IonImg src={icon} className="personalIcon" />
-            </IonItem>
-            <IonList>
-              <IonItem className="personalInfo">
+          <div className="personalInfoContainer">
+            <div className="personalIconContainer">
+              <img src={icon} className="personalIcon" />
+            </div>
+            <div>
+              <div className="personalInfo">
                 <IonLabel>{nickname}</IonLabel>
-              </IonItem>
+              </div>
 
-              <IonItem>
+              <div>
                 <IonLabel>{joinTime}</IonLabel>
-              </IonItem>
-            </IonList>
-          </IonList>
+              </div>
+            </div>
+          </div>
           <IonList>
             <IonItem>
               <IonIcon icon={heartOutline} className="chat" />
