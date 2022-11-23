@@ -12,6 +12,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('point').notNullable().defaultTo(0);
     table.boolean('is_admin').notNullable().defaultTo(false);
     table.timestamp('joinedTime').notNullable().defaultTo(knex.fn.now());
+    table.integer('bank_account');
   });
 
   await knex.schema.createTableIfNotExists('followers', (table) => {

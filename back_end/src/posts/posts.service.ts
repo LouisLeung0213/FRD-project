@@ -28,9 +28,11 @@ export class PostsService {
           .where('id', createPostDto.user_id)
           .returning('bank_account');
 
-        if (!checkBankAccount[0]) {
+        console.log(checkBankAccount);
+
+        if (!checkBankAccount[0].bankAccount) {
           await this.knex('users')
-            .insert({
+            .update({
               bank_account: createPostDto.bankAccount,
             })
             .where('id', createPostDto.user_id);

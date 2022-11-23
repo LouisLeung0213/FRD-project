@@ -71,6 +71,7 @@ const PickPhoto: React.FC = () => {
   const [isStartPriceOk, setStartPriceOk] = useState(true);
   const [isLocationOk, setIsLocationOk] = useState(true);
   const [isBankAccountOk, setIsBankAccountOk] = useState(true);
+  const [isPhotoOk, setIsPhotoOk] = useState(true);
 
   const { state, item } = useIonFormState({
     title: "",
@@ -110,60 +111,74 @@ const PickPhoto: React.FC = () => {
   //console.log(items);
   const submitForm = async (data: any) => {
     console.log(state.title);
-    let ok = false;
+    let ok = true;
     function checkStatus() {
+      if (photos.length < 1) {
+        setIsPhotoOk(false);
+        ok = false;
+      } else {
+        setIsPhotoOk(true);
+      }
+
       if (data.title.length == 0) {
         setTitleOk(false);
+        ok = false;
       } else {
         setTitleOk(true);
       }
       let numReg = /^\d+$/;
       if (data.description.length == 0) {
         setIsDescriptionOk(false);
+        ok = false;
       } else {
         setIsDescriptionOk(true);
       }
       if (data.qualityPlan == true && !data.location) {
         setIsLocationOk(false);
+        ok = false;
       } else {
         setIsLocationOk(true);
       }
       if (
         data.qualityPlan == true &&
-        !data.bankAccount &&
+        data.bankAccount === "" &&
         !data.bankAccount.match(numReg)
       ) {
         setIsBankAccountOk(false);
-      } else {
+        ok = false;
+      } else if (data.qualityPlan == true && data.bankAccount.match(numReg)) {
         setIsBankAccountOk(true);
       }
       if (data.startPrice.length == 0 || !data.startPrice.match(numReg)) {
         setStartPriceOk(false);
+        ok = false;
       } else {
         setStartPriceOk(true);
       }
+
       dismiss();
       return;
     }
+
     checkStatus();
 
     console.log("pass");
-
+    console.log("ok", ok);
     let formDataUpload = formAppend();
 
     console.log("state.title =  ", state.title);
+    if (ok === true) {
+      let res = await fetch(`${API_ORIGIN}/posts/postItem`, {
+        method: "POST",
 
-    let res = await fetch(`${API_ORIGIN}/posts/postItem`, {
-      method: "POST",
-
-      body: formDataUpload,
-    });
-    let result = await res.json();
-    console.log(result);
-    if (result.status === 200) {
-      router.push(routes.tab.mainPage, "forward", "replace");
+        body: formDataUpload,
+      });
+      let result = await res.json();
+      console.log(result);
+      if (result.status === 200) {
+        router.push(routes.tab.mainPage, "forward", "replace");
+      }
     }
-
     dismiss();
   };
 
@@ -276,6 +291,11 @@ const PickPhoto: React.FC = () => {
                   <IonIcon icon={add}></IonIcon>
                 </SwiperSlide>
               </Swiper>
+              <div className="ion-text-center">
+                {!isDescriptionOk ? (
+                  <IonText color="danger">請加入至少一張物品照片</IonText>
+                ) : null}
+              </div>
             </div>
             {item({
               name: "title",
@@ -420,26 +440,30 @@ const PickPhoto: React.FC = () => {
             )}
             <div className="ion-text-center">
               {!isLocationOk ? (
-                <IonText color="danger">請選擇門市</IonText>
+                <>
+                  <IonText color="danger">請選擇門市</IonText>
+                  <br />
+                </>
               ) : null}
             </div>
-            <br />
-            {state.qualityPlan === true ? (
-              item({
-                name: "bankAccount",
-                renderLabel: () => (
-                  <IonLabel position="floating">請輸入銀行戶口:</IonLabel>
-                ),
-                renderContent: (props) => <IonInput {...props}></IonInput>,
-              })
-            ) : (
-              <div></div>
-            )}
+
+            {state.qualityPlan === true
+              ? item({
+                  name: "bankAccount",
+                  renderLabel: () => (
+                    <IonLabel position="floating">請輸入銀行戶口:</IonLabel>
+                  ),
+                  renderContent: (props) => <IonInput {...props}></IonInput>,
+                })
+              : null}
             <div className="ion-text-center">
-              {!isBankAccountOk ? (
+              {state.qualityPlan === true &&
+              !state.bankAccount.match(/^\d+$/) &&
+              state.bankAccount !== "" ? (
                 <IonText color="danger">請輸入有效銀行戶口</IonText>
               ) : null}
             </div>
+            <br />
             {item({
               name: "promotion",
               renderLabel: () => <IonLabel>自動調整底價</IonLabel>,

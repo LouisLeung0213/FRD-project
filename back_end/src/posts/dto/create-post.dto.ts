@@ -32,7 +32,7 @@ export class CreatePostDto {
   @IsString()
   location: string;
 
-  @IsString()
+  @IsNumber()
   bankAccount: number;
 
   @IsString()
