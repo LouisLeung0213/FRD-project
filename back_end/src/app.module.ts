@@ -10,6 +10,7 @@ import { StoragesModule } from './storages/storages.module';
 import { InvoiceModule } from './invoice/invoice.module';
 import { StripeModule } from './stripe/stripe.module';
 import { env } from 'process';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { env } from 'process';
     AdminModule,
     StoragesModule,
     InvoiceModule,
-    //StripeModule.forRoot(env.STRIPE_KEY, { apiVersion: '2022-11-15' }),
+    StripeModule.forRoot(env.STRIPE_KEY, { apiVersion: '2022-11-15' }),
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
