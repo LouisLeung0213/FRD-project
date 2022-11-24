@@ -12,6 +12,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto, UpdateUserInfoDto } from './dto/update-user.dto';
+import { get } from 'http';
 // import { get } from 'http';
 
 @Controller('users')
@@ -28,20 +29,23 @@ export class UsersController {
     }
   }
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
-
-  @Get(':username')
+  @Get('findOne/:username')
   findOne(@Param('username') username: string) {
     return { msg: 'bye' };
     // return this.usersService.findOne(username);
   }
 
+  @Post('checkSignUp')
+  checkSignUp(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.checkSignUp(createUserDto);
+  }
+
   @Patch('updateUserInfo/:id')
   @UsePipes(ValidationPipe)
-  updateUserInfo(@Param('id') id: number, @Body() updateUserInfoDto: UpdateUserInfoDto) {
+  updateUserInfo(
+    @Param('id') id: number,
+    @Body() updateUserInfoDto: UpdateUserInfoDto,
+  ) {
     try {
       return this.usersService.updateUserInfo(+id, updateUserInfoDto);
     } catch (error) {
@@ -50,7 +54,10 @@ export class UsersController {
   }
 
   @Patch('updatePassword/:id')
-  updatePassword(@Param('id') id: number, @Body() updatePasswordDto: UpdatePasswordDto) {
+  updatePassword(
+    @Param('id') id: number,
+    @Body() updatePasswordDto: UpdatePasswordDto,
+  ) {
     try {
       return this.usersService.updatePassword(+id, updatePasswordDto);
     } catch (error) {

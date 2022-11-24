@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 import { useIonFormState } from "react-use-ionic-form";
 import { API_ORIGIN } from "../../api";
 import { RootState } from "../../store";
+import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
 
 const PasswordChange: React.FC = () => {
   let [isOldPasswordOk, setIsOldPasswordOk] = useState(true);
@@ -30,6 +31,7 @@ const PasswordChange: React.FC = () => {
   let [isReNewPasswordOk, setIsReNewPasswordOk] = useState(true);
   let [isReNewPasswordSame, setIsReNewPasswordSame] = useState(true);
 
+  let userPhoneNumber = useSelector((state: RootState) => state.phone);
   let id = useSelector((state: RootState) => state.id);
 
   const router = useIonRouter();
@@ -65,6 +67,27 @@ const PasswordChange: React.FC = () => {
     } else {
       setIsReNewPasswordSame(true);
     }
+    try {
+      if (!userPhoneNumber) {
+        alert(JSON.stringify("沒有有效電話號碼", null, 2));
+        return;
+      }
+      const { verificationId } =
+        await FirebaseAuthentication.signInWithPhoneNumber({
+          phoneNumber: userPhoneNumber,
+        });
+
+      const verificationCode: any = window.prompt(
+        "Please enter the verification code that was sent to your mobile device."
+      );
+      const OTPResult = await FirebaseAuthentication.signInWithPhoneNumber({
+        verificationId,
+        verificationCode,
+      });
+    } catch (error) {
+      alert(JSON.stringify("OTP錯誤", null, 2));
+      return;
+    }
 
     let res = await fetch(`${API_ORIGIN}/users/updatePassword/${id}`, {
       method: "PATCH",
@@ -84,6 +107,7 @@ const PasswordChange: React.FC = () => {
     }
 
     router.goBack();
+
     // router.push(routes.tab.profile, "forward", "replace");
   }
 

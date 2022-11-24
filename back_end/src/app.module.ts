@@ -10,7 +10,11 @@ import { StoragesModule } from './storages/storages.module';
 import { InvoiceModule } from './invoice/invoice.module';
 import { StripeModule } from './stripe/stripe.module';
 import { env } from 'process';
+<<<<<<< HEAD
+import { ChatroomModule } from './chatroom/chatroom.module';
+=======
 import { PaymentModule } from './payment/payment.module';
+>>>>>>> refs/remotes/origin/master
 
 @Module({
   imports: [
@@ -21,8 +25,13 @@ import { PaymentModule } from './payment/payment.module';
     AdminModule,
     StoragesModule,
     InvoiceModule,
+<<<<<<< HEAD
+    ChatroomModule,
+    //StripeModule.forRoot(env.STRIPE_KEY, { apiVersion: '2022-11-15' }),
+=======
     StripeModule.forRoot(env.STRIPE_KEY, { apiVersion: '2022-11-15' }),
     PaymentModule,
+>>>>>>> refs/remotes/origin/master
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -12,34 +12,41 @@ export class UsersService {
   constructor(@InjectKnex() private readonly knex: Knex) {}
 
   async create(createUserDto: CreateUserDto) {
+    try {
+      await this.knex('users')
+        .insert({
+          username: createUserDto.username,
+          password_hash: await bcrypt.hash(createUserDto.password, 10),
+          email: createUserDto.email,
+          nickname: createUserDto.nickname,
+          phone: createUserDto.phone,
+          // is_admin: createUserDto.is_admin,
+        })
+        .returning('id');
+    } catch (error) {
+      throw new HttpException('Register unsuccessfully', 500);
+    }
+  }
+
+  async checkSignUp(createUserDto: CreateUserDto) {
     let checkUser = await this.knex
       .select('username')
       .from('users')
       .where('username', createUserDto.username);
-    if (checkUser.length > 0) {
+    console.log('checkUser', checkUser[0]);
+    let checkPhone = await this.knex
+      .select('phone')
+      .from('users')
+      .where('phone', createUserDto.phone);
+    console.log('checkPhone', checkPhone[0]);
+
+    if (checkUser[0]) {
       throw new HttpException('This username is already used', 401);
+    } else if (checkPhone[0]) {
+      throw new HttpException('This phone number is already used', 402);
     } else {
-      try {
-        await this.knex('users')
-          .insert({
-            username: createUserDto.username,
-            password_hash: await bcrypt.hash(createUserDto.password, 10),
-            email: createUserDto.email,
-            nickname: createUserDto.nickname,
-            phone: createUserDto.phone,
-            // is_admin: createUserDto.is_admin,
-          })
-          .returning('id');
-      } catch (error) {
-        throw new HttpException('Register unsuccessfully', 500);
-      }
-
-      return { msg: 'This action adds a new user' };
+      return { msg: 'you can register now' };
     }
-  }
-
-  findAll() {
-    return `This action returns all users`;
   }
 
   async findOne(username: string) {

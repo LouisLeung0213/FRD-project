@@ -19,6 +19,8 @@ export let routes = {
   storages: "/Storages",
   trade: "/Trade",
   blacklist: "/Blacklist",
+  chatrooms: "/Chatrooms",
+  chatroom: (id: string | number) => `/chatroom/${id}`,
   payment: "/Payment",
   package: "/Package",
 };
