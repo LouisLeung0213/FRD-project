@@ -1,4 +1,5 @@
 import {
+  IonButton,
   IonContent,
   IonHeader,
   IonItem,
@@ -28,6 +29,7 @@ const MainPage: React.FC = () => {
 
     postsList();
   }, []);
+
   return (
     <IonPage>
       <IonHeader>

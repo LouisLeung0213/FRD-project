@@ -10,6 +10,12 @@
 				"sound",
 				"alert"
 			]
+		},
+		"FirebaseAuthentication": {
+			"skipNativeAuth": false,
+			"providers": [
+				"phone"
+			]
 		}
 	},
 	"cordova": {}

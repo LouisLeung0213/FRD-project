@@ -18,6 +18,9 @@ import { useHistory } from "react-router-dom";
 import "./SignUp.css";
 import { API_ORIGIN } from "../../api";
 
+//Firebase Auth
+import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
+
 const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
   onSignUp: () => void;
 }) => {
@@ -69,8 +72,11 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
       setIsEmailOk(true);
     }
 
+    // return result.user;
+
     try {
-      let res = await fetch(`${API_ORIGIN}/users/signUp`, {
+      console.log("ready to fetch");
+      let res = await fetch(`${API_ORIGIN}/users/checkSignUp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,18 +89,55 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
           email: state.email,
         }),
       });
+      console.log("fetch done");
       let result = await res.json();
       console.log("result.statusCode: ", result.statusCode);
 
       if (result.statusCode == 401) {
         alert(JSON.stringify("有人用左呢個帳號名喇, 改過啦", null, 2));
         return;
-      }
-      if (result.statusCode == 400) {
+      } else if (result.statusCode == 400) {
         alert(JSON.stringify("你個email都唔拿係email嚟既", null, 2));
         return;
+      } else if (result.statusCode == 402) {
+        console.log(result.statusCode);
+        alert(JSON.stringify("你個電話號碼用過啦喎", null, 2));
+        return;
+      } else {
+        console.log("ready to send OTP");
+        const { verificationId } =
+          await FirebaseAuthentication.signInWithPhoneNumber({
+            phoneNumber: data.phone,
+          });
+        const verificationCode: any = window.prompt(
+          "Please enter the verification code that was sent to your mobile device."
+        );
+        const OTPResult = await FirebaseAuthentication.signInWithPhoneNumber({
+          verificationId,
+          verificationCode,
+        });
+        console.log("sent OTP");
+        if (!OTPResult.user) {
+          alert(JSON.stringify("輸入錯誤", null, 2));
+          return;
+        } else {
+          console.log("success to insert");
+          await fetch(`${API_ORIGIN}/users/signUp`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: state.username,
+              password: state.password,
+              nickname: state.nickname,
+              phone: state.phone,
+              email: state.email,
+            }),
+          });
+          alert(JSON.stringify("success!", null, 2));
+        }
       }
-      alert(JSON.stringify("success!", null, 2));
 
       let res2 = await fetch(`${API_ORIGIN}/auth/login`, {
         method: "POST",
@@ -133,17 +176,17 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
       props.onSignUp();
       history.push(`/tab/Profile`);
     } catch (error) {
-      alert(JSON.stringify("sth wrong", null, 2));
+      alert(JSON.stringify("OTP錯誤", null, 2));
     }
   };
 
   const { state, item } = useIonFormState({
-    username: "",
-    password: "",
-    rePassword: "",
-    nickname: "",
-    phone: "",
-    email: "",
+    username: "clsTesting",
+    password: "123",
+    rePassword: "123",
+    nickname: "clsTesting",
+    phone: "+852",
+    email: "clsTesting@gmail.com",
   });
 
   return (
@@ -209,7 +252,11 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
               <IonLabel position="floating">電話號碼:</IonLabel>
             ),
             renderContent: (props) => (
-              <IonInput type="text" {...props}></IonInput>
+              <IonInput
+                type="text"
+                {...props}
+                placeholder="+852 62634213"
+              ></IonInput>
             ),
           })}
           {!isPhoneOk ? (

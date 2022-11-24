@@ -129,7 +129,8 @@ static const NSInteger FIRErrorCodeDurableDeepLinkFailed = -119;
     id<FIRAnalyticsInterop> analytics = FIR_COMPONENT(FIRAnalyticsInterop, container);
     FIRDynamicLinks *dynamicLinks = [[FIRDynamicLinks alloc] initWithAnalytics:analytics];
     [dynamicLinks configureDynamicLinks:container.app];
-
+    // Check for pending Dynamic Link automatically if enabled, otherwise we expect the developer to
+    // call strong match FDL API to retrieve a pending link.
     if ([FIRDynamicLinks isAutomaticRetrievalEnabled]) {
       [dynamicLinks checkForPendingDynamicLink];
     }
@@ -412,13 +413,13 @@ static const NSInteger FIRErrorCodeDurableDeepLinkFailed = -119;
 
   if ([self canParseUniversalLinkURL:url]) {
     if (url.query.length > 0) {
-      NSDictionary<NSString *, NSString *> *parameters = FIRDLDictionaryFromQuery(url.query);
+      NSDictionary *parameters = FIRDLDictionaryFromQuery(url.query);
       if (parameters[kFIRDLParameterLink]) {
+        FIRDynamicLink *dynamicLink = [[FIRDynamicLink alloc] init];
         NSString *urlString = parameters[kFIRDLParameterLink];
         NSURL *deepLinkURL = [NSURL URLWithString:urlString];
         if (deepLinkURL) {
-          FIRDynamicLink *dynamicLink = [[FIRDynamicLink alloc]
-              initWithParametersDictionary:@{kFIRDLParameterDeepLinkIdentifier : urlString}];
+          dynamicLink.url = deepLinkURL;
           dynamicLink.matchType = FIRDLMatchTypeUnique;
           dynamicLink.minimumAppVersion = parameters[kFIRDLParameterMinimumAppVersion];
           // Call resolveShortLink:completion: to do logging.

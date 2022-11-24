@@ -65,6 +65,8 @@ import { FirebaseDynamicLinks } from "@pantrist/capacitor-firebase-dynamic-links
 import PickPhoto from "./pages/Tabs/PickPhoto";
 import Storages from "./pages/Storages/Storages";
 import Blacklist from "./pages/Blacklist/Blacklist";
+import ChatListTab from "./pages/Chatroom/Chatroom";
+import ChatroomPage from "./pages/Chatroom/ChatroomPage";
 
 setupIonicReact();
 
@@ -175,6 +177,17 @@ const App: React.FC = () => {
             exact={true}
             render={() => <Blacklist />}
           />
+
+          {/* chatrooms demo */}
+          <Route
+            path={routes.chatrooms}
+            exact={true}
+            render={() => <ChatListTab />}
+          />
+
+          <Route path={routes.chatroom(":id")}>
+            <ChatroomPage />
+          </Route>
           <Route path="/tab">
             <IonTabs>
               <IonRouterOutlet>
@@ -233,7 +246,6 @@ const App: React.FC = () => {
                 ) : null}
 
                 <IonTabButton tab="Notices" href="/tab/Notices">
-                  <IonBadge slot="end">1</IonBadge>
                   <IonIcon icon={notificationsOutline} />
                   <IonLabel>通知</IonLabel>
                 </IonTabButton>
