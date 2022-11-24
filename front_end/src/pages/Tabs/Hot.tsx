@@ -1,11 +1,12 @@
 import {
   IonContent,
   IonHeader,
+  IonItem,
   IonPage,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import ExploreContainer from "../../components/ExploreContainer";
+
 import "./Hot.css";
 
 const Hot: React.FC = () => {
@@ -16,16 +17,13 @@ const Hot: React.FC = () => {
           <IonTitle>Tab 2 123456789</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Hot</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer name="Tab 2 page" />
+
+      <IonContent>
+        <IonItem>TODO</IonItem>
       </IonContent>
     </IonPage>
   );
 };
 
+//
 export default Hot;

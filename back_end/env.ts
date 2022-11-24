@@ -10,6 +10,7 @@ export let env = {
   DB_PASSWORD: '',
   PORT: '',
   HOST: '',
+  STRIPE_KEY: '',
 };
 
 populateEnv(env, { mode: 'halt' });

@@ -21,4 +21,5 @@ export let routes = {
   blacklist: "/Blacklist",
   chatrooms: "/Chatrooms",
   chatroom: (id: string | number) => `/chatroom/${id}`,
+  payment: "/Payment",
 };

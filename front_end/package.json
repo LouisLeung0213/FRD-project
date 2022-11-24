@@ -27,6 +27,8 @@
     "@nestjs/mapped-types": "*",
     "@pantrist/capacitor-firebase-dynamic-links": "^4.0.2",
     "@reduxjs/toolkit": "^1.9.0",
+    "@stripe/react-stripe-js": "^1.15.0",
+    "@stripe/stripe-js": "^1.44.1",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^12.6.3",
@@ -38,10 +40,15 @@
     "@types/react-router-dom": "^5.1.7",
     "capacitor": "^0.5.5",
     "cordova-res": "^0.15.4",
+<<<<<<< HEAD
     "firebase": "^9.14.0",
+=======
+    "dotenv": "^16.0.3",
+>>>>>>> refs/remotes/origin/master
     "ionicons": "^6.0.3",
     "moment": "^2.29.4",
     "native-run": "^1.7.1",
+    "populate-env": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.39.3",
