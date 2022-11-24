@@ -5,19 +5,24 @@ import {
 } from "@stripe/react-stripe-js";
 import { useState, useEffect } from "react";
 import { API_ORIGIN } from "../api";
-const CheckoutForm: React.FC = () => {
+
+const CheckoutForm: React.FC<{ clientSecret: string }> = (props: {
+  clientSecret: string;
+}) => {
   const stripe = useStripe();
   const elements = useElements();
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [clientSecret, setClientSecret] = useState("");
+
   useEffect(() => {
     if (!stripe) {
       return;
     }
 
     //TODO
-    const clientSecret =
-      "pi_3M7XPvLZBSpUPpls2Y0NbvRd_secret_mE2VQqjys6r2YyyMd5v2DBczW";
+    const clientSecret = props.clientSecret;
+    setClientSecret(clientSecret);
     // new URLSearchParams(window.location.search).get(
     //   "payment_intent_client_secret"
     // );
@@ -54,7 +59,8 @@ const CheckoutForm: React.FC = () => {
       //`Elements` instance that was used to create the Payment Element
       elements,
       confirmParams: {
-        return_url: `${API_ORIGIN}/payment/authorization`,
+        //TODO
+        return_url: `${API_ORIGIN}/payment/Success`,
       },
     });
 

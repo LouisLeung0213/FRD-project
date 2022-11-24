@@ -28,6 +28,11 @@ export class PaymentController {
     return res.status(303).redirect(url);
   }
 
+  @Get('stripeConfig')
+  stripeConfig() {
+    return this.paymentService.stripeConfig();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.paymentService.findOne(+id);

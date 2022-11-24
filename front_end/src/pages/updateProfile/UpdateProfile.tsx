@@ -123,49 +123,7 @@ const UpdateProfile: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          {/* <form onSubmit={handleSubmit} className="ion-padding">
-            <IonItem>
-              <IonImg src={icon}></IonImg>
-              <IonLabel>更改個人相片</IonLabel>
-            </IonItem>
-            <IonItem>
-              <IonLabel position="floating">帳號:</IonLabel>
-              <IonInput value={username}/>
-            </IonItem>
-            <IonItem>
-              <IonLabel position="floating">暱稱:</IonLabel>
-              <IonInput value={nickname} />
-            </IonItem>
-            <IonItem>
-              <IonLabel position="floating">電話號碼:</IonLabel>
-              <IonInput value={phone} />
-            </IonItem>
-            <IonItem>
-              <IonLabel position="floating">電子郵件:</IonLabel>
-              <IonInput value={email} />
-            </IonItem>
-            <IonButton className="ion-margin-top" type="submit" expand="block">
-              完成
-            </IonButton>
-          </form>
-          <div>---------我是分隔線---------</div> */}
           <IonList className="ion-padding">
-            {/* {item({
-              name: "username",
-              renderLabel: () => (
-                <>
-                  <IonLabel position="floating">帳號:</IonLabel>
-                </>
-              ),
-              renderContent: (props) => (
-                <IonInput type="text" {...props}></IonInput>
-              ),
-            })}
-            <div className="ion-text-center">
-              {!isUsernameOk ? (
-                <IonText color="warning">帳號呢？?</IonText>
-              ) : null}
-            </div> */}
             {item({
               name: "nickname",
               renderLabel: () => (

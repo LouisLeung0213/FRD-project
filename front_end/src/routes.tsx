@@ -20,4 +20,5 @@ export let routes = {
   trade: "/Trade",
   blacklist: "/Blacklist",
   payment: "/Payment",
+  package: "/Package",
 };

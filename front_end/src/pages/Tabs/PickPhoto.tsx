@@ -229,12 +229,8 @@ const PickPhoto: React.FC = () => {
             </IonContent>
 
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <IonButton slot="center" onClick={dismiss}>
-                返回
-              </IonButton>
-              <IonButton slot="center" onClick={() => submitForm(state)}>
-                發佈
-              </IonButton>
+              <IonButton onClick={dismiss}>返回</IonButton>
+              <IonButton onClick={() => submitForm(state)}>發佈</IonButton>
             </div>
           </IonModal>
 

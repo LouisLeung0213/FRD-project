@@ -26,6 +26,8 @@ export class PaymentService {
           },
         },
       });
+
+      console.log(paymentIntent.client_secret);
       return {
         client_secret: paymentIntent.client_secret,
       };
@@ -57,6 +59,10 @@ export class PaymentService {
 
     console.log('303', session.url);
     return session.url;
+  }
+
+  stripeConfig() {
+    return { key: env.PUBLIC_STRIPE_KEY };
   }
 
   findOne(id: number) {

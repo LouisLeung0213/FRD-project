@@ -39,6 +39,7 @@ import {
   trashSharp,
   logInOutline,
   logOutOutline,
+  walletOutline,
 } from "ionicons/icons";
 // import ExploreContainer from "../../components/ExploreContainer";
 
@@ -128,6 +129,10 @@ const Profile: React.FC<{ user: number | null }> = (props: {
               <IonLabel>電子收據</IonLabel>
             </IonItem>
 
+            <IonItem routerLink="/Package">
+              <IonIcon icon={walletOutline} slot="start" />
+              <IonLabel>充值預授權</IonLabel>
+            </IonItem>
             <IonMenuToggle>
               <IonItem
                 onClick={destroyUserInfo}

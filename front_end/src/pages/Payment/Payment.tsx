@@ -21,15 +21,30 @@ import { API_ORIGIN } from "../../api";
 //   "pk_live_51M6rISLZBSpUPpls6H2Vmy8uu7NQk2GIfp6v6ic7Ns9sd5OlJbQuDPNn03969Xm80Cafw7ba43H05xqTJq6mXMAs0023VL8CW0"
 // );
 
-const stripePromise = loadStripe(
-  "pk_test_51M6rISLZBSpUPplseyMLyatFxsKphsFv27pZ0gg5d0BzAjcqUF0AAchzmMOrrDwbCU9TI5qgPoelknFUwsDLMp4x00XgAPDrU4"
-);
+let pubKey = async () => {
+  let res = await fetch(`${API_ORIGIN}/payment/stripeConfig`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  let key = await res.json();
+  console.log(key.key);
+  return loadStripe(key.key);
+};
+
+const stripePromise = pubKey();
+
+// const stripePromise = loadStripe(
+//   "pk_test_51M6rISLZBSpUPplseyMLyatFxsKphsFv27pZ0gg5d0BzAjcqUF0AAchzmMOrrDwbCU9TI5qgPoelknFUwsDLMp4x00XgAPDrU4"
+// );
+
+console.log(stripePromise);
 
 const Payment: React.FC = () => {
-  const [loadStripe, setLoadStripe] = useState();
-  let [paymentId, setPaymentId] = useState<String>("");
+  // let [paymentId, setPaymentId] = useState<String>("");
 
-  const [secret, setSecret] = useState("");
+  // const [secret, setSecret] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   const [clientSecret, setClientSecret] = useState("");
@@ -41,7 +56,7 @@ const Payment: React.FC = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        amount: "100000",
+        amount: "156560",
       }),
     });
     let paymentAuthorizationInfo = await result.json();
@@ -81,9 +96,9 @@ const Payment: React.FC = () => {
 
         <IonContent>
           <IonItem>
-            {clientSecret ? (
+            {clientSecret && stripePromise ? (
               <Elements stripe={stripePromise} options={{ clientSecret }}>
-                <CheckoutForm />
+                <CheckoutForm clientSecret={clientSecret} />
               </Elements>
             ) : null}
           </IonItem>

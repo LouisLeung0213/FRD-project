@@ -66,6 +66,7 @@ import PickPhoto from "./pages/Tabs/PickPhoto";
 import Storages from "./pages/Storages/Storages";
 import Blacklist from "./pages/Blacklist/Blacklist";
 import Payment from "./pages/Payment/Payment";
+import Package from "./pages/Payment/Package";
 
 setupIonicReact();
 
@@ -180,6 +181,11 @@ const App: React.FC = () => {
             path={routes.payment}
             exact={true}
             render={() => <Payment />}
+          />
+          <Route
+            path={routes.package}
+            exact={true}
+            render={() => <Package />}
           />
           <Route path="/tab">
             <IonTabs>

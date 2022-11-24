@@ -11,6 +11,7 @@ export let env = {
   PORT: '',
   HOST: '',
   STRIPE_KEY: '',
+  PUBLIC_STRIPE_KEY: '',
 };
 
 populateEnv(env, { mode: 'halt' });
