@@ -21,11 +21,14 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useRef, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useIonFormState } from "react-use-ionic-form";
 import { Router } from "workbox-routing";
 import { API_ORIGIN } from "../../api";
 import CheckoutForm from "../../components/CheckoutForm";
+import { updatePoints } from "../../redux/points/actions";
 import { routes } from "../../routes";
+import { RootState } from "../../store";
 import "./Package.css";
 
 let pubKey = async () => {
@@ -45,6 +48,8 @@ const stripePromise = pubKey();
 const Package: React.FC = () => {
   const [isPointsOk, setIsPointsOk] = useState(false);
   const router = useIonRouter();
+  const points = useSelector((state: RootState) => state.points);
+  const dispatch = useDispatch();
   const paymentIntentModal = useRef<HTMLIonModalElement>(null);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -55,6 +60,14 @@ const Package: React.FC = () => {
   });
 
   async function getIdSecret() {
+    dispatch(
+      updatePoints({
+        points: state.amount,
+      })
+    );
+
+    //TODO 將points寫落redux 到之後fetch 去backend 寫入database
+
     let result = await fetch(`${API_ORIGIN}/payment/paymentIntent`, {
       method: "POST",
       headers: {
@@ -76,9 +89,6 @@ const Package: React.FC = () => {
     setIsLoading(false);
   }
 
-  useEffect(() => {
-    getIdSecret();
-  }, []);
   useEffect(() => {
     getIdSecret();
   }, []);

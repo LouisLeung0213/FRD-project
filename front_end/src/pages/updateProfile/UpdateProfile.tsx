@@ -43,6 +43,7 @@ const UpdateProfile: React.FC = () => {
   const joinedTime = useSelector((state: RootState) => state.joinedTime);
   const isAdmin = useSelector((state: RootState) => state.isAdmin);
   const reduxState = useSelector((state: RootState) => state);
+  const points = useSelector((state: RootState) => state.points);
 
   const router = useIonRouter();
   const dispatch = useDispatch();
@@ -94,6 +95,7 @@ const UpdateProfile: React.FC = () => {
           email: state.email,
           joinedTime: joinedTime,
           isAdmin: isAdmin,
+          points: points,
         })
       );
       console.log("reduxState: ", reduxState);

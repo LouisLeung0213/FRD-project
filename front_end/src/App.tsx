@@ -99,6 +99,7 @@ const App: React.FC = () => {
           email: userInfo.email,
           joinedTime: userInfo.joinedTime,
           isAdmin: userInfo.is_admin,
+          points: userInfo.points,
         })
       );
     };

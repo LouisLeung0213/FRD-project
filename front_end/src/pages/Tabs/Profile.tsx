@@ -62,17 +62,21 @@ const Profile: React.FC<{ user: number | null }> = (props: {
   let jwtKey = useSelector((state: RootState) => state.jwtKey);
   let currentUsername = useSelector((state: RootState) => state.username);
   let reduxNickname = useSelector((state: RootState) => state.nickname);
-
+  let joinedTime = useSelector((state: RootState) => state.joinedTime);
+  let reduxPoints = useSelector((state: RootState) => state.points);
+  let [points, setPoints] = useState(reduxPoints);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const getProfile = async () => {
-      //await getValue("Jwt");
-      let res = await fetch(`${API_ORIGIN}/profiles/${props.user}`);
+      let userId = await getValue("userId");
+      let res = await fetch(`${API_ORIGIN}/profiles/${userId}`);
 
       let result = await res.json();
+      console.log("123L:", result);
       setNickname(result.nickname);
       setUsername(result.username);
+      setPoints(result.points);
       setJoinTime(moment(result.joinedTime).format("MMMM Do YYYY"));
       dispatch(
         updateJwt({
@@ -84,16 +88,17 @@ const Profile: React.FC<{ user: number | null }> = (props: {
           email: result.email,
           joinedTime: result.joinedTime,
           isAdmin: result.is_admin,
+          points: result.points,
         })
       );
     };
 
     getProfile();
-  }, [jwtKey, reduxNickname]);
-
-  let [nickname, setNickname] = useState("");
-  let [username, setUsername] = useState("");
-  let [joinTime, setJoinTime] = useState("");
+  }, []);
+  //jwtKey, reduxNickname
+  let [nickname, setNickname] = useState(reduxNickname);
+  let [username, setUsername] = useState(currentUsername);
+  let [joinTime, setJoinTime] = useState(joinedTime);
 
   function destroyUserInfo() {
     removeValue("Jwt");
@@ -107,6 +112,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
         email: null,
         joinedTime: null,
         isAdmin: false,
+        points: null,
       })
     );
   }
@@ -114,6 +120,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
   function func() {
     console.log(state);
   }
+  console.log(currentUsername, username);
 
   return (
     <>
@@ -183,7 +190,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
               <div className="personalInfo">
                 <IonLabel>{nickname}</IonLabel>
               </div>
-
+              <IonLabel>可用點數: {points}</IonLabel>
               <div>
                 <IonLabel>{joinTime}</IonLabel>
               </div>

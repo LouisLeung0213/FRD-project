@@ -65,6 +65,19 @@ const CheckoutForm: React.FC<{ clientSecret: string }> = (props: {
         return_url: `${FRONT_ORIGIN}/tab/Profile`,
       },
     });
+    console.log(result);
+
+    // const res = await fetch(`${API_ORIGIN}/users/addPoints`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body:JSON.stringify({
+    //     points:
+    //   })
+    // });
+
+    // let succeedPayment = await res.json();
 
     if (result.error) {
       // Show error to your customer (for example, payment details incomplete)
