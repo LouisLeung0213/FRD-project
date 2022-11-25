@@ -5,11 +5,13 @@ config();
 
 export let env = {
   NODE_ENV: '',
-  DB_NAME: '',
-  DB_USER: '',
-  DB_PASSWORD: '',
+  POSTGRES_DB: '',
+  POSTGRES_USER: '',
+  POSTGRES_PASSWORD: '',
+  DB_PORT: 0,
+  DB_HOST: '',
   PORT: '',
-  HOST: '',
+  HOST: "localhost",
   STRIPE_KEY: '',
   PUBLIC_STRIPE_KEY: '',
 };
