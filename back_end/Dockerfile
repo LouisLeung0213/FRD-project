@@ -1,6 +1,7 @@
-FROM node:18.12.1-slim
+FROM --platform=linux/amd64 node:18.12.1-slim
 WORKDIR /usr/src/toystory
 COPY package.json .
 RUN npm install
 COPY dist dist
-CMD node dist/src/main.js
+COPY scripts/prod-run.sh scripts/
+CMD bash scripts/prod-run.sh
