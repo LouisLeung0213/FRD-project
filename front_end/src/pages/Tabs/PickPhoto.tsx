@@ -202,9 +202,7 @@ const PickPhoto: React.FC = () => {
     <IonPage className="PickPhoto">
       <IonHeader>
         <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/"></IonBackButton>
-          </IonButtons>
+          <div className="ion-text-center">發佈帖子</div>
           <IonButtons slot="end">
             <IonButton className="but" id="preview-dialog">
               發佈

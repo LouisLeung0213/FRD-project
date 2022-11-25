@@ -86,14 +86,14 @@ const UpdateProfile: React.FC = () => {
       let json = await res.json();
       dispatch(
         updateJwt({
-          newJwtKey: jwtKey,
-          newId: id,
-          newUsername: username,
-          newNickname: state.nickname,
-          newPhone: state.phone,
-          newEmail: state.email,
-          newJoinedTime: joinedTime,
-          newIsAdmin: isAdmin,
+          jwtKey: jwtKey,
+          id: id,
+          username: username,
+          nickname: state.nickname,
+          phone: state.phone,
+          email: state.email,
+          joinedTime: joinedTime,
+          isAdmin: isAdmin,
         })
       );
       console.log("reduxState: ", reduxState);

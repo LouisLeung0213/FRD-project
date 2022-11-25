@@ -162,14 +162,14 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
 
       dispatch(
         updateJwt({
-          newJwtKey: token,
-          newId: userInfo.id,
-          newUsername: userInfo.username,
-          newNickname: userInfo.nickname,
-          newPhone: userInfo.phone,
-          newEmail: userInfo.email,
-          newJoinedTime: userInfo.joinedTime,
-          newIsAdmin: userInfo.isAdmin,
+          jwtKey: token,
+          id: userInfo.id,
+          username: userInfo.username,
+          nickname: userInfo.nickname,
+          phone: userInfo.phone,
+          email: userInfo.email,
+          joinedTime: userInfo.joinedTime,
+          isAdmin: userInfo.is_admin,
         })
       );
 
