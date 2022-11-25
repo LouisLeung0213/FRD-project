@@ -12,24 +12,26 @@ export class PaymentService {
   constructor(@InjectKnex() private readonly knex: Knex) {}
 
   async paymentIntent(createPaymentDto: CreatePaymentDto) {
-    let amount = createPaymentDto.amount;
-
     const stripe = new Stripe(env.STRIPE_KEY, { apiVersion: '2022-11-15' });
     try {
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount,
+        amount: createPaymentDto.amount,
         currency: 'hkd',
         payment_method_types: ['card'],
+        // automatic_payment_methods: {
+        //   enabled: true,
+        // },
         payment_method_options: {
           card: {
             capture_method: 'manual',
           },
         },
       });
+      paymentIntent.payment_method = 'processing';
 
       console.log(paymentIntent.client_secret);
       return {
-        client_secret: paymentIntent.client_secret,
+        result: paymentIntent,
       };
     } catch (error) {
       return { error: { message: error.message } };

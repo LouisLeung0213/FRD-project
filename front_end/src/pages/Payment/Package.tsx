@@ -14,7 +14,11 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import { Elements } from "@stripe/react-stripe-js";
+import {
+  CardElement,
+  CardNumberElement,
+  Elements,
+} from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useRef, useState } from "react";
 import { useIonFormState } from "react-use-ionic-form";
@@ -58,15 +62,17 @@ const Package: React.FC = () => {
       },
       body: JSON.stringify({
         amount: state.amount,
+        payment_method_types: "card",
+        payment_method: "card",
       }),
     });
     let paymentAuthorizationInfo = await result.json();
 
-    console.log(paymentAuthorizationInfo.client_secret);
+    console.log(paymentAuthorizationInfo.result.client_secret);
 
-    console.log("client_secret", paymentAuthorizationInfo.client_secret);
+    console.log("client_secret", paymentAuthorizationInfo.result.client_secret);
 
-    setClientSecret(paymentAuthorizationInfo.client_secret);
+    setClientSecret(paymentAuthorizationInfo.result.client_secret);
     setIsLoading(false);
   }
 
@@ -84,10 +90,6 @@ const Package: React.FC = () => {
     } else {
       setIsPointsOk(false);
     }
-
-    // if (isPointsOk === true) {
-    //   router.push(routes.);
-    // }
   };
 
   return (
@@ -139,7 +141,9 @@ const Package: React.FC = () => {
             marginTop: "2rem ",
           }}
         >
-          <IonButton id="paymentIntent-dialog">發送</IonButton>
+          <IonButton id="paymentIntent-dialog" onClick={() => getIdSecret()}>
+            發送
+          </IonButton>
         </div>
       </IonContent>
 
@@ -166,11 +170,6 @@ const Package: React.FC = () => {
               </Elements>
             ) : null}
           </IonItem>
-          <div>
-            <IonButton strong={true} onClick={() => submitForm(state)}>
-              Confirm
-            </IonButton>
-          </div>
         </IonContent>
       </IonModal>
     </IonPage>
