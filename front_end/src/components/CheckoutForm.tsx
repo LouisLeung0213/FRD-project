@@ -1,10 +1,11 @@
+import { IonButton } from "@ionic/react";
 import {
   PaymentElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
 import { useState, useEffect } from "react";
-import { API_ORIGIN } from "../api";
+import { API_ORIGIN, FRONT_ORIGIN } from "../api";
 
 const CheckoutForm: React.FC<{ clientSecret: string }> = (props: {
   clientSecret: string;
@@ -27,15 +28,16 @@ const CheckoutForm: React.FC<{ clientSecret: string }> = (props: {
     //   "payment_intent_client_secret"
     // );
     stripe.retrievePaymentIntent(clientSecret!).then(({ paymentIntent }) => {
+      console.log(paymentIntent);
       switch (paymentIntent?.status) {
         case "succeeded":
-          setMessage("Payment succeeded!");
+          setMessage("成功");
           break;
         case "processing":
-          setMessage("Your payment is processing.");
+          setMessage("處理中");
           break;
         case "requires_payment_method":
-          setMessage("Your payment was not successful, please try again.");
+          setMessage("請輸入有效信用卡");
           break;
         default:
           setMessage("Something went wrong.");
@@ -52,6 +54,7 @@ const CheckoutForm: React.FC<{ clientSecret: string }> = (props: {
     if (!stripe || !elements) {
       // Stripe.js has not yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
+      console.log("not work");
       return;
     }
 
@@ -59,8 +62,7 @@ const CheckoutForm: React.FC<{ clientSecret: string }> = (props: {
       //`Elements` instance that was used to create the Payment Element
       elements,
       confirmParams: {
-        //TODO
-        return_url: `${API_ORIGIN}/payment/Success`,
+        return_url: `${FRONT_ORIGIN}/tab/Profile`,
       },
     });
 
@@ -82,6 +84,7 @@ const CheckoutForm: React.FC<{ clientSecret: string }> = (props: {
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
         </span>
       </button>
+
       {message && <div id="payment-message">{message}</div>}
     </form>
   );
