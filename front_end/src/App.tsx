@@ -55,7 +55,7 @@ import NoticeSetUp from "./pages/NoticeSetUp/NoticeSetUp";
 import Invoice from "./pages/Invoice/Invoice";
 import PasswordChange from "./pages/PasswordChange/PasswordChange";
 import Login from "./pages/Login/Login";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./store";
 import AdminPanel from "./pages/AdminPanel/AdminPanel";
 /* DeepLink Setup */
@@ -70,14 +70,41 @@ import ChatListTab from "./pages/Chatroom/Chatroom";
 import ChatroomPage from "./pages/Chatroom/ChatroomPage";
 import Payment from "./pages/Payment/Payment";
 import Package from "./pages/Payment/Package";
-
-
-
+import { getValue } from "./service/localStorage";
+import { API_ORIGIN } from "./api";
+import { updateJwt } from "./redux/user/actions";
 
 setupIonicReact();
 
 const App: React.FC = () => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
+    const getProfile = async () => {
+      let userId = await getValue("userId");
+      let token = await getValue("Jwt");
+
+      console.log("id:", userId, "token:", token);
+      let res = await fetch(`${API_ORIGIN}/profiles/${userId}`);
+
+      let userInfo = await res.json();
+      console.log("userInfo: ", userInfo);
+      dispatch(
+        updateJwt({
+          jwtKey: token,
+          id: userInfo.id,
+          username: userInfo.username,
+          nickname: userInfo.nickname,
+          phone: userInfo.phone,
+          email: userInfo.email,
+          joinedTime: userInfo.joinedTime,
+          isAdmin: userInfo.is_admin,
+        })
+      );
+    };
+
+    getProfile();
+
     const registerNotifications = async () => {
       let permStatus = await PushNotifications.checkPermissions();
 
@@ -133,6 +160,7 @@ const App: React.FC = () => {
 
   let jwtKey = useSelector((state: RootState) => state.jwtKey);
   let id = useSelector((state: RootState) => state.id);
+  console.log("redux ID : ", id);
   if (!id) {
     id = null;
   }
@@ -184,7 +212,6 @@ const App: React.FC = () => {
             render={() => <Blacklist />}
           />
 
-
           {/* chatrooms demo */}
           <Route
             path={routes.chatrooms}
@@ -207,7 +234,6 @@ const App: React.FC = () => {
             exact={true}
             render={() => <Package />}
           />
-
 
           <Route path="/tab">
             <IonTabs>

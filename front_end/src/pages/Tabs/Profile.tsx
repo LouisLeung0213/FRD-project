@@ -41,8 +41,8 @@ import {
   logOutOutline,
   walletOutline,
 } from "ionicons/icons";
-// import ExploreContainer from "../../components/ExploreContainer";
 
+import { Preferences } from "@capacitor/preferences";
 import "./Profile.css";
 import icon from "../../image/usericon.png";
 
@@ -54,6 +54,7 @@ import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
 import React from "react";
 import { API_ORIGIN } from "../../api";
+import { getValue, removeValue } from "../../service/localStorage";
 
 const Profile: React.FC<{ user: number | null }> = (props: {
   user: number | null;
@@ -61,16 +62,30 @@ const Profile: React.FC<{ user: number | null }> = (props: {
   let jwtKey = useSelector((state: RootState) => state.jwtKey);
   let currentUsername = useSelector((state: RootState) => state.username);
   let reduxNickname = useSelector((state: RootState) => state.nickname);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     const getProfile = async () => {
+      //await getValue("Jwt");
       let res = await fetch(`${API_ORIGIN}/profiles/${props.user}`);
 
       let result = await res.json();
       setNickname(result.nickname);
       setUsername(result.username);
       setJoinTime(moment(result.joinedTime).format("MMMM Do YYYY"));
+      dispatch(
+        updateJwt({
+          jwtKey: jwtKey,
+          id: result.id,
+          username: result.username,
+          nickname: result.nickname,
+          phone: result.phone,
+          email: result.email,
+          joinedTime: result.joinedTime,
+          isAdmin: result.is_admin,
+        })
+      );
     };
 
     getProfile();
@@ -81,16 +96,17 @@ const Profile: React.FC<{ user: number | null }> = (props: {
   let [joinTime, setJoinTime] = useState("");
 
   function destroyUserInfo() {
+    removeValue("Jwt");
     dispatch(
       updateJwt({
-        newJwtKey: null,
-        newId: null,
-        newUsername: null,
-        newNickname: null,
-        newPhone: null,
-        newEmail: null,
-        newJoinedTime: null,
-        newIsAdmin: false,
+        jwtKey: null,
+        id: null,
+        username: null,
+        nickname: null,
+        phone: null,
+        email: null,
+        joinedTime: null,
+        isAdmin: false,
       })
     );
   }
