@@ -144,4 +144,13 @@ export class UsersService {
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
+
+  async findAll() {
+    try {
+      let result = await this.knex.select('username').from('users');
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
