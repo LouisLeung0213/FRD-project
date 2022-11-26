@@ -55,6 +55,7 @@ import { RootState } from "../../store";
 import React from "react";
 import { API_ORIGIN } from "../../api";
 import { getValue, removeValue } from "../../service/localStorage";
+import { updatePoints } from "../../redux/points/actions";
 
 const Profile: React.FC<{ user: number | null }> = (props: {
   user: number | null;
@@ -62,40 +63,75 @@ const Profile: React.FC<{ user: number | null }> = (props: {
   let jwtState = useSelector((state: RootState) => state.jwt);
 
   let pointsState = useSelector((state: RootState) => state.points);
-  let [points, setPoints] = useState(pointsState);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const getProfile = async () => {
-      let userId = await getValue("userId");
-      let res = await fetch(`${API_ORIGIN}/profiles/${userId}`);
-
-      let result = await res.json();
-      console.log("123L:", result);
-      setNickname(result.nickname);
-      setUsername(result.username);
-      setPoints(result.points);
-      setJoinTime(moment(result.joinedTime).format("MMMM Do YYYY"));
-      dispatch(
-        updateJwt({
-          jwtKey: jwtState.jwtKey,
-          id: result.id,
-          username: result.username,
-          nickname: result.nickname,
-          phone: result.phone,
-          email: result.email,
-          joinedTime: result.joinedTime,
-          isAdmin: result.is_admin,
-        })
-      );
-    };
-
-    getProfile();
-  }, []);
-  //jwtKey, reduxNickname
   let [nickname, setNickname] = useState(jwtState.nickname);
   let [username, setUsername] = useState(jwtState.username);
   let [joinTime, setJoinTime] = useState(jwtState.joinedTime);
+  let [points, setPoints] = useState(pointsState);
+  const dispatch = useDispatch();
+
+  const getProfile = async () => {
+    let userId = await getValue("userId");
+    let res = await fetch(`${API_ORIGIN}/profiles/${userId}`);
+
+    let result = await res.json();
+    console.log("123L:", result);
+    setNickname(result.nickname);
+    setUsername(result.username);
+    setPoints(result.points);
+    setJoinTime(moment(result.joinedTime).format("MMMM Do YYYY"));
+    dispatch(
+      updateJwt({
+        jwtKey: jwtState.jwtKey,
+        id: result.id,
+        username: result.username,
+        nickname: result.nickname,
+        phone: result.phone,
+        email: result.email,
+        joinedTime: result.joinedTime,
+        isAdmin: result.is_admin,
+      })
+    );
+
+    let res2 = await fetch(`${API_ORIGIN}/profiles/${result.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    let result2 = await res.json();
+    console.log(result);
+
+    dispatch(
+      updatePoints({
+        points: result.points,
+      })
+    );
+  };
+
+  // async function getUserPoints(id: any) {
+  //   console.log("jwtState.id: ", id);
+  //   let res = await fetch(`${API_ORIGIN}/profiles/${id}`, {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   });
+  //   let result = await res.json();
+  //   console.log(result);
+
+  //   dispatch(
+  //     updatePoints({
+  //       points: result.points,
+  //     })
+  //   );
+  // }
+
+  useEffect(() => {
+    getProfile();
+    //getUserPoints(jwtState.id);
+    console.log("pointsState: ", pointsState.points);
+  }, []);
+  //jwtKey, reduxNickname
 
   function destroyUserInfo() {
     removeValue("Jwt");

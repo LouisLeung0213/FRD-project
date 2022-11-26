@@ -26,8 +26,3 @@ export class UpdatePasswordDto {
   @IsNotEmpty()
   newPassword: string;
 }
-
-export class UpdatePointsDto {
-  @IsNotEmpty()
-  points: string;
-}

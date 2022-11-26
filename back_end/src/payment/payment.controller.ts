@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { UpdatePaymentDto } from './dto/update-payment.dto';
+import { UpdatePointsDto } from './dto/update-payment.dto';
 
 @Controller('payment')
 export class PaymentController {
@@ -38,9 +38,11 @@ export class PaymentController {
     return this.paymentService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePaymentDto: UpdatePaymentDto) {
-    return this.paymentService.update(+id, updatePaymentDto);
+  @Patch('addPoints')
+  addPoints(@Body() updatePointsDto: UpdatePointsDto) {
+    console.log('hi');
+    console.log(updatePointsDto);
+    return this.paymentService.addPoints(updatePointsDto);
   }
 
   @Delete(':id')
