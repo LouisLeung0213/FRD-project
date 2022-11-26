@@ -56,19 +56,25 @@ const Package: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [clientSecret, setClientSecret] = useState("");
+  const [getClientSecret, setGetClientSecret] = useState(false);
 
   const { state, item } = useIonFormState({
     amount: "",
   });
+
   //get client_secret
+  let numbTail = "00";
   async function getIdSecret() {
+    let totalAmount = +state.amount + numbTail;
+    console.log("totalAmount::", totalAmount);
+    setGetClientSecret(true);
     let result = await fetch(`${API_ORIGIN}/payment/paymentIntent`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        amount: state.amount,
+        amount: totalAmount,
         payment_method_types: "card",
         payment_method: "card",
       }),
@@ -101,8 +107,8 @@ const Package: React.FC = () => {
   }
 
   useEffect(() => {
-    getIdSecret();
     getUserPoints();
+    //setClientSecret("");
   }, []);
 
   const submitForm = async (data: any) => {
