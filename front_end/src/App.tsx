@@ -154,16 +154,14 @@ const App: React.FC = () => {
 
     listenToDeepLinkOpen();
   }, []);
-
-  let profileHref = "/tab/Login";
-
+  let profileHref;
   let jwtState = useSelector((state: RootState) => state.jwt);
 
   console.log("redux ID : ", jwtState.id);
   if (!jwtState.id) {
-    jwtState.id = null;
+    profileHref = "/tab/Login";
   }
-  if (jwtState) {
+  if (jwtState.id) {
     profileHref = `/tab/Profile`;
   }
 
