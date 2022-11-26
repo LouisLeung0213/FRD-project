@@ -5,16 +5,20 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { API_ORIGIN, FRONT_ORIGIN } from "../api";
+import { RootState } from "../store";
 
-const CheckoutForm: React.FC<{ clientSecret: string }> = (props: {
+const CheckoutForm: React.FC<{
   clientSecret: string;
-}) => {
+  amount: string;
+}> = (props: { clientSecret: string; amount: string }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [clientSecret, setClientSecret] = useState("");
+  const pointsState = useSelector((state: RootState) => state.points);
 
   useEffect(() => {
     if (!stripe) {
@@ -24,9 +28,7 @@ const CheckoutForm: React.FC<{ clientSecret: string }> = (props: {
     //TODO
     const clientSecret = props.clientSecret;
     setClientSecret(clientSecret);
-    // new URLSearchParams(window.location.search).get(
-    //   "payment_intent_client_secret"
-    // );
+
     stripe.retrievePaymentIntent(clientSecret!).then(({ paymentIntent }) => {
       console.log(paymentIntent);
       switch (paymentIntent?.status) {
@@ -58,35 +60,26 @@ const CheckoutForm: React.FC<{ clientSecret: string }> = (props: {
       return;
     }
 
-    const result = await stripe.confirmPayment({
+    const result = stripe.confirmPayment({
       //`Elements` instance that was used to create the Payment Element
       elements,
       confirmParams: {
         return_url: `${FRONT_ORIGIN}/tab/Profile`,
       },
     });
-    console.log(result);
 
-    // const res = await fetch(`${API_ORIGIN}/users/addPoints`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body:JSON.stringify({
-    //     points:
-    //   })
-    // });
-
-    // let succeedPayment = await res.json();
-
-    if (result.error) {
-      // Show error to your customer (for example, payment details incomplete)
-      console.log(result.error.message);
-    } else {
-      // Your customer will be redirected to your `return_url`. For some payment
-      // methods like iDEAL, your customer will be redirected to an intermediate
-      // site first to authorize the payment, then redirected to the `return_url`.
-    }
+    const res = fetch(`${API_ORIGIN}/users/addPoints`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        points: props.amount,
+      }),
+    });
+    Promise.all([result, res]).catch((error) => {
+      console.log(error);
+    });
   };
 
   return (

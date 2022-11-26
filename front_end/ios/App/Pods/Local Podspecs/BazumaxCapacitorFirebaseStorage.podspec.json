@@ -1,0 +1,27 @@
+{
+  "name": "BazumaxCapacitorFirebaseStorage",
+  "version": "3.1.0",
+  "summary": "Firebase Storage support for Android & iOS",
+  "license": "MIT",
+  "homepage": "git+https://github.com/bazumax/capacitor-firebase-storage.git",
+  "authors": "bazuka5801 <bazuka5801@mail.ru>",
+  "source": {
+    "git": "git+https://github.com/bazumax/capacitor-firebase-storage.git",
+    "tag": "3.1.0"
+  },
+  "source_files": "ios/Plugin/**/*.{swift,h,m,c,cc,mm,cpp}",
+  "platforms": {
+    "ios": "12.0"
+  },
+  "dependencies": {
+    "Capacitor": [
+
+    ],
+    "Firebase/Storage": [
+
+    ]
+  },
+  "swift_versions": "5.1",
+  "static_framework": true,
+  "swift_version": "5.1"
+}

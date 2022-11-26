@@ -99,7 +99,6 @@ const App: React.FC = () => {
           email: userInfo.email,
           joinedTime: userInfo.joinedTime,
           isAdmin: userInfo.is_admin,
-          points: userInfo.points,
         })
       );
     };
@@ -159,18 +158,15 @@ const App: React.FC = () => {
 
   let profileHref = "/tab/Login";
 
-  let jwtKey = useSelector((state: RootState) => state.jwtKey);
-  let id = useSelector((state: RootState) => state.id);
-  console.log("redux ID : ", id);
-  if (!id) {
-    id = null;
+  let jwtState = useSelector((state: RootState) => state.jwt);
+
+  console.log("redux ID : ", jwtState.id);
+  if (!jwtState.id) {
+    jwtState.id = null;
   }
-  if (jwtKey) {
+  if (jwtState) {
     profileHref = `/tab/Profile`;
   }
-
-  const isAdmin = useSelector((state: RootState) => state.isAdmin);
-  const isLogin = useSelector((state: RootState) => state.id);
 
   return (
     <IonApp>
@@ -223,7 +219,6 @@ const App: React.FC = () => {
           <Route path={routes.chatroom(":id")}>
             <ChatroomPage />
           </Route>
-
           <Route
             path={routes.payment}
             exact={true}
@@ -263,7 +258,7 @@ const App: React.FC = () => {
                 <Route
                   path={routes.tab.profile}
                   exact={true}
-                  render={() => <Profile user={id} />}
+                  render={() => <Profile user={jwtState.id} />}
                 />
                 <Route
                   path={routes.tab.login}
@@ -286,7 +281,7 @@ const App: React.FC = () => {
                   <IonIcon icon={heartCircleOutline} />
                   <IonLabel>熱門</IonLabel>
                 </IonTabButton>
-                {!!isLogin ? (
+                {!!jwtState.id ? (
                   <IonTabButton tab="PickPhoto" href={routes.tab.pickPhoto}>
                     <IonIcon icon={duplicateOutline} />
                     <IonLabel>交易</IonLabel>
@@ -302,7 +297,7 @@ const App: React.FC = () => {
                   <IonLabel>個人資料</IonLabel>
                 </IonTabButton>
 
-                {!!isAdmin ? (
+                {!!jwtState.isAdmin ? (
                   <IonTabButton tab="AdminPanel" href={routes.tab.adminPanel}>
                     <IonIcon icon={planetOutline} />
                     <IonLabel>管理員</IonLabel>

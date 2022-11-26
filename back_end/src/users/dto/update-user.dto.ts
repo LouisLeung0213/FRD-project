@@ -28,7 +28,6 @@ export class UpdatePasswordDto {
 }
 
 export class UpdatePointsDto {
-  @IsNumber()
   @IsNotEmpty()
-  point: number;
+  points: string;
 }

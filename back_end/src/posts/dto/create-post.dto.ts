@@ -10,7 +10,13 @@ export class CreatePostDto {
   @IsNotEmpty()
   user_id: string;
 
-  // photo: File[];
+  @IsNumber()
+  @IsNotEmpty()
+  photo_qty: number;
+
+  @IsArray()
+  @IsNotEmpty()
+  photo: string[];
 
   // image: string;
 

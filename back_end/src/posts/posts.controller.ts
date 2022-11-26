@@ -21,6 +21,7 @@ import { writeFile } from 'fs/promises';
 import { join } from 'path';
 import { mkdirSync } from 'fs';
 import { UpdateStatusDto } from './dto/updateStatus-post.dto';
+import { io } from 'src/io';
 
 mkdirSync('uploads', { recursive: true });
 
@@ -37,24 +38,42 @@ export class PostsController {
   )
   async create(
     @Body() createPostDto: CreatePostDto,
-    @UploadedFiles() files: Record<string, Express.Multer.File[]>,
+    // @UploadedFiles() files: Record<string, Express.Multer.File[]>,
   ) {
-    let counter = 0;
-    let timestamp = Date.now();
+    console.log('createPostDto', createPostDto);
+    // let counter = 0;
+    // let timestamp = Date.now();
     let post_id = await this.postsService.create(createPostDto);
-    console.log('Body:', createPostDto, files);
-    for (let file of files.photo || []) {
-      counter++;
-      let filename =
-        '123-' + file.fieldname + '-' + file.originalname + timestamp + counter;
+    // console.log('Body:', createPostDto, files);
+    // for (let file of files.photo || []) {
+    //   counter++;
+    //   let filename =
+    //     '123-' + file.fieldname + '-' + file.originalname + timestamp + counter;
 
-      await writeFile(join('uploads', filename), file.buffer);
-
-      await this.postsService.createImageLink(filename, post_id[0].id);
+    //   await writeFile(join('uploads', filename), file.buffer);
+    // }
+    console.log('createPostDto', createPostDto);
+    // console.log('how long', createPostDto.photo[1]);
+    if (createPostDto.photo_qty > 1) {
+      for (let photo of createPostDto.photo) {
+        console.log('photo', photo);
+        await this.postsService.createImageLink(photo, post_id[0].id);
+      }
+    } else {
+      await this.postsService.createImageLink(
+        createPostDto.photo.toString(),
+        post_id[0].id,
+      );
     }
 
     return { status: 200, message: 'create post successfully' };
   }
+  // } else {
+  //   await this.postsService.createImageLink(
+  //     createPostDto.photo.toString(),
+  //     post_id[0].id,
+  //   );
+  // }
 
   @Get()
   findAll() {

@@ -21,6 +21,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useRef, useState } from "react";
+import { Root } from "react-dom/client";
 import { useSelector, useDispatch } from "react-redux";
 import { useIonFormState } from "react-use-ionic-form";
 import { Router } from "workbox-routing";
@@ -48,7 +49,8 @@ const stripePromise = pubKey();
 const Package: React.FC = () => {
   const [isPointsOk, setIsPointsOk] = useState(false);
   const router = useIonRouter();
-  const points = useSelector((state: RootState) => state.points);
+  const pointsState = useSelector((state: RootState) => state.points);
+  const jwtState = useSelector((state: RootState) => state.jwt);
   const dispatch = useDispatch();
   const paymentIntentModal = useRef<HTMLIonModalElement>(null);
 
@@ -58,16 +60,8 @@ const Package: React.FC = () => {
   const { state, item } = useIonFormState({
     amount: "",
   });
-
+  //get client_secret
   async function getIdSecret() {
-    dispatch(
-      updatePoints({
-        points: state.amount,
-      })
-    );
-
-    //TODO 將points寫落redux 到之後fetch 去backend 寫入database
-
     let result = await fetch(`${API_ORIGIN}/payment/paymentIntent`, {
       method: "POST",
       headers: {
@@ -87,6 +81,17 @@ const Package: React.FC = () => {
 
     setClientSecret(paymentAuthorizationInfo.result.client_secret);
     setIsLoading(false);
+  }
+  //get remain points of account
+  async function getUserPoints() {
+    let res = await fetch(`${API_ORIGIN}/profiles/${jwtState.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    let result = await res.json();
+    console.log(result);
   }
 
   useEffect(() => {
@@ -123,6 +128,8 @@ const Package: React.FC = () => {
           </ul>
         </div>
         <br />
+
+        <IonLabel>戶口餘額:{pointsState.points}</IonLabel>
         {item({
           name: "amount",
           renderLabel: () => (
@@ -176,7 +183,10 @@ const Package: React.FC = () => {
           <IonItem>
             {clientSecret && stripePromise ? (
               <Elements stripe={stripePromise} options={{ clientSecret }}>
-                <CheckoutForm clientSecret={clientSecret} />
+                <CheckoutForm
+                  clientSecret={clientSecret}
+                  amount={state.amount}
+                />
               </Elements>
             ) : null}
           </IonItem>

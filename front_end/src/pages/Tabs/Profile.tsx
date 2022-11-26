@@ -59,12 +59,10 @@ import { getValue, removeValue } from "../../service/localStorage";
 const Profile: React.FC<{ user: number | null }> = (props: {
   user: number | null;
 }) => {
-  let jwtKey = useSelector((state: RootState) => state.jwtKey);
-  let currentUsername = useSelector((state: RootState) => state.username);
-  let reduxNickname = useSelector((state: RootState) => state.nickname);
-  let joinedTime = useSelector((state: RootState) => state.joinedTime);
-  let reduxPoints = useSelector((state: RootState) => state.points);
-  let [points, setPoints] = useState(reduxPoints);
+  let jwtState = useSelector((state: RootState) => state.jwt);
+
+  let pointsState = useSelector((state: RootState) => state.points);
+  let [points, setPoints] = useState(pointsState);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -80,7 +78,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
       setJoinTime(moment(result.joinedTime).format("MMMM Do YYYY"));
       dispatch(
         updateJwt({
-          jwtKey: jwtKey,
+          jwtKey: jwtState.jwtKey,
           id: result.id,
           username: result.username,
           nickname: result.nickname,
@@ -88,7 +86,6 @@ const Profile: React.FC<{ user: number | null }> = (props: {
           email: result.email,
           joinedTime: result.joinedTime,
           isAdmin: result.is_admin,
-          points: result.points,
         })
       );
     };
@@ -96,9 +93,9 @@ const Profile: React.FC<{ user: number | null }> = (props: {
     getProfile();
   }, []);
   //jwtKey, reduxNickname
-  let [nickname, setNickname] = useState(reduxNickname);
-  let [username, setUsername] = useState(currentUsername);
-  let [joinTime, setJoinTime] = useState(joinedTime);
+  let [nickname, setNickname] = useState(jwtState.nickname);
+  let [username, setUsername] = useState(jwtState.username);
+  let [joinTime, setJoinTime] = useState(jwtState.joinedTime);
 
   function destroyUserInfo() {
     removeValue("Jwt");
@@ -112,15 +109,14 @@ const Profile: React.FC<{ user: number | null }> = (props: {
         email: null,
         joinedTime: null,
         isAdmin: false,
-        points: null,
       })
     );
   }
-  let state = useSelector((state: RootState) => state);
+
   function func() {
-    console.log(state);
+    console.log(jwtState);
   }
-  console.log(currentUsername, username);
+  console.log(jwtState.username, username);
 
   return (
     <>
@@ -173,7 +169,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
       <IonPage id="profile">
         <IonHeader>
           <IonToolbar>
-            {currentUsername === username ? (
+            {jwtState.username === username ? (
               <IonButtons slot="start">
                 <IonMenuButton></IonMenuButton>
               </IonButtons>
@@ -190,7 +186,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
               <div className="personalInfo">
                 <IonLabel>{nickname}</IonLabel>
               </div>
-              <IonLabel>可用點數: {points}</IonLabel>
+              <IonLabel>可用點數: {pointsState.points}</IonLabel>
               <div>
                 <IonLabel>{joinTime}</IonLabel>
               </div>

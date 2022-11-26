@@ -98,7 +98,7 @@ const Payment: React.FC = () => {
           <IonItem>
             {clientSecret && stripePromise ? (
               <Elements stripe={stripePromise} options={{ clientSecret }}>
-                <CheckoutForm clientSecret={clientSecret} />
+                <CheckoutForm clientSecret={clientSecret} amount={"10"} />
               </Elements>
             ) : null}
           </IonItem>

@@ -33,8 +33,8 @@ import { Preferences } from "@capacitor/preferences";
 import { setValue } from "../../service/localStorage";
 
 const Login: React.FC = () => {
-  const jwtKey = useSelector((state: RootState) => state.jwtKey);
-  const id = useSelector((state: RootState) => state.id);
+  const jwtState = useSelector((state: RootState) => state.jwt);
+
   const dispatch = useDispatch();
   const router = useIonRouter();
 
@@ -72,6 +72,7 @@ const Login: React.FC = () => {
     });
     let result = await res.json();
     let token = result.access_token;
+    console.log(token);
     if (token) {
       setValue("Jwt", token);
 
@@ -95,7 +96,6 @@ const Login: React.FC = () => {
           email: userInfo.email,
           joinedTime: userInfo.joinedTime,
           isAdmin: userInfo.is_admin,
-          points: userInfo.points,
         })
       );
       // history.push(`/tab/Profile`);
@@ -117,7 +117,7 @@ const Login: React.FC = () => {
         <Route
           path={routes.tab.profile}
           exact={true}
-          render={() => <Profile user={id} />}
+          render={() => <Profile user={jwtState.id} />}
         />
       </IonRouterOutlet>
       <IonHeader>

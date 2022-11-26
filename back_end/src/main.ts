@@ -4,6 +4,8 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { env } from 'env';
 import helmet from 'helmet';
 import { print } from 'listening-on';
+import * as socketIO from 'socket.io';
+import { setIO } from './io';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,8 +13,10 @@ async function bootstrap() {
   app.enableCors({
     // origin: 'https://app.example.com',
   });
-  await app.listen(env.PORT, () => {
-    print(+env.PORT);
-  });
+  const server = await app.listen(env.PORT);
+  const io = new socketIO.Server(server, { cors: { origin: '*' } });
+
+  setIO(io);
+  print(+env.PORT);
 }
 bootstrap();
