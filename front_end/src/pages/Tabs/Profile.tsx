@@ -39,9 +39,10 @@ import {
   trashSharp,
   logInOutline,
   logOutOutline,
+  walletOutline,
 } from "ionicons/icons";
-// import ExploreContainer from "../../components/ExploreContainer";
 
+import { Preferences } from "@capacitor/preferences";
 import "./Profile.css";
 import icon from "../../image/usericon.png";
 
@@ -53,50 +54,69 @@ import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
 import React from "react";
 import { API_ORIGIN } from "../../api";
+import { getValue, removeValue } from "../../service/localStorage";
 
 const Profile: React.FC<{ user: number | null }> = (props: {
   user: number | null;
 }) => {
-  let jwtKey = useSelector((state: RootState) => state.jwtKey);
-  let currentUsername = useSelector((state: RootState) => state.username);
-  let reduxNickname = useSelector((state: RootState) => state.nickname);
+  let jwtState = useSelector((state: RootState) => state.jwt);
+
+  let pointsState = useSelector((state: RootState) => state.points);
+  let [points, setPoints] = useState(pointsState);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const getProfile = async () => {
-      let res = await fetch(`${API_ORIGIN}/profiles/${props.user}`);
+      let userId = await getValue("userId");
+      let res = await fetch(`${API_ORIGIN}/profiles/${userId}`);
 
       let result = await res.json();
+      console.log("123L:", result);
       setNickname(result.nickname);
       setUsername(result.username);
+      setPoints(result.points);
       setJoinTime(moment(result.joinedTime).format("MMMM Do YYYY"));
+      dispatch(
+        updateJwt({
+          jwtKey: jwtState.jwtKey,
+          id: result.id,
+          username: result.username,
+          nickname: result.nickname,
+          phone: result.phone,
+          email: result.email,
+          joinedTime: result.joinedTime,
+          isAdmin: result.is_admin,
+        })
+      );
     };
 
     getProfile();
-  }, [jwtKey, reduxNickname]);
-
-  let [nickname, setNickname] = useState("");
-  let [username, setUsername] = useState("");
-  let [joinTime, setJoinTime] = useState("");
+  }, []);
+  //jwtKey, reduxNickname
+  let [nickname, setNickname] = useState(jwtState.nickname);
+  let [username, setUsername] = useState(jwtState.username);
+  let [joinTime, setJoinTime] = useState(jwtState.joinedTime);
 
   function destroyUserInfo() {
+    removeValue("Jwt");
     dispatch(
       updateJwt({
-        newJwtKey: null,
-        newId: null,
-        newUsername: null,
-        newNickname: null,
-        newPhone: null,
-        newEmail: null,
-        newJoinedTime: null,
-        newIsAdmin: false,
+        jwtKey: null,
+        id: null,
+        username: null,
+        nickname: null,
+        phone: null,
+        email: null,
+        joinedTime: null,
+        isAdmin: false,
       })
     );
   }
-  let state = useSelector((state: RootState) => state);
+
   function func() {
-    console.log(state);
+    console.log(jwtState);
   }
+  console.log(jwtState.username, username);
 
   return (
     <>
@@ -128,6 +148,10 @@ const Profile: React.FC<{ user: number | null }> = (props: {
               <IonLabel>電子收據</IonLabel>
             </IonItem>
 
+            <IonItem routerLink="/Package">
+              <IonIcon icon={walletOutline} slot="start" />
+              <IonLabel>充值預授權</IonLabel>
+            </IonItem>
             <IonMenuToggle>
               <IonItem
                 onClick={destroyUserInfo}
@@ -145,7 +169,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
       <IonPage id="profile">
         <IonHeader>
           <IonToolbar>
-            {currentUsername === username ? (
+            {jwtState.username === username ? (
               <IonButtons slot="start">
                 <IonMenuButton></IonMenuButton>
               </IonButtons>
@@ -162,7 +186,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
               <div className="personalInfo">
                 <IonLabel>{nickname}</IonLabel>
               </div>
-
+              <IonLabel>可用點數: {pointsState.points}</IonLabel>
               <div>
                 <IonLabel>{joinTime}</IonLabel>
               </div>

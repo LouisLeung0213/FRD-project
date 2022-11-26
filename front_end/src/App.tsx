@@ -55,7 +55,7 @@ import NoticeSetUp from "./pages/NoticeSetUp/NoticeSetUp";
 import Invoice from "./pages/Invoice/Invoice";
 import PasswordChange from "./pages/PasswordChange/PasswordChange";
 import Login from "./pages/Login/Login";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./store";
 import AdminPanel from "./pages/AdminPanel/AdminPanel";
 /* DeepLink Setup */
@@ -65,15 +65,46 @@ import { FirebaseDynamicLinks } from "@pantrist/capacitor-firebase-dynamic-links
 import PickPhoto from "./pages/Tabs/PickPhoto";
 import Storages from "./pages/Storages/Storages";
 import Blacklist from "./pages/Blacklist/Blacklist";
+
 import ChatListTab from "./pages/Chatroom/Chatroom";
 import ChatroomPage from "./pages/Chatroom/ChatroomPage";
 import Payment from "./pages/Payment/Payment";
-// import { useSocket } from "./hooks/use-socket";
+import Package from "./pages/Payment/Package";
+import { getValue } from "./service/localStorage";
+import { API_ORIGIN } from "./api";
+import { updateJwt } from "./redux/user/actions";
 
 setupIonicReact();
 
 const App: React.FC = () => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
+    const getProfile = async () => {
+      let userId = await getValue("userId");
+      let token = await getValue("Jwt");
+
+      console.log("id:", userId, "token:", token);
+      let res = await fetch(`${API_ORIGIN}/profiles/${userId}`);
+
+      let userInfo = await res.json();
+      console.log("userInfo: ", userInfo);
+      dispatch(
+        updateJwt({
+          jwtKey: token,
+          id: userInfo.id,
+          username: userInfo.username,
+          nickname: userInfo.nickname,
+          phone: userInfo.phone,
+          email: userInfo.email,
+          joinedTime: userInfo.joinedTime,
+          isAdmin: userInfo.is_admin,
+        })
+      );
+    };
+
+    getProfile();
+
     const registerNotifications = async () => {
       let permStatus = await PushNotifications.checkPermissions();
 
@@ -127,23 +158,15 @@ const App: React.FC = () => {
 
   let profileHref = "/tab/Login";
 
-  let jwtKey = useSelector((state: RootState) => state.jwtKey);
-  let id = useSelector((state: RootState) => state.id);
-  if (!id) {
-    id = null;
+  let jwtState = useSelector((state: RootState) => state.jwt);
+
+  console.log("redux ID : ", jwtState.id);
+  if (!jwtState.id) {
+    jwtState.id = null;
   }
-  if (jwtKey) {
+  if (jwtState) {
     profileHref = `/tab/Profile`;
   }
-
-  const isAdmin = useSelector((state: RootState) => state.isAdmin);
-  const isLogin = useSelector((state: RootState) => state.id);
-
-  // const socket = useSocket();
-
-  // useEffect(() => {
-  //   socket.emit("join-room", 1);
-  // }, [socket]);
 
   return (
     <IonApp>
@@ -201,6 +224,13 @@ const App: React.FC = () => {
             exact={true}
             render={() => <Payment />}
           />
+
+          <Route
+            path={routes.package}
+            exact={true}
+            render={() => <Package />}
+          />
+
           <Route path="/tab">
             <IonTabs>
               <IonRouterOutlet>
@@ -228,7 +258,7 @@ const App: React.FC = () => {
                 <Route
                   path={routes.tab.profile}
                   exact={true}
-                  render={() => <Profile user={id} />}
+                  render={() => <Profile user={jwtState.id} />}
                 />
                 <Route
                   path={routes.tab.login}
@@ -251,7 +281,7 @@ const App: React.FC = () => {
                   <IonIcon icon={heartCircleOutline} />
                   <IonLabel>熱門</IonLabel>
                 </IonTabButton>
-                {!!isLogin ? (
+                {!!jwtState.id ? (
                   <IonTabButton tab="PickPhoto" href={routes.tab.pickPhoto}>
                     <IonIcon icon={duplicateOutline} />
                     <IonLabel>交易</IonLabel>
@@ -267,7 +297,7 @@ const App: React.FC = () => {
                   <IonLabel>個人資料</IonLabel>
                 </IonTabButton>
 
-                {!!isAdmin ? (
+                {!!jwtState.isAdmin ? (
                   <IonTabButton tab="AdminPanel" href={routes.tab.adminPanel}>
                     <IonIcon icon={planetOutline} />
                     <IonLabel>管理員</IonLabel>

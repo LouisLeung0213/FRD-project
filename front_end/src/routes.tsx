@@ -22,4 +22,5 @@ export let routes = {
   chatrooms: "/Chatrooms",
   chatroom: (id: string | number) => `/chatroom/${id}`,
   payment: "/Payment",
+  package: "/Package",
 };

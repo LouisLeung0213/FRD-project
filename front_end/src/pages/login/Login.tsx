@@ -17,22 +17,24 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import { SetStateAction, useEffect, useState } from "react";
+import { useState } from "react";
 import SignUp from "../SignUp/SignUp";
-import { useForm, Controller } from "react-hook-form";
+
 import { useDispatch, useSelector } from "react-redux";
 import { routes } from "../../routes";
 import { Route } from "react-router";
 import Profile from "../Tabs/Profile";
 import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
-import { useHistory } from "react-router-dom";
+
 import { useIonFormState } from "react-use-ionic-form";
 import { API_ORIGIN } from "../../api";
+import { Preferences } from "@capacitor/preferences";
+import { setValue } from "../../service/localStorage";
 
 const Login: React.FC = () => {
-  const jwtKey = useSelector((state: RootState) => state.jwtKey);
-  const id = useSelector((state: RootState) => state.id);
+  const jwtState = useSelector((state: RootState) => state.jwt);
+
   const dispatch = useDispatch();
   const router = useIonRouter();
 
@@ -70,7 +72,10 @@ const Login: React.FC = () => {
     });
     let result = await res.json();
     let token = result.access_token;
+    console.log(token);
     if (token) {
+      setValue("Jwt", token);
+
       setIsUserCorrect(true);
       let res2 = await fetch(`${API_ORIGIN}/auth/profile`, {
         method: "GET",
@@ -79,17 +84,18 @@ const Login: React.FC = () => {
         },
       });
       let userInfo = await res2.json();
-      // console.log("userInfo: ", userInfo)
+      setValue("userId", userInfo.id);
+      console.log("userInfo: ", userInfo);
       dispatch(
         updateJwt({
-          newJwtKey: token,
-          newId: userInfo.id,
-          newUsername: userInfo.username,
-          newNickname: userInfo.nickname,
-          newPhone: userInfo.phone,
-          newEmail: userInfo.email,
-          newJoinedTime: userInfo.joinedTime,
-          newIsAdmin: userInfo.isAdmin,
+          jwtKey: token,
+          id: userInfo.id,
+          username: userInfo.username,
+          nickname: userInfo.nickname,
+          phone: userInfo.phone,
+          email: userInfo.email,
+          joinedTime: userInfo.joinedTime,
+          isAdmin: userInfo.is_admin,
         })
       );
       // history.push(`/tab/Profile`);
@@ -111,7 +117,7 @@ const Login: React.FC = () => {
         <Route
           path={routes.tab.profile}
           exact={true}
-          render={() => <Profile user={id} />}
+          render={() => <Profile user={jwtState.id} />}
         />
       </IonRouterOutlet>
       <IonHeader>

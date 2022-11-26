@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  web-server:
+    environment:
+      DB_HOST: db-server
+      DB_PORT: 5432
+      PORT: 1688
+      NODE_ENV: 'production'
+    env_file:
+      - docker.env
+    depends_on:
+      - db-server
+    image: web-server:latest
+    ports:
+      - 1688:1688
+    build:
+      context: ./back_end/
+      dockerfile: ./Dockerfile
+  db-server:
+    image: "postgres:14.6"
+    env_file:
+      - docker.env
+    ports:
+      - 15432:5432
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data

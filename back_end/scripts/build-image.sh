@@ -1,4 +1,4 @@
 set -e 
 set -x
 
-docker build -t server .
+docker build -t web-server .

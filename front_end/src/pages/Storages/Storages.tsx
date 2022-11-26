@@ -33,7 +33,7 @@ import moment from "moment";
 import { API_ORIGIN } from "../../api";
 
 const Storages: React.FC = () => {
-  const userId = useSelector((state: RootState) => state.id);
+  const jwtState = useSelector((state: RootState) => state.jwt);
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [query2, setQuery2] = useState("");
@@ -72,7 +72,7 @@ const Storages: React.FC = () => {
   async function readyToPost(productId: number) {
     // console.log("e:", e);
     // console.log("HOTB" + date + e.id);
-    let res = await fetch(`${API_ORIGIN}/posts/ready/${userId}`, {
+    let res = await fetch(`${API_ORIGIN}/posts/ready/${jwtState.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

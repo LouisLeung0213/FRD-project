@@ -7,11 +7,11 @@ export const config: { [key: string]: Knex.Config } = {
   development: {
     client: 'postgresql',
     connection: {
-      database: env.DB_NAME,
-      user: env.DB_USER,
-      password: env.DB_PASSWORD,
-      host: env.HOST,
-
+      database: env.POSTGRES_DB,
+      user: env.POSTGRES_USER,
+      password: env.POSTGRES_PASSWORD,
+      host: "localhost",
+      port: env.DB_PORT
     },
 
     pool: {
@@ -26,9 +26,11 @@ export const config: { [key: string]: Knex.Config } = {
   production: {
     client: 'postgresql',
     connection: {
-      database: 'my_db',
-      user: 'username',
-      password: 'password',
+      database: env.POSTGRES_DB,
+      user: env.POSTGRES_USER,
+      password: env.POSTGRES_PASSWORD,
+      host: env.DB_HOST,
+      port: env.DB_PORT
     },
     pool: {
       min: 2,

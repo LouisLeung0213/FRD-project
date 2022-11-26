@@ -11,7 +11,11 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdatePasswordDto, UpdateUserInfoDto } from './dto/update-user.dto';
+import {
+  UpdatePasswordDto,
+  UpdatePointsDto,
+  UpdateUserInfoDto,
+} from './dto/update-user.dto';
 import { get } from 'http';
 // import { get } from 'http';
 
@@ -65,8 +69,20 @@ export class UsersController {
     }
   }
 
+  // @Patch('addPoints')
+  // addPoints(@Body() updatePointsDto: UpdatePointsDto) {
+  //   console.log('hi');
+  //   console.log(updatePointsDto);
+  //   return this.usersService.addPoints();
+  // }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+  @Get('getAllUsers')
+  findAll() {
+    return this.usersService.findAll();
   }
 }

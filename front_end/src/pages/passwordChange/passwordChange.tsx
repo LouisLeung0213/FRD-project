@@ -31,8 +31,7 @@ const PasswordChange: React.FC = () => {
   let [isReNewPasswordOk, setIsReNewPasswordOk] = useState(true);
   let [isReNewPasswordSame, setIsReNewPasswordSame] = useState(true);
 
-  let userPhoneNumber = useSelector((state: RootState) => state.phone);
-  let id = useSelector((state: RootState) => state.id);
+  let jwtState = useSelector((state: RootState) => state.jwt);
 
   const router = useIonRouter();
 
@@ -68,13 +67,13 @@ const PasswordChange: React.FC = () => {
       setIsReNewPasswordSame(true);
     }
     try {
-      if (!userPhoneNumber) {
+      if (!jwtState.phone) {
         alert(JSON.stringify("沒有有效電話號碼", null, 2));
         return;
       }
       const { verificationId } =
         await FirebaseAuthentication.signInWithPhoneNumber({
-          phoneNumber: userPhoneNumber,
+          phoneNumber: jwtState.phone,
         });
 
       const verificationCode: any = window.prompt(
@@ -89,7 +88,7 @@ const PasswordChange: React.FC = () => {
       return;
     }
 
-    let res = await fetch(`${API_ORIGIN}/users/updatePassword/${id}`, {
+    let res = await fetch(`${API_ORIGIN}/users/updatePassword/${jwtState.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
