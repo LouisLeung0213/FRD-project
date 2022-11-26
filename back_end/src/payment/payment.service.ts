@@ -1,6 +1,6 @@
 import { Injectable, Module, Res } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { UpdatePaymentDto } from './dto/update-payment.dto';
+import { UpdatePointsDto } from './dto/update-payment.dto';
 import { Stripe } from 'stripe';
 import { env } from 'env';
 import { Knex } from 'knex';
@@ -15,7 +15,7 @@ export class PaymentService {
     const stripe = new Stripe(env.STRIPE_KEY, { apiVersion: '2022-11-15' });
     try {
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: createPaymentDto.amount,
+        amount: createPaymentDto.amount + +'00',
         currency: 'hkd',
         payment_method_types: ['card'],
         // automatic_payment_methods: {
@@ -67,12 +67,25 @@ export class PaymentService {
     return { key: env.PUBLIC_STRIPE_KEY };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} payment`;
+  async addPoints(updatePointsDto: UpdatePointsDto) {
+    const { points, userId } = updatePointsDto;
+    let result = await this.knex('users').select('points').where('id', userId);
+    console.log(result[0]);
+    let remainPoints = result[0];
+    let totalPoint = remainPoints + +points;
+    let addPoints = await this.knex('users')
+      .update({
+        points: totalPoint,
+      })
+      .where('id', userId);
+
+    return {
+      message: `${addPoints} is already add to user: ${userId}`,
+    };
   }
 
-  update(id: number, updatePaymentDto: UpdatePaymentDto) {
-    return `This action updates a #${id} payment`;
+  findOne(id: number) {
+    return `This action returns a #${id} payment`;
   }
 
   remove(id: number) {

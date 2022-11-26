@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('nickname').notNullable();
     table.string('phone').notNullable();
     table.string('email').notNullable();
-    table.string('point').notNullable().defaultTo(0);
+    table.integer('points').notNullable().defaultTo(0);
     table.boolean('is_admin').notNullable().defaultTo(false);
     table.timestamp('joinedTime').notNullable().defaultTo(knex.fn.now());
     table.integer('bank_account');

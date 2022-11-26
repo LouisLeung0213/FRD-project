@@ -68,7 +68,7 @@ import Blacklist from "./pages/Blacklist/Blacklist";
 
 import ChatListTab from "./pages/Chatroom/Chatroom";
 import ChatroomPage from "./pages/Chatroom/ChatroomPage";
-import Payment from "./pages/Payment/Payment";
+
 import Package from "./pages/Payment/Package";
 import { getValue } from "./service/localStorage";
 import { API_ORIGIN } from "./api";
@@ -78,31 +78,30 @@ setupIonicReact();
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
+  const getProfile = async () => {
+    let userId = await getValue("userId");
+    let token = await getValue("Jwt");
+
+    console.log("id:", userId, "token:", token);
+    let res = await fetch(`${API_ORIGIN}/profiles/${userId}`);
+
+    let userInfo = await res.json();
+    console.log("userInfo: ", userInfo);
+    dispatch(
+      updateJwt({
+        jwtKey: token,
+        id: userInfo.id,
+        username: userInfo.username,
+        nickname: userInfo.nickname,
+        phone: userInfo.phone,
+        email: userInfo.email,
+        joinedTime: userInfo.joinedTime,
+        isAdmin: userInfo.is_admin,
+      })
+    );
+  };
 
   useEffect(() => {
-    const getProfile = async () => {
-      let userId = await getValue("userId");
-      let token = await getValue("Jwt");
-
-      console.log("id:", userId, "token:", token);
-      let res = await fetch(`${API_ORIGIN}/profiles/${userId}`);
-
-      let userInfo = await res.json();
-      console.log("userInfo: ", userInfo);
-      dispatch(
-        updateJwt({
-          jwtKey: token,
-          id: userInfo.id,
-          username: userInfo.username,
-          nickname: userInfo.nickname,
-          phone: userInfo.phone,
-          email: userInfo.email,
-          joinedTime: userInfo.joinedTime,
-          isAdmin: userInfo.is_admin,
-        })
-      );
-    };
-
     getProfile();
 
     const registerNotifications = async () => {
@@ -219,11 +218,12 @@ const App: React.FC = () => {
           <Route path={routes.chatroom(":id")}>
             <ChatroomPage />
           </Route>
+          {/* 
           <Route
             path={routes.payment}
             exact={true}
             render={() => <Payment />}
-          />
+          /> */}
 
           <Route
             path={routes.package}

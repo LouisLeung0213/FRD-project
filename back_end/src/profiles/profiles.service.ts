@@ -14,7 +14,7 @@ export class ProfilesService {
         'joinedTime',
         'id',
         'is_admin',
-        'point',
+        'points',
       )
       .from('users')
       .where('id', userId);

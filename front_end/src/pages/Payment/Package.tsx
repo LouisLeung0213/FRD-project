@@ -92,10 +92,17 @@ const Package: React.FC = () => {
     });
     let result = await res.json();
     console.log(result);
+
+    dispatch(
+      updatePoints({
+        points: result.points,
+      })
+    );
   }
 
   useEffect(() => {
     getIdSecret();
+    getUserPoints();
   }, []);
 
   const submitForm = async (data: any) => {

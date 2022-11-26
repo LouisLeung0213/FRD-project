@@ -5,6 +5,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { useState, useEffect } from "react";
+import { Root } from "react-dom/client";
 import { useSelector } from "react-redux";
 import { API_ORIGIN, FRONT_ORIGIN } from "../api";
 import { RootState } from "../store";
@@ -19,6 +20,7 @@ const CheckoutForm: React.FC<{
   const [isLoading, setIsLoading] = useState(false);
   const [clientSecret, setClientSecret] = useState("");
   const pointsState = useSelector((state: RootState) => state.points);
+  const jwtState = useSelector((state: RootState) => state.jwt);
 
   useEffect(() => {
     if (!stripe) {
@@ -68,12 +70,13 @@ const CheckoutForm: React.FC<{
       },
     });
 
-    const res = fetch(`${API_ORIGIN}/users/addPoints`, {
+    const res = fetch(`${API_ORIGIN}/payment/addPoints`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        userId: jwtState.id,
         points: props.amount,
       }),
     });
