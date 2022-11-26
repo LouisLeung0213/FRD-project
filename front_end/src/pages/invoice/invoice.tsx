@@ -21,11 +21,11 @@ import "./Invoice.css";
 import moment from "moment";
 
 const Invoice: React.FC = () => {
-  const userId = useSelector((state: RootState["first"]) => state.id);
+  const jwtState = useSelector((state: RootState) => state.jwt);
   let [invoiceList, setInvoiceList] = useState([]);
   useEffect(() => {
     const getInvoice = async () => {
-      let res = await fetch(`http://localhost:1688/invoice/${userId}`);
+      let res = await fetch(`http://localhost:1688/invoice/${jwtState.id}`);
       let result = await res.json();
       setInvoiceList(result);
       console.log("invoice:", result);

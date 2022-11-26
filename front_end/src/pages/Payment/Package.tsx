@@ -49,8 +49,8 @@ const stripePromise = pubKey();
 const Package: React.FC = () => {
   const [isPointsOk, setIsPointsOk] = useState(false);
   const router = useIonRouter();
-  const points = useSelector((state: RootState["second"]) => state.points);
-  const userId = useSelector((state: RootState["first"]) => state.id);
+  const pointsState = useSelector((state: RootState) => state.points);
+  const jwtState = useSelector((state: RootState) => state.jwt);
   const dispatch = useDispatch();
   const paymentIntentModal = useRef<HTMLIonModalElement>(null);
 
@@ -84,7 +84,7 @@ const Package: React.FC = () => {
   }
   //get remain points of account
   async function getUserPoints() {
-    let res = await fetch(`${API_ORIGIN}/profiles/${userId}`, {
+    let res = await fetch(`${API_ORIGIN}/profiles/${jwtState.id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -129,7 +129,7 @@ const Package: React.FC = () => {
         </div>
         <br />
 
-        <IonLabel>戶口餘額:{points}</IonLabel>
+        <IonLabel>戶口餘額:{pointsState.points}</IonLabel>
         {item({
           name: "amount",
           renderLabel: () => (

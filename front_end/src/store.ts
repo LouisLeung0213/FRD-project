@@ -4,8 +4,8 @@ import { updatePointsReducer } from "./redux/points/reducer";
 import { updateJwtReducer } from "./redux/user/reducer";
 
 const rootReducer = combineReducers({
-  first: updateJwtReducer,
-  second: updatePointsReducer,
+  jwt: updateJwtReducer,
+  points: updatePointsReducer,
 });
 
 export const store = configureStore({

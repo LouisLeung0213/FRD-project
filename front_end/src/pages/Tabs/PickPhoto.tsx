@@ -57,7 +57,7 @@ const PickPhoto: React.FC = () => {
   const qualityModal = useRef<HTMLIonModalElement>(null);
   const previewModal = useRef<HTMLIonModalElement>(null);
   //const [modalShow, setModalShow] = useState(false);
-  const userId = useSelector((state: RootState["first"]) => state.id);
+  const jwtState = useSelector((state: RootState) => state.jwt);
   const router = useIonRouter();
   function dismiss() {
     qualityModal.current?.dismiss();
@@ -87,7 +87,7 @@ const PickPhoto: React.FC = () => {
   function formAppend() {
     let data = state;
     let formData = new FormData();
-    formData.append("user_id", userId ? userId + "" : "");
+    formData.append("user_id", jwtState.id ? jwtState.id + "" : "");
     formData.append("title", data.title);
     formData.append("description", data.description);
 

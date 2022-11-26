@@ -23,9 +23,7 @@ const Blacklist: React.FC = () => {
   }
 
   let [usersInfo, setUsersInfo] = useState([]);
-  const currentUserId: any = useSelector(
-    (state: RootState["first"]) => state.id
-  );
+  const jwtState: any = useSelector((state: RootState) => state.jwt);
 
   useEffect(() => {
     const getAllUser = async () => {
@@ -41,7 +39,7 @@ const Blacklist: React.FC = () => {
   }, []);
   async function banUser(e: any) {
     console.log("e:", e);
-    let res = await fetch(`${API_ORIGIN}/admin/${currentUserId}`, {
+    let res = await fetch(`${API_ORIGIN}/admin/${jwtState.id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

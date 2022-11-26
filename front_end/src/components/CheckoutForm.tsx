@@ -18,7 +18,7 @@ const CheckoutForm: React.FC<{
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [clientSecret, setClientSecret] = useState("");
-  const points = useSelector((state: RootState["second"]) => state.points);
+  const pointsState = useSelector((state: RootState) => state.points);
 
   useEffect(() => {
     if (!stripe) {

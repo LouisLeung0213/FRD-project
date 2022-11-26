@@ -34,18 +34,9 @@ import { RootState } from "../../store";
 // import "./Profile.css";
 
 const UpdateProfile: React.FC = () => {
-  const jwtKey = useSelector((state: RootState["first"]) => state.jwtKey);
-  const id = useSelector((state: RootState["first"]) => state.id);
-  const username = useSelector((state: RootState["first"]) => state.username);
-  const nickname = useSelector((state: RootState["first"]) => state.nickname);
-  const phone = useSelector((state: RootState["first"]) => state.phone);
-  const email = useSelector((state: RootState["first"]) => state.email);
-  const joinedTime = useSelector(
-    (state: RootState["first"]) => state.joinedTime
-  );
-  const isAdmin = useSelector((state: RootState["first"]) => state.isAdmin);
-  const reduxState = useSelector((state: RootState["first"]) => state);
-  const points = useSelector((state: RootState["second"]) => state.points);
+  const jwtState = useSelector((state: RootState) => state.jwt);
+
+  const pointsStates = useSelector((state: RootState) => state.points);
 
   const router = useIonRouter();
   const dispatch = useDispatch();
@@ -75,31 +66,34 @@ const UpdateProfile: React.FC = () => {
     }
     console.log("state: ", state);
     try {
-      let res = await fetch(`${API_ORIGIN}/users/updateUserInfo/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nickname: state.nickname,
-          phone: state.phone,
-          email: state.email,
-        }),
-      });
+      let res = await fetch(
+        `${API_ORIGIN}/users/updateUserInfo/${jwtState.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nickname: state.nickname,
+            phone: state.phone,
+            email: state.email,
+          }),
+        }
+      );
       let json = await res.json();
       dispatch(
         updateJwt({
-          jwtKey: jwtKey,
-          id: id,
-          username: username,
+          jwtKey: jwtState.jwtKey,
+          id: jwtState.id,
+          username: jwtState.username,
           nickname: state.nickname,
           phone: state.phone,
           email: state.email,
-          joinedTime: joinedTime,
-          isAdmin: isAdmin,
+          joinedTime: jwtState.joinedTime,
+          isAdmin: jwtState.isAdmin,
         })
       );
-      console.log("reduxState: ", reduxState);
+      console.log("reduxState: ", jwtState);
       // router.push(routes.tab.profile, "forward", "pop");
       router.goBack();
       // router.push(routes.tab.profile, "forward", "replace");
@@ -109,9 +103,9 @@ const UpdateProfile: React.FC = () => {
   }
 
   const { state, item } = useIonFormState({
-    nickname: nickname,
-    phone: phone,
-    email: email,
+    nickname: jwtState.nickname,
+    phone: jwtState.phone,
+    email: jwtState.email,
   });
 
   return (

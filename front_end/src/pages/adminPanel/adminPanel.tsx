@@ -56,7 +56,7 @@ const AdminPanel: React.FC = () => {
   let [imageList, setImageList] = useState([]);
 
   let date = Date.now();
-  const isAdmin = useSelector((state: RootState["first"]) => state.isAdmin);
+  const jwtState = useSelector((state: RootState) => state.jwt);
   const router = useIonRouter();
   useEffect(() => {
     const getProductReq = async () => {
@@ -125,7 +125,7 @@ const AdminPanel: React.FC = () => {
 
   return (
     <div>
-      {!!isAdmin ? (
+      {!!jwtState.isAdmin ? (
         <IonPage>
           <IonHeader>
             <IonToolbar>
