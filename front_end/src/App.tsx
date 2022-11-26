@@ -218,7 +218,10 @@ const App: React.FC = () => {
           <Route path={routes.chatroom(":id")}>
             <ChatroomPage />
           </Route>
+<<<<<<< HEAD
           {/* 
+=======
+>>>>>>> c7a29088964d05be806eed745667b9af424d4699
           <Route
             path={routes.payment}
             exact={true}

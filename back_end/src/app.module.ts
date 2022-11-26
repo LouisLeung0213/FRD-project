@@ -12,6 +12,18 @@ import { StripeModule } from './stripe/stripe.module';
 import { env } from 'process';
 import { ChatroomModule } from './chatroom/chatroom.module';
 import { PaymentModule } from './payment/payment.module';
+import { initializeApp } from 'firebase/app';
+import { getAnalytics } from 'firebase/analytics';
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyD243djxwnLoP4tSfW0CUqOlE-3z0UQGL4',
+  authDomain: 'test-6e6e8.firebaseapp.com',
+  projectId: 'test-6e6e8',
+  storageBucket: 'test-6e6e8.appspot.com',
+  messagingSenderId: '541343843596',
+  appId: '1:541343843596:web:7f5af8f2e7113d68a53529',
+  measurementId: 'G-35MBSYNCVH',
+};
 
 @Module({
   imports: [

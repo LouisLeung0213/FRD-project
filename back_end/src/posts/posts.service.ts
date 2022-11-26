@@ -4,10 +4,26 @@ import { UsersService } from 'src/users/users.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { UpdateStatusDto } from './dto/updateStatus-post.dto';
+// import { initializeApp } from 'firebase/app';
+
+// const firebaseConfig = {
+//   apiKey: 'AIzaSyD243djxwnLoP4tSfW0CUqOlE-3z0UQGL4',
+//   authDomain: 'test-6e6e8.firebaseapp.com',
+//   projectId: 'test-6e6e8',
+//   storageBucket: 'test-6e6e8.appspot.com',
+//   messagingSenderId: '541343843596',
+//   appId: '1:541343843596:web:7f5af8f2e7113d68a53529',
+//   measurementId: 'G-35MBSYNCVH',
+// };
 
 @Injectable()
 export class PostsService {
-  constructor(@InjectKnex() private readonly knex: Knex) {}
+  // firebase storage
+  // private app: any;
+  constructor(@InjectKnex() private readonly knex: Knex) {
+    // firebase storage
+    // this.app = initializeApp(firebaseConfig);
+  }
   async create(createPostDto: CreatePostDto) {
     try {
       let quality_plan = false;
@@ -88,9 +104,9 @@ export class PostsService {
     }
   }
 
-  async createImageLink(filename: string, post_id: number) {
+  async createImageLink(photo: string, post_id: number) {
     await this.knex('images').insert({
-      src: filename,
+      src: photo,
       post_id: post_id,
     });
   }

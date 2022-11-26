@@ -23,7 +23,11 @@ import {
 } from "@ionic/react";
 import { add, camera, imagesOutline, trash } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
-import { useImageFiles, usePhotoGallery } from "../../hooks/usePhotoGallery";
+import {
+  ImageFile,
+  useImageFiles,
+  usePhotoGallery,
+} from "../../hooks/usePhotoGallery";
 import { selectImage, fileToBase64String } from "@beenotung/tslib/file";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
@@ -44,6 +48,15 @@ import { RootState } from "../../store";
 import { API_ORIGIN } from "../../api";
 
 import { routes } from "../../routes";
+
+//firebase storage
+import storage from "../../firebaseConfig";
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  UploadTask,
+} from "firebase/storage";
 
 type ImageItem = {
   file: File;
@@ -72,6 +85,8 @@ const PickPhoto: React.FC = () => {
   const [isLocationOk, setIsLocationOk] = useState(true);
   const [isBankAccountOk, setIsBankAccountOk] = useState(true);
   const [isPhotoOk, setIsPhotoOk] = useState(true);
+  const [percent, setPercent] = useState(0);
+  const [readyToGo, setReadyToGo] = useState(false);
 
   const { state, item } = useIonFormState({
     title: "",
@@ -83,6 +98,26 @@ const PickPhoto: React.FC = () => {
     qualityPlan: false,
     promotion: false,
   });
+
+  function findMIMEType(file: string) {
+    let ext = file.split(".")[file.split(".").length - 1];
+    if (ext == "jpeg") {
+      return {
+        contentType: "image/jpeg",
+      };
+    } else if (ext == "png") {
+      return {
+        contentType: "image/jpeg",
+      };
+    } else if (ext == "webp") {
+      return {
+        contentType: "image/jpeg",
+      };
+    } else {
+      alert("格式錯誤");
+      return;
+    }
+  }
 
   function formAppend() {
     let data = state;
@@ -100,9 +135,9 @@ const PickPhoto: React.FC = () => {
     formData.append("qualityPlan", data.qualityPlan ? "t" : "f");
     formData.append("promotion", data.promotion ? "t" : "f");
 
-    for (let photo of photos) {
-      formData.append("photo", photo.file);
-    }
+    // for (let photo of photos) {
+    //   formData.append("photo", photo.file);
+    // }
 
     console.log("Form Data: ", formData);
     return formData;
@@ -164,38 +199,155 @@ const PickPhoto: React.FC = () => {
 
     console.log("pass");
     console.log("ok", ok);
+
+    console.log("photos", photos);
+    let photoQTY = 0;
+
+    if (!photos) {
+      alert("不能沒有圖片");
+      return;
+    } else if (photos.length > 1) {
+      photoQTY = photos.length;
+    } else if (photos.length == 1) {
+      photoQTY = photos.length;
+    }
+    let urls = [];
+
+    function uploadBytesResumablePromise(photo: any): Promise<string> {
+      return new Promise((resolve, reject) => {
+        findMIMEType(photo.name);
+        const storageRef = ref(
+          storage,
+          `/files/${photo.name}+${jwtState.id}+${Date.now()}`
+        );
+        const uploadTask = uploadBytesResumable(storageRef, photo.file);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const percent = Math.round(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            );
+
+            // update progress
+            setPercent(percent);
+          },
+          (err) => console.log(err),
+          () => {
+            // download url
+            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+              console.log("url", url);
+              // setUrls((prevState) => [...prevState, url]);
+              resolve(url);
+            });
+          }
+        );
+      });
+    }
+
+    for (let photo of photos) {
+      let url = await uploadBytesResumablePromise(photo);
+      urls.push(url);
+    }
+    console.log("finished for loop");
+    console.log({ urls });
+
     let formDataUpload = formAppend();
-
-    console.log("state.title =  ", state.title);
-    if (ok === true) {
-      let res = await fetch(`${API_ORIGIN}/posts/postItem`, {
-        method: "POST",
-
-        body: formDataUpload,
-      });
-      let result = await res.json();
-      console.log(result);
-      if (result.status === 200) {
-        router.push(routes.tab.mainPage, "forward", "replace");
-      }
+    formDataUpload.append("photo_qty", photoQTY as any);
+    console.log("url", urls);
+    for (let url of urls) {
+      formDataUpload.append("photo", url);
     }
-    dismiss();
-  };
+    console.log(formDataUpload.getAll("photo"));
+    let res = await fetch(`${API_ORIGIN}/posts/postItem`, {
+      method: "POST",
 
-  async function pickImages() {
-    let files = await selectImage({
-      multiple: true,
-      accept: "image/*",
+      body: formDataUpload,
     });
-    for (let file of files) {
-      console.log("file:", file);
-      let dataUrl = await fileToBase64String(file);
-
-      setItems((items) => {
-        return [...items, { file, dataUrl }];
-      });
+    let result = await res.json();
+    console.log(result);
+    if (result.status === 200) {
+      router.push(routes.tab.mainPage, "forward", "replace");
+      console.log("done");
     }
-  }
+
+    // photos.map((photo) => {
+    //   const storageRef = ref(storage, `/files/${photo.name}`);
+    //   const uploadTask = uploadBytesResumable(storageRef, photo.file);
+    //   promises.push(uploadTask);
+    //   uploadTask.on(
+    //     "state_changed",
+    //     (snapshot) => {
+    //       const percent = Math.round(
+    //         (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+    //       );
+
+    //       // update progress
+    //       setPercent(percent);
+    //     },
+    //     (err) => console.log(err),
+    //     () => {
+    //       // download url
+    //       getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+    //         console.log("url", url);
+    //         setUrls((prevState) => [...prevState, url]);
+    //       });
+    //     }
+    //   );
+    // });
+
+    // Promise.all(promises)
+    //   .then(async () => {
+    //     let formDataUpload = formAppend();
+    //     console.log("url", urls);
+    //     for (let url of urls) {
+    //       formDataUpload.append("photo", url);
+    //     }
+    //     console.log(formDataUpload.getAll("photo"));
+    //     let res = await fetch(`${API_ORIGIN}/posts/postItem`, {
+    //       method: "POST",
+
+    //       body: formDataUpload,
+    //     });
+    //     let result = await res.json();
+    //     console.log(result);
+    //     if (result.status === 200) {
+    //       router.push(routes.tab.mainPage, "forward", "replace");
+    //       console.log("done");
+    //     }
+    //   })
+    //   .catch((err) => console.log("err", err));
+  };
+  dismiss();
+
+  // console.log("state.title =  ", state.title);
+  // if (firebaseIsOk) {
+  //   let res = await fetch(`${API_ORIGIN}/posts/postItem`, {
+  //     method: "POST",
+
+  //     body: formDataUpload,
+  //   });
+  //   let result = await res.json();
+  //   console.log(result);
+  //   if (result.status === 200) {
+  //     router.push(routes.tab.mainPage, "forward", "replace");
+  //     console.log("done");
+  //   }
+  // }
+
+  // async function pickImages() {
+  //   let files = await selectImage({
+  //     multiple: true,
+  //     accept: "image/*",
+  //   });
+  //   for (let file of files) {
+  //     console.log("file:", file);
+  //     let dataUrl = await fileToBase64String(file);
+
+  //     setItems((items) => {
+  //       return [...items, { file, dataUrl }];
+  //     });
+  //   }
+  // }
 
   defineCustomElements(window);
   return (

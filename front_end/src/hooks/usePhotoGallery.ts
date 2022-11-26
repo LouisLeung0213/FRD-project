@@ -30,6 +30,7 @@ export interface UserPhoto {
 const PHOTO_STORAGE = "photos";
 
 export interface ImageFile {
+  name: string;
   file: File;
   dataUrl: string;
   id: number;
@@ -64,6 +65,7 @@ export function useImageFiles() {
           file,
           dataUrl,
           id: photos.reduce((acc, c) => Math.max(acc, c.id), 0) + 1,
+          name: file.name,
         },
       ]);
     }

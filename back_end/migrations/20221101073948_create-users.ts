@@ -98,7 +98,7 @@ export async function up(knex: Knex): Promise<void> {
 
   await knex.schema.createTableIfNotExists('images', (table) => {
     table.increments('id');
-    table.string('src').notNullable();
+    table.text('src').notNullable();
     table.integer('post_id').notNullable().references('posts.id');
   });
 }

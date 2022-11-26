@@ -2,6 +2,7 @@ import {
   IonButton,
   IonContent,
   IonHeader,
+  IonInput,
   IonItem,
   IonLabel,
   IonList,
@@ -49,7 +50,7 @@ const MainPage: React.FC = () => {
               .map((e: any) => {
                 return (
                   <IonItem key={e.id}>
-                    <img src={`../../../../back_end/uploads/${e.src}`}></img>
+                    <img src={e.json_agg[0]}></img>
                     {!e.admin_title ? (
                       <IonLabel>{e.post_title}</IonLabel>
                     ) : (
