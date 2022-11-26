@@ -218,7 +218,7 @@ const PickPhoto: React.FC = () => {
         findMIMEType(photo.name);
         const storageRef = ref(
           storage,
-          `/files/${photo.name}+${userId}+${Date.now()}`
+          `/files/${photo.name}+${jwtState.id}+${Date.now()}`
         );
         const uploadTask = uploadBytesResumable(storageRef, photo.file);
         uploadTask.on(
