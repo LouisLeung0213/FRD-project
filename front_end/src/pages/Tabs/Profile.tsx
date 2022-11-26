@@ -69,6 +69,35 @@ const Profile: React.FC<{ user: number | null }> = (props: {
   let [points, setPoints] = useState(pointsState);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    const getProfile = async () => {
+      // let userId = await getValue("userId");
+      let res = await fetch(`${API_ORIGIN}/profiles/${props.user}`);
+
+      let result = await res.json();
+      console.log("123L:", result);
+      setNickname(result.nickname);
+      setUsername(result.username);
+      setPoints(result.points);
+      setJoinTime(moment(result.joinedTime).format("MMMM Do YYYY"));
+      dispatch(
+        updateJwt({
+          jwtKey: jwtState.jwtKey,
+          id: result.id,
+          username: result.username,
+          nickname: result.nickname,
+          phone: result.phone,
+          email: result.email,
+          joinedTime: result.joinedTime,
+          isAdmin: result.is_admin,
+        })
+      );
+    };
+
+    getProfile();
+  }, []);
+  //jwtKey, reduxNickname
+
   const getProfile = async () => {
     let userId = await getValue("userId");
     let res = await fetch(`${API_ORIGIN}/profiles/${userId}`, {
