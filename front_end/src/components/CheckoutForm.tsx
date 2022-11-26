@@ -18,7 +18,7 @@ const CheckoutForm: React.FC<{
   const elements = useElements();
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [clientSecret, setClientSecret] = useState("");
+  const [clientSecret, setClientSecret] = useState(props.clientSecret);
   const pointsState = useSelector((state: RootState) => state.points);
   const jwtState = useSelector((state: RootState) => state.jwt);
 
@@ -27,7 +27,6 @@ const CheckoutForm: React.FC<{
       return;
     }
 
-    //TODO
     const clientSecret = props.clientSecret;
     setClientSecret(clientSecret);
 

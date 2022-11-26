@@ -4,7 +4,7 @@ import { CreatePaymentDto } from './create-payment.dto';
 
 export class UpdatePointsDto extends PartialType(CreatePaymentDto) {
   @IsNotEmpty()
-  points: string;
+  points: number;
 
   @IsNumber()
   userId: number;

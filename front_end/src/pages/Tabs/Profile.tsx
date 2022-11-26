@@ -100,7 +100,12 @@ const Profile: React.FC<{ user: number | null }> = (props: {
 
   const getProfile = async () => {
     let userId = await getValue("userId");
-    let res = await fetch(`${API_ORIGIN}/profiles/${userId}`);
+    let res = await fetch(`${API_ORIGIN}/profiles/${userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     let result = await res.json();
     console.log("123L:", result);
@@ -120,15 +125,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
         isAdmin: result.is_admin,
       })
     );
-
-    let res2 = await fetch(`${API_ORIGIN}/profiles/${result.id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    let result2 = await res.json();
-    console.log(result);
+    console.log("here:", result);
 
     dispatch(
       updatePoints({

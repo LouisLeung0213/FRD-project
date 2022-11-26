@@ -15,7 +15,7 @@ export class PaymentService {
     const stripe = new Stripe(env.STRIPE_KEY, { apiVersion: '2022-11-15' });
     try {
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: createPaymentDto.amount + +'00',
+        amount: createPaymentDto.amount,
         currency: 'hkd',
         payment_method_types: ['card'],
         // automatic_payment_methods: {
@@ -71,8 +71,11 @@ export class PaymentService {
     const { points, userId } = updatePointsDto;
     let result = await this.knex('users').select('points').where('id', userId);
     console.log(result[0]);
-    let remainPoints = result[0];
-    let totalPoint = remainPoints + +points;
+    let remainPoints = result[0].points;
+
+    let totalPoint = (remainPoints += points);
+
+    console.log('totalAmount::::::', totalPoint);
     let addPoints = await this.knex('users')
       .update({
         points: totalPoint,
