@@ -67,8 +67,8 @@ const Profile: React.FC<{ user: number | null }> = (props: {
 
   useEffect(() => {
     const getProfile = async () => {
-      let userId = await getValue("userId");
-      let res = await fetch(`${API_ORIGIN}/profiles/${userId}`);
+      // let userId = await getValue("userId");
+      let res = await fetch(`${API_ORIGIN}/profiles/${props.user}`);
 
       let result = await res.json();
       console.log("123L:", result);

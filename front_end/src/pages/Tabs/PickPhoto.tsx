@@ -86,7 +86,6 @@ const PickPhoto: React.FC = () => {
   const [isBankAccountOk, setIsBankAccountOk] = useState(true);
   const [isPhotoOk, setIsPhotoOk] = useState(true);
   const [percent, setPercent] = useState(0);
-  const [readyToGo, setReadyToGo] = useState(false);
 
   const { state, item } = useIonFormState({
     title: "",
@@ -536,7 +535,8 @@ const PickPhoto: React.FC = () => {
                       </li>
                       <br />
                       <li>
-                        請注意收貨時會檢查圖片是否真實反映貨品狀態，請使用近照，否則將貨品上架及不會收取。
+                        請注意收貨時會檢查圖片是否真實反映貨品狀態，請使用近照，否則貨品將不會
+                        上架及不會收取。
                       </li>
                       <br />
                       <li>
