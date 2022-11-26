@@ -56,7 +56,7 @@ const AdminPanel: React.FC = () => {
   let [imageList, setImageList] = useState([]);
 
   let date = Date.now();
-  const isAdmin = useSelector((state: RootState) => state.isAdmin);
+  const isAdmin = useSelector((state: RootState["first"]) => state.isAdmin);
   const router = useIonRouter();
   useEffect(() => {
     const getProductReq = async () => {

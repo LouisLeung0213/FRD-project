@@ -69,8 +69,12 @@ export class UsersController {
     }
   }
 
-  @Patch('addPoint')
-  addPoint(@Body() updatePointsDto: UpdatePointsDto) {}
+  // @Patch('addPoints')
+  // addPoints(@Body() updatePointsDto: UpdatePointsDto) {
+  //   console.log('hi');
+  //   console.log(updatePointsDto);
+  //   return this.usersService.addPoints();
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

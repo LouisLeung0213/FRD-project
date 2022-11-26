@@ -31,8 +31,8 @@ const PasswordChange: React.FC = () => {
   let [isReNewPasswordOk, setIsReNewPasswordOk] = useState(true);
   let [isReNewPasswordSame, setIsReNewPasswordSame] = useState(true);
 
-  let userPhoneNumber = useSelector((state: RootState) => state.phone);
-  let id = useSelector((state: RootState) => state.id);
+  let userPhoneNumber = useSelector((state: RootState["first"]) => state.phone);
+  let id = useSelector((state: RootState["first"]) => state.id);
 
   const router = useIonRouter();
 

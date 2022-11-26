@@ -33,8 +33,8 @@ import { Preferences } from "@capacitor/preferences";
 import { setValue } from "../../service/localStorage";
 
 const Login: React.FC = () => {
-  const jwtKey = useSelector((state: RootState) => state.jwtKey);
-  const id = useSelector((state: RootState) => state.id);
+  const jwtKey = useSelector((state: RootState["first"]) => state.jwtKey);
+  const id = useSelector((state: RootState["first"]) => state.id);
   const dispatch = useDispatch();
   const router = useIonRouter();
 
@@ -95,7 +95,6 @@ const Login: React.FC = () => {
           email: userInfo.email,
           joinedTime: userInfo.joinedTime,
           isAdmin: userInfo.is_admin,
-          points: userInfo.points,
         })
       );
       // history.push(`/tab/Profile`);

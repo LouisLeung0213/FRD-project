@@ -23,7 +23,9 @@ const Blacklist: React.FC = () => {
   }
 
   let [usersInfo, setUsersInfo] = useState([]);
-  const currentUserId: any = useSelector((state: RootState) => state.id);
+  const currentUserId: any = useSelector(
+    (state: RootState["first"]) => state.id
+  );
 
   useEffect(() => {
     const getAllUser = async () => {

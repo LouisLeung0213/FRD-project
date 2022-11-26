@@ -33,7 +33,7 @@ import moment from "moment";
 import { API_ORIGIN } from "../../api";
 
 const Storages: React.FC = () => {
-  const userId = useSelector((state: RootState) => state.id);
+  const userId = useSelector((state: RootState["first"]) => state.id);
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [query2, setQuery2] = useState("");

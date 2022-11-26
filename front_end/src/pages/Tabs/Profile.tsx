@@ -59,11 +59,15 @@ import { getValue, removeValue } from "../../service/localStorage";
 const Profile: React.FC<{ user: number | null }> = (props: {
   user: number | null;
 }) => {
-  let jwtKey = useSelector((state: RootState) => state.jwtKey);
-  let currentUsername = useSelector((state: RootState) => state.username);
-  let reduxNickname = useSelector((state: RootState) => state.nickname);
-  let joinedTime = useSelector((state: RootState) => state.joinedTime);
-  let reduxPoints = useSelector((state: RootState) => state.points);
+  let jwtKey = useSelector((state: RootState["first"]) => state.jwtKey);
+  let currentUsername = useSelector(
+    (state: RootState["first"]) => state.username
+  );
+  let reduxNickname = useSelector(
+    (state: RootState["first"]) => state.nickname
+  );
+  let joinedTime = useSelector((state: RootState["first"]) => state.joinedTime);
+  let reduxPoints = useSelector((state: RootState["second"]) => state.points);
   let [points, setPoints] = useState(reduxPoints);
   const dispatch = useDispatch();
 
@@ -88,7 +92,6 @@ const Profile: React.FC<{ user: number | null }> = (props: {
           email: result.email,
           joinedTime: result.joinedTime,
           isAdmin: result.is_admin,
-          points: result.points,
         })
       );
     };
@@ -112,11 +115,10 @@ const Profile: React.FC<{ user: number | null }> = (props: {
         email: null,
         joinedTime: null,
         isAdmin: false,
-        points: null,
       })
     );
   }
-  let state = useSelector((state: RootState) => state);
+  let state = useSelector((state: RootState["first"]) => state);
   function func() {
     console.log(state);
   }

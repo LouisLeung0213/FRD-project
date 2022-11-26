@@ -34,16 +34,18 @@ import { RootState } from "../../store";
 // import "./Profile.css";
 
 const UpdateProfile: React.FC = () => {
-  const jwtKey = useSelector((state: RootState) => state.jwtKey);
-  const id = useSelector((state: RootState) => state.id);
-  const username = useSelector((state: RootState) => state.username);
-  const nickname = useSelector((state: RootState) => state.nickname);
-  const phone = useSelector((state: RootState) => state.phone);
-  const email = useSelector((state: RootState) => state.email);
-  const joinedTime = useSelector((state: RootState) => state.joinedTime);
-  const isAdmin = useSelector((state: RootState) => state.isAdmin);
-  const reduxState = useSelector((state: RootState) => state);
-  const points = useSelector((state: RootState) => state.points);
+  const jwtKey = useSelector((state: RootState["first"]) => state.jwtKey);
+  const id = useSelector((state: RootState["first"]) => state.id);
+  const username = useSelector((state: RootState["first"]) => state.username);
+  const nickname = useSelector((state: RootState["first"]) => state.nickname);
+  const phone = useSelector((state: RootState["first"]) => state.phone);
+  const email = useSelector((state: RootState["first"]) => state.email);
+  const joinedTime = useSelector(
+    (state: RootState["first"]) => state.joinedTime
+  );
+  const isAdmin = useSelector((state: RootState["first"]) => state.isAdmin);
+  const reduxState = useSelector((state: RootState["first"]) => state);
+  const points = useSelector((state: RootState["second"]) => state.points);
 
   const router = useIonRouter();
   const dispatch = useDispatch();
@@ -95,7 +97,6 @@ const UpdateProfile: React.FC = () => {
           email: state.email,
           joinedTime: joinedTime,
           isAdmin: isAdmin,
-          points: points,
         })
       );
       console.log("reduxState: ", reduxState);

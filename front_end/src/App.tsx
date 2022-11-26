@@ -99,7 +99,6 @@ const App: React.FC = () => {
           email: userInfo.email,
           joinedTime: userInfo.joinedTime,
           isAdmin: userInfo.is_admin,
-          points: userInfo.points,
         })
       );
     };
@@ -159,8 +158,8 @@ const App: React.FC = () => {
 
   let profileHref = "/tab/Login";
 
-  let jwtKey = useSelector((state: RootState) => state.jwtKey);
-  let id = useSelector((state: RootState) => state.id);
+  let jwtKey = useSelector((state: RootState["first"]) => state.jwtKey);
+  let id = useSelector((state: RootState["first"]) => state.id);
   console.log("redux ID : ", id);
   if (!id) {
     id = null;
@@ -169,8 +168,8 @@ const App: React.FC = () => {
     profileHref = `/tab/Profile`;
   }
 
-  const isAdmin = useSelector((state: RootState) => state.isAdmin);
-  const isLogin = useSelector((state: RootState) => state.id);
+  const isAdmin = useSelector((state: RootState["first"]) => state.isAdmin);
+  const isLogin = useSelector((state: RootState["first"]) => state.id);
 
   return (
     <IonApp>

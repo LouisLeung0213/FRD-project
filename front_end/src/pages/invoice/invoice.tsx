@@ -21,7 +21,7 @@ import "./Invoice.css";
 import moment from "moment";
 
 const Invoice: React.FC = () => {
-  const userId = useSelector((state: RootState) => state.id);
+  const userId = useSelector((state: RootState["first"]) => state.id);
   let [invoiceList, setInvoiceList] = useState([]);
   useEffect(() => {
     const getInvoice = async () => {

@@ -57,7 +57,7 @@ const PickPhoto: React.FC = () => {
   const qualityModal = useRef<HTMLIonModalElement>(null);
   const previewModal = useRef<HTMLIonModalElement>(null);
   //const [modalShow, setModalShow] = useState(false);
-  const userId = useSelector((state: RootState) => state.id);
+  const userId = useSelector((state: RootState["first"]) => state.id);
   const router = useIonRouter();
   function dismiss() {
     qualityModal.current?.dismiss();
