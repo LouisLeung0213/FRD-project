@@ -1,0 +1,6 @@
+framework module BazumaxCapacitorFirebaseStorage {
+  umbrella header "BazumaxCapacitorFirebaseStorage-umbrella.h"
+
+  export *
+  module * { export * }
+}

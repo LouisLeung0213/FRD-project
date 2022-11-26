@@ -65,12 +65,10 @@ import { FirebaseDynamicLinks } from "@pantrist/capacitor-firebase-dynamic-links
 import PickPhoto from "./pages/Tabs/PickPhoto";
 import Storages from "./pages/Storages/Storages";
 import Blacklist from "./pages/Blacklist/Blacklist";
-<<<<<<< HEAD
 import ChatListTab from "./pages/Chatroom/Chatroom";
 import ChatroomPage from "./pages/Chatroom/ChatroomPage";
-=======
 import Payment from "./pages/Payment/Payment";
->>>>>>> refs/remotes/origin/master
+// import { useSocket } from "./hooks/use-socket";
 
 setupIonicReact();
 
@@ -141,6 +139,12 @@ const App: React.FC = () => {
   const isAdmin = useSelector((state: RootState) => state.isAdmin);
   const isLogin = useSelector((state: RootState) => state.id);
 
+  // const socket = useSocket();
+
+  // useEffect(() => {
+  //   socket.emit("join-room", 1);
+  // }, [socket]);
+
   return (
     <IonApp>
       <IonReactRouter>
@@ -181,7 +185,6 @@ const App: React.FC = () => {
             exact={true}
             render={() => <Blacklist />}
           />
-<<<<<<< HEAD
 
           {/* chatrooms demo */}
           <Route
@@ -193,13 +196,11 @@ const App: React.FC = () => {
           <Route path={routes.chatroom(":id")}>
             <ChatroomPage />
           </Route>
-=======
           <Route
             path={routes.payment}
             exact={true}
             render={() => <Payment />}
           />
->>>>>>> refs/remotes/origin/master
           <Route path="/tab">
             <IonTabs>
               <IonRouterOutlet>
