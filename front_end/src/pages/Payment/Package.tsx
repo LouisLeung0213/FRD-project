@@ -108,7 +108,6 @@ const Package: React.FC = () => {
 
   useEffect(() => {
     getUserPoints();
-    //setClientSecret("");
   }, []);
 
   const submitForm = async (data: any) => {
