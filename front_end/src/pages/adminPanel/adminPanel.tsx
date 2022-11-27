@@ -194,9 +194,9 @@ const AdminPanel: React.FC = () => {
                         備註：
                       </IonInput>
                     </IonItem>
-                    {imageList.map((e: any) => {
+                    {/* {imageList.map((e: any) => {
                       return <IonImg src={e} alt="user post image"></IonImg>;
-                    })}
+                    })} */}
                     <IonButton color="success" onClick={() => acceptReq()}>
                       確認驗證
                     </IonButton>

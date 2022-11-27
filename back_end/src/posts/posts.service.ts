@@ -59,7 +59,7 @@ export class PostsService {
       if (createPostDto.promotion === 't') {
         promotion_plan = true;
       }
-      console.log({
+      console.log('??', {
         user_id: +createPostDto.user_id,
         post_title: createPostDto.title,
         post_description: createPostDto.description,
@@ -84,7 +84,7 @@ export class PostsService {
         })
         .returning('id');
 
-      console.log(createPost);
+      console.log('createPost', createPost);
       let tags = createPostDto.tags.split('#');
       console.log(tags);
       tags.shift();
