@@ -10,10 +10,26 @@ import {
 import { BidService } from './bid.service';
 import { CreateBidDto } from './dto/create-bid.dto';
 import { UpdateBidDto } from './dto/update-bid.dto';
+import { io } from 'src/io';
+import { Server } from 'socket.io';
 
 @Controller('bid')
 export class BidController {
-  constructor(private readonly bidService: BidService) {}
+  static instance: BidController;
+
+  constructor(private readonly bidService: BidService) {
+    BidController.instance = this;
+  }
+
+  setupIO(io: Server) {
+    console.log('setupIO');
+    io.on('connection', (socket) => {
+      console.log('socket connected:', socket.id);
+      socket.on('join-room', (postId) => {
+        console.log('join-room', { id: socket.id, postId });
+      });
+    });
+  }
 
   @Post()
   create(@Body() createBidDto: CreateBidDto) {
@@ -22,6 +38,9 @@ export class BidController {
 
   @Post('biding')
   biding(@Body() createBidDto: CreateBidDto) {
+    io.to('/room:' + createBidDto.postId).emit('new bid received', {
+      id: createBidDto.postId,
+    });
     return this.bidService.biding(createBidDto);
   }
 
