@@ -63,9 +63,9 @@ const Package: React.FC = () => {
   });
 
   //get client_secret
-  let numbTail = "00";
+
   async function getIdSecret() {
-    let totalAmount = +state.amount + numbTail;
+    let totalAmount = +state.amount * 100;
     console.log("totalAmount::", totalAmount);
     setGetClientSecret(true);
     let result = await fetch(`${API_ORIGIN}/payment/paymentIntent`, {

@@ -69,6 +69,19 @@ const CheckoutForm: React.FC<{
       },
     });
 
+    // if (
+    //   result.error.type === "card_error" ||
+    //   result.error.type === "validation_error"
+    // ) {
+    //   setMessage(
+    //     result.error.message ? result.error.message : "validation_error"
+    //   );
+    // } else {
+    //   setMessage("An unexpected error occurred.");
+    // }
+
+    //TODO not WORK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // if (!result.error) {
     const res = fetch(`${API_ORIGIN}/payment/addPoints`, {
       method: "PATCH",
       headers: {
@@ -77,11 +90,14 @@ const CheckoutForm: React.FC<{
       body: JSON.stringify({
         userId: jwtState.id,
         points: props.amount,
+        clientSecret: props.clientSecret,
       }),
     });
+
     Promise.all([result, res]).catch((error) => {
       console.log(error);
     });
+    // }
   };
 
   return (

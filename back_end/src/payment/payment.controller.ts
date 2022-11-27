@@ -21,11 +21,9 @@ export class PaymentController {
     return this.paymentService.paymentIntent(createPaymentDto);
   }
 
-  @Post('create-checkout-session')
-  async sessionTest(@Body() createPaymentDto: CreatePaymentDto, @Res() res) {
-    let url = await this.paymentService.sessionTest(createPaymentDto);
-
-    return res.status(303).redirect(url);
+  @Patch('capturePaymentIntent')
+  async capturePaymentIntent(@Body() updatePointsDto: UpdatePointsDto) {
+    return await this.paymentService.capturePaymentIntent(updatePointsDto);
   }
 
   @Get('stripeConfig')

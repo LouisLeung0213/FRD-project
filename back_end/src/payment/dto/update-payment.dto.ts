@@ -1,11 +1,16 @@
 import { PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { CreatePaymentDto } from './create-payment.dto';
 
 export class UpdatePointsDto extends PartialType(CreatePaymentDto) {
+  @IsNumber()
   @IsNotEmpty()
-  points: number;
+  points: string;
 
   @IsNumber()
   userId: number;
+
+  @IsString()
+  @IsNotEmpty()
+  clientSecret?;
 }
