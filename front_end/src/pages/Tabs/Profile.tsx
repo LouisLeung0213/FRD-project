@@ -2,22 +2,16 @@ import {
   IonButton,
   IonButtons,
   IonContent,
-  IonDatetime,
   IonHeader,
   IonIcon,
-  IonImg,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
-  IonListHeader,
   IonMenu,
   IonMenuButton,
   IonMenuToggle,
   IonPage,
-  IonRouterOutlet,
-  IonSplitPane,
-  IonTabButton,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -27,26 +21,15 @@ import {
   ribbonOutline,
   searchOutline,
   lockOpenOutline,
-  lockOpenSharp,
   paperPlaneOutline,
-  paperPlaneSharp,
-  peopleCircleOutline,
   personOutline,
-  personSharp,
   receiptOutline,
-  receiptSharp,
-  trashOutline,
-  trashSharp,
-  logInOutline,
   logOutOutline,
   walletOutline,
 } from "ionicons/icons";
 
-import { Preferences } from "@capacitor/preferences";
-import "./Profile.css";
+import "./Profile.scss";
 import icon from "../../image/usericon.png";
-
-import { Route, useLocation } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import moment from "moment";
@@ -111,25 +94,6 @@ const Profile: React.FC<{ user: number | null }> = (props: {
     //TODO
   };
 
-  // //for own account
-  // async function getUserPoints(id: any) {
-  //   console.log("jwtState.id: ", id);
-  //   let res = await fetch(`${API_ORIGIN}/profiles/${id}`, {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   });
-  //   let result = await res.json();
-  //   console.log(result);
-
-  //   dispatch(
-  //     updatePoints({
-  //       points: result.points,
-  //     })
-  //   );
-  // }
-
   useEffect(() => {
     if (props.user === jwtState.id) {
       getOwnProfile();
@@ -137,7 +101,6 @@ const Profile: React.FC<{ user: number | null }> = (props: {
       getOtherProfile();
     }
 
-    //getUserPoints(jwtState.id);
     console.log("pointsState: ", pointsState.points);
   }, []);
   //jwtKey, reduxNickname
@@ -227,8 +190,8 @@ const Profile: React.FC<{ user: number | null }> = (props: {
             <div className="personalIconContainer">
               <img src={icon} className="personalIcon" />
             </div>
-            <div>
-              <div className="personalInfo">
+            <div className="personalInfo">
+              <div className="personalInfo_name">
                 <IonLabel>{nickname}</IonLabel>
               </div>
               <IonLabel>可用點數: {pointsState.points}</IonLabel>
@@ -237,24 +200,26 @@ const Profile: React.FC<{ user: number | null }> = (props: {
               </div>
             </div>
           </div>
-          <IonList>
-            <IonItem>
-              <IonIcon icon={heartOutline} className="chat" />
-            </IonItem>
-            <IonItem>
-              <IonIcon icon={chatbubblesOutline} className="chat" />
-            </IonItem>
-            <IonItem>
-              <IonIcon icon={ribbonOutline} className="chat" />
-            </IonItem>
-          </IonList>
+          <div className="">
+            <IonList>
+              <IonItem>
+                <IonIcon icon={heartOutline} className="chat" />
+              </IonItem>
+              <IonItem>
+                <IonIcon icon={chatbubblesOutline} className="chat" />
+              </IonItem>
+              <IonItem>
+                <IonIcon icon={ribbonOutline} className="chat" />
+              </IonItem>
+            </IonList>
+          </div>
 
           <IonItem className="search">
             <IonIcon className="searchIcon" icon={searchOutline} />
             <IonInput placeholder="搜尋此賣家的產品"></IonInput>
           </IonItem>
           <IonItem className="portfolioContainer">
-            <IonLabel>My product</IonLabel>
+            <IonLabel>拍賣產品</IonLabel>
           </IonItem>
 
           <IonButton onClick={func}>Show the redux state</IonButton>
