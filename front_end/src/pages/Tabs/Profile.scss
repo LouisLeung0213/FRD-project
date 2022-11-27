@@ -1,0 +1,35 @@
+#profile {
+  .personalInfoContainer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100vw;
+    height: 30;
+  }
+
+  .personalIconContainer {
+    width: 50%;
+    height: 13rem;
+  }
+  .personalInfo {
+    height: 13rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .personalIcon {
+    border: 0.35rem white solid;
+    border-radius: 50%;
+  }
+
+  .personalInfo_name {
+    width: 100%;
+    padding: 0.25rem;
+    margin: 0.1rem;
+
+    font-size: 3rem;
+    text-align: center;
+  }
+}
