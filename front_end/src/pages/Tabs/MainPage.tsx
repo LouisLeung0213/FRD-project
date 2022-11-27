@@ -18,7 +18,7 @@ import {
 } from "@ionic/react";
 import { useEffect, useRef, useState } from "react";
 import { API_ORIGIN } from "../../api";
-import Post from "../Post/Post";
+import Post, { PostObj } from "../Post/Post";
 import "./MainPage.css";
 
 const MainPage: React.FC = () => {
@@ -43,6 +43,7 @@ const MainPage: React.FC = () => {
 
   function dismiss() {
     modal.current?.dismiss();
+    setIsOpen(false);
   }
 
   const enterAnimation = (baseEl: HTMLElement) => {
@@ -70,7 +71,7 @@ const MainPage: React.FC = () => {
     return enterAnimation(baseEl).direction("reverse");
   };
 
-  function openPost(e: object) {
+  function openPost(e: PostObj) {
     setCurrentPost(e);
     setIsOpen(true);
   }
@@ -116,12 +117,12 @@ const MainPage: React.FC = () => {
         >
           <IonContent>
             <IonToolbar>
-              <IonTitle>Modal</IonTitle>
+              <IonTitle>HOTBID</IonTitle>
               <IonButtons slot="end">
                 <IonButton onClick={() => dismiss()}>Close</IonButton>
               </IonButtons>
             </IonToolbar>
-            <Post post={currentPost} />
+            <Post post={currentPost as PostObj} />
           </IonContent>
         </IonModal>
       </IonContent>
