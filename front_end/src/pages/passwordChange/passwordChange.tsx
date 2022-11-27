@@ -142,12 +142,12 @@ const PasswordChange: React.FC = () => {
           })}
           <div className="ion-text-center">
             {!isOldPasswordOk ? (
-              <IonText color="warning">舊密碼呢？?</IonText>
+              <IonText color="warning">請輸入正確舊密碼</IonText>
             ) : null}
           </div>
           <div className="ion-text-center">
             {!isOldPasswordCorrect ? (
-              <IonText color="warning">舊密碼唔啱wo??</IonText>
+              <IonText color="warning">舊密碼錯誤</IonText>
             ) : null}
           </div>
           {item({
@@ -159,12 +159,12 @@ const PasswordChange: React.FC = () => {
           })}
           <div className="ion-text-center">
             {!isNewPasswordOk ? (
-              <IonText color="warning">新密碼呢？?</IonText>
+              <IonText color="warning">請輸入有效新密碼</IonText>
             ) : null}
           </div>
           <div className="ion-text-center">
             {!isNewPasswordNotSame ? (
-              <IonText color="warning">新密碼同舊密碼一樣wo, 改改佢啦</IonText>
+              <IonText color="warning">新密碼同舊密碼不可相同</IonText>
             ) : null}
           </div>
           {item({
@@ -186,14 +186,12 @@ const PasswordChange: React.FC = () => {
           })}
           <div className="ion-text-center">
             {!isReNewPasswordOk ? (
-              <IonText color="warning">確認新密碼呢???</IonText>
+              <IonText color="warning">請輸入有效新密碼</IonText>
             ) : null}
           </div>
           <div className="ion-text-center">
             {!isReNewPasswordSame ? (
-              <IonText color="warning">
-                新密碼同確認新密碼唔一樣wo, 改改佢啦
-              </IonText>
+              <IonText color="warning">新密碼同舊密碼不可相同</IonText>
             ) : null}
           </div>
           <IonMenuToggle>

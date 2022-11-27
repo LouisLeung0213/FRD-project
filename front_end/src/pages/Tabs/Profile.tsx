@@ -254,7 +254,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
             <IonInput placeholder="搜尋此賣家的產品"></IonInput>
           </IonItem>
           <IonItem className="portfolioContainer">
-            <IonLabel>My product</IonLabel>
+            <IonLabel>拍賣產品</IonLabel>
           </IonItem>
 
           <IonButton onClick={func}>Show the redux state</IonButton>
