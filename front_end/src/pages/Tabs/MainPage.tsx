@@ -93,11 +93,6 @@ const MainPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Main</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent fullscreen>
         <IonList>
           <div className="ion-padding" slot="content">
@@ -154,7 +149,6 @@ const MainPage: React.FC = () => {
                     ) : (
                       <IonLabel>現價：${post.max}</IonLabel>
                     )}
-                    <IonLabel>{post.nickname}</IonLabel>
                   </div>
                 );
               })}
