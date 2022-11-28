@@ -42,8 +42,6 @@ jobs:
           path: ~/.ssh
   deploy-docker:
     needs:
-      - build-docker
-      - test-node
       - setup-ssh
     runs-on: ubuntu-latest
     steps:
