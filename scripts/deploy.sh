@@ -4,6 +4,8 @@ set -x
 server="toystory"
 
 cd back_end
+rm -rf dist
+nest build
 ./scripts/build-image.sh
 cd ..
 
