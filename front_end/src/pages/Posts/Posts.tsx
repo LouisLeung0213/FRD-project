@@ -7,6 +7,7 @@ import {
   IonButton,
   IonText,
   IonCard,
+  IonContent,
 } from "@ionic/react";
 import { useCallback, useEffect, useState } from "react";
 import moment from "moment";
@@ -15,6 +16,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { useSocket } from "../../hooks/use-socket";
 import { Socket } from "socket.io-client";
+import { checkmarkDoneCircleOutline } from "ionicons/icons";
+import "./Posts.css";
 
 export type PostObj = {
   admin_comment: "";
@@ -68,8 +71,20 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
       [props.post.id]
     )
   );
-
+  console.log("props.post.q_mark:", props.post.q_mark);
   console.log("rendering, socket:", socket);
+  const bidRecord = async () => {
+    let res = await fetch(`${API_ORIGIN}/bid/bidList/${props.post.id}`);
+    let result = await res.json();
+    console.log(props.post.id);
+    console.log(result);
+    setBidList(result);
+    if (!result[0].nickname) {
+      setHighestBidder("");
+    } else {
+      setHighestBidder(result[0].nickname);
+    }
+  };
 
   useEffect(() => {
     console.log(jwtState.id);
@@ -97,7 +112,6 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
 
   async function submitBid() {
     if (!bidPrice.match(numReg)) {
-      console.log("are u on9?");
       alert("請輸入有效金額");
       return;
     }
@@ -115,60 +129,73 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
     let result = await res.json();
     console.log(result);
     if (result.status == "19") {
-      alert("你出既價低過最高價喎");
-
+      alert("出價不可低過最高價");
       return;
     } else if (result.status == "09") {
-      alert("你出價低過原價喎");
+      alert("出價不可比原價更低");
       return;
     } else {
       alert("出價成功");
       setBidIsSubmitted(true);
+      setBidPrice("");
       return;
     }
   }
 
   return (
-    <IonList>
-      <IonItem>{props.post.username}</IonItem>
-      <IonItem>{props.post.nickname}</IonItem>
+    <IonList className="post-modal">
+      <h1 className="ion-padding">{props.post.nickname}</h1>
       {props.post.json_agg.map((e: any, index) => {
         return (
-          <IonItem key={index}>
-            <img src={e}></img>
-          </IonItem>
+          <div className="imageDiv" key={index}>
+            <img className="image" src={e}></img>
+          </div>
         );
       })}
       {!props.post.admin_title ? (
         <>
-          <IonLabel>{props.post.post_title}</IonLabel>
-          <IonLabel>{props.post.post_description}</IonLabel>
+          <h2 className="ion-padding">{props.post.post_title}</h2>
+          <h2 className="ion-padding">{props.post.post_description}</h2>
         </>
       ) : (
         <>
-          <IonLabel>{props.post.admin_title}</IonLabel>
-          <IonLabel>{props.post.admin_comment}</IonLabel>
+          <h2 className="ion-padding title" style={{ color: "#fcd92b" }}>
+            {props.post.admin_title}
+            {props.post.q_mark ? (
+              <IonIcon
+                className="q_mark_icon"
+                style={{ color: "#3880ff" }}
+                icon={checkmarkDoneCircleOutline}
+              ></IonIcon>
+            ) : null}
+          </h2>
+          <h3 className="ion-padding">產品描述: {props.post.admin_comment}</h3>
         </>
       )}
       <IonItem>${nowPrice}</IonItem>
       <IonItem>{props.post.q_mark}</IonItem>
       <IonItem>
-        上架時間：{moment(props.post.post_time).format("MMMM Do YYYY")}
+        <h6>上架時間：{moment(props.post.post_time).format("MMMM Do YYYY")}</h6>
       </IonItem>
       {!props.post.q_mark ? null : (
         <>
-          <IonItem>現時最高出價者：{highestBidder}</IonItem>
+          <IonItem>
+            <h3>現時最高出價者：{highestBidder}</h3>
+          </IonItem>
           {bidList.map((e: any, index) => {
             return (
-              <IonCard key={index}>
-                {e.nickname}: $ {e.bid_price}
-              </IonCard>
+              <div className="ionCardContainer">
+                <IonCard key={index}>
+                  {e.nickname}: $ {e.bid_price}
+                </IonCard>
+              </div>
             );
           })}
-          <IonItem>
+          <IonItem className="inputBox">
             {!jwtState.id ? null : (
               <>
                 <IonInput
+                  value={bidPrice}
                   placeholder="請輸入金額"
                   onIonChange={(e: any) => setBidPrice(e.target.value)}
                 ></IonInput>
@@ -177,7 +204,13 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
                     <IonText color="warning">請輸入有效數字</IonText>
                   </div>
                 ) : null}
-                <IonButton onClick={() => submitBid()}>出價</IonButton>
+                <IonButton
+                  onClick={() => {
+                    submitBid();
+                  }}
+                >
+                  出價
+                </IonButton>
               </>
             )}
           </IonItem>

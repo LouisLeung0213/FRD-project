@@ -129,22 +129,26 @@ const AdminPanel: React.FC = () => {
         <IonPage>
           <IonHeader>
             <IonToolbar>
-              熱拍管理處
-              <IonButtons slot="end">
-                <IonIcon
-                  icon={skullOutline}
-                  onClick={() =>
-                    router.push(routes.blacklist, "forward", "pop")
-                  }
-                ></IonIcon>
-                <IonIcon
-                  icon={cubeOutline}
-                  onClick={() => router.push(routes.storages, "forward", "pop")}
-                ></IonIcon>
-              </IonButtons>
+              <IonTitle>熱拍管理處</IonTitle>
             </IonToolbar>
           </IonHeader>
           <IonContent>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <IonButton
+                className="buttons"
+                expand="block"
+                onClick={() => router.push(routes.blacklist, "forward", "pop")}
+              >
+                <IonIcon icon={skullOutline}></IonIcon>
+              </IonButton>
+              <IonButton
+                className="buttons"
+                expand="block"
+                onClick={() => router.push(routes.storages, "forward", "pop")}
+              >
+                <IonIcon icon={cubeOutline}></IonIcon>
+              </IonButton>
+            </div>
             <IonList>
               <IonAccordionGroup>
                 <IonAccordion value="first">

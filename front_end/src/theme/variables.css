@@ -150,9 +150,6 @@ http://ionicframework.com/docs/theming/ */
   ion-tab-bar {
     height: 56px;
   }
-  ion-icon {
-    color: #ffffff;
-  }
 
   ion-label {
     font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
@@ -167,9 +164,9 @@ http://ionicframework.com/docs/theming/ */
   ion-title {
     font-size: 1.45rem;
     color: #46b0e0;
-    display: flex;
+    /* display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
     font-weight: bolder;
   }
 
@@ -187,6 +184,7 @@ http://ionicframework.com/docs/theming/ */
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
   }
   /*
    * iOS Dark Theme

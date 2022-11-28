@@ -5,6 +5,7 @@ import {
   IonButtons,
   IonContent,
   IonHeader,
+  IonIcon,
   IonImg,
   IonInput,
   IonItem,
@@ -20,7 +21,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import { API_ORIGIN } from "../../api";
 import { useSocket } from "../../hooks/use-socket";
-import Post, { PostObj } from "../Post/Post";
+import Post, { PostObj } from "../Posts/Posts";
+import { checkmarkDoneCircleOutline } from "ionicons/icons";
 import "./MainPage.css";
 
 const MainPage: React.FC = () => {
@@ -105,44 +107,75 @@ const MainPage: React.FC = () => {
             ></IonSearchbar>
             {postsList
               .filter((postsList) => postsList.post_title.includes(query))
-              .map((e: any) => {
+              .map((post: any) => {
                 return (
-                  <IonItem key={e.id} onClick={() => openPost(e)}>
-                    <img src={e.json_agg[0]}></img>
-                    {!e.admin_title ? (
-                      <IonLabel>{e.post_title}</IonLabel>
+                  // <IonItem key={e.id} onClick={() => openPost(e)}>
+                  //   <img src={e.json_agg[0]}></img>
+                  //   {!e.admin_title ? (
+                  //     <IonLabel>{e.post_title}</IonLabel>
+                  //   ) : (
+                  //     <IonLabel>{e.admin_title}</IonLabel>
+                  //   )}
+                  //   {!post.max ? (
+                  //     <IonLabel>${post.original_price}</IonLabel>
+                  //   ) : (
+                  //     <IonLabel>${post.max}</IonLabel>
+                  //   )}
+                  //   <IonLabel>{e.nickname}</IonLabel>
+                  // </IonItem>
+                  <div
+                    className="postContainer"
+                    key={post.id}
+                    onClick={() => openPost(post)}
+                  >
+                    <h2
+                      className="ion-padding title"
+                      style={{ color: "#fcd92b" }}
+                    >
+                      {!post.admin_title ? post.post_title : post.admin_title}
+
+                      {post.q_mark ? (
+                        <IonIcon
+                          className="q_mark_icon"
+                          style={{ color: "#3880ff" }}
+                          icon={checkmarkDoneCircleOutline}
+                        ></IonIcon>
+                      ) : null}
+                    </h2>
+                    <img src={post.json_agg[0]}></img>
+
+                    {!post.max ? (
+                      <IonLabel>現價：${post.original_price}</IonLabel>
                     ) : (
-                      <IonLabel>{e.admin_title}</IonLabel>
+                      <IonLabel>現價：${post.max}</IonLabel>
                     )}
-                    {!e.max ? (
-                      <IonLabel>${e.original_price}</IonLabel>
-                    ) : (
-                      <IonLabel>${e.max}</IonLabel>
-                    )}
-                    <IonLabel>{e.nickname}</IonLabel>
-                  </IonItem>
+                    <IonLabel>{post.nickname}</IonLabel>
+                  </div>
                 );
               })}
           </div>
         </IonList>
-        <IonModal
-          id="post-modal"
-          ref={modal}
-          isOpen={isOpen}
-          enterAnimation={enterAnimation}
-          leaveAnimation={leaveAnimation}
-        >
-          <IonContent>
-            <IonToolbar>
-              <IonTitle>HOTBID</IonTitle>
-              <IonButtons slot="end">
-                <IonButton onClick={() => dismiss()}>Close</IonButton>
-              </IonButtons>
-            </IonToolbar>
-            <Post post={currentPost as PostObj} />
-          </IonContent>
-        </IonModal>
       </IonContent>
+
+      <IonModal
+        id="post-modal"
+        ref={modal}
+        isOpen={isOpen}
+        enterAnimation={enterAnimation}
+        leaveAnimation={leaveAnimation}
+      >
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>HOT BID</IonTitle>
+            <IonButtons slot="end">
+              <IonButton onClick={() => dismiss()}>Close</IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <Post post={currentPost as PostObj} />
+        </IonContent>
+      </IonModal>
     </IonPage>
   );
 };

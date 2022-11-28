@@ -1,9 +1,7 @@
 export let routes = {
   tab: {
     mainPage: "/tab/MainPage",
-    hot: "/tab/Hot",
     pickPhoto: "/tab/PickPhoto",
-
     notices: "/tab/Notices",
     profile: "/tab/Profile",
     login: "/tab/Login",

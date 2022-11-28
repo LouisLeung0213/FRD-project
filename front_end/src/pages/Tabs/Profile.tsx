@@ -80,6 +80,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
         email: result.email,
         joinedTime: result.joinedTime,
         isAdmin: result.is_admin,
+        bankAccount: result.bank_account,
       })
     );
     console.log("here:", result);
@@ -117,6 +118,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
         email: null,
         joinedTime: null,
         isAdmin: false,
+        bankAccount: null,
       })
     );
   }
@@ -134,7 +136,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
             <IonTitle>設定</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
+        <IonContent fullscreen={true}>
           <IonList>
             <IonItem routerLink="/AccountSetting">
               <IonIcon icon={personOutline} slot="start" />
