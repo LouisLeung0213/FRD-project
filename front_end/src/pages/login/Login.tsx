@@ -5,6 +5,7 @@ import {
   IonCheckbox,
   IonContent,
   IonHeader,
+  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
@@ -31,6 +32,7 @@ import { useIonFormState } from "react-use-ionic-form";
 import { API_ORIGIN } from "../../api";
 import { Preferences } from "@capacitor/preferences";
 import { setValue } from "../../service/localStorage";
+import { chevronBackOutline } from "ionicons/icons";
 
 const Login: React.FC = () => {
   const jwtState = useSelector((state: RootState) => state.jwt);
@@ -123,9 +125,6 @@ const Login: React.FC = () => {
       </IonRouterOutlet>
       <IonHeader>
         <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton></IonBackButton>
-          </IonButtons>
           <IonTitle>登入</IonTitle>
         </IonToolbar>
       </IonHeader>
