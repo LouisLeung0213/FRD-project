@@ -1,6 +1,7 @@
 import {
   createAnimation,
   IonAvatar,
+  IonBackButton,
   IonButton,
   IonButtons,
   IonContent,
@@ -22,8 +23,24 @@ import { Socket } from "socket.io-client";
 import { API_ORIGIN } from "../../api";
 import { useSocket } from "../../hooks/use-socket";
 import Post, { PostObj } from "../Posts/Posts";
-import { checkmarkDoneCircleOutline } from "ionicons/icons";
-import "./MainPage.css";
+import {
+  checkmarkDoneCircleOutline,
+  chevronBackOutline,
+  personOutline,
+} from "ionicons/icons";
+import "./MainPage.scss";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
+
+import "swiper/swiper.min.css";
+import "swiper/css/autoplay";
+import "swiper/css/keyboard";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import "swiper/css/zoom";
+import "@ionic/react/css/ionic-swiper.css";
+import "swiper/swiper.min.css";
+import "@ionic/react/css/ionic-swiper.css";
 
 const MainPage: React.FC = () => {
   let [postsList, setPostsList] = useState<[any]>([] as any);
@@ -95,7 +112,7 @@ const MainPage: React.FC = () => {
     <IonPage>
       <IonContent fullscreen>
         <IonList>
-          <div className="ion-padding" slot="content">
+          <div slot="content">
             <IonSearchbar
               debounce={1000}
               onIonChange={(ev: any) => setQuery(ev.target.value)}
@@ -123,32 +140,66 @@ const MainPage: React.FC = () => {
                     key={post.id}
                     onClick={() => openPost(post)}
                   >
-                    <h4 className="nameText">{post.nickname}</h4>
-                    <h3
-                      className="ion-padding title"
-                      style={{
-                        color: "#fcd92b",
-                        margin: "0px",
-                        padding: "0px",
-                      }}
-                    >
-                      {!post.admin_title ? post.post_title : post.admin_title}
-
-                      {post.q_mark ? (
+                    <div className="nameContainer">
+                      <h4 className="nameText">
                         <IonIcon
-                          className="q_mark_icon"
-                          style={{ color: "#3880ff" }}
-                          icon={checkmarkDoneCircleOutline}
+                          className="personIcon"
+                          icon={personOutline}
                         ></IonIcon>
-                      ) : null}
-                    </h3>
-                    <img src={post.json_agg[0]}></img>
+                        {post.nickname}
+                      </h4>
+                      <h3
+                        className="title"
+                        style={{
+                          color: "#fcd92b",
+                          margin: "0px",
+                          padding: "0px",
+                        }}
+                      >
+                        {!post.admin_title ? post.post_title : post.admin_title}
 
-                    {!post.max ? (
-                      <IonLabel>現價：${post.original_price}</IonLabel>
-                    ) : (
-                      <IonLabel>現價：${post.max}</IonLabel>
-                    )}
+                        {post.q_mark ? (
+                          <IonIcon
+                            className="q_mark_icon"
+                            style={{ color: "#3880ff" }}
+                            icon={checkmarkDoneCircleOutline}
+                          ></IonIcon>
+                        ) : null}
+                      </h3>
+                    </div>
+                    <Swiper
+                      modules={[
+                        Autoplay,
+                        Keyboard,
+                        Pagination,
+                        Scrollbar,
+                        Zoom,
+                      ]}
+                      autoplay={true}
+                      keyboard={true}
+                      pagination={true}
+                      slidesPerView={1}
+                      //scrollbar={true}
+                      zoom={true}
+                      effect={"fade"}
+                      className="slide "
+                    >
+                      {post.json_agg.map((photo: any, index: any) => {
+                        return (
+                          <SwiperSlide className="image-slide" key={index}>
+                            <img src={photo} key={index} />
+                          </SwiperSlide>
+                        );
+                      })}
+                    </Swiper>
+                    {/* <img src={post.json_agg}></img> */}
+                    <div className="nameContainer">
+                      {!post.max ? (
+                        <h3>現價：${post.original_price}</h3>
+                      ) : (
+                        <h3>現價：${post.max}</h3>
+                      )}
+                    </div>
                   </div>
                 );
               })}
@@ -160,14 +211,19 @@ const MainPage: React.FC = () => {
         id="post-modal"
         ref={modal}
         isOpen={isOpen}
-        enterAnimation={enterAnimation}
-        leaveAnimation={leaveAnimation}
+        // enterAnimation={enterAnimation}
+        // leaveAnimation={leaveAnimation}
       >
         <IonHeader>
           <IonToolbar>
-            <IonTitle>HOT BID</IonTitle>
-            <IonButtons slot="end">
-              <IonButton onClick={() => dismiss()}>Close</IonButton>
+            <IonButtons slot="start">
+              <IonButton
+                onClick={() => {
+                  dismiss();
+                }}
+              >
+                <IonIcon size="large" icon={chevronBackOutline}></IonIcon> Back
+              </IonButton>
             </IonButtons>
           </IonToolbar>
         </IonHeader>
