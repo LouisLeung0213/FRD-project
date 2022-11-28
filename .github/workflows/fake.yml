@@ -34,7 +34,7 @@ jobs:
           find
       - name: check ssh connection
         run: |
-          ssh server "docker ps"
+          ssh toystory "docker ps"
       - name: archive ssh setup
         uses: actions/upload-artifact@v3
         with:
