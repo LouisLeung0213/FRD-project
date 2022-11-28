@@ -16,8 +16,10 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Socket } from "socket.io-client";
 import { API_ORIGIN } from "../../api";
+import { useSocket } from "../../hooks/use-socket";
 import Post, { PostObj } from "../Post/Post";
 import "./MainPage.css";
 
@@ -26,6 +28,17 @@ const MainPage: React.FC = () => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
+
+  const socket = useSocket(
+    useCallback((socket: Socket) => {
+      socket.on("priceUpdated", (msg) => {
+        console.log("msg", msg.newPrice);
+        setPostsList(msg.newPrice);
+        return;
+      });
+      return () => {};
+    }, [])
+  );
 
   useEffect(() => {
     const postsList = async () => {
@@ -101,7 +114,11 @@ const MainPage: React.FC = () => {
                     ) : (
                       <IonLabel>{e.admin_title}</IonLabel>
                     )}
-                    <IonLabel>${e.original_price}</IonLabel>
+                    {!e.max ? (
+                      <IonLabel>${e.original_price}</IonLabel>
+                    ) : (
+                      <IonLabel>${e.max}</IonLabel>
+                    )}
                     <IonLabel>{e.nickname}</IonLabel>
                   </IonItem>
                 );

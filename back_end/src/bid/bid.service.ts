@@ -52,7 +52,18 @@ export class BidService {
             bid_price: createBidDto.bidPrice,
           })
           .returning('id');
-        return bid[0];
+        if (bid[0].id) {
+          let newBidList = await this.knex
+            .select('post_id', 'buyer_id', 'bid_price', 'nickname')
+            .from('bid_records')
+            .join('users', 'buyer_id', 'users.id')
+            .where('post_id', createBidDto.postId)
+            .limit(5)
+            .orderBy('bid_price', 'desc');
+          return newBidList;
+        } else {
+          return { status: '99', message: 'unexpected error occurred' };
+        }
       }
     }
   }

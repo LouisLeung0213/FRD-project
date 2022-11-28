@@ -40,6 +40,7 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
   const [bidIsSubmitted, setBidIsSubmitted] = useState(false);
   const [bidList, setBidList] = useState([]);
   const [highestBidder, setHighestBidder] = useState("");
+  const [nowPrice, setNowPrice] = useState(0);
   let numReg = /^\d+$/;
 
   const socket = useSocket(
@@ -47,6 +48,18 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
       (socket: Socket) => {
         console.log("join room", props.post.id);
         socket.emit("join-room", props.post.id);
+        socket.on("newBidReceived", (msg) => {
+          console.log("received", msg);
+          if (msg.newBidContent[0].post_id != +props.post.id) {
+            console.log("wrong, bye bye");
+            return;
+          }
+          console.log("newBidList", msg);
+          setBidList(msg.newBidContent);
+          setHighestBidder(msg.newBidContent[0].nickname);
+          setNowPrice(msg.newBidContent[0].bid_price);
+          return;
+        });
         return () => {
           console.log("leave room", props.post.id);
           socket.emit("leave-room", props.post.id);
@@ -63,18 +76,24 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
     const bidRecord = async () => {
       let res = await fetch(`${API_ORIGIN}/bid/bidList/${props.post.id}`);
       let result = await res.json();
-      console.log(props.post.id);
+      console.log(props);
       console.log(result);
       setBidList(result);
-      if (!result[0].nickname) {
+      if (!("nickname" in result)) {
         setHighestBidder("");
       } else {
         setHighestBidder(result[0].nickname);
       }
+      if (!result[0]) {
+        setNowPrice(props.post.original_price);
+      } else {
+        setNowPrice(result[0].bid_price);
+      }
     };
     bidRecord();
+
     setBidIsSubmitted(false);
-  }, [bidIsSubmitted]);
+  }, []);
 
   async function submitBid() {
     if (!bidPrice.match(numReg)) {
@@ -131,7 +150,7 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
           <IonLabel>{props.post.admin_comment}</IonLabel>
         </>
       )}
-      <IonItem>${props.post.original_price}</IonItem>
+      <IonItem>${nowPrice}</IonItem>
       <IonItem>{props.post.q_mark}</IonItem>
       <IonItem>
         上架時間：{moment(props.post.post_time).format("MMMM Do YYYY")}
