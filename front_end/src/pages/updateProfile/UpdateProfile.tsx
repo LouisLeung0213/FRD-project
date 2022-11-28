@@ -91,6 +91,7 @@ const UpdateProfile: React.FC = () => {
           email: state.email,
           joinedTime: jwtState.joinedTime,
           isAdmin: jwtState.isAdmin,
+          bankAccount: jwtState.bankAccount,
         })
       );
       console.log("reduxState: ", jwtState);

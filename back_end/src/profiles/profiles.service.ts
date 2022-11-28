@@ -15,6 +15,7 @@ export class ProfilesService {
         'id',
         'is_admin',
         'points',
+        'bank_account',
       )
       .from('users')
       .where('id', userId);

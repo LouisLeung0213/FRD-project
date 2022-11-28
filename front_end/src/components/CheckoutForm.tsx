@@ -80,18 +80,26 @@ const CheckoutForm: React.FC<{
         return_url: `${FRONT_ORIGIN}/tab/Profile`,
       },
     });
+    console.log(result);
 
-    const failPayment = await fetch(`${API_ORIGIN}/payment/deductPoints`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: jwtState.id,
-        points: props.amount,
-        clientSecret: props.clientSecret,
-      }),
-    });
+    if (
+      result.error.type === "card_error" ||
+      result.error.type === "validation_error"
+    ) {
+      const failPayment = await fetch(`${API_ORIGIN}/payment/deductPoints`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: jwtState.id,
+          points: props.amount,
+          clientSecret: props.clientSecret,
+        }),
+      });
+      let result = await failPayment.json();
+      console.log(result);
+    }
   };
 
   return (
