@@ -143,7 +143,7 @@ const Storages: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          熱拍儲物室
+          <IonTitle>熱拍儲物室</IonTitle>
           <IonButtons slot="start">
             <IonBackButton defaultHref={routes.tab.adminPanel}></IonBackButton>
           </IonButtons>
@@ -245,10 +245,23 @@ const Storages: React.FC = () => {
                             ></IonIcon>
                           </IonItemOption>
                         </IonItemOptions>
-                        <IonItem key={index}>
-                          賣家名稱：{e.nickname}，EMAIL：
-                          {e.email}，電話號碼：{e.phone}，電子收據號碼：
-                          {e.receipt_code}，入倉時間：
+                        <IonItem
+                          style={{
+                            marginBottom: "10px",
+                            border: "3px #808080 solid",
+                            padding: "3px",
+                          }}
+                          key={index}
+                        >
+                          賣家名稱：{e.nickname}
+                          <br />
+                          EMAIL：{e.email}
+                          <br />
+                          電話號碼：{e.phone}
+                          <br />
+                          電子收據號碼：{e.receipt_code}
+                          <br />
+                          入倉時間：
                           {moment(e.in_time).format("MMMM Do YYYY, h:mm:ss a")}
                         </IonItem>
                         <IonItemOptions>

@@ -1,0 +1,33 @@
+ion-card {
+  margin: 0;
+  font-size: 19px;
+  text-align: center;
+}
+
+.ionCardContainer {
+  margin: 10px 10px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+}
+
+.q_mark_icon {
+  margin-left: 5px;
+}
+
+.imageDiv {
+  width: 95vw;
+  margin: auto;
+}
+
+.image {
+  display: flex;
+  align-items: center;
+}
+
+.inputBox {
+  margin-top: 1.5rem;
+  height: 5rem;
+}

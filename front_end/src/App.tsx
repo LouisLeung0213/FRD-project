@@ -43,11 +43,11 @@ import {
   options,
   planetOutline,
 } from "ionicons/icons";
-import Hot from "./pages/Tabs/Hot";
+
 import MainPage from "./pages/Tabs/MainPage";
 
 import Profile from "./pages/Tabs/Profile";
-import Trade from "./pages/Trade/Trade";
+
 import { routes } from "../src/routes";
 import Notices from "./pages/Tabs/Notices";
 import UpdateProfile from "./pages/UpdateProfile/UpdateProfile";
@@ -97,6 +97,7 @@ const App: React.FC = () => {
         email: userInfo.email,
         joinedTime: userInfo.joinedTime,
         isAdmin: userInfo.is_admin,
+        bankAccount: userInfo.bank_account,
       })
     );
   };
@@ -194,7 +195,7 @@ const App: React.FC = () => {
             exact={true}
             render={() => <Invoice />}
           />
-          <Route path={routes.trade} exact={true} render={() => <Trade />} />
+
           <Route
             path={routes.storages}
             exact={true}
@@ -237,11 +238,7 @@ const App: React.FC = () => {
                   exact={true}
                   render={() => <MainPage />}
                 />
-                <Route
-                  path={routes.tab.hot}
-                  exact={true}
-                  render={() => <Hot />}
-                />
+
                 <Route
                   path={routes.tab.pickPhoto}
                   exact={true}
@@ -274,10 +271,6 @@ const App: React.FC = () => {
                 <IonTabButton tab="MainPage" href="/tab/MainPage">
                   <IonIcon icon={homeOutline} />
                   <IonLabel>主頁</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab="Hot" href="/tab/Hot">
-                  <IonIcon icon={heartCircleOutline} />
-                  <IonLabel>熱門</IonLabel>
                 </IonTabButton>
                 {!!jwtState.id ? (
                   <IonTabButton tab="PickPhoto" href={routes.tab.pickPhoto}>

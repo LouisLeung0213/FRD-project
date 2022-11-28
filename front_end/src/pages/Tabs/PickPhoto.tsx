@@ -87,6 +87,7 @@ const PickPhoto: React.FC = () => {
   const [isBankAccountOk, setIsBankAccountOk] = useState(true);
   const [isPhotoOk, setIsPhotoOk] = useState(true);
   const [percent, setPercent] = useState(0);
+  const [bankState, setBankState] = useState(jwtState.bankAccount);
 
   const { state, item } = useIonFormState({
     title: "",
@@ -94,38 +95,38 @@ const PickPhoto: React.FC = () => {
     tags: "",
     startPrice: "",
     location: "",
-    bankAccount: "",
+    bankAccount: jwtState.bankAccount || "",
     qualityPlan: false,
     promotion: false,
   });
 
-  function findMIMEType(file: string) {
-    let ext = file.split(".")[file.split(".").length - 1];
-    if (ext == "jpeg") {
-      return {
-        contentType: "image/jpeg",
-      };
-    } else if (ext == "png") {
-      return {
-        contentType: "image/jpeg",
-      };
-    } else if (ext == "webp") {
-      return {
-        contentType: "image/jpeg",
-      };
-    } else {
-      alert("格式錯誤");
-      return;
-    }
-  }
+  // function findMIMEType(file: string) {
+  //   let ext = file.split(".")[file.split(".").length - 1];
+  //   if (ext == "jpeg") {
+  //     return {
+  //       contentType: "image/jpeg",
+  //     };
+  //   } else if (ext == "png") {
+  //     return {
+  //       contentType: "image/jpeg",
+  //     };
+  //   } else if (ext == "webp") {
+  //     return {
+  //       contentType: "image/jpeg",
+  //     };
+  //   } else {
+  //     alert("格式錯誤");
+  //     return;
+  //   }
+  // }
 
   function formAppend() {
     let data = state;
     let formData = new FormData();
+
     formData.append("user_id", jwtState.id ? jwtState.id + "" : "");
     formData.append("title", data.title);
     formData.append("description", data.description);
-
     formData.append("tags", data.tags);
 
     formData.append("startPrice", data.startPrice);
@@ -215,7 +216,7 @@ const PickPhoto: React.FC = () => {
 
     function uploadBytesResumablePromise(photo: any): Promise<string> {
       return new Promise((resolve, reject) => {
-        findMIMEType(photo.name);
+        // findMIMEType(photo.name);
         const storageRef = ref(
           storage,
           `/files/${photo.name}+${jwtState.id}+${Date.now()}`
@@ -265,7 +266,7 @@ const PickPhoto: React.FC = () => {
     });
     let result = await res.json();
     console.log(result);
-    if (result.status === 200) {
+    if (result.status == 200) {
       router.push(routes.tab.mainPage, "forward", "replace");
       console.log("done");
     }
@@ -316,8 +317,9 @@ const PickPhoto: React.FC = () => {
     //     }
     //   })
     //   .catch((err) => console.log("err", err));
+
+    dismiss();
   };
-  dismiss();
 
   // console.log("state.title =  ", state.title);
   // if (firebaseIsOk) {
@@ -354,8 +356,6 @@ const PickPhoto: React.FC = () => {
     <IonPage className="PickPhoto">
       <IonHeader>
         <IonToolbar>
-          <IonTitle className="ion-text-center">發佈帖子</IonTitle>
-
           <IonButton
             className="preview-but"
             fill="clear"
@@ -396,7 +396,7 @@ const PickPhoto: React.FC = () => {
                   icon={imagesOutline}
                 ></IonIcon>
               </IonButton>
-              <IonLabel className="label">加入物品照片</IonLabel>
+              <p className="label">加入圖片</p>
             </div>
             <div>
               <Swiper
@@ -410,6 +410,9 @@ const PickPhoto: React.FC = () => {
                 effect={"fade"}
                 className="slide "
               >
+                <SwiperSlide className="image-box add-box" onClick={takePhoto}>
+                  <IonIcon icon={add}></IonIcon>
+                </SwiperSlide>
                 {photos.map((photo, index) => {
                   return (
                     <SwiperSlide key={index} className="image-box">
@@ -440,9 +443,6 @@ const PickPhoto: React.FC = () => {
                     </SwiperSlide>
                   );
                 })}
-                <SwiperSlide className="image-box add-box" onClick={takePhoto}>
-                  <IonIcon icon={add}></IonIcon>
-                </SwiperSlide>
               </Swiper>
               <div className="ion-text-center">
                 {!isDescriptionOk ? (

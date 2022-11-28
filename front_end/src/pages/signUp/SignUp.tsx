@@ -170,6 +170,7 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
           email: userInfo.email,
           joinedTime: userInfo.joinedTime,
           isAdmin: userInfo.is_admin,
+          bankAccount: userInfo.bank_account,
         })
       );
 

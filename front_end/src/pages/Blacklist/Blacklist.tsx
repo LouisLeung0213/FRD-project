@@ -8,6 +8,7 @@ import {
   IonLabel,
   IonList,
   IonPage,
+  IonTitle,
   IonToolbar,
 } from "@ionic/react";
 import { useState, useEffect } from "react";
@@ -55,7 +56,7 @@ const Blacklist: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          熱拍懲教處
+          <IonTitle>熱拍懲教處</IonTitle>
           <IonButtons slot="start">
             <IonBackButton defaultHref={routes.tab.adminPanel}></IonBackButton>
           </IonButtons>
