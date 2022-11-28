@@ -129,7 +129,7 @@ const Login: React.FC = () => {
           <IonTitle>登入</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent fullscreen={true}>
         <IonList className="ion-padding">
           {item({
             name: "username",

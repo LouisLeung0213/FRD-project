@@ -192,7 +192,7 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
 
   return (
     <IonPage>
-      <IonContent fullscreen>
+      <IonContent fullscreen={true}>
         <IonList className="ion-padding">
           {item({
             name: "username",

@@ -17,10 +17,12 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { checkmarkDoneCircleOutline } from "ionicons/icons";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Socket } from "socket.io-client";
 import { API_ORIGIN } from "../../api";
+import { useSocket } from "../../hooks/use-socket";
 import Post, { PostObj } from "../Posts/Posts";
+import { checkmarkDoneCircleOutline } from "ionicons/icons";
 import "./MainPage.css";
 
 const MainPage: React.FC = () => {
@@ -28,6 +30,17 @@ const MainPage: React.FC = () => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
+
+  const socket = useSocket(
+    useCallback((socket: Socket) => {
+      socket.on("priceUpdated", (msg) => {
+        console.log("msg", msg.newPrice);
+        setPostsList(msg.newPrice);
+        return;
+      });
+      return () => {};
+    }, [])
+  );
 
   useEffect(() => {
     const postsList = async () => {
@@ -80,11 +93,6 @@ const MainPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Main</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent fullscreen>
         <IonList>
           <div className="ion-padding" slot="content">
@@ -96,14 +104,33 @@ const MainPage: React.FC = () => {
               .filter((postsList) => postsList.post_title.includes(query))
               .map((post: any) => {
                 return (
+                  // <IonItem key={e.id} onClick={() => openPost(e)}>
+                  //   <img src={e.json_agg[0]}></img>
+                  //   {!e.admin_title ? (
+                  //     <IonLabel>{e.post_title}</IonLabel>
+                  //   ) : (
+                  //     <IonLabel>{e.admin_title}</IonLabel>
+                  //   )}
+                  //   {!post.max ? (
+                  //     <IonLabel>${post.original_price}</IonLabel>
+                  //   ) : (
+                  //     <IonLabel>${post.max}</IonLabel>
+                  //   )}
+                  //   <IonLabel>{e.nickname}</IonLabel>
+                  // </IonItem>
                   <div
                     className="postContainer"
                     key={post.id}
                     onClick={() => openPost(post)}
                   >
-                    <h2
+                    <h4 className="nameText">{post.nickname}</h4>
+                    <h3
                       className="ion-padding title"
-                      style={{ color: "#fcd92b" }}
+                      style={{
+                        color: "#fcd92b",
+                        margin: "0px",
+                        padding: "0px",
+                      }}
                     >
                       {!post.admin_title ? post.post_title : post.admin_title}
 
@@ -114,11 +141,14 @@ const MainPage: React.FC = () => {
                           icon={checkmarkDoneCircleOutline}
                         ></IonIcon>
                       ) : null}
-                    </h2>
+                    </h3>
                     <img src={post.json_agg[0]}></img>
 
-                    <IonLabel>現價 ${post.original_price}</IonLabel>
-                    <IonLabel>{post.nickname}</IonLabel>
+                    {!post.max ? (
+                      <IonLabel>現價：${post.original_price}</IonLabel>
+                    ) : (
+                      <IonLabel>現價：${post.max}</IonLabel>
+                    )}
                   </div>
                 );
               })}

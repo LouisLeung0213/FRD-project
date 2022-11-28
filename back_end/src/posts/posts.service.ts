@@ -133,6 +133,13 @@ export class PostsService {
   }
 
   async showAll() {
+    // let newPrice = await this.knex
+    //   .select('posts.id', this.knex.raw('max(bid_price)'))
+
+    //   .from('posts')
+    //   .join('bid_records', 'post_id', 'posts.id')
+    //   .groupBy('posts.id');
+    // console.log('newPrice', newPrice);
     let showAllList = await this.knex
       .select(
         'posts.id',
@@ -149,12 +156,15 @@ export class PostsService {
         'nickname',
         'username',
         this.knex.raw('json_agg(src)'),
+        this.knex.raw('max(bid_price)'),
       )
       .from('posts')
       .join('users', 'user_id', 'users.id')
-      .join('images', 'posts.id', 'post_id')
+      .join('images', 'posts.id', 'images.post_id')
+      .fullOuterJoin('bid_records', 'bid_records.post_id', 'posts.id')
       .where('status', 'selling')
       .groupBy('posts.id', 'users.username', 'users.nickname');
+    console.log('showAllList', showAllList);
     return showAllList;
   }
 
