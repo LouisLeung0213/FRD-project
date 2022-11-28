@@ -1,0 +1,42 @@
+General：
+    1. Title置左或中，返回/menu置右
+
+主頁（post出面）：
+    1. Post既description加番padding-left
+    2. Post一係就冇margin，一係就多d margin
+    3. 唔洗用框包住d Posts
+    4. Post要加番上架日期，格式用 2022-11-28，放係post既右下角
+
+主頁（post入面）：
+    1. 動畫用card model飛出嚟
+    2. Post title放最頂
+    3. 出post人放相下面
+    4. 藍剔要轉做button，要俾user㩒入去，話俾user知個藍剔係咩意思
+    5. 出價button整大d + 唔好包係個框入面 ＋ 左邊加番個 $
+    6. 最近出價要係左邊加番icon ＋ 底色要明顯d (dark mode撞左色)
+    7. close轉做交叉
+
+交易：
+    1. 個tab改番做發佈
+    2. 加圖個十字放番去最前
+    3. 唔要上面加入圖片個掣
+    4. 產品info，置中
+    5. 加入認證度加番藍剔標
+    6. 新增account: 加dropdown俾人揀銀行, 加埋人名
+    7. 用舊account: 加dropdown俾人揀想用邊個account
+    8. 提醒user我地會記低account info
+
+個人資料：
+    1. 加多d margin
+    2. 字太大，16px就得
+    3. 係個日期上面加番註冊日期四雙字（2022-11-28）
+    4. like加番字，唔要dm
+    5. 下面個search bar用番main page個款，唔要underline
+
+更新個人資料： 
+    1. 改完之後完成，粒掣改番做儲存
+
+Admin：
+    1. icon加番字
+    2. 確認驗證加番margin-top
+    3. 完成驗證，隻字置中
