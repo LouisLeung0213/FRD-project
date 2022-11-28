@@ -107,25 +107,24 @@ const PickPhoto: React.FC = () => {
     promotion: false,
   });
 
-  // function findMIMEType(file: string) {
-  //   let ext = file.split(".")[file.split(".").length - 1];
-  //   if (ext == "jpeg") {
-  //     return {
-  //       contentType: "image/jpeg",
-  //     };
-  //   } else if (ext == "png") {
-  //     return {
-  //       contentType: "image/jpeg",
-  //     };
-  //   } else if (ext == "webp") {
-  //     return {
-  //       contentType: "image/jpeg",
-  //     };
-  //   } else {
-  //     alert("格式錯誤");
-  //     return;
-  //   }
-  // }
+  function findMIMEType(ext: string) {
+    if (ext == "image/jpeg") {
+      return {
+        contentType: "image/jpeg",
+      };
+    } else if (ext == "image/png") {
+      return {
+        contentType: "image/jpeg",
+      };
+    } else if (ext == "image/webp") {
+      return {
+        contentType: "image/jpeg",
+      };
+    } else {
+      alert("格式錯誤");
+      return;
+    }
+  }
 
   function formAppend() {
     let data = state;
@@ -223,7 +222,8 @@ const PickPhoto: React.FC = () => {
 
     function uploadBytesResumablePromise(photo: any): Promise<string> {
       return new Promise((resolve, reject) => {
-        // findMIMEType(photo.name);
+        // console.log(photo.file.type);
+        findMIMEType(photo.file.type);
         const storageRef = ref(
           storage,
           `/files/${photo.name}+${jwtState.id}+${Date.now()}`
