@@ -81,6 +81,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
         joinedTime: result.joinedTime,
         isAdmin: result.is_admin,
         bankAccount: result.bank_account,
+        icon_src: result.icon_src
       })
     );
     console.log("here:", result);
@@ -119,6 +120,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
         joinedTime: null,
         isAdmin: false,
         bankAccount: null,
+        icon_src: null,
       })
     );
   }

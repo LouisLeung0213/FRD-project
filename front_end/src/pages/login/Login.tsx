@@ -97,6 +97,7 @@ const Login: React.FC = () => {
           joinedTime: userInfo.joinedTime,
           isAdmin: userInfo.is_admin,
           bankAccount: userInfo.bank_account,
+          icon_src: userInfo.icon_src
         })
       );
       // history.push(`/tab/Profile`);

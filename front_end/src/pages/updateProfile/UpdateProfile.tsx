@@ -24,6 +24,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useIonFormState } from "react-use-ionic-form";
 import { API_ORIGIN } from "../../api";
+import { useImageFiles } from "../../hooks/usePhotoGallery";
 
 // import ExploreContainer from "../../components/ExploreContainer";
 // import ProfileContainer from "../../components/ProfileContainer";
@@ -35,7 +36,7 @@ import { RootState } from "../../store";
 
 const UpdateProfile: React.FC = () => {
   const jwtState = useSelector((state: RootState) => state.jwt);
-
+  const { photos, takePhoto } = useImageFiles();
   const pointsStates = useSelector((state: RootState) => state.points);
 
   const router = useIonRouter();
@@ -92,6 +93,7 @@ const UpdateProfile: React.FC = () => {
           joinedTime: jwtState.joinedTime,
           isAdmin: jwtState.isAdmin,
           bankAccount: jwtState.bankAccount,
+          icon_src: jwtState.icon_src,
         })
       );
       console.log("reduxState: ", jwtState);
@@ -104,10 +106,15 @@ const UpdateProfile: React.FC = () => {
   }
 
   const { state, item } = useIonFormState({
+    icon: jwtState.icon_src,
     nickname: jwtState.nickname,
     phone: jwtState.phone,
     email: jwtState.email,
   });
+
+  function showPhotos() {
+    console.log("photos: ", photos);
+  }
 
   return (
     <>
@@ -120,14 +127,26 @@ const UpdateProfile: React.FC = () => {
             <IonTitle>設定帳號</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
-          <IonList className="ion-padding">
+        <IonContent fullscreen={true}>
+          <IonList>
+            {item({
+              name: "nickname",
+              renderContent: (props) => (
+                <div
+                  style={{ padding: "0px" }}
+                  className="icon"
+                  onClick={takePhoto}
+                  {...props}
+                >
+                  <img src={icon}></img>
+                </div>
+              ),
+            })}
             {item({
               name: "nickname",
               renderLabel: () => (
                 <>
                   {" "}
-                  <IonImg src={icon}></IonImg>
                   <IonLabel position="floating">暱稱:</IonLabel>
                 </>
               ),
@@ -188,6 +207,7 @@ const UpdateProfile: React.FC = () => {
               </IonButton>
             </IonMenuToggle>
           </IonList>
+          <IonButton onClick={showPhotos}>show</IonButton>
         </IonContent>
       </IonPage>
     </>

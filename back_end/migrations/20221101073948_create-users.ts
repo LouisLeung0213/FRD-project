@@ -13,6 +13,7 @@ export async function up(knex: Knex): Promise<void> {
     table.boolean('is_admin').notNullable().defaultTo(false);
     table.timestamp('joinedTime').notNullable().defaultTo(knex.fn.now());
     table.text('bank_account');
+    table.text('icon_src').notNullable();
   });
 
   await knex.schema.createTableIfNotExists('client_secret', (table) => {
