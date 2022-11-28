@@ -18,10 +18,11 @@ import {
   IonSelectOption,
   IonText,
   IonTextarea,
+  IonTitle,
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import { add, camera, imagesOutline, trash } from "ionicons/icons";
+import { add, arrowRedo, camera, imagesOutline, trash } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import {
   ImageFile,
@@ -86,7 +87,6 @@ const PickPhoto: React.FC = () => {
   const [isBankAccountOk, setIsBankAccountOk] = useState(true);
   const [isPhotoOk, setIsPhotoOk] = useState(true);
   const [percent, setPercent] = useState(0);
-  const [readyToGo, setReadyToGo] = useState(false);
 
   const { state, item } = useIonFormState({
     title: "",
@@ -354,12 +354,16 @@ const PickPhoto: React.FC = () => {
     <IonPage className="PickPhoto">
       <IonHeader>
         <IonToolbar>
-          <div className="ion-text-center">發佈帖子</div>
-          <IonButtons slot="end">
-            <IonButton className="but" id="preview-dialog">
-              發佈
-            </IonButton>
-          </IonButtons>
+          <IonTitle className="ion-text-center">發佈帖子</IonTitle>
+
+          <IonButton
+            className="preview-but"
+            fill="clear"
+            slot="end"
+            id="preview-dialog"
+          >
+            <IonIcon style={{ color: "#fcd92b" }} icon={arrowRedo}></IonIcon>
+          </IonButton>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding" fullscreen={true}>
@@ -387,7 +391,10 @@ const PickPhoto: React.FC = () => {
           <div>
             <div className="photoButtonDiv ">
               <IonButton slot="start" onClick={() => takePhoto()}>
-                <IonIcon icon={imagesOutline}></IonIcon>
+                <IonIcon
+                  style={{ color: "black" }}
+                  icon={imagesOutline}
+                ></IonIcon>
               </IonButton>
               <IonLabel className="label">加入物品照片</IonLabel>
             </div>
@@ -536,7 +543,8 @@ const PickPhoto: React.FC = () => {
                       </li>
                       <br />
                       <li>
-                        請注意收貨時會檢查圖片是否真實反映貨品狀態，請使用近照，否則將貨品上架及不會收取。
+                        請注意收貨時會檢查圖片是否真實反映貨品狀態，請使用近照，否則貨品將不會
+                        上架及不會收取。
                       </li>
                       <br />
                       <li>
@@ -597,7 +605,7 @@ const PickPhoto: React.FC = () => {
               ? item({
                   name: "bankAccount",
                   renderLabel: () => (
-                    <IonLabel position="floating">請輸入銀行戶口:</IonLabel>
+                    <IonLabel position="floating">請輸入銀行戶口</IonLabel>
                   ),
                   renderContent: (props) => <IonInput {...props}></IonInput>,
                 })

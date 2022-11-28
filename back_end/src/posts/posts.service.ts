@@ -59,7 +59,7 @@ export class PostsService {
       if (createPostDto.promotion === 't') {
         promotion_plan = true;
       }
-      console.log({
+      console.log('??', {
         user_id: +createPostDto.user_id,
         post_title: createPostDto.title,
         post_description: createPostDto.description,
@@ -84,7 +84,7 @@ export class PostsService {
         })
         .returning('id');
 
-      console.log(createPost);
+      console.log('createPost', createPost);
       let tags = createPostDto.tags.split('#');
       console.log(tags);
       tags.shift();
@@ -143,6 +143,8 @@ export class PostsService {
         'q_mark',
         'admin_title',
         'admin_comment',
+        'status',
+        'auto_adjust_plan',
         'post_time',
         'nickname',
         'username',
@@ -157,7 +159,27 @@ export class PostsService {
   }
 
   async findOne(id: number) {
-    return `This action returns a #${id} post`;
+    // let postDetail = await this.knex
+    //   .select(
+    //     'user_id',
+    //     'post_title',
+    //     'post_description',
+    //     'original_price',
+    //     'q_mark',
+    //     'admin_title',
+    //     'admin_comment',
+    //     'status',
+    //     'post_time',
+    //     'auto_adjust_plan',
+    //     'nickname',
+    //     'username',
+    //     this.knex.raw('json_agg(src)'),
+    //   )
+    //   .from('posts')
+    //   .join('users', 'user_id', 'users.id')
+    //   .join('images', 'posts.id', 'post_id')
+    //   .where('posts.id', id);
+    return 'postDetail[0]';
   }
 
   async showVerify() {

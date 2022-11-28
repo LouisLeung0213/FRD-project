@@ -1,6 +1,6 @@
 import { Injectable, Module, Res } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { UpdatePaymentDto } from './dto/update-payment.dto';
+import { UpdatePointsDto } from './dto/update-payment.dto';
 import { Stripe } from 'stripe';
 import { env } from 'env';
 import { Knex } from 'knex';
@@ -38,41 +38,177 @@ export class PaymentService {
     }
   }
 
-  async sessionTest(createPaymentDto: CreatePaymentDto) {
-    let amount = createPaymentDto.amount;
+  async capturePaymentIntent(updatePointsDto: UpdatePointsDto) {
+    let required_amount = updatePointsDto.amount;
     const stripe = new Stripe(env.STRIPE_KEY, { apiVersion: '2022-11-15' });
-    const session = await stripe.checkout.sessions.create({
-      line_items: [
-        {
-          price_data: {
-            currency: 'hkd',
-            product_data: {
-              name: 'T-shirt',
-            },
-            unit_amount: amount,
-          },
-          quantity: 1,
-        },
-      ],
-      mode: 'payment',
-      success_url: 'http://localhost:4242/success',
-      cancel_url: 'http://localhost:4242/cancel',
-    });
 
-    console.log('303', session.url);
-    return session.url;
+    let origin_points_result = await this.knex('users')
+      .select('points')
+      .where('id', updatePointsDto.userId);
+
+    let origin_points: number = origin_points_result[0].points;
+    let new_points = origin_points - required_amount;
+    if (new_points < 0) {
+      return { message: "your account didn't have enough money" };
+    }
+
+    let held_intent = await this.knex('client_secret')
+      .select('*')
+      .where('user_id', updatePointsDto.userId)
+      .andWhere('captured', false);
+    //console.log(held_intent);
+    let total_intent_should_capture = [];
+    let amount_should_capture = 0;
+
+    for (let intent of held_intent) {
+      if (required_amount > intent.amount) {
+        amount_should_capture = intent.amount;
+        total_intent_should_capture.push({
+          client_secret_should_capture: `${intent.client_secret}`,
+          amount_should_capture: amount_should_capture,
+        });
+        required_amount = required_amount - intent.amount;
+        console.log(
+          '>:',
+          'required_amount: ',
+          required_amount,
+          'amount_should_capture: ',
+          amount_should_capture,
+          'intent.client_secret:',
+          intent.client_secret,
+        );
+      } else if (required_amount == intent.amount) {
+        amount_should_capture = intent.amount;
+        total_intent_should_capture.push({
+          client_secret_should_capture: `${intent.client_secret}`,
+          amount_should_capture: amount_should_capture,
+        });
+        required_amount = required_amount - intent.amount;
+
+        console.log(
+          '=:',
+          required_amount,
+          amount_should_capture,
+          intent.client_secret,
+        );
+      } else if (required_amount < intent.mount) {
+        amount_should_capture = intent.amount - required_amount;
+
+        total_intent_should_capture.push({
+          client_secret_should_capture: `${intent.client_secret}`,
+          amount_should_capture: amount_should_capture,
+        });
+        required_amount = 0;
+        console.log(
+          '<:',
+          required_amount,
+          amount_should_capture,
+          intent.client_secret,
+        );
+      }
+
+      if (required_amount == 0) {
+        break;
+      }
+    }
+    console.log(total_intent_should_capture);
+
+    let remain_capture = required_amount;
+    for (let intent2 of total_intent_should_capture) {
+      remain_capture = remain_capture - intent2.amount_should_capture;
+      const result = await stripe.paymentIntents.capture(
+        intent2.client_secret_should_capture,
+        {
+          amount_to_capture: intent2.amount_should_capture * 100,
+        },
+      );
+      console.log(result);
+      let captured_result = await this.knex('client_secret')
+        .update('captured', true)
+        .where('client_secret', intent2.client_secret_should_capture);
+
+      if (remain_capture == 0) {
+        break;
+      }
+    }
+
+    let deductResult = await this.knex('users')
+      .update('points', new_points)
+      .where('id', updatePointsDto.userId);
+
+    return {
+      message: 'transaction complete',
+      message2: 'required_amount:',
+      required_amount,
+      message3: 'origin_points:',
+      origin_points,
+      message4: 'new_points',
+      new_points,
+    };
   }
 
   stripeConfig() {
     return { key: env.PUBLIC_STRIPE_KEY };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} payment`;
+  async addPoints(updatePointsDto: UpdatePointsDto) {
+    const { points, userId, clientSecret } = updatePointsDto;
+    let result = await this.knex('users').select('points').where('id', userId);
+    console.log(result[0]);
+    let remainPoints: string = result[0].points;
+    console.log(remainPoints);
+
+    function add(a, b) {
+      return parseInt(a) + parseInt(b);
+    }
+    let totalPoint = add(remainPoints, points);
+
+    console.log('totalAmount::::::', totalPoint);
+    let addPoints = await this.knex('users')
+      .update({
+        points: totalPoint,
+      })
+      .where('id', userId);
+    let client_secret = clientSecret.split('_').slice(0, 2).join('_');
+    let addClientSecret = await this.knex('client_secret').insert({
+      amount: points,
+      client_secret: client_secret,
+      user_id: userId,
+    });
+
+    return {
+      message: `${addPoints} is already add to user: ${userId}`,
+      message2: `${clientSecret} is already add to ${addClientSecret[0]}`,
+    };
   }
 
-  update(id: number, updatePaymentDto: UpdatePaymentDto) {
-    return `This action updates a #${id} payment`;
+  async deductPoints(updatePointsDto: UpdatePointsDto) {
+    const { points, userId, clientSecret } = updatePointsDto;
+    let result = await this.knex('users').select('points').where('id', userId);
+    console.log(result[0]);
+
+    let remainPoints: string = result[0].points;
+    function deduct(a, b) {
+      return parseInt(a) - parseInt(b);
+    }
+    let afterDeductPoint = deduct(remainPoints, points);
+
+    let deductPoints = await this.knex('users')
+      .update({
+        points: afterDeductPoint,
+      })
+      .where('id', userId);
+
+    let client_secret = clientSecret.split('_').slice(0, 2).join('_');
+    let deleteClientSecret = await this.knex('client_secret')
+      .delete(' client_secret', client_secret)
+      .where('user_id', userId);
+
+    return { deleteClientSecret };
+  }
+
+  findOne(id: number) {
+    return `This action returns a #${id} payment`;
   }
 
   remove(id: number) {

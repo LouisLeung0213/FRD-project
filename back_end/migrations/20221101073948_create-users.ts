@@ -9,10 +9,18 @@ export async function up(knex: Knex): Promise<void> {
     table.string('nickname').notNullable();
     table.string('phone').notNullable();
     table.string('email').notNullable();
-    table.string('point').notNullable().defaultTo(0);
+    table.integer('points').notNullable().defaultTo(0);
     table.boolean('is_admin').notNullable().defaultTo(false);
     table.timestamp('joinedTime').notNullable().defaultTo(knex.fn.now());
-    table.integer('bank_account');
+    table.text('bank_account');
+  });
+
+  await knex.schema.createTableIfNotExists('client_secret', (table) => {
+    table.increments('id');
+    table.integer('amount').notNullable();
+    table.string('client_secret').notNullable();
+    table.integer('user_id').notNullable().references('users.id');
+    table.boolean('captured').defaultTo(false);
   });
 
   await knex.schema.createTableIfNotExists('followers', (table) => {
@@ -114,5 +122,6 @@ export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTableIfExists('banned_users');
   await knex.schema.dropTableIfExists('posts');
   await knex.schema.dropTableIfExists('store_location');
+  await knex.schema.dropTableIfExists('client_secret');
   await knex.schema.dropTableIfExists('users');
 }

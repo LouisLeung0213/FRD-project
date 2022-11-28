@@ -1,6 +1,7 @@
-import { IsNumber, isNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, isNumber } from 'class-validator';
 
 export class CreatePaymentDto {
   @IsNumber()
+  @IsNotEmpty()
   amount: number;
 }

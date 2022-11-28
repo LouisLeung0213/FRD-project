@@ -5,6 +5,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { useState, useEffect } from "react";
+import { Root } from "react-dom/client";
 import { useSelector } from "react-redux";
 import { API_ORIGIN, FRONT_ORIGIN } from "../api";
 import { RootState } from "../store";
@@ -17,15 +18,15 @@ const CheckoutForm: React.FC<{
   const elements = useElements();
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [clientSecret, setClientSecret] = useState("");
+  const [clientSecret, setClientSecret] = useState(props.clientSecret);
   const pointsState = useSelector((state: RootState) => state.points);
+  const jwtState = useSelector((state: RootState) => state.jwt);
 
   useEffect(() => {
     if (!stripe) {
       return;
     }
 
-    //TODO
     const clientSecret = props.clientSecret;
     setClientSecret(clientSecret);
 
@@ -60,7 +61,19 @@ const CheckoutForm: React.FC<{
       return;
     }
 
-    const result = stripe.confirmPayment({
+    const res = await fetch(`${API_ORIGIN}/payment/addPoints`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: jwtState.id,
+        points: props.amount,
+        clientSecret: props.clientSecret,
+      }),
+    });
+
+    const result = await stripe.confirmPayment({
       //`Elements` instance that was used to create the Payment Element
       elements,
       confirmParams: {
@@ -68,17 +81,16 @@ const CheckoutForm: React.FC<{
       },
     });
 
-    const res = fetch(`${API_ORIGIN}/users/addPoints`, {
+    const failPayment = await fetch(`${API_ORIGIN}/payment/deductPoints`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        userId: jwtState.id,
         points: props.amount,
+        clientSecret: props.clientSecret,
       }),
-    });
-    Promise.all([result, res]).catch((error) => {
-      console.log(error);
     });
   };
 

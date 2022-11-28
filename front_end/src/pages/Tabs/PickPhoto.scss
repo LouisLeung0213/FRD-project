@@ -1,88 +1,77 @@
-/* .photoList {
-} */
-
-.description {
-  height: 40vh;
-  width: 100vw;
-  overflow-y: auto;
-}
-
-.but {
-  color: #4170bd;
-  font-size: large;
-}
-
-.buttonList {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.ion-padding-top {
-  padding-top: 16px;
-}
-
-ion-modal#qualityPlan-modal {
-  --width: fit-content;
-  --min-width: 250px;
-  --height: fit-content;
-  --border-radius: 6px;
-  --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
-}
-
-ion-modal#qualityPlan-modal h1 {
-  margin: 20px 20px 10px 20px;
-}
-
-ion-modal#qualityPlan-modal ion-icon {
-  margin-right: 6px;
-
-  width: 48px;
-  height: 48px;
-
-  padding: 4px 0;
-
-  color: #aaaaaa;
-}
-
-ion-modal#qualityPlan-modal .wrapper {
-  margin-bottom: 10px;
-}
-
-ion-modal#preview-modal {
-  --width: 90vw;
-  --min-width: 250px;
-  --height: 60vh;
-  --border-radius: 6px;
-  --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
-  --display: flex;
-  --align-items: center;
-}
-
-ion-modal#preview-modal h1 {
-  margin: 20px 20px 10px 20px;
-}
-
-ion-modal#preview-modal ion-icon {
-  margin-right: 6px;
-
-  width: 48px;
-  height: 48px;
-
-  padding: 4px 0;
-
-  color: #aaaaaa;
-}
-
-ion-modal#preview-modal .wrapper {
-  margin-bottom: 10px;
-}
-
 .PickPhoto {
+  .description {
+    height: 40vh;
+    width: 100vw;
+    overflow-y: auto;
+  }
+  .preview-but {
+    font-size: 1.25rem;
+  }
+
+  ion-modal#qualityPlan-modal {
+    --width: fit-content;
+    --min-width: 250px;
+    --height: fit-content;
+    --border-radius: 6px;
+    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+  }
+
+  ion-modal#qualityPlan-modal h1 {
+    margin: 20px 20px 10px 20px;
+  }
+
+  ion-modal#qualityPlan-modal ion-icon {
+    margin-right: 6px;
+
+    width: 48px;
+    height: 48px;
+
+    padding: 4px 0;
+
+    color: red;
+  }
+
+  ion-modal#qualityPlan-modal .wrapper {
+    margin-bottom: 10px;
+  }
+
+  ion-modal#preview-modal {
+    --width: fit-content;
+    --min-width: 250px;
+    --height: fit-content;
+    --border-radius: 6px;
+    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+  }
+
+  ion-modal#preview-modal h1 {
+    margin: 20px 20px 10px 20px;
+  }
+
+  ion-modal#preview-modal ion-icon {
+    margin-right: 6px;
+
+    width: 48px;
+    height: 48px;
+
+    padding: 4px 0;
+
+    color: #aaaaaa;
+  }
+
+  ion-modal#preview-modal .wrapper {
+    margin-bottom: 10px;
+  }
+
   .photoButtonDiv {
     display: flex;
     align-items: center;
     width: 50%;
     justify-content: space-between;
+    margin-left: 0.5rem;
+  }
+
+  .label {
+    font-size: 1.15rem;
   }
   .slide {
     width: 100%;

@@ -2,22 +2,16 @@ import {
   IonButton,
   IonButtons,
   IonContent,
-  IonDatetime,
   IonHeader,
   IonIcon,
-  IonImg,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
-  IonListHeader,
   IonMenu,
   IonMenuButton,
   IonMenuToggle,
   IonPage,
-  IonRouterOutlet,
-  IonSplitPane,
-  IonTabButton,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -27,26 +21,15 @@ import {
   ribbonOutline,
   searchOutline,
   lockOpenOutline,
-  lockOpenSharp,
   paperPlaneOutline,
-  paperPlaneSharp,
-  peopleCircleOutline,
   personOutline,
-  personSharp,
   receiptOutline,
-  receiptSharp,
-  trashOutline,
-  trashSharp,
-  logInOutline,
   logOutOutline,
   walletOutline,
 } from "ionicons/icons";
 
-import { Preferences } from "@capacitor/preferences";
-import "./Profile.css";
+import "./Profile.scss";
 import icon from "../../image/usericon.png";
-
-import { Route, useLocation } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import moment from "moment";
@@ -55,6 +38,7 @@ import { RootState } from "../../store";
 import React from "react";
 import { API_ORIGIN } from "../../api";
 import { getValue, removeValue } from "../../service/localStorage";
+import { updatePoints } from "../../redux/points/actions";
 
 const Profile: React.FC<{ user: number | null }> = (props: {
   user: number | null;
@@ -62,40 +46,64 @@ const Profile: React.FC<{ user: number | null }> = (props: {
   let jwtState = useSelector((state: RootState) => state.jwt);
 
   let pointsState = useSelector((state: RootState) => state.points);
-  let [points, setPoints] = useState(pointsState);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const getProfile = async () => {
-      let userId = await getValue("userId");
-      let res = await fetch(`${API_ORIGIN}/profiles/${userId}`);
-
-      let result = await res.json();
-      console.log("123L:", result);
-      setNickname(result.nickname);
-      setUsername(result.username);
-      setPoints(result.points);
-      setJoinTime(moment(result.joinedTime).format("MMMM Do YYYY"));
-      dispatch(
-        updateJwt({
-          jwtKey: jwtState.jwtKey,
-          id: result.id,
-          username: result.username,
-          nickname: result.nickname,
-          phone: result.phone,
-          email: result.email,
-          joinedTime: result.joinedTime,
-          isAdmin: result.is_admin,
-        })
-      );
-    };
-
-    getProfile();
-  }, []);
-  //jwtKey, reduxNickname
   let [nickname, setNickname] = useState(jwtState.nickname);
   let [username, setUsername] = useState(jwtState.username);
   let [joinTime, setJoinTime] = useState(jwtState.joinedTime);
+  let [points, setPoints] = useState(pointsState);
+  const dispatch = useDispatch();
+
+  //jwtKey, reduxNickname
+
+  const getOwnProfile = async () => {
+    let userId = await getValue("userId");
+
+    let res = await fetch(`${API_ORIGIN}/profiles/${userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    let result = await res.json();
+    console.log("123L:", result);
+    setNickname(result.nickname);
+    setUsername(result.username);
+    setPoints(result.points);
+    setJoinTime(moment(result.joinedTime).format("MMMM Do YYYY"));
+    dispatch(
+      updateJwt({
+        jwtKey: jwtState.jwtKey,
+        id: result.id,
+        username: result.username,
+        nickname: result.nickname,
+        phone: result.phone,
+        email: result.email,
+        joinedTime: result.joinedTime,
+        isAdmin: result.is_admin,
+      })
+    );
+    console.log("here:", result);
+    dispatch(
+      updatePoints({
+        points: result.points,
+      })
+    );
+  };
+
+  const getOtherProfile = async () => {
+    //TODO
+  };
+
+  useEffect(() => {
+    if (props.user === jwtState.id) {
+      getOwnProfile();
+    } else {
+      getOtherProfile();
+    }
+
+    console.log("pointsState: ", pointsState.points);
+  }, []);
+  //jwtKey, reduxNickname
 
   function destroyUserInfo() {
     removeValue("Jwt");
@@ -182,8 +190,8 @@ const Profile: React.FC<{ user: number | null }> = (props: {
             <div className="personalIconContainer">
               <img src={icon} className="personalIcon" />
             </div>
-            <div>
-              <div className="personalInfo">
+            <div className="personalInfo">
+              <div className="personalInfo_name">
                 <IonLabel>{nickname}</IonLabel>
               </div>
               <IonLabel>可用點數: {pointsState.points}</IonLabel>
@@ -192,24 +200,26 @@ const Profile: React.FC<{ user: number | null }> = (props: {
               </div>
             </div>
           </div>
-          <IonList>
-            <IonItem>
-              <IonIcon icon={heartOutline} className="chat" />
-            </IonItem>
-            <IonItem>
-              <IonIcon icon={chatbubblesOutline} className="chat" />
-            </IonItem>
-            <IonItem>
-              <IonIcon icon={ribbonOutline} className="chat" />
-            </IonItem>
-          </IonList>
+          <div className="">
+            <IonList>
+              <IonItem>
+                <IonIcon icon={heartOutline} className="chat" />
+              </IonItem>
+              <IonItem>
+                <IonIcon icon={chatbubblesOutline} className="chat" />
+              </IonItem>
+              <IonItem>
+                <IonIcon icon={ribbonOutline} className="chat" />
+              </IonItem>
+            </IonList>
+          </div>
 
           <IonItem className="search">
             <IonIcon className="searchIcon" icon={searchOutline} />
             <IonInput placeholder="搜尋此賣家的產品"></IonInput>
           </IonItem>
           <IonItem className="portfolioContainer">
-            <IonLabel>My product</IonLabel>
+            <IonLabel>拍賣產品</IonLabel>
           </IonItem>
 
           <IonButton onClick={func}>Show the redux state</IonButton>

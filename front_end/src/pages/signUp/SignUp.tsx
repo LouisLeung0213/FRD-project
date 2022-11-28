@@ -94,14 +94,14 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
       console.log("result.statusCode: ", result.statusCode);
 
       if (result.statusCode == 401) {
-        alert(JSON.stringify("有人用左呢個帳號名喇, 改過啦", null, 2));
+        alert(JSON.stringify("帳號名稱已被使用", null, 2));
         return;
       } else if (result.statusCode == 400) {
-        alert(JSON.stringify("你個email都唔拿係email嚟既", null, 2));
+        alert(JSON.stringify("請輸入有效EMAIL", null, 2));
         return;
       } else if (result.statusCode == 402) {
         console.log(result.statusCode);
-        alert(JSON.stringify("你個電話號碼用過啦喎", null, 2));
+        alert(JSON.stringify("電話號碼已被使用", null, 2));
         return;
       } else {
         console.log("ready to send OTP");
@@ -202,7 +202,7 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
           })}
           {!isUsernameOk ? (
             <div className="ion-text-center">
-              <IonText color="warning">帳號呢？?</IonText>
+              <IonText color="warning">請輸入有效帳號</IonText>
             </div>
           ) : null}
           {item({
@@ -214,7 +214,7 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
           })}
           {!isPasswordOk ? (
             <div className="ion-text-center">
-              <IonText color="warning">密碼呢？?</IonText>
+              <IonText color="warning">請輸入有效密碼</IonText>
             </div>
           ) : null}
 
@@ -229,7 +229,7 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
           })}
           {!isRePasswordOk ? (
             <div className="ion-text-center">
-              <IonText color="warning">密碼confirm呢??</IonText>
+              <IonText color="warning">請輸入有效密碼</IonText>
             </div>
           ) : null}
 
@@ -242,7 +242,7 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
           })}
           {!isNicknameOk ? (
             <div className="ion-text-center">
-              <IonText color="warning">暱稱呢？?</IonText>
+              <IonText color="warning">請輸入有效暱稱</IonText>
             </div>
           ) : null}
 
@@ -261,7 +261,7 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
           })}
           {!isPhoneOk ? (
             <div className="ion-text-center">
-              <IonText color="warning">電話號碼呢？?</IonText>
+              <IonText color="warning">請輸入有效電話號碼</IonText>
             </div>
           ) : null}
 
@@ -276,7 +276,7 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
           })}
           {!isEmailOk ? (
             <div className="ion-text-center">
-              <IonText color="warning">電子郵件呢？?</IonText>
+              <IonText color="warning">請輸入有效電子郵件</IonText>
             </div>
           ) : null}
           <IonButton

@@ -136,7 +136,7 @@ const UpdateProfile: React.FC = () => {
             })}
             <div className="ion-text-center">
               {!isNicknameOk ? (
-                <IonText color="warning">暱稱呢？?</IonText>
+                <IonText color="warning">請輸入有效暱稱</IonText>
               ) : null}
             </div>
             {item({
@@ -150,7 +150,7 @@ const UpdateProfile: React.FC = () => {
             })}
             <div className="ion-text-center">
               {!isPhoneOk ? (
-                <IonText color="warning">電話號碼呢？?</IonText>
+                <IonText color="warning">請輸入有效電話號碼</IonText>
               ) : null}
             </div>
             {item({
@@ -172,7 +172,7 @@ const UpdateProfile: React.FC = () => {
             })}
             <div className="ion-text-center">
               {!isEmailOk ? (
-                <IonText color="warning">電子郵件呢???</IonText>
+                <IonText color="warning">請輸入有效電子郵件</IonText>
               ) : null}
             </div>
             <IonMenuToggle>

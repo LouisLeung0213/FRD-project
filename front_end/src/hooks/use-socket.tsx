@@ -1,12 +1,35 @@
-import { useEffect, useMemo } from "react";
-import { connect } from "socket.io-client";
+import { useEffect, useMemo, useState } from "react";
+import { connect, Socket } from "socket.io-client";
 import { WS_ORIGIN } from "../api";
 
-export function useSocket() {
-  const socket = useMemo(() => connect(WS_ORIGIN), []);
+let socket: Socket;
+
+export function useSocket(initFn: (socket: Socket) => () => void) {
+  console.log("what is socket", socket);
+  if (!socket) {
+    console.log(WS_ORIGIN);
+    socket = connect(WS_ORIGIN);
+  }
+
   useEffect(() => {
+    let teardown: () => void;
+    let isDestroyed = false;
+
+    if (socket.connected) {
+      teardown = initFn(socket);
+    } else {
+      socket.on("connect", () => {
+        if (!isDestroyed) {
+          teardown = initFn(socket);
+        }
+      });
+    }
     return () => {
-      socket.close();
+      console.log("clean up useSocket");
+      isDestroyed = true;
+      teardown?.();
     };
-  }, [socket]);
+  }, [initFn]);
+
+  return socket;
 }

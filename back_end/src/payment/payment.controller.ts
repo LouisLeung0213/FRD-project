@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { UpdatePaymentDto } from './dto/update-payment.dto';
+import { UpdatePointsDto } from './dto/update-payment.dto';
 
 @Controller('payment')
 export class PaymentController {
@@ -21,11 +21,9 @@ export class PaymentController {
     return this.paymentService.paymentIntent(createPaymentDto);
   }
 
-  @Post('create-checkout-session')
-  async sessionTest(@Body() createPaymentDto: CreatePaymentDto, @Res() res) {
-    let url = await this.paymentService.sessionTest(createPaymentDto);
-
-    return res.status(303).redirect(url);
+  @Patch('capturePaymentIntent')
+  async capturePaymentIntent(@Body() updatePointsDto: UpdatePointsDto) {
+    return await this.paymentService.capturePaymentIntent(updatePointsDto);
   }
 
   @Get('stripeConfig')
@@ -38,9 +36,18 @@ export class PaymentController {
     return this.paymentService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePaymentDto: UpdatePaymentDto) {
-    return this.paymentService.update(+id, updatePaymentDto);
+  @Patch('addPoints')
+  addPoints(@Body() updatePointsDto: UpdatePointsDto) {
+    console.log('hi');
+    console.log(updatePointsDto);
+    return this.paymentService.addPoints(updatePointsDto);
+  }
+
+  @Patch('deductPoints')
+  deductPoints(@Body() updatePointsDto: UpdatePointsDto) {
+    console.log('bye');
+    console.log(updatePointsDto);
+    return this.paymentService.deductPoints(updatePointsDto);
   }
 
   @Delete(':id')

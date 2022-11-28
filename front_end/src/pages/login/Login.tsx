@@ -139,7 +139,7 @@ const Login: React.FC = () => {
           })}
           <div className="ion-text-center">
             {!isUsernameOk ? (
-              <IonText color="warning">帳號呢？?</IonText>
+              <IonText color="warning">請輸入有效帳號</IonText>
             ) : null}
           </div>
 
@@ -160,7 +160,7 @@ const Login: React.FC = () => {
           })}
           <div className="ion-text-center">
             {!isPasswordOk ? (
-              <IonText color="warning">密碼呢???</IonText>
+              <IonText color="warning">請輸入有效密碼</IonText>
             ) : null}
           </div>
           <IonButton
@@ -174,7 +174,7 @@ const Login: React.FC = () => {
           </IonButton>
           <div className="ion-text-center">
             {!isUserCorrect ? (
-              <IonText color="warning">冇人識你喎...</IonText>
+              <IonText color="warning">帳號或密碼錯誤</IonText>
             ) : null}
           </div>
           <IonButton
