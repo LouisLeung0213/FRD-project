@@ -110,7 +110,7 @@ const MainPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent fullscreen>
+      <IonContent fullscreen={true}>
         <IonList>
           <div slot="content">
             <IonSearchbar
