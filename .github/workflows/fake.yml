@@ -56,10 +56,10 @@ jobs:
           cd ~/.ssh
           chmod 400 id_rsa
           ssh toystory whoami
-      - name: restore docker image
-        uses: actions/download-artifact@v3
-        with:
-          name: docker-files
+      # - name: restore docker image
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: docker-files
       - name: check docker image
         run: |
           file fake.img
