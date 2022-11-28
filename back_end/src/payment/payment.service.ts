@@ -182,6 +182,31 @@ export class PaymentService {
     };
   }
 
+  async deductPoints(updatePointsDto: UpdatePointsDto) {
+    const { points, userId, clientSecret } = updatePointsDto;
+    let result = await this.knex('users').select('points').where('id', userId);
+    console.log(result[0]);
+
+    let remainPoints: string = result[0].points;
+    function deduct(a, b) {
+      return parseInt(a) - parseInt(b);
+    }
+    let afterDeductPoint = deduct(remainPoints, points);
+
+    let deductPoints = await this.knex('users')
+      .update({
+        points: afterDeductPoint,
+      })
+      .where('id', userId);
+
+    let client_secret = clientSecret.split('_').slice(0, 2).join('_');
+    let deleteClientSecret = await this.knex('client_secret')
+      .delete(' client_secret', client_secret)
+      .where('user_id', userId);
+
+    return { deleteClientSecret };
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} payment`;
   }

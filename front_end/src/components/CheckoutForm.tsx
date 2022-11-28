@@ -61,28 +61,7 @@ const CheckoutForm: React.FC<{
       return;
     }
 
-    const result = stripe.confirmPayment({
-      //`Elements` instance that was used to create the Payment Element
-      elements,
-      confirmParams: {
-        return_url: `${FRONT_ORIGIN}/tab/Profile`,
-      },
-    });
-
-    // if (
-    //   result.error.type === "card_error" ||
-    //   result.error.type === "validation_error"
-    // ) {
-    //   setMessage(
-    //     result.error.message ? result.error.message : "validation_error"
-    //   );
-    // } else {
-    //   setMessage("An unexpected error occurred.");
-    // }
-
-    //TODO not WORK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // if (!result.error) {
-    const res = fetch(`${API_ORIGIN}/payment/addPoints`, {
+    const res = await fetch(`${API_ORIGIN}/payment/addPoints`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -94,10 +73,25 @@ const CheckoutForm: React.FC<{
       }),
     });
 
-    Promise.all([result, res]).catch((error) => {
-      console.log(error);
+    const result = await stripe.confirmPayment({
+      //`Elements` instance that was used to create the Payment Element
+      elements,
+      confirmParams: {
+        return_url: `${FRONT_ORIGIN}/tab/Profile`,
+      },
     });
-    // }
+
+    const failPayment = await fetch(`${API_ORIGIN}/payment/deductPoints`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: jwtState.id,
+        points: props.amount,
+        clientSecret: props.clientSecret,
+      }),
+    });
   };
 
   return (

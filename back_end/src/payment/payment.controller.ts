@@ -43,6 +43,13 @@ export class PaymentController {
     return this.paymentService.addPoints(updatePointsDto);
   }
 
+  @Patch('deductPoints')
+  deductPoints(@Body() updatePointsDto: UpdatePointsDto) {
+    console.log('bye');
+    console.log(updatePointsDto);
+    return this.paymentService.deductPoints(updatePointsDto);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.paymentService.remove(+id);
