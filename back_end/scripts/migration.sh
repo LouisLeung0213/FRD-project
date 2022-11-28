@@ -1,6 +1,7 @@
+#!/bin/bash
 set -e
 set -o pipefail
 
-npx knex migrate:down
-npx knex migrate:up
-npx knex seed:run
+yarn knex migrate:down
+yarn knex migrate:up
+yarn knex seed:run
