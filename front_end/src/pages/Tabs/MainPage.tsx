@@ -101,9 +101,14 @@ const MainPage: React.FC = () => {
                     key={post.id}
                     onClick={() => openPost(post)}
                   >
-                    <h2
+                    <h4 className="nameText">{post.nickname}</h4>
+                    <h3
                       className="ion-padding title"
-                      style={{ color: "#fcd92b" }}
+                      style={{
+                        color: "#fcd92b",
+                        margin: "0px",
+                        padding: "0px",
+                      }}
                     >
                       {!post.admin_title ? post.post_title : post.admin_title}
 
@@ -114,11 +119,9 @@ const MainPage: React.FC = () => {
                           icon={checkmarkDoneCircleOutline}
                         ></IonIcon>
                       ) : null}
-                    </h2>
+                    </h3>
                     <img src={post.json_agg[0]}></img>
-
                     <IonLabel>現價 ${post.original_price}</IonLabel>
-                    <IonLabel>{post.nickname}</IonLabel>
                   </div>
                 );
               })}

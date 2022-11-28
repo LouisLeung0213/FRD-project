@@ -22,7 +22,14 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import { add, arrowRedo, camera, imagesOutline, trash } from "ionicons/icons";
+import {
+  add,
+  arrowRedo,
+  camera,
+  images,
+  imagesOutline,
+  trash,
+} from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import {
   ImageFile,
@@ -267,7 +274,7 @@ const PickPhoto: React.FC = () => {
     let result = await res.json();
     console.log(result);
     if (result.status == 200) {
-      router.push(routes.tab.mainPage, "forward", "replace");
+      router.push(routes.tab.mainPage);
       console.log("done");
     }
 
@@ -390,12 +397,12 @@ const PickPhoto: React.FC = () => {
 
           <div>
             <div className="photoButtonDiv ">
-              <IonButton slot="start" onClick={() => takePhoto()}>
-                <IonIcon
-                  style={{ color: "black" }}
-                  icon={imagesOutline}
-                ></IonIcon>
-              </IonButton>
+              <IonIcon
+                style={{ color: "#fcd92b" }}
+                size="large"
+                icon={images}
+              ></IonIcon>
+
               <p className="label">加入圖片</p>
             </div>
             <div>
@@ -475,11 +482,13 @@ const PickPhoto: React.FC = () => {
                 ></IonTextarea>
               ),
             })}
-            <div className="ion-text-center">
-              {!isDescriptionOk ? (
+
+            {!isDescriptionOk ? (
+              <div className="ion-text-center">
                 <IonText color="danger">請輸入產品描述</IonText>
-              ) : null}
-            </div>
+              </div>
+            ) : null}
+
             <br />
             {item({
               name: "tags",
@@ -511,7 +520,7 @@ const PickPhoto: React.FC = () => {
                 <IonText color="danger">請輸入有效底價</IonText>
               ) : null}
             </div>
-            <br />
+
             <br />
             {item({
               name: "qualityPlan",
@@ -573,33 +582,32 @@ const PickPhoto: React.FC = () => {
                 </IonButton>
               </div>
             </IonModal>
-            {state.qualityPlan === true ? (
-              item({
-                name: "location",
-                renderLabel: () => (
-                  <IonLabel position="floating">請選擇存放於門市:</IonLabel>
-                ),
-                renderContent: (props) => (
-                  <IonSelect {...props}>
-                    {locationSelections.map((location) => (
-                      <IonSelectOption key={location} value={location}>
-                        {location}
-                      </IonSelectOption>
-                    ))}
-                  </IonSelect>
-                ),
-              })
-            ) : (
-              <div></div>
-            )}
-            <div className="ion-text-center">
-              {!isLocationOk ? (
-                <>
-                  <IonText color="danger">請選擇門市</IonText>
-                  <br />
-                </>
-              ) : null}
-            </div>
+            {state.qualityPlan === true
+              ? item({
+                  name: "location",
+                  renderLabel: () => (
+                    <IonLabel position="floating">請選擇存放於門市:</IonLabel>
+                  ),
+                  renderContent: (props) => (
+                    <IonSelect {...props}>
+                      {locationSelections.map((location) => (
+                        <IonSelectOption key={location} value={location}>
+                          {location}
+                        </IonSelectOption>
+                      ))}
+                    </IonSelect>
+                  ),
+                })
+              : null}
+
+            {!isLocationOk ? (
+              <>
+                <div className="ion-text-center">
+                  <IonText color="danger">請選擇門市</IonText>{" "}
+                </div>
+                <br />
+              </>
+            ) : null}
 
             {state.qualityPlan === true
               ? item({

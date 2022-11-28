@@ -1,7 +1,11 @@
 .postContainer {
-  margin-top: 8px;
-  margin-bottom: 8px;
-  border: 0.15rem #808080 solid;
+  margin-top: 20px;
+  margin-bottom: 50px;
+
   display: flex;
   flex-direction: column;
+}
+
+.nameText {
+  margin: 0px;
 }
