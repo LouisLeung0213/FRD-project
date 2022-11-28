@@ -22,7 +22,7 @@ import { Socket } from "socket.io-client";
 import { API_ORIGIN } from "../../api";
 import { useSocket } from "../../hooks/use-socket";
 import Post, { PostObj } from "../Posts/Posts";
-import { checkmarkDoneCircleOutline } from "ionicons/icons";
+import { checkmarkDoneCircleOutline, personOutline } from "ionicons/icons";
 import "./MainPage.css";
 
 const MainPage: React.FC = () => {
@@ -123,31 +123,39 @@ const MainPage: React.FC = () => {
                     key={post.id}
                     onClick={() => openPost(post)}
                   >
-                    <h4 className="nameText">{post.nickname}</h4>
-                    <h3
-                      className="ion-padding title"
-                      style={{
-                        color: "#fcd92b",
-                        margin: "0px",
-                        padding: "0px",
-                      }}
-                    >
-                      {!post.admin_title ? post.post_title : post.admin_title}
-
-                      {post.q_mark ? (
+                    <div className="nameContainer">
+                      <h4 className="nameText">
                         <IonIcon
-                          className="q_mark_icon"
-                          style={{ color: "#3880ff" }}
-                          icon={checkmarkDoneCircleOutline}
+                          className="personIcon"
+                          icon={personOutline}
                         ></IonIcon>
-                      ) : null}
-                    </h3>
+                        {post.nickname}
+                      </h4>
+                      <h3
+                        className="ion-padding title"
+                        style={{
+                          color: "#fcd92b",
+                          margin: "0px",
+                          padding: "0px",
+                        }}
+                      >
+                        {!post.admin_title ? post.post_title : post.admin_title}
+
+                        {post.q_mark ? (
+                          <IonIcon
+                            className="q_mark_icon"
+                            style={{ color: "#3880ff" }}
+                            icon={checkmarkDoneCircleOutline}
+                          ></IonIcon>
+                        ) : null}
+                      </h3>
+                    </div>
                     <img src={post.json_agg[0]}></img>
 
                     {!post.max ? (
-                      <IonLabel>現價：${post.original_price}</IonLabel>
+                      <h3>現價：${post.original_price}</h3>
                     ) : (
-                      <IonLabel>現價：${post.max}</IonLabel>
+                      <h3>現價：${post.max}</h3>
                     )}
                   </div>
                 );

@@ -8,4 +8,13 @@
 
 .nameText {
   margin: 0px;
+  color: #8f7d7d;
+}
+
+.nameContainer {
+  margin: 10px 0px;
+}
+
+.personIcon {
+  margin-right: 5px;
 }
