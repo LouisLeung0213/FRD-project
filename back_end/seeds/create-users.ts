@@ -18,6 +18,7 @@ export async function seed(knex: Knex): Promise<void> {
         email: '123@gmail.com',
         points: 0,
         is_admin: true,
+        icon_src: "",
       },
       {
         username: 'louis',
@@ -27,6 +28,7 @@ export async function seed(knex: Knex): Promise<void> {
         email: '123@gmail.com',
         points: 0,
         is_admin: true,
+        icon_src: "",
       },
       {
         username: 'scott',
@@ -36,6 +38,7 @@ export async function seed(knex: Knex): Promise<void> {
         email: '123@gmail.com',
         points: 0,
         is_admin: true,
+        icon_src: "",
       },
     ]);
 

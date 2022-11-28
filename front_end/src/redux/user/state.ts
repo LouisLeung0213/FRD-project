@@ -8,6 +8,7 @@ export interface UpdateJwtState {
   joinedTime: string | null;
   isAdmin: boolean;
   bankAccount: string | null;
+  icon_src: string | null;
 }
 
 export const initialState: UpdateJwtState = {
@@ -20,4 +21,5 @@ export const initialState: UpdateJwtState = {
   joinedTime: null,
   isAdmin: false,
   bankAccount: null,
+  icon_src: null
 };
