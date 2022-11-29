@@ -31,7 +31,7 @@ import {
 import "./Profile.scss";
 import icon from "../../image/usericon.png";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import moment from "moment";
 import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
@@ -40,6 +40,8 @@ import { API_ORIGIN } from "../../api";
 import { getValue, removeValue } from "../../service/localStorage";
 import { updatePoints } from "../../redux/points/actions";
 import { useParams } from "react-router";
+import { useSocket } from "../../hooks/use-socket";
+import { Socket } from "socket.io-client";
 import { routes } from "../../routes";
 
 const Profile: React.FC<{ user: number | null }> = (props: {
