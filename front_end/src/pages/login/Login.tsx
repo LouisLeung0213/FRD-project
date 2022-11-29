@@ -98,7 +98,7 @@ const Login: React.FC = () => {
           email: userInfo.email,
           joinedTime: userInfo.joinedTime,
           isAdmin: userInfo.is_admin,
-          bankAccount: userInfo.bank_account,
+          bankAccount: null,
           icon_name: userInfo.icon_name,
           icon_src: userInfo.icon_src,
         })
