@@ -137,7 +137,6 @@ const PickPhoto: React.FC = () => {
 
     formData.append("startPrice", data.startPrice);
     formData.append("location", data.location);
-    formData.append("bankAccount", data.bankAccount);
 
     formData.append("qualityPlan", data.qualityPlan ? "t" : "f");
     formData.append("promotion", data.promotion ? "t" : "f");
@@ -609,7 +608,7 @@ const PickPhoto: React.FC = () => {
               </>
             ) : null}
 
-            {state.qualityPlan === true
+            {/* {state.qualityPlan === true
               ? item({
                   name: "bankAccount",
                   renderLabel: () => (
@@ -623,8 +622,8 @@ const PickPhoto: React.FC = () => {
               !state.bankAccount.match(/^\d+$/) &&
               state.bankAccount !== "" ? (
                 <IonText color="danger">請輸入有效銀行戶口</IonText>
-              ) : null}
-            </div>
+              ) : null} 
+            </div> */}
             <br />
             {item({
               name: "promotion",

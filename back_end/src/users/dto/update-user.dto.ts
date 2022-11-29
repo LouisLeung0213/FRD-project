@@ -15,6 +15,14 @@ export class UpdateUserInfoDto {
   @IsString()
   @IsNotEmpty()
   email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  bank_name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  bank_account: string;
 }
 
 export class UpdatePasswordDto {

@@ -18,7 +18,7 @@ export async function seed(knex: Knex): Promise<void> {
         email: '123@gmail.com',
         points: 0,
         is_admin: true,
-        icon_src: "",
+        icon_src: '',
       },
       {
         username: 'louis',
@@ -28,7 +28,7 @@ export async function seed(knex: Knex): Promise<void> {
         email: '123@gmail.com',
         points: 0,
         is_admin: true,
-        icon_src: "",
+        icon_src: '',
       },
       {
         username: 'scott',
@@ -38,7 +38,26 @@ export async function seed(knex: Knex): Promise<void> {
         email: '123@gmail.com',
         points: 0,
         is_admin: true,
-        icon_src: "",
+        icon_src: '',
+      },
+    ]);
+
+    await txn('bank').insert([
+      { bank_name: '恆生銀行' },
+      {
+        bank_name: '匯豐銀行',
+      },
+      {
+        bank_name: '中國銀行',
+      },
+      {
+        bank_name: '渣打銀行',
+      },
+      {
+        bank_name: '花旗銀行',
+      },
+      {
+        bank_name: '大新銀行',
       },
     ]);
 

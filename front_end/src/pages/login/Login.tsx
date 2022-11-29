@@ -99,11 +99,11 @@ const Login: React.FC = () => {
           joinedTime: userInfo.joinedTime,
           isAdmin: userInfo.is_admin,
           bankAccount: userInfo.bank_account,
-          icon_src: userInfo.icon_src
+          icon_src: userInfo.icon_src,
         })
       );
       // history.push(`/tab/Profile`);
-      router.push(routes.tab.profile, "forward", "replace");
+      router.push(routes.tab.profile(":id"), "forward", "replace");
     } else {
       setIsUserCorrect(false);
       // alert(JSON.stringify("冇人識你喎...", null, 2));
@@ -119,7 +119,7 @@ const Login: React.FC = () => {
     <IonPage>
       <IonRouterOutlet>
         <Route
-          path={routes.tab.profile}
+          path={routes.tab.profile(":id")}
           exact={true}
           render={() => <Profile user={jwtState.id} />}
         />

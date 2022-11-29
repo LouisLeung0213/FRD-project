@@ -15,24 +15,22 @@ import {
   IonMenuToggle,
   IonPage,
   IonRouterOutlet,
+  IonSelect,
+  IonSelectOption,
   IonText,
   IonTitle,
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useIonFormState } from "react-use-ionic-form";
 import { API_ORIGIN } from "../../api";
 import { useImageFiles } from "../../hooks/usePhotoGallery";
 
-// import ExploreContainer from "../../components/ExploreContainer";
-// import ProfileContainer from "../../components/ProfileContainer";
 import icon from "../../image/usericon.png";
 import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
-
-// import "./Profile.css";
 
 const UpdateProfile: React.FC = () => {
   const jwtState = useSelector((state: RootState) => state.jwt);
@@ -45,6 +43,29 @@ const UpdateProfile: React.FC = () => {
   let [isNicknameOk, setIsNicknameOk] = useState(true);
   let [isPhoneOk, setIsPhoneOk] = useState(true);
   let [isEmailOk, setIsEmailOk] = useState(true);
+  let [banks, setBanks] = useState([]);
+  async function getBankSelect() {
+    let result = await fetch(`${API_ORIGIN}/information/banks`, {
+      method: "GET",
+    });
+    let banks = await result.json();
+    let bankArr: any = [];
+
+    for (let bank of banks) {
+      console.log(bank.bank_name);
+      bankArr.push(bank.bank_name);
+    }
+    return bankArr;
+  }
+
+  useEffect(() => {
+    async function get() {
+      let bank = await getBankSelect();
+      console.log(bank);
+      setBanks(bank);
+    }
+    get();
+  }, []);
 
   async function updateInfo(data: any) {
     if (data.nickname.length == 0) {
@@ -78,24 +99,30 @@ const UpdateProfile: React.FC = () => {
             nickname: state.nickname,
             phone: state.phone,
             email: state.email,
+            bank_name: state.bank_name,
+            bank_account: state.bank_account,
           }),
         }
       );
       let json = await res.json();
-      dispatch(
-        updateJwt({
-          jwtKey: jwtState.jwtKey,
-          id: jwtState.id,
-          username: jwtState.username,
-          nickname: state.nickname,
-          phone: state.phone,
-          email: state.email,
-          joinedTime: jwtState.joinedTime,
-          isAdmin: jwtState.isAdmin,
-          bankAccount: jwtState.bankAccount,
-          icon_src: jwtState.icon_src,
-        })
-      );
+
+      if (json) {
+        dispatch(
+          updateJwt({
+            jwtKey: jwtState.jwtKey,
+            id: jwtState.id,
+            username: jwtState.username,
+            nickname: state.nickname,
+            phone: state.phone,
+            email: state.email,
+            joinedTime: jwtState.joinedTime,
+            isAdmin: jwtState.isAdmin,
+            bankAccount: jwtState.bankAccount,
+            icon_src: jwtState.icon_src,
+          })
+        );
+      }
+
       console.log("reduxState: ", jwtState);
       // router.push(routes.tab.profile, "forward", "pop");
       router.goBack();
@@ -110,12 +137,14 @@ const UpdateProfile: React.FC = () => {
     nickname: jwtState.nickname,
     phone: jwtState.phone,
     email: jwtState.email,
+    bank_name: "",
+    bank_account: "",
   });
 
   function showPhotos() {
     console.log("photos: ", photos);
   }
-
+  console.log("bankAccount: :: ", jwtState.bankAccount);
   return (
     <>
       <IonPage id="main-content">
@@ -146,7 +175,6 @@ const UpdateProfile: React.FC = () => {
               name: "nickname",
               renderLabel: () => (
                 <>
-                  {" "}
                   <IonLabel position="floating">暱稱:</IonLabel>
                 </>
               ),
@@ -195,6 +223,39 @@ const UpdateProfile: React.FC = () => {
                 <IonText color="warning">請輸入有效電子郵件</IonText>
               ) : null}
             </div>
+            <br />
+            <div className="ion-padding">
+              <IonLabel>已儲存的銀行戶口</IonLabel>
+              {jwtState.bankAccount?.map((item) => {
+                return <IonItem>{item}</IonItem>;
+              })}
+            </div>
+            <br />
+            {item({
+              name: "bank_name",
+              renderLabel: () => (
+                <IonLabel position="floating">新增銀行:</IonLabel>
+              ),
+              renderContent: (props) => (
+                <IonSelect {...props}>
+                  {banks.map((bank: any) => (
+                    <IonSelectOption key={bank} value={bank}>
+                      {bank}
+                    </IonSelectOption>
+                  ))}
+                </IonSelect>
+              ),
+            })}
+            {item({
+              name: "bank_account",
+              renderLabel: () => (
+                <IonLabel position="floating">請輸入戶口號碼:</IonLabel>
+              ),
+              renderContent: (props) => (
+                <IonInput type="text" {...props}></IonInput>
+              ),
+            })}
+
             <IonMenuToggle>
               <IonButton
                 className="ion-margin-top"
