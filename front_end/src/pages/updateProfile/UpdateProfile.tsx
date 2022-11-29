@@ -34,16 +34,33 @@ import { useDispatch, useSelector } from "react-redux";
 import { useIonFormState } from "react-use-ionic-form";
 import { API_ORIGIN } from "../../api";
 import { useImageFiles } from "../../hooks/usePhotoGallery";
-
-import icon from "../../image/usericon.png";
 import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
 import styles from "./UpdateProfile.module.scss";
+import storage from "../../firebaseConfig";
+import icon from "../../image/new_usericon.jpeg";
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  getStorage,
+  deleteObject,
+} from "firebase/storage";
 
 const UpdateProfile: React.FC = () => {
   const jwtState = useSelector((state: RootState) => state.jwt);
+  console.log("jwtState.icon_src: ", jwtState.icon_src);
   const { photos, takePhoto } = useImageFiles();
-  const pointsStates = useSelector((state: RootState) => state.points);
+  const [showedIcon, setShowedIcon] = useState(
+    jwtState.icon_src!.split("$1").join("?") as string
+  );
+  useEffect(() => {
+    let photosLength = photos.length;
+    if (photosLength > 0) {
+      let lastPhoto = photos[photosLength - 1];
+      setShowedIcon(lastPhoto.dataUrl);
+    }
+  }, [photos]);
 
   const router = useIonRouter();
   const dispatch = useDispatch();
@@ -53,6 +70,8 @@ const UpdateProfile: React.FC = () => {
   let [isEmailOk, setIsEmailOk] = useState(true);
   let [banks, setBanks] = useState([]) as any;
   let [savedBanks, setSavedBanks] = useState() as any;
+
+  let [percent, setPercent] = useState(0);
 
   async function getBankSelect() {
     let result = await fetch(`${API_ORIGIN}/information/banks`, {
@@ -142,8 +161,79 @@ const UpdateProfile: React.FC = () => {
     } else {
       setIsEmailOk(true);
     }
-    console.log("state: ", state);
+
+    function findMIMEType(ext: string) {
+      if (ext == "image/jpeg") {
+        return {
+          contentType: "image/jpeg",
+        };
+      } else if (ext == "image/png") {
+        return {
+          contentType: "image/jpeg",
+        };
+      } else if (ext == "image/webp") {
+        return {
+          contentType: "image/jpeg",
+        };
+      } else {
+        alert("格式錯誤");
+        return;
+      }
+    }
+
+    let now = Date.now();
+
+    function uploadBytesResumablePromise(photo: any): Promise<string> {
+      return new Promise((resolve, reject) => {
+        findMIMEType(photo.file.type);
+        let name = `/icons/${photo.name}+${jwtState.id}+${now}`;
+        const storageRef = ref(storage, name);
+        const uploadTask = uploadBytesResumable(storageRef, photo.file);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const percent = Math.round(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            );
+
+            // update progress
+            setPercent(percent);
+          },
+          (err) => console.log(err),
+          () => {
+            // download url
+            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+              resolve(url);
+            });
+          }
+        );
+      });
+    }
+
+    function deleteImage(icon_name: string) {
+      const storage = getStorage();
+
+      // Create a reference to the file to delete
+      const desertRef = ref(storage, icon_name);
+
+      // Delete the file
+      deleteObject(desertRef)
+        .then(() => {
+          // File deleted successfully
+        })
+        .catch((error) => {
+          // Uh-oh, an error occurred!
+        });
+    }
     try {
+      let photosLength = photos.length;
+      let lastPhoto = photos[photosLength - 1];
+      if (jwtState.icon_name !== "/default/new_usericon.jpeg+1+1669717126192") {
+        deleteImage(jwtState.icon_name!);
+      }
+      let icon_url = await uploadBytesResumablePromise(lastPhoto);
+      let icon_name = `/icons/${lastPhoto.name}+${jwtState.id}+${now}`;
+
       let res = await fetch(
         `${API_ORIGIN}/users/updateUserInfo/${jwtState.id}`,
         {
@@ -155,6 +245,8 @@ const UpdateProfile: React.FC = () => {
             nickname: state.nickname,
             phone: state.phone,
             email: state.email,
+            icon_name: icon_name,
+            icon_src: icon_url,
             bank_name: state.bank_name,
             bank_account: state.bank_account,
           }),
@@ -174,6 +266,7 @@ const UpdateProfile: React.FC = () => {
             joinedTime: jwtState.joinedTime,
             isAdmin: jwtState.isAdmin,
             bankAccount: jwtState.bankAccount,
+            icon_name: icon_name,
             icon_src: jwtState.icon_src,
           })
         );
@@ -189,7 +282,6 @@ const UpdateProfile: React.FC = () => {
   }
 
   const { state, item } = useIonFormState({
-    icon: jwtState.icon_src,
     nickname: jwtState.nickname,
     phone: jwtState.phone,
     email: jwtState.email,
@@ -198,7 +290,10 @@ const UpdateProfile: React.FC = () => {
   });
 
   function showPhotos() {
+    let photosLength = photos.length;
     console.log("photos: ", photos);
+    console.log("photos length: ", photosLength);
+    console.log("last photo: ", photos[photosLength - 1]);
   }
   console.log("bankAccount: :: ", jwtState.bankAccount);
   return (
@@ -213,20 +308,16 @@ const UpdateProfile: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent fullscreen={true}>
+          <div
+            style={{
+              margin: "20px",
+              justifyContent: "center",
+              display: "flex",
+            }}
+          >
+            <img onClick={takePhoto} src={showedIcon}></img>
+          </div>
           <IonList>
-            {item({
-              name: "nickname",
-              renderContent: (props) => (
-                <div
-                  style={{ padding: "0px" }}
-                  className="icon"
-                  onClick={takePhoto}
-                  {...props}
-                >
-                  <img src={icon}></img>
-                </div>
-              ),
-            })}
             {item({
               name: "nickname",
               renderLabel: () => (

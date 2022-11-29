@@ -112,6 +112,7 @@ const Package: React.FC = () => {
         joinedTime: userInfo.userInfo.joinedTime,
         isAdmin: userInfo.userInfo.is_admin,
         bankAccount: userInfo.bankInfo.bank_account,
+        icon_name: userInfo.userInfo.icon_name,
         icon_src: userInfo.userInfo.icon_src,
       })
     );

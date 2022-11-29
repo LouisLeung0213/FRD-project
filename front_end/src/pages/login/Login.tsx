@@ -99,6 +99,7 @@ const Login: React.FC = () => {
           joinedTime: userInfo.joinedTime,
           isAdmin: userInfo.is_admin,
           bankAccount: userInfo.bank_account,
+          icon_name: userInfo.icon_name,
           icon_src: userInfo.icon_src,
         })
       );
@@ -111,7 +112,7 @@ const Login: React.FC = () => {
   };
 
   const { state, item } = useIonFormState({
-    username: "louis",
+    username: "caleb",
     password: "123",
   });
 

@@ -12,7 +12,10 @@ export async function up(knex: Knex): Promise<void> {
     table.integer('points').notNullable().defaultTo(0);
     table.boolean('is_admin').notNullable().defaultTo(false);
     table.timestamp('joinedTime').notNullable().defaultTo(knex.fn.now());
-    table.text('icon_src').notNullable();
+    table
+      .text('icon_name')
+      .defaultTo('/default/new_usericon.jpeg+1+1669717126192');
+    table.text('icon_src').defaultTo("https://firebasestorage.googleapis.com/v0/b/test-6e6e8.appspot.com/o/default%2Fnew_usericon.jpeg%2B1%2B1669717126192?alt=media&token=aad5a75f-811c-48a2-80d1-673cef3e5d3d");
     table.text('firebase_token');
   });
   await knex.schema.createTableIfNotExists('bank', (table) => {
@@ -121,9 +124,25 @@ export async function up(knex: Knex): Promise<void> {
     table.text('src').notNullable();
     table.integer('post_id').notNullable().references('posts.id');
   });
+
+  await knex.schema.createTableIfNotExists('chatrooms', (table) => {
+    table.increments('id');
+    table.integer('post_id').notNullable().references('posts.id');
+    table.integer('room_user_id').notNullable().references('users.id');
+  });
+
+  await knex.schema.createTableIfNotExists('chat_histories', (table) => {
+    table.increments('id');
+    table.integer('chatroom_id').notNullable().references('chatrooms.id');
+    table.text('content').notNullable();
+    table.integer('sender_id').notNullable().references('users.id');
+    table.timestamp('send_time').defaultTo(knex.fn.now());
+  });
 }
 
 export async function down(knex: Knex): Promise<void> {
+  await knex.schema.dropTableIfExists('chat_histories');
+  await knex.schema.dropTableIfExists('chatrooms');
   await knex.schema.dropTableIfExists('search_histories');
   await knex.schema.dropTableIfExists('followers');
   await knex.schema.dropTableIfExists('images');

@@ -17,7 +17,7 @@ export let routes = {
   storages: "/Storages",
   trade: "/Trade",
   blacklist: "/Blacklist",
-  chatrooms: "/Chatrooms",
+  chatroomPage: "/ChatroomPage",
   chatroom: (id: string | number) => `/chatroom/${id}`,
   post: (id: string | number) => `/post/${id}`,
   payment: "/Payment",

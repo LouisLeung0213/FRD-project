@@ -17,7 +17,7 @@ import {
 } from "@ionic/react";
 import {
   heartOutline,
-  chatbubblesOutline,
+  chatbubbleOutline,
   ribbonOutline,
   searchOutline,
   lockOpenOutline,
@@ -46,11 +46,16 @@ const Profile: React.FC<{ user: number | null }> = (props: {
   user: number | null;
 }) => {
   let jwtState = useSelector((state: RootState) => state.jwt);
+  let icon_src = "";
+  if (jwtState.icon_src) {
+    icon_src = jwtState.icon_src.split("$1").join("?");
+  }
   let pointsState = useSelector((state: RootState) => state.points);
 
   let [nickname, setNickname] = useState(jwtState.nickname);
   let [username, setUsername] = useState(jwtState.username);
   let [joinTime, setJoinTime] = useState(jwtState.joinedTime);
+  let [showedIcon, setShowedIcon] = useState(icon_src as string);
   let [points, setPoints] = useState(pointsState.points);
   const dispatch = useDispatch();
   let params: any = useParams();
@@ -60,10 +65,6 @@ const Profile: React.FC<{ user: number | null }> = (props: {
 
   const getOwnProfile = async () => {
     let userId = await getValue("userId");
-    console.log(jwtState.nickname);
-    console.log(jwtState.username);
-    console.log(pointsState.points);
-    console.log(jwtState.joinedTime);
     setNickname(jwtState.nickname);
     setUsername(jwtState.username);
     setPoints(pointsState.points);
@@ -80,9 +81,9 @@ const Profile: React.FC<{ user: number | null }> = (props: {
     } else {
       getOtherProfile();
     }
+    setShowedIcon(icon_src);
+  }, [icon_src, jwtState, pointsState]);
 
-    console.log("pointsState: ", pointsState.points);
-  }, [jwtState, pointsState]);
   //jwtKey, reduxNickname
 
   function destroyUserInfo() {
@@ -98,6 +99,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
         joinedTime: null,
         isAdmin: false,
         bankAccount: null,
+        icon_name: null,
         icon_src: null,
       })
     );
@@ -107,8 +109,6 @@ const Profile: React.FC<{ user: number | null }> = (props: {
     console.log(jwtState);
     console.log(pointsState);
   }
-  console.log(jwtState.username, username);
-
   return (
     <>
       <IonMenu contentId="profile">
@@ -171,7 +171,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
         <IonContent fullscreen>
           <div className="personalInfoContainer">
             <div className="personalIconContainer">
-              <img src={icon} className="personalIcon" />
+              <img src={showedIcon} className="personalIcon" />
             </div>
             <div className="personalInfo">
               <div className="personalInfo_name">
@@ -189,7 +189,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
                 <IonIcon icon={heartOutline} className="chat" />
               </IonItem>
               <IonItem>
-                <IonIcon icon={chatbubblesOutline} className="chat" />
+                <IonIcon icon={chatbubbleOutline} className="chat" />
               </IonItem>
               <IonItem>
                 <IonIcon icon={ribbonOutline} className="chat" />
