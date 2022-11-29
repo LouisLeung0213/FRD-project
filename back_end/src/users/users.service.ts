@@ -61,6 +61,8 @@ export class UsersService {
           'email',
           'joinedTime',
           'is_admin',
+          'icon_name',
+          'icon_src',
         )
         .from('users')
         .where('username', username);
@@ -77,6 +79,8 @@ export class UsersService {
           email: user.email,
           joinedTime: user.joinedTime,
           isAdmin: user.is_admin,
+          icon_name: user.icon_name,
+          icon_src: user.icon_src
         };
       } else {
         throw new HttpException('Wrong username or password', 401);
@@ -97,6 +101,8 @@ export class UsersService {
             nickname: updateUserInfoDto.nickname,
             phone: updateUserInfoDto.phone,
             email: updateUserInfoDto.email,
+            icon_name: updateUserInfoDto.icon_name,
+            icon_src: updateUserInfoDto.icon_src
           })
           .returning('id');
 

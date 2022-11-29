@@ -98,6 +98,7 @@ const App: React.FC = () => {
         joinedTime: userInfo.joinedTime,
         isAdmin: userInfo.is_admin,
         bankAccount: userInfo.bank_account,
+        icon_name: userInfo.icon_name,
         icon_src: userInfo.icon_src
       })
     );
@@ -159,7 +160,6 @@ const App: React.FC = () => {
   let profileHref;
   let jwtState = useSelector((state: RootState) => state.jwt);
 
-  console.log("redux ID : ", jwtState.id);
   if (!jwtState.id) {
     profileHref = "/tab/Login";
   }

@@ -5,7 +5,6 @@ import { WS_ORIGIN } from "../api";
 let socket: Socket;
 
 export function useSocket(initFn: (socket: Socket) => () => void) {
-  console.log("what is socket", socket);
   if (!socket) {
     console.log(WS_ORIGIN);
     socket = connect(WS_ORIGIN);

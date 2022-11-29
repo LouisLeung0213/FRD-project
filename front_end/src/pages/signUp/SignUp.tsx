@@ -171,7 +171,8 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
           joinedTime: userInfo.joinedTime,
           isAdmin: userInfo.is_admin,
           bankAccount: userInfo.bank_account,
-          icon_src: userInfo.icon_src
+          icon_name: null,
+          icon_src: null
         })
       );
 

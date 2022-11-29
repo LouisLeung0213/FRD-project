@@ -44,12 +44,16 @@ const Profile: React.FC<{ user: number | null }> = (props: {
   user: number | null;
 }) => {
   let jwtState = useSelector((state: RootState) => state.jwt);
-
+  let icon_src = "";
+  if (jwtState.icon_src) {
+    icon_src = jwtState.icon_src.split("$1").join("?");
+  }
   let pointsState = useSelector((state: RootState) => state.points);
   let [nickname, setNickname] = useState(jwtState.nickname);
   let [username, setUsername] = useState(jwtState.username);
   let [joinTime, setJoinTime] = useState(jwtState.joinedTime);
   let [points, setPoints] = useState(pointsState);
+  let [showedIcon, setShowedIcon] = useState(icon_src as string);
   const dispatch = useDispatch();
 
   //jwtKey, reduxNickname
@@ -65,26 +69,24 @@ const Profile: React.FC<{ user: number | null }> = (props: {
     });
 
     let result = await res.json();
-    console.log("123L:", result);
     setNickname(result.nickname);
     setUsername(result.username);
     setPoints(result.points);
     setJoinTime(moment(result.joinedTime).format("MMMM Do YYYY"));
-    dispatch(
-      updateJwt({
-        jwtKey: jwtState.jwtKey,
-        id: result.id,
-        username: result.username,
-        nickname: result.nickname,
-        phone: result.phone,
-        email: result.email,
-        joinedTime: result.joinedTime,
-        isAdmin: result.is_admin,
-        bankAccount: result.bank_account,
-        icon_src: result.icon_src
-      })
-    );
-    console.log("here:", result);
+    // dispatch(
+    //   updateJwt({
+    //     jwtKey: jwtState.jwtKey,
+    //     id: result.id,
+    //     username: result.username,
+    //     nickname: result.nickname,
+    //     phone: result.phone,
+    //     email: result.email,
+    //     joinedTime: result.joinedTime,
+    //     isAdmin: result.is_admin,
+    //     bankAccount: result.bank_account,
+    //     // icon_src: result.icon_src
+    //   })
+    // );
     dispatch(
       updatePoints({
         points: result.points,
@@ -102,9 +104,8 @@ const Profile: React.FC<{ user: number | null }> = (props: {
     } else {
       getOtherProfile();
     }
-
-    console.log("pointsState: ", pointsState.points);
-  }, []);
+    setShowedIcon(icon_src);
+  }, [icon_src]);
   //jwtKey, reduxNickname
 
   function destroyUserInfo() {
@@ -120,6 +121,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
         joinedTime: null,
         isAdmin: false,
         bankAccount: null,
+        icon_name: null,
         icon_src: null,
       })
     );
@@ -128,8 +130,6 @@ const Profile: React.FC<{ user: number | null }> = (props: {
   function func() {
     console.log(jwtState);
   }
-  console.log(jwtState.username, username);
-
   return (
     <>
       <IonMenu contentId="profile">
@@ -192,7 +192,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
         <IonContent fullscreen>
           <div className="personalInfoContainer">
             <div className="personalIconContainer">
-              <img src={icon} className="personalIcon" />
+              <img src={showedIcon} className="personalIcon" />
             </div>
             <div className="personalInfo">
               <div className="personalInfo_name">

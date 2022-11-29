@@ -13,7 +13,10 @@ export async function up(knex: Knex): Promise<void> {
     table.boolean('is_admin').notNullable().defaultTo(false);
     table.timestamp('joinedTime').notNullable().defaultTo(knex.fn.now());
     table.text('bank_account');
-    table.text('icon_src').notNullable();
+    table
+      .text('icon_name')
+      .defaultTo('/default/new_usericon.jpeg+1+1669717126192');
+    table.text('icon_src').defaultTo("https://firebasestorage.googleapis.com/v0/b/test-6e6e8.appspot.com/o/default%2Fnew_usericon.jpeg%2B1%2B1669717126192?alt=media&token=aad5a75f-811c-48a2-80d1-673cef3e5d3d");
   });
 
   await knex.schema.createTableIfNotExists('client_secret', (table) => {
