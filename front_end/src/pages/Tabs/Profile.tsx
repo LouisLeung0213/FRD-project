@@ -42,6 +42,7 @@ import { updatePoints } from "../../redux/points/actions";
 import { useParams } from "react-router";
 import { useSocket } from "../../hooks/use-socket";
 import { Socket } from "socket.io-client";
+import { routes } from "../../routes";
 
 const Profile: React.FC<{ user: number | null }> = (props: {
   user: number | null;
@@ -120,7 +121,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
         </IonHeader>
         <IonContent fullscreen={true}>
           <IonList>
-            <IonItem routerLink="/AccountSetting">
+            <IonItem routerLink={routes.menu.accountSetting}>
               <IonIcon icon={personOutline} slot="start" />
               <IonLabel>設定個人帳號</IonLabel>
             </IonItem>

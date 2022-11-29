@@ -17,15 +17,38 @@ export class InformationService {
     return banks;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} information`;
+  async savedBank(id: number) {
+    let banks_id = await this.knex
+      .select('*')
+      .from('bank_account')
+      .where('user_id', id);
+    let bank_name_arr = [];
+    console.log('banks_id', banks_id);
+    if (banks_id.length > 0) {
+      for (let i = 0; i < banks_id.length; i++) {
+        let bank_name = await this.knex
+          .select('bank_name')
+          .from('bank')
+          .where('id', banks_id[i].bank_id);
+        console.log(bank_name[0].bank_name);
+
+        bank_name_arr.push(bank_name[0]);
+      }
+    }
+
+    return { bank_name_arr, banks_id };
   }
 
   update(id: number, updateInformationDto: UpdateInformationDto) {
     return `This action updates a #${id} information`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} information`;
+  async deleteBank(accountShouldDelete: number) {
+    let result = await this.knex
+      .delete()
+      .from('bank_account')
+      .where('bank_account', accountShouldDelete);
+
+    return { message: 'account delete successfully' };
   }
 }
