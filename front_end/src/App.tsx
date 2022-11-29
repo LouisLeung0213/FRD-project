@@ -42,6 +42,7 @@ import {
   personCircleOutline,
   options,
   planetOutline,
+  chatbubblesOutline,
 } from "ionicons/icons";
 
 import MainPage from "./pages/Tabs/MainPage";
@@ -66,13 +67,13 @@ import PickPhoto from "./pages/Tabs/PickPhoto";
 import Storages from "./pages/Storages/Storages";
 import Blacklist from "./pages/Blacklist/Blacklist";
 
-import ChatListTab from "./pages/Chatroom/Chatroom";
 import ChatroomPage from "./pages/Chatroom/ChatroomPage";
 
 import Package from "./pages/Payment/Package";
 import { getValue } from "./service/localStorage";
 import { API_ORIGIN } from "./api";
 import { updateJwt } from "./redux/user/actions";
+import Chatroom from "./pages/Chatroom/Chatroom";
 
 setupIonicReact();
 
@@ -207,16 +208,16 @@ const App: React.FC = () => {
             render={() => <Blacklist />}
           />
 
-          {/* chatrooms demo */}
           <Route
-            path={routes.chatrooms}
+            path={routes.chatroomPage}
             exact={true}
-            render={() => <ChatListTab />}
+            render={() => <ChatroomPage />}
           />
-
-          <Route path={routes.chatroom(":id")}>
-            <ChatroomPage />
-          </Route>
+          <Route
+            path={routes.chatroom(":id")}
+            exact={true}
+            render={() => <Chatroom />}
+          />
           {/* 
           <Route
             path={routes.payment}
@@ -280,8 +281,8 @@ const App: React.FC = () => {
                 ) : null}
 
                 <IonTabButton tab="Notices" href="/tab/Notices">
-                  <IonIcon icon={notificationsOutline} />
-                  <IonLabel>通知</IonLabel>
+                  <IonIcon icon={chatbubblesOutline} />
+                  <IonLabel>聊天</IonLabel>
                 </IonTabButton>
                 <IonTabButton tab="Profile" href={profileHref}>
                   <IonIcon icon={personCircleOutline} />

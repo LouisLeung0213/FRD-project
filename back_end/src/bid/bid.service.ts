@@ -26,7 +26,7 @@ export class BidService {
       if (originalPrice[0].original_price > +createBidDto.bidPrice) {
         return {
           status: '09',
-          message: 'invaild bid due to bidPrice lower than originalPrice',
+          message: 'invalid bid due to bidPrice lower than originalPrice',
         };
       } else {
         let bid = await this.knex('bid_records')

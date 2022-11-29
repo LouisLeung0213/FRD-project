@@ -17,7 +17,7 @@ import {
 } from "@ionic/react";
 import {
   heartOutline,
-  chatbubblesOutline,
+  chatbubbleOutline,
   ribbonOutline,
   searchOutline,
   lockOpenOutline,
@@ -55,7 +55,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
   //jwtKey, reduxNickname
 
   const getOwnProfile = async () => {
-    let userId = await getValue("userId");
+    let userId: any = await getValue("userId");
 
     let res = await fetch(`${API_ORIGIN}/profiles/${userId}`, {
       method: "GET",
@@ -208,7 +208,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
                 <IonIcon icon={heartOutline} className="chat" />
               </IonItem>
               <IonItem>
-                <IonIcon icon={chatbubblesOutline} className="chat" />
+                <IonIcon icon={chatbubbleOutline} className="chat" />
               </IonItem>
               <IonItem>
                 <IonIcon icon={ribbonOutline} className="chat" />
