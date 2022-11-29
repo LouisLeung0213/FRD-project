@@ -88,7 +88,7 @@ const App: React.FC = () => {
     let res = await fetch(`${API_ORIGIN}/profiles/${userId}`);
 
     let userInfo = await res.json();
-    console.log("userInfo: ", userInfo.userInfo);
+    console.log("userInfo: ", userInfo);
     dispatch(
       updateJwt({
         jwtKey: token,
