@@ -86,7 +86,36 @@ const Login: React.FC = () => {
         },
       });
       let userInfo = await res2.json();
+
       setValue("userId", userInfo.id);
+
+      let res3 = await fetch(
+        `${API_ORIGIN}/information/savedBank/${userInfo.id}`
+      );
+
+      let json = await res3.json();
+      let savedBankArr: any = [];
+
+      console.log("here!", json);
+      if (json.banks_id.length > 0) {
+        let savedBankNameArr: any = json.bank_name_arr;
+        let savedBankAccount: any = json.banks_id;
+        console.log(
+          "!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+          savedBankNameArr,
+          savedBankAccount
+        );
+
+        for (let i = 0; i < json.bank_name_arr.length; i++) {
+          console.log("saved bank:", json[i]);
+          savedBankArr.push({
+            bankName: savedBankNameArr[i].bank_name,
+            bankAccount: savedBankAccount[i].bank_account,
+          });
+        }
+        console.log("saved bank Array 2222222222:", savedBankArr);
+      }
+
       console.log("userInfo: ", userInfo);
       dispatch(
         updateJwt({
@@ -98,7 +127,7 @@ const Login: React.FC = () => {
           email: userInfo.email,
           joinedTime: userInfo.joinedTime,
           isAdmin: userInfo.is_admin,
-          bankAccount: null,
+          bankAccount: savedBankArr ? savedBankArr : null,
           icon_name: userInfo.icon_name,
           icon_src: userInfo.icon_src,
         })
