@@ -366,7 +366,7 @@ const PickPhoto: React.FC = () => {
             className={styles.preview_but}
             fill="clear"
             slot="end"
-            id={styles.preview_dialog}
+            id="preview_dialog"
           >
             <IonIcon style={{ color: "#fcd92b" }} icon={arrowRedo}></IonIcon>
           </IonButton>
@@ -377,7 +377,7 @@ const PickPhoto: React.FC = () => {
           <IonModal
             id={styles.preview_modal}
             ref={previewModal}
-            trigger={styles.preview_dialog}
+            trigger="preview_dialog"
           >
             <IonContent className="ion-padding">
               <ul>
