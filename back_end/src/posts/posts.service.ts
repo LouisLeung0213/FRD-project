@@ -39,20 +39,20 @@ export class PostsService {
           .returning('id');
         locationId = location[0].id;
 
-        let checkBankAccount = await this.knex('users')
-          .select('bank_account')
-          .where('id', createPostDto.user_id)
-          .returning('bank_account');
+        // let checkBankAccount = await this.knex('users')
+        //   .select('bank_account')
+        //   .where('id', createPostDto.user_id)
+        //   .returning('bank_account');
 
-        console.log(checkBankAccount);
+        // console.log(checkBankAccount);
 
-        if (!checkBankAccount[0].bankAccount) {
-          await this.knex('users')
-            .update({
-              bank_account: createPostDto.bankAccount,
-            })
-            .where('id', createPostDto.user_id);
-        }
+        // if (!checkBankAccount[0].bankAccount) {
+        //   await this.knex('users')
+        //     .update({
+        //       bank_account: createPostDto.bankAccount,
+        //     })
+        //     .where('id', createPostDto.user_id);
+        // }
       }
 
       let promotion_plan = false;

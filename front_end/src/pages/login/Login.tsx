@@ -5,6 +5,7 @@ import {
   IonCheckbox,
   IonContent,
   IonHeader,
+  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
@@ -31,6 +32,7 @@ import { useIonFormState } from "react-use-ionic-form";
 import { API_ORIGIN } from "../../api";
 import { Preferences } from "@capacitor/preferences";
 import { setValue } from "../../service/localStorage";
+import { chevronBackOutline } from "ionicons/icons";
 
 const Login: React.FC = () => {
   const jwtState = useSelector((state: RootState) => state.jwt);
@@ -97,10 +99,12 @@ const Login: React.FC = () => {
           joinedTime: userInfo.joinedTime,
           isAdmin: userInfo.is_admin,
           bankAccount: userInfo.bank_account,
+          icon_name: userInfo.icon_name,
+          icon_src: userInfo.icon_src,
         })
       );
       // history.push(`/tab/Profile`);
-      router.push(routes.tab.profile, "forward", "replace");
+      router.push(routes.tab.profile(":id"), "forward", "replace");
     } else {
       setIsUserCorrect(false);
       // alert(JSON.stringify("冇人識你喎...", null, 2));
@@ -108,7 +112,7 @@ const Login: React.FC = () => {
   };
 
   const { state, item } = useIonFormState({
-    username: "louis",
+    username: "caleb",
     password: "123",
   });
 
@@ -116,20 +120,17 @@ const Login: React.FC = () => {
     <IonPage>
       <IonRouterOutlet>
         <Route
-          path={routes.tab.profile}
+          path={routes.tab.profile(":id")}
           exact={true}
           render={() => <Profile user={jwtState.id} />}
         />
       </IonRouterOutlet>
       <IonHeader>
         <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton></IonBackButton>
-          </IonButtons>
           <IonTitle>登入</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent fullscreen={true}>
         <IonList className="ion-padding">
           {item({
             name: "username",

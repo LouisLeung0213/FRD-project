@@ -61,6 +61,8 @@ export class UsersService {
           'email',
           'joinedTime',
           'is_admin',
+          'icon_name',
+          'icon_src',
         )
         .from('users')
         .where('username', username);
@@ -77,6 +79,8 @@ export class UsersService {
           email: user.email,
           joinedTime: user.joinedTime,
           isAdmin: user.is_admin,
+          icon_name: user.icon_name,
+          icon_src: user.icon_src
         };
       } else {
         throw new HttpException('Wrong username or password', 401);
@@ -90,6 +94,11 @@ export class UsersService {
     try {
       let users = await this.knex.select('id').from('users').where('id', id);
 
+      let bank_id = await this.knex
+        .select('id')
+        .from('bank')
+        .where('bank_name', updateUserInfoDto.bank_name);
+
       if (users.length > 0) {
         let userId = await this.knex('users')
           .where('id', id)
@@ -97,11 +106,20 @@ export class UsersService {
             nickname: updateUserInfoDto.nickname,
             phone: updateUserInfoDto.phone,
             email: updateUserInfoDto.email,
+            icon_name: updateUserInfoDto.icon_name,
+            icon_src: updateUserInfoDto.icon_src
           })
           .returning('id');
 
+        let addBank = await this.knex('bank_account').insert({
+          bank_account: updateUserInfoDto.bank_account,
+          user_id: id,
+          bank_id: bank_id[0].id,
+        });
+
         return {
           userId,
+          addBank,
         };
       } else {
         throw new HttpException('No such user', 401);

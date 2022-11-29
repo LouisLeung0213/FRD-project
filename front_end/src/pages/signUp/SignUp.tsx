@@ -171,6 +171,8 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
           joinedTime: userInfo.joinedTime,
           isAdmin: userInfo.is_admin,
           bankAccount: userInfo.bank_account,
+          icon_name: null,
+          icon_src: null
         })
       );
 
@@ -192,7 +194,7 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
 
   return (
     <IonPage>
-      <IonContent fullscreen>
+      <IonContent fullscreen={true}>
         <IonList className="ion-padding">
           {item({
             name: "username",

@@ -15,10 +15,15 @@ export class ProfilesService {
         'id',
         'is_admin',
         'points',
-        'bank_account',
       )
       .from('users')
       .where('id', userId);
-    return userInfo[0];
+
+    let bankInfo = await this.knex
+      .select('*')
+      .from('bank_account')
+      .where('user_id', userId);
+
+    return { userInfo: userInfo[0], bankInfo: bankInfo };
   }
 }

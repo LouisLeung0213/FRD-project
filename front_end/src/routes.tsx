@@ -3,7 +3,7 @@ export let routes = {
     mainPage: "/tab/MainPage",
     pickPhoto: "/tab/PickPhoto",
     notices: "/tab/Notices",
-    profile: "/tab/Profile",
+    profile: (id: string | number) => `/tab/Profile/${id}`,
     login: "/tab/Login",
     adminPanel: "/tab/AdminPanel",
   },

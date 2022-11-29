@@ -1,0 +1,47 @@
+.postContainer {
+  margin-top: 20px;
+  margin-bottom: 50px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.nameText {
+  margin: 0px;
+  color: #8f7d7d;
+}
+
+.priceContainer {
+  margin: 5px 20px;
+}
+
+.nameContainer {
+  margin: 5px 20px;
+}
+.personIcon {
+  margin-right: 5px;
+}
+
+.slide {
+  width: 100%;
+  height: 24rem;
+  margin: 0.3rem 0 0.3rem 0;
+}
+
+.image_slide {
+  width: 50%;
+  height: 15rem;
+}
+
+.q_mark_icon {
+  margin-left: 10px;
+  padding-top: 3px;
+  color: #3880ff;
+}
+
+.title {
+  color: #fcd92b;
+  margin: 0px;
+  padding: 0px;
+  align-items: baseline;
+}

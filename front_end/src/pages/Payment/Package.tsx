@@ -28,7 +28,9 @@ import { Router } from "workbox-routing";
 import { API_ORIGIN } from "../../api";
 import CheckoutForm from "../../components/CheckoutForm";
 import { updatePoints } from "../../redux/points/actions";
+import { updateJwt } from "../../redux/user/actions";
 import { routes } from "../../routes";
+import { getValue } from "../../service/localStorage";
 import { RootState } from "../../store";
 import "./Package.css";
 
@@ -90,18 +92,34 @@ const Package: React.FC = () => {
   }
   //get remain points of account
   async function getUserPoints() {
+    let token = await getValue("Jwt");
     let res = await fetch(`${API_ORIGIN}/profiles/${jwtState.id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
-    let result = await res.json();
-    console.log(result);
+    let userInfo = await res.json();
+    console.log(userInfo);
+    dispatch(
+      updateJwt({
+        jwtKey: token,
+        id: userInfo.userInfo.id,
+        username: userInfo.userInfo.username,
+        nickname: userInfo.userInfo.nickname,
+        phone: userInfo.userInfo.phone,
+        email: userInfo.userInfo.email,
+        joinedTime: userInfo.userInfo.joinedTime,
+        isAdmin: userInfo.userInfo.is_admin,
+        bankAccount: userInfo.bankInfo.bank_account,
+        icon_name: userInfo.userInfo.icon_name,
+        icon_src: userInfo.userInfo.icon_src,
+      })
+    );
 
     dispatch(
       updatePoints({
-        points: result.points,
+        points: userInfo.userInfo.points,
       })
     );
   }
