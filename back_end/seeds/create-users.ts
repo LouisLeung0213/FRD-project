@@ -57,7 +57,6 @@ export async function seed(knex: Knex): Promise<void> {
         bank_name: '大新銀行',
       },
     ])
-    .returning('icon_src');
 
     await txn('store_location').insert([
       { location: 'notAvailable' },
