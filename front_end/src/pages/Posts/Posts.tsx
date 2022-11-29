@@ -8,6 +8,7 @@ import {
   IonText,
   IonCard,
   IonContent,
+  useIonRouter,
 } from "@ionic/react";
 import { useCallback, useEffect, useState } from "react";
 import moment from "moment";
@@ -16,8 +17,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { useSocket } from "../../hooks/use-socket";
 import { Socket } from "socket.io-client";
-import { checkmarkDoneCircleOutline } from "ionicons/icons";
+import { chatbubbleOutline, checkmarkDoneCircleOutline } from "ionicons/icons";
 import "./Posts.css";
+import { routes } from "../../routes";
 
 export type PostObj = {
   admin_comment: "";
@@ -45,6 +47,7 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
   const [highestBidder, setHighestBidder] = useState("");
   const [nowPrice, setNowPrice] = useState(0);
   let numReg = /^\d+$/;
+  const router = useIonRouter();
 
   const socket = useSocket(
     useCallback(
@@ -76,8 +79,7 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
   const bidRecord = async () => {
     let res = await fetch(`${API_ORIGIN}/bid/bidList/${props.post.id}`);
     let result = await res.json();
-    console.log(props.post.id);
-    console.log(result);
+
     setBidList(result);
     if (!result[0].nickname) {
       setHighestBidder("");
@@ -94,7 +96,7 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
       console.log(props);
       console.log(result);
       setBidList(result);
-      if (!("nickname" in result)) {
+      if (!("nickname" in result[0])) {
         setHighestBidder("");
       } else {
         setHighestBidder(result[0].nickname);
@@ -109,6 +111,28 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
 
     setBidIsSubmitted(false);
   }, []);
+
+  async function goChat() {
+    let res = await fetch(
+      `${API_ORIGIN}/chatroom/createRoom/${props.post.id}/${jwtState.id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: props.post.user_id,
+        }),
+      }
+    );
+    let result = await res.json();
+    console.log(result);
+    if ("id" in result[0]) {
+      router.push(routes.chatroom(result[0].id), "forward", "replace");
+    } else {
+      alert("cannot open chatroom");
+    }
+  }
 
   async function submitBid() {
     if (!bidPrice.match(numReg)) {
@@ -152,6 +176,11 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
           </div>
         );
       })}
+      <IonIcon
+        icon={chatbubbleOutline}
+        slot="start"
+        onClick={() => goChat()}
+      ></IonIcon>
       {!props.post.admin_title ? (
         <>
           <h2 className="ion-padding">{props.post.post_title}</h2>

@@ -124,9 +124,25 @@ export async function up(knex: Knex): Promise<void> {
     table.text('src').notNullable();
     table.integer('post_id').notNullable().references('posts.id');
   });
+
+  await knex.schema.createTableIfNotExists('chatrooms', (table) => {
+    table.increments('id');
+    table.integer('post_id').notNullable().references('posts.id');
+    table.integer('room_user_id').notNullable().references('users.id');
+  });
+
+  await knex.schema.createTableIfNotExists('chat_histories', (table) => {
+    table.increments('id');
+    table.integer('chatroom_id').notNullable().references('chatrooms.id');
+    table.text('content').notNullable();
+    table.integer('sender_id').notNullable().references('users.id');
+    table.timestamp('send_time').defaultTo(knex.fn.now());
+  });
 }
 
 export async function down(knex: Knex): Promise<void> {
+  await knex.schema.dropTableIfExists('chat_histories');
+  await knex.schema.dropTableIfExists('chatrooms');
   await knex.schema.dropTableIfExists('search_histories');
   await knex.schema.dropTableIfExists('followers');
   await knex.schema.dropTableIfExists('images');

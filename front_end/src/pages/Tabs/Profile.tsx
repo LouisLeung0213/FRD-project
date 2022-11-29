@@ -17,7 +17,7 @@ import {
 } from "@ionic/react";
 import {
   heartOutline,
-  chatbubblesOutline,
+  chatbubbleOutline,
   ribbonOutline,
   searchOutline,
   lockOpenOutline,
@@ -31,7 +31,7 @@ import {
 import "./Profile.scss";
 import icon from "../../image/usericon.png";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import moment from "moment";
 import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
@@ -40,6 +40,9 @@ import { API_ORIGIN } from "../../api";
 import { getValue, removeValue } from "../../service/localStorage";
 import { updatePoints } from "../../redux/points/actions";
 import { useParams } from "react-router";
+import { useSocket } from "../../hooks/use-socket";
+import { Socket } from "socket.io-client";
+import { routes } from "../../routes";
 
 const Profile: React.FC<{ user: number | null }> = (props: {
   user: number | null;
@@ -83,7 +86,6 @@ const Profile: React.FC<{ user: number | null }> = (props: {
     setShowedIcon(icon_src);
   }, [icon_src, jwtState, pointsState]);
 
-
   //jwtKey, reduxNickname
 
   function destroyUserInfo() {
@@ -119,7 +121,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
         </IonHeader>
         <IonContent fullscreen={true}>
           <IonList>
-            <IonItem routerLink="/AccountSetting">
+            <IonItem routerLink={routes.menu.accountSetting}>
               <IonIcon icon={personOutline} slot="start" />
               <IonLabel>設定個人帳號</IonLabel>
             </IonItem>
@@ -189,7 +191,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
                 <IonIcon icon={heartOutline} className="chat" />
               </IonItem>
               <IonItem>
-                <IonIcon icon={chatbubblesOutline} className="chat" />
+                <IonIcon icon={chatbubbleOutline} className="chat" />
               </IonItem>
               <IonItem>
                 <IonIcon icon={ribbonOutline} className="chat" />

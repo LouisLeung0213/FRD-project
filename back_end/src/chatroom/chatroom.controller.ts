@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { ChatroomService } from './chatroom.service';
 import { CreateChatroomDto } from './dto/create-chatroom.dto';
+import { InsertChatroomDto } from './dto/insert-chatroom.dto';
 import { UpdateChatroomDto } from './dto/update-chatroom.dto';
 
 @Controller('chatroom')
@@ -20,22 +21,34 @@ export class ChatroomController {
     return this.chatroomService.create(createChatroomDto);
   }
 
-  @Get()
-  findAll() {
-    this.chatroomService.findAll();
-    return [
-      {
-        id: 1,
-        image: 'https//joeschmoe.io/api/vi/1',
-        name: 'Alice',
-        message: 'Hi Bob',
-      },
-    ];
+  @Post('createRoom/:id/:joinerId')
+  openChat(
+    @Param('id') id: string,
+    @Param('joinerId') joinerId: string,
+    @Body() createChatroomDto: CreateChatroomDto,
+  ) {
+    console.log('id', id, 'joinerId', joinerId);
+    return this.chatroomService.openChat(+id, +joinerId, createChatroomDto);
   }
 
-  @Get('/room/:id')
+  @Post('send/:id')
+  send(@Param('id') id: string, @Body() insertChatroomDto: InsertChatroomDto) {
+    return this.chatroomService.send(+id, insertChatroomDto);
+  }
+
+  @Get('roomDetail/:postId')
+  findAll(@Param('postId') postId: string) {
+    return this.chatroomService.findAll(+postId);
+  }
+
+  @Get('room/:id')
   findOne(@Param('id') id: string) {
     return this.chatroomService.findOne(+id);
+  }
+
+  @Get('msg/:chatroomId')
+  getMsg(@Param('chatroomId') chatroomId: string) {
+    return this.chatroomService.msg(+chatroomId);
   }
 
   @Patch(':id')

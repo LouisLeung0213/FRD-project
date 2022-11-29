@@ -18,11 +18,11 @@ export class UpdateUserInfoDto {
 
   @IsString()
   @IsNotEmpty()
-  icon_name: string
+  icon_name: string;
 
   @IsString()
   @IsNotEmpty()
-  icon_src: string
+  icon_src: string;
 
   @IsString()
   bank_name: string;

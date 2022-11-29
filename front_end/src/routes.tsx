@@ -8,7 +8,7 @@ export let routes = {
     adminPanel: "/tab/AdminPanel",
   },
   menu: {
-    accountSetting: "/AccountSetting",
+    accountSetting: `/AccountSetting`,
     noticeSetting: "/NoticeSetUp",
     passwordChange: "/PasswordChange",
     invoice: "/Invoice",
@@ -17,7 +17,7 @@ export let routes = {
   storages: "/Storages",
   trade: "/Trade",
   blacklist: "/Blacklist",
-  chatrooms: "/Chatrooms",
+  chatroomPage: "/ChatroomPage",
   chatroom: (id: string | number) => `/chatroom/${id}`,
   post: (id: string | number) => `/post/${id}`,
   payment: "/Payment",

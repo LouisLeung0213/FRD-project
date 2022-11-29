@@ -22,6 +22,13 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
+import {
+  callOutline,
+  cardOutline,
+  closeCircleOutline,
+  mailOutline,
+  personOutline,
+} from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useIonFormState } from "react-use-ionic-form";
@@ -29,6 +36,7 @@ import { API_ORIGIN } from "../../api";
 import { useImageFiles } from "../../hooks/usePhotoGallery";
 import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
+import styles from "./UpdateProfile.module.scss";
 import storage from "../../firebaseConfig";
 import icon from "../../image/new_usericon.jpeg";
 import {
@@ -42,10 +50,15 @@ import {
 const UpdateProfile: React.FC = () => {
   const jwtState = useSelector((state: RootState) => state.jwt);
   console.log("jwtState.icon_src: ", jwtState.icon_src);
+  let real_icon_src = "";
+
+  if (jwtState.icon_src && jwtState.icon_src.includes("$1")) {
+    real_icon_src = jwtState.icon_src.split("$1").join("?");
+  } else if (jwtState.icon_src) {
+    real_icon_src = jwtState.icon_src;
+  }
   const { photos, takePhoto } = useImageFiles();
-  const [showedIcon, setShowedIcon] = useState(
-    jwtState.icon_src!.split("$1").join("?") as string
-  );
+  const [showedIcon, setShowedIcon] = useState(real_icon_src as string);
   useEffect(() => {
     let photosLength = photos.length;
     if (photosLength > 0) {
@@ -60,8 +73,11 @@ const UpdateProfile: React.FC = () => {
   let [isNicknameOk, setIsNicknameOk] = useState(true);
   let [isPhoneOk, setIsPhoneOk] = useState(true);
   let [isEmailOk, setIsEmailOk] = useState(true);
+  let [banks, setBanks] = useState([]) as any;
+  let [savedBanks, setSavedBanks] = useState() as any;
+
   let [percent, setPercent] = useState(0);
-  let [banks, setBanks] = useState([]);
+
   async function getBankSelect() {
     let result = await fetch(`${API_ORIGIN}/information/banks`, {
       method: "GET",
@@ -76,14 +92,60 @@ const UpdateProfile: React.FC = () => {
     return bankArr;
   }
 
+  async function getSavedBank() {
+    let result = await fetch(
+      `${API_ORIGIN}/information/savedBank/${jwtState.id}`
+    );
+
+    let json = await result.json();
+    console.log("here!", json);
+
+    if (json.banks_id.length > 0) {
+      let savedBankNameArr: any = json.bank_name_arr;
+      let savedBankAccount: any = json.banks_id;
+      console.log(
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+        savedBankNameArr,
+        savedBankAccount
+      );
+      let savedBankArr: any = [];
+
+      for (let i = 0; i < json.bank_name_arr.length; i++) {
+        console.log("saved bank:", json[i]);
+        savedBankArr.push({
+          bankName: savedBankNameArr[i].bank_name,
+          bankAccount: savedBankAccount[i].bank_account,
+        });
+      }
+      console.log("saved bank Array 2222222222:", savedBankArr);
+      return savedBankArr;
+    } else {
+      return;
+    }
+  }
+
   useEffect(() => {
     async function get() {
       let bank = await getBankSelect();
-      console.log(bank);
+      let userBank = await getSavedBank();
+      console.log("user bank:", userBank);
+      setSavedBanks(userBank);
       setBanks(bank);
     }
     get();
   }, []);
+
+  async function deleteBank(account: any) {
+    let result = await fetch(`${API_ORIGIN}/information/deleteBank`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        accountShouldDelete: account,
+      }),
+    });
+  }
 
   async function updateInfo(data: any) {
     if (data.nickname.length == 0) {
@@ -126,6 +188,9 @@ const UpdateProfile: React.FC = () => {
 
     let now = Date.now();
 
+    let icon_url = jwtState.icon_src;
+    let icon_name = jwtState.icon_name;
+
     function uploadBytesResumablePromise(photo: any): Promise<string> {
       return new Promise((resolve, reject) => {
         findMIMEType(photo.file.type);
@@ -146,6 +211,7 @@ const UpdateProfile: React.FC = () => {
           () => {
             // download url
             getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+              console.log("url", url);
               resolve(url);
             });
           }
@@ -171,11 +237,11 @@ const UpdateProfile: React.FC = () => {
     try {
       let photosLength = photos.length;
       let lastPhoto = photos[photosLength - 1];
-      if (jwtState.icon_name !== "/default/new_usericon.jpeg+1+1669717126192"){
-        deleteImage(jwtState.icon_name!)
+      if (jwtState.icon_name !== "/default/new_usericon.jpeg+1+1669717126192") {
+        deleteImage(jwtState.icon_name!);
       }
-      let icon_url = await uploadBytesResumablePromise(lastPhoto);
-      let icon_name = `/icons/${lastPhoto.name}+${jwtState.id}+${now}`;
+      icon_url = await uploadBytesResumablePromise(lastPhoto);
+      icon_name = `/icons/${lastPhoto.name}+${jwtState.id}+${now}`;
 
       let res = await fetch(
         `${API_ORIGIN}/users/updateUserInfo/${jwtState.id}`,
@@ -265,7 +331,13 @@ const UpdateProfile: React.FC = () => {
               name: "nickname",
               renderLabel: () => (
                 <>
-                  <IonLabel position="floating">暱稱:</IonLabel>
+                  <IonLabel position="floating">
+                    <IonIcon
+                      className={styles.tagIcon}
+                      icon={personOutline}
+                    ></IonIcon>
+                    暱稱:
+                  </IonLabel>
                 </>
               ),
               renderContent: (props) => (
@@ -280,7 +352,15 @@ const UpdateProfile: React.FC = () => {
             {item({
               name: "phone",
               renderLabel: () => (
-                <IonLabel position="floating">電話號碼::</IonLabel>
+                <>
+                  <IonLabel position="floating">
+                    <IonIcon
+                      className={styles.tagIcon}
+                      icon={callOutline}
+                    ></IonIcon>
+                    電話號碼::
+                  </IonLabel>
+                </>
               ),
               renderContent: (props) => (
                 <IonInput type="text" {...props}></IonInput>
@@ -294,16 +374,22 @@ const UpdateProfile: React.FC = () => {
             {item({
               name: "email",
               renderLabel: () => (
-                <IonLabel position="floating">電子郵件:</IonLabel>
+                <IonLabel position="floating">
+                  <IonIcon
+                    className={styles.tagIcon}
+                    icon={mailOutline}
+                  ></IonIcon>
+                  電子郵件:
+                </IonLabel>
               ),
               renderContent: (props) => (
                 <IonInput
                   type="text"
-                  onKeyDown={(e) => {
-                    if (e.key == "Enter") {
-                      updateInfo(state);
-                    }
-                  }}
+                  // onKeyDown={(e) => {
+                  //   if (e.key == "Enter") {
+                  //     updateInfo(state);
+                  //   }
+                  // }}
                   {...props}
                 ></IonInput>
               ),
@@ -316,11 +402,36 @@ const UpdateProfile: React.FC = () => {
             <br />
             <div className="ion-padding">
               <IonLabel>已儲存的銀行戶口</IonLabel>
-              {jwtState.bankAccount?.map((item) => {
-                return <IonItem>{item}</IonItem>;
+              {savedBanks?.map((item: any, index: number) => {
+                return (
+                  <>
+                    <IonItem className="savedBank" key={index}>
+                      <IonIcon
+                        className={styles.tagIcon}
+                        icon={cardOutline}
+                      ></IonIcon>
+                      {item.bankName}: {item.bankAccount}
+                      <IonButton
+                        fill="clear"
+                        slot="end"
+                        onClick={() => {
+                          setSavedBanks(
+                            savedBanks.filter((i: any) => i != item)
+                          );
+                          deleteBank(item.bankAccount);
+                        }}
+                      >
+                        <IonIcon
+                          size="small"
+                          icon={closeCircleOutline}
+                        ></IonIcon>
+                      </IonButton>
+                    </IonItem>
+                  </>
+                );
               })}
             </div>
-            <br />
+
             {item({
               name: "bank_name",
               renderLabel: () => (

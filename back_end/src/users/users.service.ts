@@ -78,9 +78,9 @@ export class UsersService {
           phone: user.phone,
           email: user.email,
           joinedTime: user.joinedTime,
-          isAdmin: user.is_admin,
+          is_admin: user.is_admin,
           icon_name: user.icon_name,
-          icon_src: user.icon_src
+          icon_src: user.icon_src,
         };
       } else {
         throw new HttpException('Wrong username or password', 401);
@@ -107,15 +107,18 @@ export class UsersService {
             phone: updateUserInfoDto.phone,
             email: updateUserInfoDto.email,
             icon_name: updateUserInfoDto.icon_name,
-            icon_src: updateUserInfoDto.icon_src
+            icon_src: updateUserInfoDto.icon_src,
           })
           .returning('id');
 
-        let addBank = await this.knex('bank_account').insert({
-          bank_account: updateUserInfoDto.bank_account,
-          user_id: id,
-          bank_id: bank_id[0].id,
-        });
+        let addBank;
+        if (updateUserInfoDto.bank_account) {
+          addBank = await this.knex('bank_account').insert({
+            bank_account: updateUserInfoDto.bank_account,
+            user_id: id,
+            bank_id: bank_id[0].id,
+          });
+        }
 
         return {
           userId,
