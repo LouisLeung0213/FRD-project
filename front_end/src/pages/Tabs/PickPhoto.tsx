@@ -49,7 +49,7 @@ import "swiper/css/zoom";
 import "@ionic/react/css/ionic-swiper.css";
 import "swiper/swiper.min.css";
 import "@ionic/react/css/ionic-swiper.css";
-import "./PickPhoto.scss";
+import styles from "./PickPhoto.module.scss";
 import { useIonFormState } from "react-use-ionic-form";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -137,7 +137,6 @@ const PickPhoto: React.FC = () => {
 
     formData.append("startPrice", data.startPrice);
     formData.append("location", data.location);
-    formData.append("bankAccount", data.bankAccount);
 
     formData.append("qualityPlan", data.qualityPlan ? "t" : "f");
     formData.append("promotion", data.promotion ? "t" : "f");
@@ -360,14 +359,14 @@ const PickPhoto: React.FC = () => {
 
   defineCustomElements(window);
   return (
-    <IonPage className="PickPhoto">
+    <IonPage className={styles.PickPhoto}>
       <IonHeader>
         <IonToolbar>
           <IonButton
-            className="preview-but"
+            className={styles.preview_but}
             fill="clear"
             slot="end"
-            id="preview-dialog"
+            id={styles.preview_dialog}
           >
             <IonIcon style={{ color: "#fcd92b" }} icon={arrowRedo}></IonIcon>
           </IonButton>
@@ -376,9 +375,9 @@ const PickPhoto: React.FC = () => {
       <IonContent className="ion-padding" fullscreen={true}>
         <>
           <IonModal
-            id="preview-modal"
+            id={styles.preview_modal}
             ref={previewModal}
-            trigger="preview-dialog"
+            trigger={styles.preview_dialog}
           >
             <IonContent className="ion-padding">
               <ul>
@@ -396,14 +395,14 @@ const PickPhoto: React.FC = () => {
           </IonModal>
 
           <div>
-            <div className="photoButtonDiv ">
+            <div className={styles.photoButtonDiv}>
               <IonIcon
                 style={{ color: "#fcd92b" }}
                 size="large"
                 icon={images}
               ></IonIcon>
 
-              <p className="label">加入圖片</p>
+              <p className={styles.label}>加入圖片</p>
             </div>
             <div>
               <Swiper
@@ -415,14 +414,14 @@ const PickPhoto: React.FC = () => {
                 scrollbar={true}
                 zoom={true}
                 effect={"fade"}
-                className="slide "
+                className={styles.slide}
               >
-                <SwiperSlide className="image-box add-box" onClick={takePhoto}>
+                <SwiperSlide className={styles.image_box} onClick={takePhoto}>
                   <IonIcon icon={add}></IonIcon>
                 </SwiperSlide>
                 {photos.map((photo, index) => {
                   return (
-                    <SwiperSlide key={index} className="image-box">
+                    <SwiperSlide key={index} className={styles.image_box}>
                       <img src={photo.dataUrl} key={index} />
                       <IonFab
                         slot="fixed"
@@ -430,7 +429,7 @@ const PickPhoto: React.FC = () => {
                         horizontal="center"
                       >
                         <IonFabButton
-                          className="preview-box"
+                          className={styles.preview_box}
                           onClick={() => {
                             console.log("456");
                             setPhotos(photos.filter((p) => p != photo));
@@ -476,7 +475,7 @@ const PickPhoto: React.FC = () => {
               ),
               renderContent: (props) => (
                 <IonTextarea
-                  className="description"
+                  className={styles.description}
                   placeholder="請輸入物品詳情"
                   {...props}
                 ></IonTextarea>
@@ -498,7 +497,7 @@ const PickPhoto: React.FC = () => {
               ),
               renderContent: (props) => (
                 <IonInput
-                  className="tags"
+                  className={styles.tags}
                   placeholder="請於標籤前加入#"
                   {...props}
                 ></IonInput>
@@ -539,7 +538,7 @@ const PickPhoto: React.FC = () => {
               ref={qualityModal}
               trigger="open-custom-dialog"
             >
-              <div className="wrapper">
+              <div className={styles.wrapper}>
                 <IonItem className="ion-padding">
                   <IonText>
                     <ul>
@@ -609,7 +608,7 @@ const PickPhoto: React.FC = () => {
               </>
             ) : null}
 
-            {state.qualityPlan === true
+            {/* {state.qualityPlan === true
               ? item({
                   name: "bankAccount",
                   renderLabel: () => (
@@ -623,8 +622,8 @@ const PickPhoto: React.FC = () => {
               !state.bankAccount.match(/^\d+$/) &&
               state.bankAccount !== "" ? (
                 <IonText color="danger">請輸入有效銀行戶口</IonText>
-              ) : null}
-            </div>
+              ) : null} 
+            </div> */}
             <br />
             {item({
               name: "promotion",

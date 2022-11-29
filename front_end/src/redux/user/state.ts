@@ -7,8 +7,8 @@ export interface UpdateJwtState {
   email: string | null;
   joinedTime: string | null;
   isAdmin: boolean;
-  bankAccount: string | null;
   icon_name: string| null;
+  bankAccount: Array<string> | null;
   icon_src: string | null;
 }
 

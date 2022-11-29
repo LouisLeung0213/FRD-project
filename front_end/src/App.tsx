@@ -73,6 +73,7 @@ import Package from "./pages/Payment/Package";
 import { getValue } from "./service/localStorage";
 import { API_ORIGIN } from "./api";
 import { updateJwt } from "./redux/user/actions";
+import { updatePoints } from "./redux/points/actions";
 
 setupIonicReact();
 
@@ -86,20 +87,25 @@ const App: React.FC = () => {
     let res = await fetch(`${API_ORIGIN}/profiles/${userId}`);
 
     let userInfo = await res.json();
-    console.log("userInfo: ", userInfo);
+    console.log("userInfo: ", userInfo.userInfo);
     dispatch(
       updateJwt({
         jwtKey: token,
-        id: userInfo.id,
-        username: userInfo.username,
-        nickname: userInfo.nickname,
-        phone: userInfo.phone,
-        email: userInfo.email,
-        joinedTime: userInfo.joinedTime,
-        isAdmin: userInfo.is_admin,
-        bankAccount: userInfo.bank_account,
+        id: userInfo.userInfo.id,
+        username: userInfo.userInfo.username,
+        nickname: userInfo.userInfo.nickname,
+        phone: userInfo.userInfo.phone,
+        email: userInfo.userInfo.email,
+        joinedTime: userInfo.userInfo.joinedTime,
+        isAdmin: userInfo.userInfo.is_admin,
+        bankAccount: userInfo.bankInfo.bank_account,
         icon_name: userInfo.icon_name,
-        icon_src: userInfo.icon_src
+        icon_src: userInfo.userInfo.icon_src,
+      })
+    );
+    dispatch(
+      updatePoints({
+        points: userInfo.userInfo.points,
       })
     );
   };
@@ -164,7 +170,7 @@ const App: React.FC = () => {
     profileHref = "/tab/Login";
   }
   if (jwtState.id) {
-    profileHref = `/tab/Profile`;
+    profileHref = `/tab/Profile/${jwtState.id}`;
   }
 
   return (
@@ -252,7 +258,7 @@ const App: React.FC = () => {
                   render={() => <Notices />}
                 />
                 <Route
-                  path={routes.tab.profile}
+                  path={routes.tab.profile(":id")}
                   exact={true}
                   render={() => <Profile user={jwtState.id} />}
                 />

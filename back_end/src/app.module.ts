@@ -15,6 +15,7 @@ import { PaymentModule } from './payment/payment.module';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { BidModule } from './bid/bid.module';
+import { InformationModule } from './information/information.module';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyD243djxwnLoP4tSfW0CUqOlE-3z0UQGL4',
@@ -40,6 +41,7 @@ const firebaseConfig = {
     StripeModule.forRoot(env.STRIPE_KEY, { apiVersion: '2022-11-15' }),
     PaymentModule,
     BidModule,
+    InformationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -37,6 +37,25 @@ export async function seed(knex: Knex): Promise<void> {
         points: 0,
         is_admin: true,
       },
+    ]);
+
+    await txn('bank').insert([
+      { bank_name: '恆生銀行' },
+      {
+        bank_name: '匯豐銀行',
+      },
+      {
+        bank_name: '中國銀行',
+      },
+      {
+        bank_name: '渣打銀行',
+      },
+      {
+        bank_name: '花旗銀行',
+      },
+      {
+        bank_name: '大新銀行',
+      },
     ])
     .returning('icon_src');
 

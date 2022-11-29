@@ -28,7 +28,7 @@ import {
   chevronBackOutline,
   personOutline,
 } from "ionicons/icons";
-import "./MainPage.scss";
+import styles from "./MainPage.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
 
@@ -78,30 +78,30 @@ const MainPage: React.FC = () => {
     setIsOpen(false);
   }
 
-  const enterAnimation = (baseEl: HTMLElement) => {
-    const root = baseEl.shadowRoot;
+  // const enterAnimation = (baseEl: HTMLElement) => {
+  //   const root = baseEl.shadowRoot;
 
-    const backdropAnimation = createAnimation()
-      .addElement(root?.querySelector("ion-backdrop")!)
-      .fromTo("opacity", "0.01", "var(--backdrop-opacity)");
+  //   const backdropAnimation = createAnimation()
+  //     .addElement(root?.querySelector("ion-backdrop")!)
+  //     .fromTo("opacity", "0.01", "var(--backdrop-opacity)");
 
-    const wrapperAnimation = createAnimation()
-      .addElement(root?.querySelector(".modal-wrapper")!)
-      .keyframes([
-        { offset: 0, opacity: "0", transform: "scale(0)" },
-        { offset: 1, opacity: "0.99", transform: "scale(1)" },
-      ]);
+  //   const wrapperAnimation = createAnimation()
+  //     .addElement(root?.querySelector(".modal-wrapper")!)
+  //     .keyframes([
+  //       { offset: 0, opacity: "0", transform: "scale(0)" },
+  //       { offset: 1, opacity: "0.99", transform: "scale(1)" },
+  //     ]);
 
-    return createAnimation()
-      .addElement(baseEl)
-      .easing("ease-out")
-      .duration(500)
-      .addAnimation([backdropAnimation, wrapperAnimation]);
-  };
+  //   return createAnimation()
+  //     .addElement(baseEl)
+  //     .easing("ease-out")
+  //     .duration(500)
+  //     .addAnimation([backdropAnimation, wrapperAnimation]);
+  // };
 
-  const leaveAnimation = (baseEl: HTMLElement) => {
-    return enterAnimation(baseEl).direction("reverse");
-  };
+  // const leaveAnimation = (baseEl: HTMLElement) => {
+  //   return enterAnimation(baseEl).direction("reverse");
+  // };
 
   function openPost(e: PostObj) {
     setCurrentPost(e);
@@ -110,7 +110,7 @@ const MainPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent fullscreen>
+      <IonContent fullscreen={true}>
         <IonList>
           <div slot="content">
             <IonSearchbar
@@ -136,36 +136,28 @@ const MainPage: React.FC = () => {
                   //   <IonLabel>{e.nickname}</IonLabel>
                   // </IonItem>
                   <div
-                    className="postContainer"
+                    className={styles.postContainer}
                     key={post.id}
                     onClick={() => openPost(post)}
                   >
-                    <div className="nameContainer">
-                      <h4 className="nameText">
+                    <div className={styles.nameContainer}>
+                      <h4 className={styles.nameText}>
                         <IonIcon
-                          className="personIcon"
+                          className={styles.personIcon}
                           icon={personOutline}
                         ></IonIcon>
                         {post.nickname}
                       </h4>
-                      <h3
-                        className="title"
-                        style={{
-                          color: "#fcd92b",
-                          margin: "0px",
-                          padding: "0px",
-                        }}
-                      >
+                      <h2 className={styles.title}>
                         {!post.admin_title ? post.post_title : post.admin_title}
 
                         {post.q_mark ? (
                           <IonIcon
-                            className="q_mark_icon"
-                            style={{ color: "#3880ff" }}
+                            className={styles.q_mark_icon}
                             icon={checkmarkDoneCircleOutline}
                           ></IonIcon>
                         ) : null}
-                      </h3>
+                      </h2>
                     </div>
                     <Swiper
                       modules={[
@@ -182,18 +174,21 @@ const MainPage: React.FC = () => {
                       //scrollbar={true}
                       zoom={true}
                       effect={"fade"}
-                      className="slide "
+                      className={styles.slide}
                     >
                       {post.json_agg.map((photo: any, index: any) => {
                         return (
-                          <SwiperSlide className="image-slide" key={index}>
+                          <SwiperSlide
+                            className={styles.image_slide}
+                            key={index}
+                          >
                             <img src={photo} key={index} />
                           </SwiperSlide>
                         );
                       })}
                     </Swiper>
                     {/* <img src={post.json_agg}></img> */}
-                    <div className="nameContainer">
+                    <div className={styles.priceContainer}>
                       {!post.max ? (
                         <h3>現價：${post.original_price}</h3>
                       ) : (
