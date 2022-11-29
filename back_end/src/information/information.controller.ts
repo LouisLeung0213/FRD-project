@@ -25,9 +25,10 @@ export class InformationController {
     return this.informationService.allBank();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.informationService.findOne(+id);
+  @Get('savedBank/:id')
+  savedBank(@Param('id') id: string) {
+    console.log(id);
+    return this.informationService.savedBank(+id);
   }
 
   @Patch(':id')
@@ -38,8 +39,10 @@ export class InformationController {
     return this.informationService.update(+id, updateInformationDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.informationService.remove(+id);
+  @Delete('deleteBank')
+  deleteBank(@Body() updateInformationDto: UpdateInformationDto) {
+    return this.informationService.deleteBank(
+      updateInformationDto.accountShouldDelete,
+    );
   }
 }

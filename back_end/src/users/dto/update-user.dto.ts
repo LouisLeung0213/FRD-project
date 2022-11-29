@@ -16,12 +16,8 @@ export class UpdateUserInfoDto {
   @IsNotEmpty()
   email: string;
 
-  @IsString()
-  @IsNotEmpty()
   bank_name: string;
 
-  @IsString()
-  @IsNotEmpty()
   bank_account: string;
 }
 

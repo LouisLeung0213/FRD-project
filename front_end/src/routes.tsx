@@ -8,7 +8,7 @@ export let routes = {
     adminPanel: "/tab/AdminPanel",
   },
   menu: {
-    accountSetting: "/AccountSetting",
+    accountSetting: `/AccountSetting`,
     noticeSetting: "/NoticeSetUp",
     passwordChange: "/PasswordChange",
     invoice: "/Invoice",

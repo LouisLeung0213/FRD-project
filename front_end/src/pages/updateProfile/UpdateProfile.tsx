@@ -22,6 +22,13 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
+import {
+  callOutline,
+  cardOutline,
+  closeCircleOutline,
+  mailOutline,
+  personOutline,
+} from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useIonFormState } from "react-use-ionic-form";
@@ -31,6 +38,7 @@ import { useImageFiles } from "../../hooks/usePhotoGallery";
 import icon from "../../image/usericon.png";
 import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
+import styles from "./UpdateProfile.module.scss";
 
 const UpdateProfile: React.FC = () => {
   const jwtState = useSelector((state: RootState) => state.jwt);
@@ -43,7 +51,9 @@ const UpdateProfile: React.FC = () => {
   let [isNicknameOk, setIsNicknameOk] = useState(true);
   let [isPhoneOk, setIsPhoneOk] = useState(true);
   let [isEmailOk, setIsEmailOk] = useState(true);
-  let [banks, setBanks] = useState([]);
+  let [banks, setBanks] = useState([]) as any;
+  let [savedBanks, setSavedBanks] = useState() as any;
+
   async function getBankSelect() {
     let result = await fetch(`${API_ORIGIN}/information/banks`, {
       method: "GET",
@@ -58,14 +68,60 @@ const UpdateProfile: React.FC = () => {
     return bankArr;
   }
 
+  async function getSavedBank() {
+    let result = await fetch(
+      `${API_ORIGIN}/information/savedBank/${jwtState.id}`
+    );
+
+    let json = await result.json();
+    console.log("here!", json);
+
+    if (json.banks_id.length > 0) {
+      let savedBankNameArr: any = json.bank_name_arr;
+      let savedBankAccount: any = json.banks_id;
+      console.log(
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+        savedBankNameArr,
+        savedBankAccount
+      );
+      let savedBankArr: any = [];
+
+      for (let i = 0; i < json.bank_name_arr.length; i++) {
+        console.log("saved bank:", json[i]);
+        savedBankArr.push({
+          bankName: savedBankNameArr[i].bank_name,
+          bankAccount: savedBankAccount[i].bank_account,
+        });
+      }
+      console.log("saved bank Array 2222222222:", savedBankArr);
+      return savedBankArr;
+    } else {
+      return;
+    }
+  }
+
   useEffect(() => {
     async function get() {
       let bank = await getBankSelect();
-      console.log(bank);
+      let userBank = await getSavedBank();
+      console.log("user bank:", userBank);
+      setSavedBanks(userBank);
       setBanks(bank);
     }
     get();
   }, []);
+
+  async function deleteBank(account: any) {
+    let result = await fetch(`${API_ORIGIN}/information/deleteBank`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        accountShouldDelete: account,
+      }),
+    });
+  }
 
   async function updateInfo(data: any) {
     if (data.nickname.length == 0) {
@@ -175,7 +231,13 @@ const UpdateProfile: React.FC = () => {
               name: "nickname",
               renderLabel: () => (
                 <>
-                  <IonLabel position="floating">暱稱:</IonLabel>
+                  <IonLabel position="floating">
+                    <IonIcon
+                      className={styles.tagIcon}
+                      icon={personOutline}
+                    ></IonIcon>
+                    暱稱:
+                  </IonLabel>
                 </>
               ),
               renderContent: (props) => (
@@ -190,7 +252,15 @@ const UpdateProfile: React.FC = () => {
             {item({
               name: "phone",
               renderLabel: () => (
-                <IonLabel position="floating">電話號碼::</IonLabel>
+                <>
+                  <IonLabel position="floating">
+                    <IonIcon
+                      className={styles.tagIcon}
+                      icon={callOutline}
+                    ></IonIcon>
+                    電話號碼::
+                  </IonLabel>
+                </>
               ),
               renderContent: (props) => (
                 <IonInput type="text" {...props}></IonInput>
@@ -204,16 +274,22 @@ const UpdateProfile: React.FC = () => {
             {item({
               name: "email",
               renderLabel: () => (
-                <IonLabel position="floating">電子郵件:</IonLabel>
+                <IonLabel position="floating">
+                  <IonIcon
+                    className={styles.tagIcon}
+                    icon={mailOutline}
+                  ></IonIcon>
+                  電子郵件:
+                </IonLabel>
               ),
               renderContent: (props) => (
                 <IonInput
                   type="text"
-                  onKeyDown={(e) => {
-                    if (e.key == "Enter") {
-                      updateInfo(state);
-                    }
-                  }}
+                  // onKeyDown={(e) => {
+                  //   if (e.key == "Enter") {
+                  //     updateInfo(state);
+                  //   }
+                  // }}
                   {...props}
                 ></IonInput>
               ),
@@ -226,11 +302,36 @@ const UpdateProfile: React.FC = () => {
             <br />
             <div className="ion-padding">
               <IonLabel>已儲存的銀行戶口</IonLabel>
-              {jwtState.bankAccount?.map((item) => {
-                return <IonItem>{item}</IonItem>;
+              {savedBanks?.map((item: any, index: number) => {
+                return (
+                  <>
+                    <IonItem className="savedBank" key={index}>
+                      <IonIcon
+                        className={styles.tagIcon}
+                        icon={cardOutline}
+                      ></IonIcon>
+                      {item.bankName}: {item.bankAccount}
+                      <IonButton
+                        fill="clear"
+                        slot="end"
+                        onClick={() => {
+                          setSavedBanks(
+                            savedBanks.filter((i: any) => i != item)
+                          );
+                          deleteBank(item.bankAccount);
+                        }}
+                      >
+                        <IonIcon
+                          size="small"
+                          icon={closeCircleOutline}
+                        ></IonIcon>
+                      </IonButton>
+                    </IonItem>
+                  </>
+                );
               })}
             </div>
-            <br />
+
             {item({
               name: "bank_name",
               renderLabel: () => (
