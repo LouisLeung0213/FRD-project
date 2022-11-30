@@ -64,12 +64,21 @@ export class ChatroomService {
   }
 
   async getOwnerId(chatroomId: number) {
+    // let getRoomId = await this.knex
+    //   .select('post_id')
+    //   .from('chatrooms')
+    //   .where('id', chatroomId);
     let ownerId = await this.knex
-      .select('users.id')
+      .select(
+        'users.id',
+        'chatrooms.post_id',
+        'room_user_id',
+        'chatrooms.id as chatroom_id',
+      )
       .from('chatrooms')
       .join('posts', 'post_id', 'posts.id')
       .join('users', 'users.id', 'user_id')
-      .where('post_id', chatroomId);
+      .where('chatrooms.id', chatroomId);
     console.log('ownerId', ownerId[0]);
     return ownerId[0];
   }
@@ -94,15 +103,52 @@ export class ChatroomService {
 
   async msg(chatroomId: number) {
     let msgList = await this.knex
-      .select('content', 'sender_id', 'send_time', 'icon_src')
+      .select(
+        'chat_histories.id',
+        'content',
+        'sender_id',
+        'send_time',
+        'icon_src',
+      )
       .from('chat_histories')
       .join('users', 'sender_id', 'users.id')
       .where('chatroom_id', chatroomId);
     return msgList;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} chatroom`;
+  async getAllRoom(id: number) {
+    let rooms = await this.knex
+      .select(
+        'chatrooms.id',
+        this.knex.raw('json_agg(content)->>-1 as latest_content'),
+        'post_title',
+        this.knex.raw('json_agg(images.src)->>0 as image'),
+        'buyers.icon_src as buyer_icon',
+        'sellers.icon_src as seller_icon',
+        this.knex.raw('json_agg(send_time)->>-1 as latest_send_times'),
+        'user_id as seller_id',
+        'room_user_id as buyer_id',
+        'sellers.nickname as seller_nickname',
+        'buyers.nickname as buyer_nickname',
+      )
+      .from('chatrooms')
+      .fullOuterJoin('posts', 'posts.id', 'chatrooms.post_id')
+      .fullOuterJoin('users as buyers', 'buyers.id', 'chatrooms.room_user_id')
+      .fullOuterJoin('users as sellers', 'sellers.id', 'posts.user_id')
+      .join('chat_histories', 'chatroom_id', 'chatrooms.id')
+      .fullOuterJoin('images', 'images.post_id', 'chatrooms.post_id')
+      .where('chatrooms.room_user_id', id)
+      .orWhere('posts.user_id', id)
+      .groupBy(
+        'chatrooms.id',
+        'posts.post_title',
+        'buyers.icon_src',
+        'sellers.icon_src',
+        'buyers.nickname',
+        'sellers.nickname',
+        'posts.user_id',
+      );
+    return rooms;
   }
 
   update(id: number, updateChatroomDto: UpdateChatroomDto) {

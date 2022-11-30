@@ -38,7 +38,10 @@ export type PostObj = {
   username: "";
 };
 
-const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
+const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
+  post: PostObj;
+  goChat: any;
+}) => {
   const jwtState = useSelector((state: RootState) => state.jwt);
 
   const [bidPrice, setBidPrice] = useState("");
@@ -96,7 +99,7 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
       console.log(props);
       console.log(result);
       setBidList(result);
-      if (!("nickname" in result[0])) {
+      if (!result[0]) {
         setHighestBidder("");
       } else {
         setHighestBidder(result[0].nickname);
@@ -112,7 +115,7 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
     setBidIsSubmitted(false);
   }, []);
 
-  async function goChat() {
+  async function getChatDetail() {
     let res = await fetch(
       `${API_ORIGIN}/chatroom/createRoom/${props.post.id}/${jwtState.id}`,
       {
@@ -128,7 +131,7 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
     let result = await res.json();
     console.log(result);
     if ("id" in result[0]) {
-      router.push(routes.chatroom(result[0].id), "forward", "replace");
+      props.goChat(result[0].id);
     } else {
       alert("cannot open chatroom");
     }
@@ -179,7 +182,7 @@ const Post: React.FC<{ post: PostObj }> = (props: { post: PostObj }) => {
       <IonIcon
         icon={chatbubbleOutline}
         slot="start"
-        onClick={() => goChat()}
+        onClick={() => getChatDetail()}
       ></IonIcon>
       {!props.post.admin_title ? (
         <>

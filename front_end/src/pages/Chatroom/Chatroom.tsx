@@ -14,7 +14,7 @@ import {
 } from "@ionic/react";
 import { navigateOutline } from "ionicons/icons";
 import moment from "moment";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { Socket } from "socket.io-client";
@@ -32,6 +32,7 @@ type PostDetail = {
 };
 
 type MSG = {
+  id: number;
   chatroom_id: number;
   content: string;
   sender_id: number;
@@ -40,21 +41,38 @@ type MSG = {
 };
 
 const Chatroom: React.FC = () => {
-  const socket = useSocket(
+  const [newWsMessageId, setNewWsMessageId] = useState(null);
+  useSocket(
     useCallback((socket: Socket) => {
       socket.on("new-msg", (data) => {
         console.log("received", data);
         setMsgList(data.newMSG);
+        setNewWsMessageId(data.newMSG[data.newMSG.length - 1].id);
       });
       return () => {};
     }, [])
   );
 
+  useLayoutEffect(() => {
+    if (!newWsMessageId) return;
+    let ionCard = document.querySelector(
+      `[dataset-message-id="${newWsMessageId}"]`
+    );
+    // console.log({ newWsMessageId, ionCard });
+
+    if (ionCard) {
+      ionCard.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  }, [newWsMessageId]);
+
   let jwtState = useSelector((state: RootState) => state.jwt);
 
-  const [chatList, setChatList] = useState<
-    { id: number; image: string; name: string; message: string }[]
-  >([]);
+  // const [chatList, setChatList] = useState<
+  //   { id: number; image: string; name: string; message: string }[]
+  // >([]);
   const [postDetail, setPostDetail] = useState({
     post_title: "",
     original_price: "",
@@ -62,7 +80,7 @@ const Chatroom: React.FC = () => {
     json_agg: [""],
   } as PostDetail);
   const [currentMsg, setCurrentMsg] = useState("");
-  const [msgList, setMsgList] = useState([]);
+  const [msgList, setMsgList] = useState([]) as any;
   let chatroomId: any = useParams();
 
   useEffect(() => {
@@ -70,7 +88,17 @@ const Chatroom: React.FC = () => {
     const getChatroomMsg = async () => {
       let res = await fetch(`${API_ORIGIN}/chatroom/msg/${chatroomId.id}`);
       let result = await res.json();
+      console.log("msg:", result);
       setMsgList(result);
+      let latestMSG = document.querySelector(
+        `[dataset-message-id="${result[result.length - 1].id}"]`
+      );
+
+      if (latestMSG) {
+        latestMSG.scrollIntoView({
+          block: "end",
+        });
+      }
     };
 
     const getChatroomDetail = async () => {
@@ -86,6 +114,7 @@ const Chatroom: React.FC = () => {
   }, []);
 
   async function sendMsg(msg: string) {
+    console.log("chatroomId", chatroomId.id);
     let send = await fetch(`${API_ORIGIN}/chatroom/send/${chatroomId.id}`, {
       method: "POST",
       headers: {
@@ -99,6 +128,7 @@ const Chatroom: React.FC = () => {
       return;
     }
     console.log("msg", result);
+    setCurrentMsg("");
   }
 
   return (
@@ -119,9 +149,9 @@ const Chatroom: React.FC = () => {
           </IonItem>
           {msgList.length > 0 ? (
             <>
-              {msgList.map((msg: MSG, index) => {
+              {msgList.map((msg: MSG) => {
                 return (
-                  <div key={index}>
+                  <div key={msg.id} dataset-message-id={msg.id}>
                     {msg.sender_id == jwtState.id ? (
                       <>
                         <IonLabel>{moment(msg.send_time).format("L")}</IonLabel>

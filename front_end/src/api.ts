@@ -9,3 +9,5 @@ export let FRONT_ORIGIN = "http://192.168.160.72:8100";
 // export let FRONT_ORIGIN = "http://localhost:8100";
 //export let FRONT_ORIGIN = "http://localhost:8100";
 export let WS_ORIGIN = API_ORIGIN.replace("http", "ws");
+
+// docker need wss
