@@ -111,7 +111,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
         email: null,
         joinedTime: null,
         isAdmin: false,
-        bankAccount: null,
+        bankAccount: [{}],
         icon_name: null,
         icon_src: null,
       })

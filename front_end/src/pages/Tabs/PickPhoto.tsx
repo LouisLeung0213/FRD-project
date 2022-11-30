@@ -39,7 +39,6 @@ import {
 //import { selectImage, fileToBase64String } from "@beenotung/tslib/file";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
-import { uploadFile } from "../../service/firebaseStorage";
 
 import "swiper/swiper.min.css";
 import "swiper/css/autoplay";
@@ -96,6 +95,7 @@ const PickPhoto: React.FC = () => {
   const [isPhotoOk, setIsPhotoOk] = useState(true);
   const [percent, setPercent] = useState(0);
   const [bankState, setBankState] = useState(jwtState.bankAccount);
+  const [banks, setBanks] = useState([]) as any;
 
   const { state, item } = useIonFormState({
     title: "",
@@ -104,6 +104,7 @@ const PickPhoto: React.FC = () => {
     startPrice: "",
     location: "",
     bankAccount: { bankName: "", bankAccount: "" },
+    newBankAccount: { bankName: "", bankAccount: "" },
     qualityPlan: false,
     promotion: false,
   });
@@ -140,6 +141,26 @@ const PickPhoto: React.FC = () => {
   //     return;
   //   }
   // }
+  async function getBankSelect() {
+    let result = await fetch(`${API_ORIGIN}/information/banks`, {
+      method: "GET",
+    });
+    let banks = await result.json();
+    let bankArr: any = [];
+
+    for (let bank of banks) {
+      console.log(bank.bank_name);
+      bankArr.push(bank.bank_name);
+    }
+
+    setBanks(bankArr);
+  }
+  useEffect(() => {
+    async function get() {
+      getBankSelect();
+    }
+    get();
+  }, []);
 
   function findMIMEType(ext: string) {
     if (ext == "image/jpeg") {
@@ -176,7 +197,8 @@ const PickPhoto: React.FC = () => {
     formData.append("promotion", data.promotion ? "t" : "f");
 
     formData.append("bankName", data.bankAccount.bankName);
-    formData.append("bankAccount", data.bankAccount.bankAccount);
+    formData.append("newBankName", data.newBankAccount.bankName);
+    formData.append("newBankAccount", data.newBankAccount.bankAccount);
 
     console.log("Form Data: ", formData);
     return formData;
@@ -647,28 +669,36 @@ const PickPhoto: React.FC = () => {
                   ),
                   renderContent: (props) => (
                     <IonSelect {...props}>
-                      {bankState ? (
-                        bankState.map((account: any) => (
-                          <IonSelectOption key={account} value={account}>
-                            {account.bankName}: {account.bankAccount}
-                          </IonSelectOption>
-                        ))
-                      ) : (
-                        <IonSelectOption disabled={true}>
-                          <IonLabel>請到設置個人帳戶更新</IonLabel>
+                      {bankState.map((account: any) => (
+                        <IonSelectOption key={account} value={account}>
+                          {account.bankName}: {account.bankAccount}
                         </IonSelectOption>
-                      )}
+                      ))}
                     </IonSelect>
                   ),
                 })
               : null}
-            {state.qualityPlan === true ? (
-              <p># 如需新增銀行，請到設置個人帳戶更新</p>
-            ) : null}
+            {/* {state.qualityPlan === true
+              ? item({
+                  name: "newBankAccount",
+                  renderLabel: () => (
+                    <IonLabel position="floating">新增銀行戶口:</IonLabel>
+                  ),
+                  renderContent: (props) => (
+                    <IonSelect {...props}>
+                      {banks.map((bank: any) => (
+                        <IonSelectOption key={bank} value={bank}>
+                          {bank}
+                        </IonSelectOption>
+                      ))}
+                    </IonSelect>
+                  ),
+                })
+              : null} */}
             {!isBankAccountOk ? (
               <>
                 <div className="ion-text-center">
-                  <IonText color="danger">請選擇銀行戶口</IonText>{" "}
+                  <IonText color="danger">請選擇銀行戶口</IonText>
                 </div>
                 <br />
               </>
