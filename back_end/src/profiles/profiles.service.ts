@@ -21,7 +21,7 @@ export class ProfilesService {
 
     let bankInfo = await this.knex
       .select('*')
-      .from('bank_account')
+      .from('bank_accounts')
       .where('user_id', userId);
 
     return { userInfo: userInfo[0], bankInfo: bankInfo };

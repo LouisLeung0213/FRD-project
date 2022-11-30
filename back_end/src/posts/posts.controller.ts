@@ -40,7 +40,6 @@ export class PostsController {
     @Body() createPostDto: CreatePostDto,
     // @UploadedFiles() files: Record<string, Express.Multer.File[]>,
   ) {
-    console.log('createPostDto', createPostDto);
     // let counter = 0;
     // let timestamp = Date.now();
     let post_id = await this.postsService.create(createPostDto);
@@ -53,13 +52,15 @@ export class PostsController {
     //   await writeFile(join('uploads', filename), file.buffer);
     // }
     console.log('createPostDto', createPostDto);
-    // console.log('how long', createPostDto.photo[1]);
+
     if (createPostDto.photo_qty > 1) {
       for (let photo of createPostDto.photo) {
         console.log('photo', photo);
+        console.log('more than one photo: ', post_id);
         await this.postsService.createImageLink(photo, post_id[0].id);
       }
     } else {
+      console.log('one photo: ', post_id);
       await this.postsService.createImageLink(
         createPostDto.photo.toString(),
         post_id[0].id,

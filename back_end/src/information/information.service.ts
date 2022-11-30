@@ -13,14 +13,14 @@ export class InformationService {
   }
 
   async allBank() {
-    let banks = await this.knex.select('*').from('bank');
+    let banks = await this.knex.select('*').from('banks');
     return banks;
   }
 
   async savedBank(id: number) {
     let banks_id = await this.knex
       .select('*')
-      .from('bank_account')
+      .from('bank_accounts')
       .where('user_id', id);
     let bank_name_arr = [];
     console.log('banks_id', banks_id);
@@ -28,7 +28,7 @@ export class InformationService {
       for (let i = 0; i < banks_id.length; i++) {
         let bank_name = await this.knex
           .select('bank_name')
-          .from('bank')
+          .from('banks')
           .where('id', banks_id[i].bank_id);
         console.log(bank_name[0].bank_name);
 
@@ -46,8 +46,8 @@ export class InformationService {
   async deleteBank(accountShouldDelete: number) {
     let result = await this.knex
       .delete()
-      .from('bank_account')
-      .where('bank_account', accountShouldDelete);
+      .from('bank_accounts')
+      .where('bank_accounts', accountShouldDelete);
 
     return { message: 'account delete successfully' };
   }

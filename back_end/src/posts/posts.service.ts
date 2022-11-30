@@ -4,72 +4,22 @@ import { UsersService } from 'src/users/users.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { UpdateStatusDto } from './dto/updateStatus-post.dto';
-// import { initializeApp } from 'firebase/app';
-
-// const firebaseConfig = {
-//   apiKey: 'AIzaSyD243djxwnLoP4tSfW0CUqOlE-3z0UQGL4',
-//   authDomain: 'test-6e6e8.firebaseapp.com',
-//   projectId: 'test-6e6e8',
-//   storageBucket: 'test-6e6e8.appspot.com',
-//   messagingSenderId: '541343843596',
-//   appId: '1:541343843596:web:7f5af8f2e7113d68a53529',
-//   measurementId: 'G-35MBSYNCVH',
-// };
 
 @Injectable()
 export class PostsService {
-  // firebase storage
-  // private app: any;
-  constructor(@InjectKnex() private readonly knex: Knex) {
-    // firebase storage
-    // this.app = initializeApp(firebaseConfig);
-  }
+  constructor(@InjectKnex() private readonly knex: Knex) {}
   async create(createPostDto: CreatePostDto) {
     try {
       let quality_plan = false;
       let pending_in = 'selling';
       let post_time: any = this.knex.fn.now();
       let locationId: number = 1;
-      if (createPostDto.qualityPlan === 't') {
-        quality_plan = true;
-        pending_in = 'pending_in';
-        let location = await this.knex('store_location')
-          .select('*')
-          .where('location', createPostDto.location)
-          .returning('id');
-        locationId = location[0].id;
-
-        // let checkBankAccount = await this.knex('users')
-        //   .select('bank_account')
-        //   .where('id', createPostDto.user_id)
-        //   .returning('bank_account');
-
-        // console.log(checkBankAccount);
-
-        // if (!checkBankAccount[0].bankAccount) {
-        //   await this.knex('users')
-        //     .update({
-        //       bank_account: createPostDto.bankAccount,
-        //     })
-        //     .where('id', createPostDto.user_id);
-        // }
-      }
 
       let promotion_plan = false;
       if (createPostDto.promotion === 't') {
         promotion_plan = true;
       }
-      console.log('??', {
-        user_id: +createPostDto.user_id,
-        post_title: createPostDto.title,
-        post_description: createPostDto.description,
-        original_price: createPostDto.startPrice,
-        q_mark: quality_plan,
-        auto_adjust_plan: promotion_plan,
-        location_id: locationId,
-        status: pending_in,
-        post_time: post_time,
-      });
+
       let createPost = await this.knex('posts')
         .insert({
           user_id: +createPostDto.user_id,
@@ -84,7 +34,47 @@ export class PostsService {
         })
         .returning('id');
 
-      console.log('createPost', createPost);
+      if (createPostDto.qualityPlan === 't' && createPostDto.bankName != '') {
+        quality_plan = true;
+        pending_in = 'pending_in';
+        let location = await this.knex('store_locations')
+          .select('*')
+          .where('location', createPostDto.location)
+          .returning('id');
+        locationId = location[0].id;
+
+        let bank_account_id = await this.knex('bank_accounts')
+          .select('id')
+          .where('bank_accounts', createPostDto.bankAccount)
+          .returning('id');
+
+        let bank_reference = await this.knex('posts')
+          .update('bank_references', bank_account_id[0].id)
+          .where('id', createPost[0].id);
+
+        console.log('createPost', bank_reference);
+      }
+
+      if (
+        createPostDto.qualityPlan === 't' &&
+        createPostDto.newBankName != ''
+      ) {
+        let bankId = await this.knex('banks')
+          .select('id')
+          .where('bank_name', createPostDto.newBankName);
+
+        let new_bank_account_id = await this.knex('bank_accounts')
+          .insert({
+            bank_account: createPostDto.newBankAccount,
+            user_id: createPostDto.user_id,
+            bank_id: bankId[0].id,
+          })
+          .returning('id');
+
+        let bank_reference = await this.knex('posts')
+          .update('bank_references', new_bank_account_id[0].id)
+          .where('id', createPost[0].id);
+      }
       let tags = createPostDto.tags.split('#');
       console.log(tags);
       tags.shift();
@@ -164,7 +154,7 @@ export class PostsService {
       .fullOuterJoin('bid_records', 'bid_records.post_id', 'posts.id')
       .where('status', 'selling')
       .groupBy('posts.id', 'users.username', 'users.nickname');
-    console.log('showAllList', showAllList);
+    // console.log('showAllList', showAllList);
     return showAllList;
   }
 
@@ -219,12 +209,12 @@ export class PostsService {
         status: 'selling',
       })
       .where('id', updatePostDto.postId);
-    console.log(updatePostInfo);
+    // console.log(updatePostInfo);
     return `This action updates a #${id} post`;
   }
 
   async updateStatus(id: number, updateStatusDto: UpdateStatusDto) {
-    console.log(updateStatusDto);
+    // console.log(updateStatusDto);
 
     await this.knex('posts')
       .update({

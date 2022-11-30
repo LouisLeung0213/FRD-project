@@ -33,7 +33,6 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "dotenv": "^16.0.3",
-    "firebase": "^9.14.0",
     "helmet": "^6.0.0",
     "knex": "^2.3.0",
     "listening-on": "^2.0.9",

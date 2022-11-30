@@ -46,6 +46,7 @@ import {
   getStorage,
   deleteObject,
 } from "firebase/storage";
+import { routes } from "../../routes";
 
 const UpdateProfile: React.FC = () => {
   const jwtState = useSelector((state: RootState) => state.jwt);
@@ -58,6 +59,7 @@ const UpdateProfile: React.FC = () => {
     real_icon_src = jwtState.icon_src;
   }
   const { photos, takePhoto } = useImageFiles();
+
   const [showedIcon, setShowedIcon] = useState(real_icon_src as string);
   useEffect(() => {
     let photosLength = photos.length;
@@ -111,7 +113,7 @@ const UpdateProfile: React.FC = () => {
       let savedBankArr: any = [];
 
       for (let i = 0; i < json.bank_name_arr.length; i++) {
-        console.log("saved bank:", json[i]);
+        // console.log("saved bank:", json[i]);
         savedBankArr.push({
           bankName: savedBankNameArr[i].bank_name,
           bankAccount: savedBankAccount[i].bank_account,
@@ -240,8 +242,11 @@ const UpdateProfile: React.FC = () => {
       if (jwtState.icon_name !== "/default/new_usericon.jpeg+1+1669717126192") {
         deleteImage(jwtState.icon_name!);
       }
-      icon_url = await uploadBytesResumablePromise(lastPhoto);
-      icon_name = `/icons/${lastPhoto.name}+${jwtState.id}+${now}`;
+
+      if (photosLength > 0) {
+        icon_url = await uploadBytesResumablePromise(lastPhoto);
+        icon_name = `/icons/${lastPhoto.name}+${jwtState.id}+${now}`;
+      }
 
       let res = await fetch(
         `${API_ORIGIN}/users/updateUserInfo/${jwtState.id}`,
@@ -274,17 +279,20 @@ const UpdateProfile: React.FC = () => {
             email: state.email,
             joinedTime: jwtState.joinedTime,
             isAdmin: jwtState.isAdmin,
-            bankAccount: jwtState.bankAccount,
+            bankAccount: [
+              ...jwtState.bankAccount,
+              { bankName: state.bank_name, bankAccount: state.bank_account },
+            ],
             icon_name: icon_name,
-            icon_src: jwtState.icon_src,
+            icon_src: icon_url,
           })
         );
       }
 
       console.log("reduxState: ", jwtState);
-      // router.push(routes.tab.profile, "forward", "pop");
+      // // router.push(routes.tab.profile, "forward", "pop");
       router.goBack();
-      // router.push(routes.tab.profile, "forward", "replace");
+      // router.push(routes.tab.profile(jwtState.id!), "forward", "replace");
     } catch (error) {
       console.log(error);
     }
@@ -457,17 +465,15 @@ const UpdateProfile: React.FC = () => {
               ),
             })}
 
-            <IonMenuToggle>
-              <IonButton
-                className="ion-margin-top"
-                onClick={() => {
-                  updateInfo(state);
-                }}
-                expand="block"
-              >
-                完成
-              </IonButton>
-            </IonMenuToggle>
+            <IonButton
+              className="ion-margin-top"
+              onClick={() => {
+                updateInfo(state);
+              }}
+              expand="block"
+            >
+              完成
+            </IonButton>
           </IonList>
           <IonButton onClick={showPhotos}>show</IonButton>
         </IonContent>

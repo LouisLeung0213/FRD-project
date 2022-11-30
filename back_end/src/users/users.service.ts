@@ -96,7 +96,7 @@ export class UsersService {
 
       let bank_id = await this.knex
         .select('id')
-        .from('bank')
+        .from('banks')
         .where('bank_name', updateUserInfoDto.bank_name);
 
       if (users.length > 0) {
@@ -113,7 +113,7 @@ export class UsersService {
 
         let addBank;
         if (updateUserInfoDto.bank_account) {
-          addBank = await this.knex('bank_account').insert({
+          addBank = await this.knex('bank_accounts').insert({
             bank_account: updateUserInfoDto.bank_account,
             user_id: id,
             bank_id: bank_id[0].id,
