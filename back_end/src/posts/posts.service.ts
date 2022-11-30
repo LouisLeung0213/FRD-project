@@ -37,15 +37,15 @@ export class PostsService {
       if (createPostDto.qualityPlan === 't') {
         quality_plan = true;
         pending_in = 'pending_in';
-        let location = await this.knex('store_location')
+        let location = await this.knex('store_locations')
           .select('*')
           .where('location', createPostDto.location)
           .returning('id');
         locationId = location[0].id;
 
-        let bank_account_id = await this.knex('bank_account')
+        let bank_account_id = await this.knex('bank_accounts')
           .select('id')
-          .where('bank_account', createPostDto.bankAccount)
+          .where('bank_accounts', createPostDto.bankAccount)
           .returning('id');
 
         console.log(bank_account_id);

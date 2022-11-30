@@ -39,7 +39,7 @@ export async function seed(knex: Knex): Promise<void> {
       },
     ]);
 
-    await txn('bank').insert([
+    await txn('banks').insert([
       { bank_name: '恆生銀行' },
       {
         bank_name: '匯豐銀行',
@@ -58,7 +58,15 @@ export async function seed(knex: Knex): Promise<void> {
       },
     ])
 
-    await txn('store_location').insert([
+    await txn('bank_accounts').insert(
+      [
+        {bank_account: '123', user_id: '1', bank_id: '1'},
+        {bank_account: '123', user_id: '2', bank_id: '1'},
+        {bank_account: '123', user_id: '3', bank_id: '1'}
+      ]
+    )
+
+    await txn('store_locations').insert([
       { location: 'notAvailable' },
       {
         location: '荃灣西',

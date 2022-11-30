@@ -18,18 +18,18 @@ export async function up(knex: Knex): Promise<void> {
     table.text('icon_src').defaultTo("https://firebasestorage.googleapis.com/v0/b/test-6e6e8.appspot.com/o/default%2Fnew_usericon.jpeg%2B1%2B1669717126192?alt=media&token=aad5a75f-811c-48a2-80d1-673cef3e5d3d");
     table.text('firebase_token');
   });
-  await knex.schema.createTableIfNotExists('bank', (table) => {
+  await knex.schema.createTableIfNotExists('banks', (table) => {
     table.increments('id');
     table.string('bank_name').notNullable();
   });
-  await knex.schema.createTableIfNotExists('bank_account', (table) => {
+  await knex.schema.createTableIfNotExists('bank_accounts', (table) => {
     table.increments('id');
     table.text('bank_account').notNullable();
     table.integer('user_id').notNullable().references('users.id');
-    table.integer('bank_id').notNullable().references('bank.id');
+    table.integer('bank_id').notNullable().references('banks.id');
   });
 
-  await knex.schema.createTableIfNotExists('client_secret', (table) => {
+  await knex.schema.createTableIfNotExists('client_secrets', (table) => {
     table.increments('id');
     table.integer('amount').notNullable();
     table.string('client_secret').notNullable();
@@ -56,7 +56,7 @@ export async function up(knex: Knex): Promise<void> {
     table.timestamp('search_time').notNullable().defaultTo(knex.fn.now());
   });
 
-  await knex.schema.createTableIfNotExists('store_location', (table) => {
+  await knex.schema.createTableIfNotExists('store_locations', (table) => {
     table.increments('id');
     table.string('location').notNullable();
   });
@@ -84,9 +84,9 @@ export async function up(knex: Knex): Promise<void> {
       .defaultTo('selling');
     table.timestamp('post_time');
     table.integer('priority').notNullable().defaultTo(0);
-    table.integer('location_id').references('store_location.id');
+    table.integer('location_id').references('store_locations.id');
     table.boolean('auto_adjust_plan').defaultTo(false);
-    table.integer('bank_references').references('bank_account.id');
+    table.integer('bank_references').references('bank_accounts.id');
   });
 
   await knex.schema.createTableIfNotExists('storages', (table) => {
@@ -152,9 +152,9 @@ export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTableIfExists('storages');
   await knex.schema.dropTableIfExists('banned_users');
   await knex.schema.dropTableIfExists('posts');
-  await knex.schema.dropTableIfExists('store_location');
-  await knex.schema.dropTableIfExists('client_secret');
-  await knex.schema.dropTableIfExists('bank_account');
-  await knex.schema.dropTableIfExists('bank');
+  await knex.schema.dropTableIfExists('store_locations');
+  await knex.schema.dropTableIfExists('client_secrets');
+  await knex.schema.dropTableIfExists('bank_accounts');
+  await knex.schema.dropTableIfExists('banks');
   await knex.schema.dropTableIfExists('users');
 }
