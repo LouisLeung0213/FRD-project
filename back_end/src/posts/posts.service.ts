@@ -14,31 +14,12 @@ export class PostsService {
       let pending_in = 'selling';
       let post_time: any = this.knex.fn.now();
       let locationId: number = 1;
-      if (createPostDto.qualityPlan === 't') {
-        quality_plan = true;
-        pending_in = 'pending_in';
-        let location = await this.knex('store_location')
-          .select('*')
-          .where('location', createPostDto.location)
-          .returning('id');
-        locationId = location[0].id;
-      }
 
       let promotion_plan = false;
       if (createPostDto.promotion === 't') {
         promotion_plan = true;
       }
-      // console.log('??', {
-      //   user_id: +createPostDto.user_id,
-      //   post_title: createPostDto.title,
-      //   post_description: createPostDto.description,
-      //   original_price: createPostDto.startPrice,
-      //   q_mark: quality_plan,
-      //   auto_adjust_plan: promotion_plan,
-      //   location_id: locationId,
-      //   status: pending_in,
-      //   post_time: post_time,
-      // });
+
       let createPost = await this.knex('posts')
         .insert({
           user_id: +createPostDto.user_id,
@@ -53,18 +34,41 @@ export class PostsService {
         })
         .returning('id');
 
-      let bank_account_id = await this.knex('bank_account')
-        .select('id')
-        .where('bank_account', createPostDto.bankAccount)
-        .returning('id');
+      if (createPostDto.qualityPlan === 't') {
+        quality_plan = true;
+        pending_in = 'pending_in';
+        let location = await this.knex('store_location')
+          .select('*')
+          .where('location', createPostDto.location)
+          .returning('id');
+        locationId = location[0].id;
 
-      console.log(bank_account_id);
+        let bank_account_id = await this.knex('bank_account')
+          .select('id')
+          .where('bank_account', createPostDto.bankAccount)
+          .returning('id');
 
-      let bank_reference = await this.knex('posts')
-        .update('bank_references', bank_account_id[0].id)
-        .where('id', createPost[0].id);
+        console.log(bank_account_id);
 
-      console.log('createPost', bank_reference);
+        let bank_reference = await this.knex('posts')
+          .update('bank_references', bank_account_id[0].id)
+          .where('id', createPost[0].id);
+
+        console.log('createPost', bank_reference);
+      }
+
+      // console.log('??', {
+      //   user_id: +createPostDto.user_id,
+      //   post_title: createPostDto.title,
+      //   post_description: createPostDto.description,
+      //   original_price: createPostDto.startPrice,
+      //   q_mark: quality_plan,
+      //   auto_adjust_plan: promotion_plan,
+      //   location_id: locationId,
+      //   status: pending_in,
+      //   post_time: post_time,
+      // });
+
       let tags = createPostDto.tags.split('#');
       console.log(tags);
       tags.shift();

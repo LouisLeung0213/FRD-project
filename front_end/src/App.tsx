@@ -79,6 +79,9 @@ import { updatePoints } from "./redux/points/actions";
 setupIonicReact();
 
 const App: React.FC = () => {
+  const [username, setUsername] = useState("");
+  let jwtState = useSelector((state: RootState) => state.jwt);
+
   const dispatch = useDispatch();
   const getProfile = async () => {
     let userId = await getValue("userId");
@@ -89,6 +92,7 @@ const App: React.FC = () => {
 
     let userInfo = await res.json();
     console.log("userInfo: ", userInfo);
+    setUsername(userInfo.userInfo.username);
     dispatch(
       updateJwt({
         jwtKey: token,
@@ -109,10 +113,14 @@ const App: React.FC = () => {
         points: userInfo.userInfo.points,
       })
     );
+
+    console.log("!!!!!!!!!!!!!!!!!!!", jwtState.isAdmin);
   };
 
   useEffect(() => {
+    // setLoginLoad(true);
     getProfile();
+    console.log(username);
 
     const registerNotifications = async () => {
       let permStatus = await PushNotifications.checkPermissions();
@@ -163,9 +171,8 @@ const App: React.FC = () => {
     }
 
     listenToDeepLinkOpen();
-  }, []);
+  }, [username]);
   let profileHref;
-  let jwtState = useSelector((state: RootState) => state.jwt);
 
   if (!jwtState.id) {
     profileHref = "/tab/Login";
@@ -173,6 +180,10 @@ const App: React.FC = () => {
   if (jwtState.id) {
     profileHref = `/tab/Profile/${jwtState.id}`;
   }
+
+  useEffect(() => {
+    console.log("123123131", username);
+  }, [username]);
 
   return (
     <IonApp>
@@ -182,11 +193,12 @@ const App: React.FC = () => {
         {/*DeepLink Setup end */}
         <IonRouterOutlet>
           <Switch>
-            <Route exact={true} path="/">
+            <Route path="/">
               <Redirect to={routes.tab.mainPage} />
             </Route>
             <Route
               path={routes.menu.accountSetting}
+              exact={true}
               render={() => <UpdateProfile />}
             ></Route>
             <Route
@@ -284,17 +296,19 @@ const App: React.FC = () => {
                   <IonIcon icon={homeOutline} />
                   <IonLabel>主頁</IonLabel>
                 </IonTabButton>
-                {!!jwtState.id ? (
+                {!!jwtState.jwtKey ? (
                   <IonTabButton tab="PickPhoto" href={routes.tab.pickPhoto}>
                     <IonIcon icon={duplicateOutline} />
                     <IonLabel>交易</IonLabel>
                   </IonTabButton>
                 ) : null}
+                {!!jwtState.jwtKey ? (
+                  <IonTabButton tab="Notices" href={routes.tab.notices}>
+                    <IonIcon icon={chatbubblesOutline} />
+                    <IonLabel>聊天</IonLabel>
+                  </IonTabButton>
+                ) : null}
 
-                <IonTabButton tab="Notices" href="/tab/Notices">
-                  <IonIcon icon={chatbubblesOutline} />
-                  <IonLabel>聊天</IonLabel>
-                </IonTabButton>
                 <IonTabButton tab="Profile" href={profileHref}>
                   <IonIcon icon={personCircleOutline} />
                   <IonLabel>個人資料</IonLabel>
