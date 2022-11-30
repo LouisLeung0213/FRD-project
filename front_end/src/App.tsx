@@ -193,7 +193,7 @@ const App: React.FC = () => {
         {/*DeepLink Setup end */}
         <IonRouterOutlet>
           <Switch>
-            <Route path="/">
+            <Route path="/" exact={true}>
               <Redirect to={routes.tab.mainPage} />
             </Route>
             <Route

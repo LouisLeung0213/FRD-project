@@ -35,7 +35,7 @@ export class BidController {
       });
       socket.on('join-TJroom', (data) => {
         socket.join('TJroom: ' + data.userId);
-        console.log('Joined', data.userId);
+        console.log('TJroom', data.userId);
       });
     });
   }

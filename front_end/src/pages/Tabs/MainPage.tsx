@@ -58,6 +58,11 @@ const MainPage: React.FC = () => {
         setPostsList(msg.newPrice);
         return;
       });
+      socket.on("new-post", (msg) => {
+        console.log("msg", msg);
+        setPostsList(msg.newPost);
+        return;
+      });
       return () => {};
     }, [])
   );
@@ -112,7 +117,7 @@ const MainPage: React.FC = () => {
   }
 
   function goChat(id: number) {
-    router.push(routes.chatroom(id));
+    router.push(routes.chatroom(id), "forward", "replace");
     dismiss();
   }
 
