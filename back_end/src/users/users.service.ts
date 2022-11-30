@@ -111,11 +111,14 @@ export class UsersService {
           })
           .returning('id');
 
-        let addBank = await this.knex('bank_account').insert({
-          bank_account: updateUserInfoDto.bank_account,
-          user_id: id,
-          bank_id: bank_id[0].id,
-        });
+        let addBank;
+        if (updateUserInfoDto.bank_account) {
+          addBank = await this.knex('bank_account').insert({
+            bank_account: updateUserInfoDto.bank_account,
+            user_id: id,
+            bank_id: bank_id[0].id,
+          });
+        }
 
         return {
           userId,

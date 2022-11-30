@@ -50,10 +50,15 @@ import {
 const UpdateProfile: React.FC = () => {
   const jwtState = useSelector((state: RootState) => state.jwt);
   console.log("jwtState.icon_src: ", jwtState.icon_src);
+  let real_icon_src = "";
+
+  if (jwtState.icon_src && jwtState.icon_src.includes("$1")) {
+    real_icon_src = jwtState.icon_src.split("$1").join("?");
+  } else if (jwtState.icon_src) {
+    real_icon_src = jwtState.icon_src;
+  }
   const { photos, takePhoto } = useImageFiles();
-  const [showedIcon, setShowedIcon] = useState(
-    jwtState.icon_src!.split("$1").join("?") as string
-  );
+  const [showedIcon, setShowedIcon] = useState(real_icon_src as string);
   useEffect(() => {
     let photosLength = photos.length;
     if (photosLength > 0) {
@@ -183,6 +188,9 @@ const UpdateProfile: React.FC = () => {
 
     let now = Date.now();
 
+    let icon_url = jwtState.icon_src;
+    let icon_name = jwtState.icon_name;
+
     function uploadBytesResumablePromise(photo: any): Promise<string> {
       return new Promise((resolve, reject) => {
         findMIMEType(photo.file.type);
@@ -203,6 +211,7 @@ const UpdateProfile: React.FC = () => {
           () => {
             // download url
             getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+              console.log("url", url);
               resolve(url);
             });
           }
@@ -231,8 +240,8 @@ const UpdateProfile: React.FC = () => {
       if (jwtState.icon_name !== "/default/new_usericon.jpeg+1+1669717126192") {
         deleteImage(jwtState.icon_name!);
       }
-      let icon_url = await uploadBytesResumablePromise(lastPhoto);
-      let icon_name = `/icons/${lastPhoto.name}+${jwtState.id}+${now}`;
+      icon_url = await uploadBytesResumablePromise(lastPhoto);
+      icon_name = `/icons/${lastPhoto.name}+${jwtState.id}+${now}`;
 
       let res = await fetch(
         `${API_ORIGIN}/users/updateUserInfo/${jwtState.id}`,

@@ -164,7 +164,7 @@ export class PostsService {
       .fullOuterJoin('bid_records', 'bid_records.post_id', 'posts.id')
       .where('status', 'selling')
       .groupBy('posts.id', 'users.username', 'users.nickname');
-    // console.log('showAllList', showAllList);
+    console.log('showAllList', showAllList);
     return showAllList;
   }
 

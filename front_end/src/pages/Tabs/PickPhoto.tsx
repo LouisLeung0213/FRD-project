@@ -95,6 +95,7 @@ const PickPhoto: React.FC = () => {
   const [isPhotoOk, setIsPhotoOk] = useState(true);
   const [percent, setPercent] = useState(0);
   const [bankState, setBankState] = useState(jwtState.bankAccount);
+  const [savedBanks, setSavedBanks] = useState() as any;
 
   const { state, item } = useIonFormState({
     title: "",
@@ -106,6 +107,46 @@ const PickPhoto: React.FC = () => {
     qualityPlan: false,
     promotion: false,
   });
+
+  async function getSavedBank() {
+    let result = await fetch(
+      `${API_ORIGIN}/information/savedBank/${jwtState.id}`
+    );
+
+    let json = await result.json();
+    console.log("here!", json);
+
+    if (json.banks_id.length > 0) {
+      let savedBankNameArr: any = json.bank_name_arr;
+      let savedBankAccount: any = json.banks_id;
+      console.log(
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+        savedBankNameArr,
+        savedBankAccount
+      );
+      let savedBankArr: any = [];
+
+      for (let i = 0; i < json.bank_name_arr.length; i++) {
+        console.log("saved bank:", json[i]);
+        savedBankArr.push({
+          bankName: savedBankNameArr[i].bank_name,
+          bankAccount: savedBankAccount[i].bank_account,
+        });
+      }
+      console.log("saved bank Array PickPhoto:", savedBankArr);
+      return savedBankArr;
+    } else {
+      return;
+    }
+  }
+
+  useEffect(() => {
+    async function get() {
+      let userBank = await getSavedBank();
+      setSavedBanks(userBank);
+    }
+    get();
+  }, []);
 
   function findMIMEType(ext: string) {
     if (ext == "image/jpeg") {
@@ -151,7 +192,6 @@ const PickPhoto: React.FC = () => {
 
   //console.log(items);
   const submitForm = async (data: any) => {
-    console.log(state.title);
     let ok = true;
     function checkStatus() {
       if (photos.length < 1) {
@@ -204,9 +244,9 @@ const PickPhoto: React.FC = () => {
     checkStatus();
 
     console.log("pass");
-    console.log("ok", ok);
+    // console.log("ok", ok);
 
-    console.log("photos", photos);
+    // console.log("photos", photos);
     let photoQTY = 0;
 
     if (!photos) {
@@ -255,23 +295,23 @@ const PickPhoto: React.FC = () => {
       let url = await uploadBytesResumablePromise(photo);
       urls.push(url);
     }
-    console.log("finished for loop");
-    console.log({ urls });
+    // console.log("finished for loop");
+    // console.log({ urls });
 
     let formDataUpload = formAppend();
     formDataUpload.append("photo_qty", photoQTY as any);
-    console.log("url", urls);
+    // console.log("url", urls);
     for (let url of urls) {
       formDataUpload.append("photo", url);
     }
-    console.log(formDataUpload.getAll("photo"));
+    // console.log(formDataUpload.getAll("photo"));
     let res = await fetch(`${API_ORIGIN}/posts/postItem`, {
       method: "POST",
 
       body: formDataUpload,
     });
     let result = await res.json();
-    console.log(result);
+    // console.log(result);
     if (result.status == 200) {
       router.push(routes.tab.mainPage);
       console.log("done");
@@ -481,13 +521,11 @@ const PickPhoto: React.FC = () => {
                 ></IonTextarea>
               ),
             })}
-
             {!isDescriptionOk ? (
               <div className="ion-text-center">
                 <IonText color="danger">請輸入產品描述</IonText>
               </div>
             ) : null}
-
             <br />
             {item({
               name: "tags",
@@ -519,7 +557,6 @@ const PickPhoto: React.FC = () => {
                 <IonText color="danger">請輸入有效底價</IonText>
               ) : null}
             </div>
-
             <br />
             {item({
               name: "qualityPlan",
@@ -598,7 +635,6 @@ const PickPhoto: React.FC = () => {
                   ),
                 })
               : null}
-
             {!isLocationOk ? (
               <>
                 <div className="ion-text-center">
@@ -608,22 +644,36 @@ const PickPhoto: React.FC = () => {
               </>
             ) : null}
 
-            {/* {state.qualityPlan === true
+            {state.qualityPlan === true
               ? item({
                   name: "bankAccount",
                   renderLabel: () => (
-                    <IonLabel position="floating">請輸入銀行戶口</IonLabel>
+                    <IonLabel position="floating">請選擇銀行戶口:</IonLabel>
                   ),
-                  renderContent: (props) => <IonInput {...props}></IonInput>,
+                  renderContent: (props) => (
+                    <IonSelect className={styles.bankSelect} {...props}>
+                      {savedBanks.map((account: any) => (
+                        <IonSelectOption key={account} value={account}>
+                          {account.bankName}: {account.bankAccount}
+                        </IonSelectOption>
+                      ))}
+                    </IonSelect>
+                  ),
                 })
               : null}
-            <div className="ion-text-center">
+            {state.qualityPlan === true ? (
+              <p className="ion-padding">
+                {" "}
+                # 如需新增銀行，請到設置個人帳戶更新
+              </p>
+            ) : null}
+            {/*<div className="ion-text-center">
               {state.qualityPlan === true &&
               !state.bankAccount.match(/^\d+$/) &&
               state.bankAccount !== "" ? (
-                <IonText color="danger">請輸入有效銀行戶口</IonText>
-              ) : null} 
-            </div> */}
+                <IonText color="danger"></IonText>
+              ) : null}
+            </div>*/}
             <br />
             {item({
               name: "promotion",
