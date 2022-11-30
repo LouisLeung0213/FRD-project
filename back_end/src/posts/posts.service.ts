@@ -45,7 +45,7 @@ export class PostsService {
 
         let bank_account_id = await this.knex('bank_accounts')
           .select('id')
-          .where('bank_account', createPostDto.bankAccount)
+          .where('bank_accounts', createPostDto.bankAccount)
           .returning('id');
 
         let bank_reference = await this.knex('posts')

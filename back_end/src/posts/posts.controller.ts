@@ -56,9 +56,11 @@ export class PostsController {
     if (createPostDto.photo_qty > 1) {
       for (let photo of createPostDto.photo) {
         console.log('photo', photo);
+        console.log('more than one photo: ', post_id);
         await this.postsService.createImageLink(photo, post_id[0].id);
       }
     } else {
+      console.log('one photo: ', post_id);
       await this.postsService.createImageLink(
         createPostDto.photo.toString(),
         post_id[0].id,

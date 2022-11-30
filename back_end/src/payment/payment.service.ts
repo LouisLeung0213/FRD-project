@@ -52,7 +52,7 @@ export class PaymentService {
       return { message: "your account didn't have enough money" };
     }
 
-    let held_intent = await this.knex('client_secret')
+    let held_intent = await this.knex('client_secrets')
       .select('*')
       .where('user_id', updatePointsDto.userId)
       .andWhere('captured', false);
@@ -123,9 +123,9 @@ export class PaymentService {
         },
       );
       console.log(result);
-      let captured_result = await this.knex('client_secret')
+      let captured_result = await this.knex('client_secrets')
         .update('captured', true)
-        .where('client_secret', intent2.client_secret_should_capture);
+        .where('client_secrets', intent2.client_secret_should_capture);
 
       if (remain_capture == 0) {
         break;
@@ -170,7 +170,7 @@ export class PaymentService {
       })
       .where('id', userId);
     let client_secret = clientSecret.split('_').slice(0, 2).join('_');
-    let addClientSecret = await this.knex('client_secret').insert({
+    let addClientSecret = await this.knex('client_secrets').insert({
       amount: points,
       client_secret: client_secret,
       user_id: userId,
@@ -200,8 +200,8 @@ export class PaymentService {
       .where('id', userId);
 
     let client_secret = clientSecret.split('_').slice(0, 2).join('_');
-    let deleteClientSecret = await this.knex('client_secret')
-      .delete(' client_secret', client_secret)
+    let deleteClientSecret = await this.knex('client_secrets')
+      .delete(' client_secrets', client_secret)
       .where('user_id', userId);
 
     return { deleteClientSecret };
