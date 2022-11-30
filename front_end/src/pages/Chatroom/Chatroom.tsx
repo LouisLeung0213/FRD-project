@@ -1,5 +1,8 @@
 import {
   IonAvatar,
+  IonBackButton,
+  IonButton,
+  IonButtons,
   IonContent,
   IonFooter,
   IonHeader,
@@ -11,8 +14,13 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  useIonRouter,
 } from "@ionic/react";
-import { navigateOutline } from "ionicons/icons";
+import {
+  chevronBackOutline,
+  chevronForwardOutline,
+  navigateOutline,
+} from "ionicons/icons";
 import moment from "moment";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -42,6 +50,8 @@ type MSG = {
 
 const Chatroom: React.FC = () => {
   const [newWsMessageId, setNewWsMessageId] = useState(null);
+  const router = useIonRouter();
+
   useSocket(
     useCallback((socket: Socket) => {
       socket.on("new-msg", (data) => {
@@ -113,6 +123,14 @@ const Chatroom: React.FC = () => {
     getChatroomDetail();
   }, []);
 
+  async function backToMain() {
+    router.push("/", "forward", "replace");
+  }
+
+  async function backToChat() {
+    router.push(routes.tab.notices, "forward", "replace");
+  }
+
   async function sendMsg(msg: string) {
     console.log("chatroomId", chatroomId.id);
     let send = await fetch(`${API_ORIGIN}/chatroom/send/${chatroomId.id}`, {
@@ -135,7 +153,27 @@ const Chatroom: React.FC = () => {
     <IonPage className="ChatListTab">
       <IonHeader>
         <IonToolbar>
+          <IonButtons slot="start">
+            <IonButton
+              onClick={() => {
+                backToMain();
+              }}
+            >
+              <IonIcon size="large" icon={chevronBackOutline}></IonIcon> 主頁
+            </IonButton>
+          </IonButtons>
           <IonTitle>Chatroom</IonTitle>
+
+          <IonButtons slot="end">
+            <IonButton
+              onClick={() => {
+                backToChat();
+              }}
+            >
+              聊天室
+              <IonIcon size="large" icon={chevronForwardOutline}></IonIcon>
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">

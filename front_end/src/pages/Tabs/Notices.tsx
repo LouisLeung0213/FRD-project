@@ -8,10 +8,12 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  useIonRouter,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { API_ORIGIN } from "../../api";
+import { routes } from "../../routes";
 import { RootState } from "../../store";
 
 import "./Notices.css";
@@ -19,6 +21,7 @@ import "./Notices.css";
 const Notices: React.FC = () => {
   let jwtState = useSelector((state: RootState) => state.jwt) as any;
   const [chatList, setChatList] = useState([]) as any;
+  const router = useIonRouter();
 
   useEffect(() => {
     const getChatList = async () => {
@@ -29,6 +32,10 @@ const Notices: React.FC = () => {
     };
     getChatList();
   }, []);
+
+  function goChatroom(chatroomId: number) {
+    router.push(routes.chatroom(chatroomId), "forward", "replace");
+  }
 
   return (
     <IonPage>
@@ -44,7 +51,7 @@ const Notices: React.FC = () => {
               return (
                 <div key={chat.id}>
                   {jwtState.id == chat.seller_id ? (
-                    <IonItem>
+                    <IonItem onClick={() => goChatroom(chat.id)}>
                       <IonAvatar>
                         <img src={chat.buyer_icon}></img>
                       </IonAvatar>
@@ -59,7 +66,7 @@ const Notices: React.FC = () => {
                       </IonItem>
                     </IonItem>
                   ) : (
-                    <IonItem>
+                    <IonItem onClick={() => goChatroom(chat.id)}>
                       <IonAvatar>
                         <img src={chat.seller_icon}></img>
                       </IonAvatar>

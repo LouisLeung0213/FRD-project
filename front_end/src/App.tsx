@@ -201,7 +201,7 @@ const App: React.FC = () => {
         {/*DeepLink Setup end */}
         <IonRouterOutlet>
           <Switch>
-            <Route exact={true} path="/">
+            <Route path="/" exact={true}>
               <Redirect to={routes.tab.mainPage} />
             </Route>
             <Route
