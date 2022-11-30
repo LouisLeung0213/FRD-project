@@ -18,7 +18,7 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import SignUp from "../SignUp/SignUp";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -33,6 +33,8 @@ import { API_ORIGIN } from "../../api";
 import { Preferences } from "@capacitor/preferences";
 import { setValue } from "../../service/localStorage";
 import { chevronBackOutline } from "ionicons/icons";
+import { useSocket } from "../../hooks/use-socket";
+import { Socket } from "socket.io-client";
 
 const Login: React.FC = () => {
   const jwtState = useSelector((state: RootState) => state.jwt);
@@ -45,6 +47,8 @@ const Login: React.FC = () => {
   const [isUsernameOk, setIsUsernameOk] = useState(true);
   const [isPasswordOk, setIsPasswordOk] = useState(true);
   const [isUserCorrect, setIsUserCorrect] = useState(true);
+
+  let currentUserId: number = 0;
 
   // const [isBanned, setIsBanned] = useState(false);
 
@@ -104,12 +108,22 @@ const Login: React.FC = () => {
         })
       );
       // history.push(`/tab/Profile`);
+      socket.emit("join-TJroom", { userId: userInfo.id });
       router.push(routes.tab.profile(":id"), "forward", "replace");
     } else {
       setIsUserCorrect(false);
       // alert(JSON.stringify("冇人識你喎...", null, 2));
     }
   };
+
+  const socket = useSocket(
+    useCallback(
+      (socket: Socket) => {
+        return () => {};
+      },
+      [submit]
+    )
+  );
 
   const { state, item } = useIonFormState({
     username: "caleb",

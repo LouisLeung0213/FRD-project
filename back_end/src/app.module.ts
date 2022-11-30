@@ -12,8 +12,6 @@ import { StripeModule } from './stripe/stripe.module';
 import { env } from 'process';
 import { ChatroomModule } from './chatroom/chatroom.module';
 import { PaymentModule } from './payment/payment.module';
-import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
 import { BidModule } from './bid/bid.module';
 import { InformationModule } from './information/information.module';
 

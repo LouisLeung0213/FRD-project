@@ -6,7 +6,6 @@
     "@awesome-cordova-plugins/core": "^6.2.0",
     "@awesome-cordova-plugins/fcm": "^6.2.0",
     "@awesome-cordova-plugins/photo-library": "^6.2.0",
-    "@bazumax/capacitor-firebase-storage": "^3.1.0",
     "@beenotung/tslib": "^20.2.0",
     "@capacitor-firebase/authentication": "^1.2.0",
     "@capacitor/android": "^4.4.0",

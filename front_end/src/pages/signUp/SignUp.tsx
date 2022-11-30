@@ -9,7 +9,7 @@ import {
   IonPage,
   IonText,
 } from "@ionic/react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useIonFormState } from "react-use-ionic-form";
 import { updateJwt } from "../../redux/user/actions";
@@ -20,6 +20,8 @@ import { API_ORIGIN } from "../../api";
 
 //Firebase Auth
 import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
+import { useSocket } from "../../hooks/use-socket";
+import { Socket } from "socket.io-client";
 
 const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
   onSignUp: () => void;
@@ -177,11 +179,21 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
       );
 
       props.onSignUp();
+      socket.emit("join-TJroom", { userId: userInfo.id });
       history.push(`/tab/Profile`);
     } catch (error) {
       alert(JSON.stringify("OTP錯誤", null, 2));
     }
   };
+
+  const socket = useSocket(
+    useCallback(
+      (socket: Socket) => {
+        return () => {};
+      },
+      [register]
+    )
+  );
 
   const { state, item } = useIonFormState({
     username: "clsTesting",
