@@ -49,16 +49,28 @@ const Profile: React.FC<{ user: number | null }> = (props: {
   user: number | null;
 }) => {
   let jwtState = useSelector((state: RootState) => state.jwt);
-  let icon_src = "";
-  if (jwtState.icon_src) {
-    icon_src = jwtState.icon_src.split("$1").join("?");
-  }
+  // if (jwtState.icon_src && jwtState.icon_src.includes("$1")) {
+  //   real_icon_src = jwtState.icon_src.split("$1").join("?");
+  // } else if (jwtState.icon_src) {
+  //   real_icon_src = jwtState.icon_src;
+  // }
+
   let pointsState = useSelector((state: RootState) => state.points);
+
+  let real_icon_src = "";
+  useEffect(() => {
+    if (jwtState.icon_src && jwtState.icon_src.includes("$1")) {
+      real_icon_src = jwtState.icon_src.split("$1").join("?");
+    } else if (jwtState.icon_src) {
+      real_icon_src = jwtState.icon_src;
+    }
+    setShowedIcon(real_icon_src);
+  }, [jwtState]);
 
   let [nickname, setNickname] = useState(jwtState.nickname);
   let [username, setUsername] = useState(jwtState.username);
   let [joinTime, setJoinTime] = useState(jwtState.joinedTime);
-  let [showedIcon, setShowedIcon] = useState(icon_src as string);
+  let [showedIcon, setShowedIcon] = useState(real_icon_src as string);
   let [points, setPoints] = useState(pointsState.points);
   const dispatch = useDispatch();
   let params: any = useParams();
@@ -83,8 +95,7 @@ const Profile: React.FC<{ user: number | null }> = (props: {
     } else {
       getOtherProfile();
     }
-    setShowedIcon(icon_src);
-  }, [icon_src, jwtState, pointsState]);
+  }, [jwtState, pointsState]);
 
   //jwtKey, reduxNickname
 
@@ -108,8 +119,8 @@ const Profile: React.FC<{ user: number | null }> = (props: {
   }
 
   function func() {
-    console.log(jwtState);
-    console.log(pointsState);
+    console.log("Current jwtState: ", jwtState);
+    // console.log(pointsState);
   }
   return (
     <>
