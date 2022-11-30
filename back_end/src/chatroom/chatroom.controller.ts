@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { Server } from 'socket.io';
+import { io } from 'src/io';
 import { ChatroomService } from './chatroom.service';
 import { CreateChatroomDto } from './dto/create-chatroom.dto';
 import { InsertChatroomDto } from './dto/insert-chatroom.dto';
@@ -15,6 +17,8 @@ import { UpdateChatroomDto } from './dto/update-chatroom.dto';
 @Controller('chatroom')
 export class ChatroomController {
   constructor(private readonly chatroomService: ChatroomService) {}
+
+  setupIO(io: Server) {}
 
   @Post()
   create(@Body() createChatroomDto: CreateChatroomDto) {
@@ -32,8 +36,23 @@ export class ChatroomController {
   }
 
   @Post('send/:id')
-  send(@Param('id') id: string, @Body() insertChatroomDto: InsertChatroomDto) {
-    return this.chatroomService.send(+id, insertChatroomDto);
+  async send(
+    @Param('id') id: string,
+    @Body() insertChatroomDto: InsertChatroomDto,
+  ) {
+    let send = await this.chatroomService.send(+id, insertChatroomDto);
+    let ownerId = await this.chatroomService.getOwnerId(+id);
+    console.log('send', send);
+    if ('id' in send) {
+      console.log('send');
+      io.to('TJroom: ' + insertChatroomDto.senderId).emit('new-msg', {
+        newMSG: send,
+      });
+      io.to('TJroom: ' + ownerId.id).emit('new-msg', {
+        newMSG: send,
+      });
+    }
+    return send;
   }
 
   @Get('roomDetail/:postId')

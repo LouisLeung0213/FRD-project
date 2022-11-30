@@ -63,6 +63,17 @@ export class ChatroomService {
     return send[0];
   }
 
+  async getOwnerId(chatroomId: number) {
+    let ownerId = await this.knex
+      .select('users.id')
+      .from('chatrooms')
+      .join('posts', 'post_id', 'posts.id')
+      .join('users', 'users.id', 'user_id')
+      .where('post_id', chatroomId);
+    console.log('ownerId', ownerId[0]);
+    return ownerId[0];
+  }
+
   async findAll(postId: number) {
     let postDetail = await this.knex
       .select(
@@ -83,8 +94,9 @@ export class ChatroomService {
 
   async msg(chatroomId: number) {
     let msgList = await this.knex
-      .select('content', 'sender_id', 'send_time')
+      .select('content', 'sender_id', 'send_time', 'icon_src')
       .from('chat_histories')
+      .join('users', 'sender_id', 'users.id')
       .where('chatroom_id', chatroomId);
     return msgList;
   }

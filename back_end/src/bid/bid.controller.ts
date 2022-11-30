@@ -33,6 +33,10 @@ export class BidController {
         console.log('join-room', { id: socket.id, postId });
         socket.join('room: ' + postId);
       });
+      socket.on('join-TJroom', (data) => {
+        socket.join('TJroom: ' + data.userId);
+        console.log('Joined', data.userId);
+      });
     });
   }
 

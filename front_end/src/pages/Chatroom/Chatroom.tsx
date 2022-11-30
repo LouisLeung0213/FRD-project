@@ -14,11 +14,13 @@ import {
 } from "@ionic/react";
 import { navigateOutline } from "ionicons/icons";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
+import { Socket } from "socket.io-client";
 import { resultingClientExists } from "workbox-core/_private";
 import { API_ORIGIN } from "../../api";
+import { useSocket } from "../../hooks/use-socket";
 import { routes } from "../../routes";
 import { RootState } from "../../store";
 
@@ -34,10 +36,20 @@ type MSG = {
   content: string;
   sender_id: number;
   send_time: string;
-  // icon_src: string;
+  icon_src: string;
 };
 
 const Chatroom: React.FC = () => {
+  const socket = useSocket(
+    useCallback((socket: Socket) => {
+      socket.on("new-msg", (data) => {
+        console.log("received", data);
+        setMsgList(data.newMSG);
+      });
+      return () => {};
+    }, [])
+  );
+
   let jwtState = useSelector((state: RootState) => state.jwt);
 
   const [chatList, setChatList] = useState<
@@ -107,9 +119,9 @@ const Chatroom: React.FC = () => {
           </IonItem>
           {msgList.length > 0 ? (
             <>
-              {msgList.map((msg: MSG) => {
+              {msgList.map((msg: MSG, index) => {
                 return (
-                  <>
+                  <div key={index}>
                     {msg.sender_id == jwtState.id ? (
                       <>
                         <IonLabel>{moment(msg.send_time).format("L")}</IonLabel>
@@ -124,7 +136,7 @@ const Chatroom: React.FC = () => {
                           }}
                         >
                           <IonAvatar>
-                            <img src=""></img>
+                            <img src={msg.icon_src}></img>
                           </IonAvatar>
                           <IonLabel>{msg.content}</IonLabel>
                         </div>
@@ -143,13 +155,13 @@ const Chatroom: React.FC = () => {
                           }}
                         >
                           <IonAvatar>
-                            <img src=""></img>
+                            <img src={msg.icon_src}></img>
                           </IonAvatar>
                           <IonLabel>{msg.content}</IonLabel>
                         </div>
                       </>
                     )}
-                  </>
+                  </div>
                 );
               })}
             </>
