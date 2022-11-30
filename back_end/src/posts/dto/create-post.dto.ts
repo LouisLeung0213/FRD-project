@@ -45,6 +45,12 @@ export class CreatePostDto {
   bankAccount: number;
 
   @IsString()
+  newBankName: string;
+
+  @IsNumber()
+  newBankAccount: number;
+
+  @IsString()
   qualityPlan: string;
 
   @IsString()

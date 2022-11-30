@@ -34,21 +34,19 @@ export class PostsService {
         })
         .returning('id');
 
-      if (createPostDto.qualityPlan === 't') {
+      if (createPostDto.qualityPlan === 't' && createPostDto.bankName != '') {
         quality_plan = true;
         pending_in = 'pending_in';
-        let location = await this.knex('store_location')
+        let location = await this.knex('store_locations')
           .select('*')
           .where('location', createPostDto.location)
           .returning('id');
         locationId = location[0].id;
 
-        let bank_account_id = await this.knex('bank_account')
+        let bank_account_id = await this.knex('bank_accounts')
           .select('id')
           .where('bank_account', createPostDto.bankAccount)
           .returning('id');
-
-        console.log(bank_account_id);
 
         let bank_reference = await this.knex('posts')
           .update('bank_references', bank_account_id[0].id)
@@ -57,18 +55,26 @@ export class PostsService {
         console.log('createPost', bank_reference);
       }
 
-      // console.log('??', {
-      //   user_id: +createPostDto.user_id,
-      //   post_title: createPostDto.title,
-      //   post_description: createPostDto.description,
-      //   original_price: createPostDto.startPrice,
-      //   q_mark: quality_plan,
-      //   auto_adjust_plan: promotion_plan,
-      //   location_id: locationId,
-      //   status: pending_in,
-      //   post_time: post_time,
-      // });
+      if (
+        createPostDto.qualityPlan === 't' &&
+        createPostDto.newBankName != ''
+      ) {
+        let bankId = await this.knex('banks')
+          .select('id')
+          .where('bank_name', createPostDto.newBankName);
 
+        let new_bank_account_id = await this.knex('bank_accounts')
+          .insert({
+            bank_account: createPostDto.newBankAccount,
+            user_id: createPostDto.user_id,
+            bank_id: bankId[0].id,
+          })
+          .returning('id');
+
+        let bank_reference = await this.knex('posts')
+          .update('bank_references', new_bank_account_id[0].id)
+          .where('id', createPost[0].id);
+      }
       let tags = createPostDto.tags.split('#');
       console.log(tags);
       tags.shift();

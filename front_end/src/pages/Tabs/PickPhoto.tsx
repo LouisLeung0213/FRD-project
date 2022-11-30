@@ -104,7 +104,8 @@ const PickPhoto: React.FC = () => {
     startPrice: "",
     location: "",
     bankAccount: { bankName: "", bankAccount: "" },
-    newBankAccount: { bankName: "", bankAccount: "" },
+    newBankName: "",
+    newBankAccount: "",
     qualityPlan: false,
     promotion: false,
   });
@@ -197,8 +198,11 @@ const PickPhoto: React.FC = () => {
     formData.append("promotion", data.promotion ? "t" : "f");
 
     formData.append("bankName", data.bankAccount.bankName);
-    formData.append("newBankName", data.newBankAccount.bankName);
-    formData.append("newBankAccount", data.newBankAccount.bankAccount);
+    formData.append("bankAccount", data.bankAccount.bankAccount);
+
+    //new bank
+    formData.append("newBankName", data.newBankName);
+    formData.append("newBankAccount", data.newBankAccount);
 
     console.log("Form Data: ", formData);
     return formData;
@@ -678,9 +682,9 @@ const PickPhoto: React.FC = () => {
                   ),
                 })
               : null}
-            {/* {state.qualityPlan === true
+            {state.qualityPlan === true
               ? item({
-                  name: "newBankAccount",
+                  name: "newBankName",
                   renderLabel: () => (
                     <IonLabel position="floating">新增銀行戶口:</IonLabel>
                   ),
@@ -694,7 +698,19 @@ const PickPhoto: React.FC = () => {
                     </IonSelect>
                   ),
                 })
-              : null} */}
+              : null}
+            {state.qualityPlan === true
+              ? item({
+                  name: "newBankAccount",
+                  renderLabel: () => (
+                    <IonLabel position="floating">新增銀行戶口:</IonLabel>
+                  ),
+                  renderContent: (props) => (
+                    <IonInput placeholder="新增銀行" {...props}></IonInput>
+                  ),
+                })
+              : null}
+
             {!isBankAccountOk ? (
               <>
                 <div className="ion-text-center">
