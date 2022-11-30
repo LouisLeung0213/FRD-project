@@ -38,6 +38,9 @@ export class CreatePostDto {
   @IsString()
   location: string;
 
+  @IsString()
+  bankName: string;
+
   @IsNumber()
   bankAccount: number;
 

@@ -36,9 +36,10 @@ import {
   useImageFiles,
   usePhotoGallery,
 } from "../../hooks/usePhotoGallery";
-import { selectImage, fileToBase64String } from "@beenotung/tslib/file";
+//import { selectImage, fileToBase64String } from "@beenotung/tslib/file";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
+import { uploadFile } from "../../service/firebaseStorage";
 
 import "swiper/swiper.min.css";
 import "swiper/css/autoplay";
@@ -95,7 +96,6 @@ const PickPhoto: React.FC = () => {
   const [isPhotoOk, setIsPhotoOk] = useState(true);
   const [percent, setPercent] = useState(0);
   const [bankState, setBankState] = useState(jwtState.bankAccount);
-  const [savedBanks, setSavedBanks] = useState() as any;
 
   const { state, item } = useIonFormState({
     title: "",
@@ -103,50 +103,43 @@ const PickPhoto: React.FC = () => {
     tags: "",
     startPrice: "",
     location: "",
-    bankAccount: jwtState.bankAccount || "",
+    bankAccount: { bankName: "", bankAccount: "" },
     qualityPlan: false,
     promotion: false,
   });
 
-  async function getSavedBank() {
-    let result = await fetch(
-      `${API_ORIGIN}/information/savedBank/${jwtState.id}`
-    );
+  // async function getSavedBank() {
+  //   let result = await fetch(
+  //     `${API_ORIGIN}/information/savedBank/${jwtState.id}`
+  //   );
 
-    let json = await result.json();
-    console.log("here!", json);
+  //   console.log("HALO:", jwtState.bankAccount);
+  //   let json = await result.json();
+  //   console.log("here!", json);
 
-    if (json.banks_id.length > 0) {
-      let savedBankNameArr: any = json.bank_name_arr;
-      let savedBankAccount: any = json.banks_id;
-      console.log(
-        "!!!!!!!!!!!!!!!!!!!!!!!!!!!",
-        savedBankNameArr,
-        savedBankAccount
-      );
-      let savedBankArr: any = [];
+  //   if (json.banks_id.length > 0) {
+  //     let savedBankNameArr: any = json.bank_name_arr;
+  //     let savedBankAccount: any = json.banks_id;
+  //     // console.log(
+  //     //   "!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+  //     //   savedBankNameArr,
+  //     //   savedBankAccount
+  //     // );
+  //     let savedBankArr: any = [];
 
-      for (let i = 0; i < json.bank_name_arr.length; i++) {
-        console.log("saved bank:", json[i]);
-        savedBankArr.push({
-          bankName: savedBankNameArr[i].bank_name,
-          bankAccount: savedBankAccount[i].bank_account,
-        });
-      }
-      console.log("saved bank Array PickPhoto:", savedBankArr);
-      return savedBankArr;
-    } else {
-      return;
-    }
-  }
-
-  useEffect(() => {
-    async function get() {
-      let userBank = await getSavedBank();
-      setSavedBanks(userBank);
-    }
-    get();
-  }, []);
+  //     for (let i = 0; i < json.bank_name_arr.length; i++) {
+  //       console.log("saved bank:", json[i]);
+  //       savedBankArr.push({
+  //         bankName: savedBankNameArr[i].bank_name,
+  //         bankAccount: savedBankAccount[i].bank_account,
+  //       });
+  //     }
+  //     console.log("saved bank Array PickPhoto:", savedBankArr);
+  //     return savedBankArr;
+  //   } else {
+  //     return;
+  //   }
+  // }
 
   function findMIMEType(ext: string) {
     if (ext == "image/jpeg") {
@@ -182,9 +175,8 @@ const PickPhoto: React.FC = () => {
     formData.append("qualityPlan", data.qualityPlan ? "t" : "f");
     formData.append("promotion", data.promotion ? "t" : "f");
 
-    // for (let photo of photos) {
-    //   formData.append("photo", photo.file);
-    // }
+    formData.append("bankName", data.bankAccount.bankName);
+    formData.append("bankAccount", data.bankAccount.bankAccount);
 
     console.log("Form Data: ", formData);
     return formData;
@@ -222,12 +214,14 @@ const PickPhoto: React.FC = () => {
       }
       if (
         data.qualityPlan == true &&
-        data.bankAccount === "" &&
-        !data.bankAccount.match(numReg)
+        (data.bankAccount.bank_name == "" || data.bankAccount.bankAccount == "")
       ) {
         setIsBankAccountOk(false);
         ok = false;
-      } else if (data.qualityPlan == true && data.bankAccount.match(numReg)) {
+      } else if (
+        data.qualityPlan == true &&
+        (data.bankAccount.bank_name != "" || data.bankAccount.bankAccount != "")
+      ) {
         setIsBankAccountOk(true);
       }
       if (data.startPrice.length == 0 || !data.startPrice.match(numReg)) {
@@ -553,7 +547,8 @@ const PickPhoto: React.FC = () => {
               ),
             })}
             <div className="ion-text-center">
-              {!isStartPriceOk ? (
+              {!isStartPriceOk ||
+              (state.startPrice != "" && !state.startPrice.match(/^\d+$/)) ? (
                 <IonText color="danger">請輸入有效底價</IonText>
               ) : null}
             </div>
@@ -651,29 +646,33 @@ const PickPhoto: React.FC = () => {
                     <IonLabel position="floating">請選擇銀行戶口:</IonLabel>
                   ),
                   renderContent: (props) => (
-                    <IonSelect className={styles.bankSelect} {...props}>
-                      {savedBanks.map((account: any) => (
-                        <IonSelectOption key={account} value={account}>
-                          {account.bankName}: {account.bankAccount}
+                    <IonSelect {...props}>
+                      {bankState ? (
+                        bankState.map((account: any) => (
+                          <IonSelectOption key={account} value={account}>
+                            {account.bankName}: {account.bankAccount}
+                          </IonSelectOption>
+                        ))
+                      ) : (
+                        <IonSelectOption disabled={true}>
+                          <IonLabel>請到設置個人帳戶更新</IonLabel>
                         </IonSelectOption>
-                      ))}
+                      )}
                     </IonSelect>
                   ),
                 })
               : null}
             {state.qualityPlan === true ? (
-              <p className="ion-padding">
-                {" "}
-                # 如需新增銀行，請到設置個人帳戶更新
-              </p>
+              <p># 如需新增銀行，請到設置個人帳戶更新</p>
             ) : null}
-            {/*<div className="ion-text-center">
-              {state.qualityPlan === true &&
-              !state.bankAccount.match(/^\d+$/) &&
-              state.bankAccount !== "" ? (
-                <IonText color="danger"></IonText>
-              ) : null}
-            </div>*/}
+            {!isBankAccountOk ? (
+              <>
+                <div className="ion-text-center">
+                  <IonText color="danger">請選擇銀行戶口</IonText>{" "}
+                </div>
+                <br />
+              </>
+            ) : null}
             <br />
             {item({
               name: "promotion",
