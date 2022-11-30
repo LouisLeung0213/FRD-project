@@ -243,7 +243,7 @@ const UpdateProfile: React.FC = () => {
         deleteImage(jwtState.icon_name!);
       }
 
-      if (photosLength > 0){
+      if (photosLength > 0) {
         icon_url = await uploadBytesResumablePromise(lastPhoto);
         icon_name = `/icons/${lastPhoto.name}+${jwtState.id}+${now}`;
       }
@@ -279,7 +279,10 @@ const UpdateProfile: React.FC = () => {
             email: state.email,
             joinedTime: jwtState.joinedTime,
             isAdmin: jwtState.isAdmin,
-            bankAccount: jwtState.bankAccount,
+            bankAccount: [
+              ...jwtState.bankAccount,
+              { bankName: state.bank_name, bankAccount: state.bank_account },
+            ],
             icon_name: icon_name,
             icon_src: icon_url,
           })
@@ -462,15 +465,15 @@ const UpdateProfile: React.FC = () => {
               ),
             })}
 
-              <IonButton
-                className="ion-margin-top"
-                onClick={() => {
-                  updateInfo(state);
-                }}
-                expand="block"
-              >
-                完成
-              </IonButton>
+            <IonButton
+              className="ion-margin-top"
+              onClick={() => {
+                updateInfo(state);
+              }}
+              expand="block"
+            >
+              完成
+            </IonButton>
           </IonList>
           <IonButton onClick={showPhotos}>show</IonButton>
         </IonContent>

@@ -141,6 +141,8 @@ const PickPhoto: React.FC = () => {
   //   }
   // }
 
+  useEffect(() => {});
+
   function findMIMEType(ext: string) {
     if (ext == "image/jpeg") {
       return {
