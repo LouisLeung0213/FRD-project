@@ -81,8 +81,8 @@ setupIonicReact();
 const App: React.FC = () => {
   const [username, setUsername] = useState("");
   let jwtState = useSelector((state: RootState) => state.jwt);
-
   const dispatch = useDispatch();
+
   const getProfile = async () => {
     let userId = await getValue("userId");
     let token = await getValue("Jwt");
@@ -92,7 +92,12 @@ const App: React.FC = () => {
 
     let userInfo = await res.json();
     console.log("userInfo: ", userInfo);
-    setUsername(userInfo.userInfo.username);
+
+    let arr = [];
+
+    for (let i = 0; i < userInfo.bankInfo.length; i++) {
+      arr.push(userInfo.bankInfo[i]);
+    }
     dispatch(
       updateJwt({
         jwtKey: token,
@@ -103,11 +108,12 @@ const App: React.FC = () => {
         email: userInfo.userInfo.email,
         joinedTime: userInfo.userInfo.joinedTime,
         isAdmin: userInfo.userInfo.is_admin,
-        bankAccount: userInfo.bankInfo.bank_account,
+        bankAccount: arr,
         icon_name: userInfo.icon_name,
         icon_src: userInfo.userInfo.icon_src,
       })
     );
+
     dispatch(
       updatePoints({
         points: userInfo.userInfo.points,
@@ -119,8 +125,9 @@ const App: React.FC = () => {
 
   useEffect(() => {
     // setLoginLoad(true);
-    getProfile();
+
     console.log(username);
+    getProfile();
 
     const registerNotifications = async () => {
       let permStatus = await PushNotifications.checkPermissions();
@@ -171,7 +178,8 @@ const App: React.FC = () => {
     }
 
     listenToDeepLinkOpen();
-  }, [username]);
+  }, []);
+
   let profileHref;
 
   if (!jwtState.id) {
@@ -193,7 +201,7 @@ const App: React.FC = () => {
         {/*DeepLink Setup end */}
         <IonRouterOutlet>
           <Switch>
-            <Route path="/">
+            <Route exact={true} path="/">
               <Redirect to={routes.tab.mainPage} />
             </Route>
             <Route
@@ -296,13 +304,13 @@ const App: React.FC = () => {
                   <IonIcon icon={homeOutline} />
                   <IonLabel>主頁</IonLabel>
                 </IonTabButton>
-                {!!jwtState.jwtKey ? (
+                {jwtState.jwtKey ? (
                   <IonTabButton tab="PickPhoto" href={routes.tab.pickPhoto}>
                     <IonIcon icon={duplicateOutline} />
                     <IonLabel>交易</IonLabel>
                   </IonTabButton>
                 ) : null}
-                {!!jwtState.jwtKey ? (
+                {jwtState.jwtKey ? (
                   <IonTabButton tab="Notices" href={routes.tab.notices}>
                     <IonIcon icon={chatbubblesOutline} />
                     <IonLabel>聊天</IonLabel>
@@ -314,7 +322,7 @@ const App: React.FC = () => {
                   <IonLabel>個人資料</IonLabel>
                 </IonTabButton>
 
-                {!!jwtState.isAdmin ? (
+                {jwtState.isAdmin ? (
                   <IonTabButton tab="AdminPanel" href={routes.tab.adminPanel}>
                     <IonIcon icon={planetOutline} />
                     <IonLabel>管理員</IonLabel>
