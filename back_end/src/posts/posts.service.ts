@@ -45,11 +45,15 @@ export class PostsService {
 
         let bank_account_id = await this.knex('bank_accounts')
           .select('id')
-          .where('bank_accounts', createPostDto.bankAccount)
+          .where('bank_account', createPostDto.bankAccount)
           .returning('id');
 
         let bank_reference = await this.knex('posts')
           .update('bank_references', bank_account_id[0].id)
+          .where('id', createPost[0].id);
+
+        let status_update = await this.knex('posts')
+          .update('status', pending_in)
           .where('id', createPost[0].id);
 
         console.log('createPost', bank_reference);
@@ -59,6 +63,8 @@ export class PostsService {
         createPostDto.qualityPlan === 't' &&
         createPostDto.newBankName != ''
       ) {
+        quality_plan = true;
+        pending_in = 'pending_in';
         let bankId = await this.knex('banks')
           .select('id')
           .where('bank_name', createPostDto.newBankName);
@@ -71,9 +77,15 @@ export class PostsService {
           })
           .returning('id');
 
-        let bank_reference = await this.knex('posts')
+        let bank_reference_2 = await this.knex('posts')
           .update('bank_references', new_bank_account_id[0].id)
           .where('id', createPost[0].id);
+
+        let status_update = await this.knex('posts')
+          .update('status', pending_in)
+          .where('id', createPost[0].id);
+
+        console.log('createPost', bank_reference_2);
       }
       let tags = createPostDto.tags.split('#');
       console.log(tags);
