@@ -73,7 +73,6 @@ const Profile: React.FC<{ user: number | null }> = (props: {
   let [points, setPoints] = useState(pointsState.points);
   const dispatch = useDispatch();
   let params: any = useParams();
-  console.log("params:", params);
 
   //jwtKey, reduxNickname
 
