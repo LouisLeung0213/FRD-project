@@ -42,14 +42,17 @@ export class ChatroomController {
   ) {
     let send = await this.chatroomService.send(+id, insertChatroomDto);
     let ownerId = await this.chatroomService.getOwnerId(+id);
-    console.log('send', send);
+    console.log('ownerId', ownerId);
+    let newMSGList = await this.chatroomService.msg(ownerId.chatroom_id);
+
+    console.log('send', newMSGList);
     if ('id' in send) {
       console.log('send');
-      io.to('TJroom: ' + insertChatroomDto.senderId).emit('new-msg', {
-        newMSG: send,
+      io.to('TJroom: ' + ownerId.room_user_id).emit('new-msg', {
+        newMSG: newMSGList,
       });
       io.to('TJroom: ' + ownerId.id).emit('new-msg', {
-        newMSG: send,
+        newMSG: newMSGList,
       });
     }
     return send;
@@ -60,9 +63,9 @@ export class ChatroomController {
     return this.chatroomService.findAll(+postId);
   }
 
-  @Get('room/:id')
-  findOne(@Param('id') id: string) {
-    return this.chatroomService.findOne(+id);
+  @Get('allRoom/:userId')
+  getAllRoom(@Param('userId') userId: string) {
+    return this.chatroomService.getAllRoom(+userId);
   }
 
   @Get('msg/:chatroomId')

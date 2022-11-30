@@ -17,6 +17,7 @@ import {
   IonSearchbar,
   IonTitle,
   IonToolbar,
+  useIonRouter,
 } from "@ionic/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
@@ -41,12 +42,14 @@ import "swiper/css/zoom";
 import "@ionic/react/css/ionic-swiper.css";
 import "swiper/swiper.min.css";
 import "@ionic/react/css/ionic-swiper.css";
+import { routes } from "../../routes";
 
 const MainPage: React.FC = () => {
   let [postsList, setPostsList] = useState<[any]>([] as any);
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
+  const router = useIonRouter();
 
   const socket = useSocket(
     useCallback((socket: Socket) => {
@@ -106,6 +109,11 @@ const MainPage: React.FC = () => {
   function openPost(e: PostObj) {
     setCurrentPost(e);
     setIsOpen(true);
+  }
+
+  function goChat(id: number) {
+    router.push(routes.chatroom(id));
+    dismiss();
   }
 
   return (
@@ -223,7 +231,7 @@ const MainPage: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <Post post={currentPost as PostObj} />
+          <Post post={currentPost as PostObj} goChat={goChat} />
         </IonContent>
       </IonModal>
     </IonPage>
