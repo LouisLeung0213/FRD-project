@@ -78,6 +78,7 @@ import { API_ORIGIN } from "./api";
 import { updateJwt } from "./redux/user/actions";
 import Chatroom from "./pages/Chatroom/Chatroom";
 import { updatePoints } from "./redux/points/actions";
+import MainNotice from "./pages/MainNotice/MainNotice";
 import { Router } from "workbox-routing";
 import { forceUpdate } from "ionicons/dist/types/stencil-public-runtime";
 
@@ -216,101 +217,106 @@ const App: React.FC = () => {
         {/* <AppUrlListener></AppUrlListener> */}
         {/*DeepLink Setup end */}
         <IonRouterOutlet>
-          <Route path="/" exact={true}>
-            <Redirect to={routes.tab.mainPage} />
-          </Route>
-          <Route
-            path={routes.menu.accountSetting}
-            exact={true}
-            render={() => <UpdateProfile />}
-          ></Route>
-          <Route
-            path={routes.menu.noticeSetting}
-            exact={true}
-            render={() => <NoticeSetUp />}
-          />
-          <Route
-            path={routes.menu.passwordChange}
-            exact={true}
-            render={() => <PasswordChange />}
-          />
-          <Route
-            path={routes.menu.invoice}
-            exact={true}
-            render={() => <Invoice />}
-          />
+          <Switch>
+            <Route path="/" exact={true}>
+              <Redirect to={routes.tab.mainPage} />
+            </Route>
+            <Route
+              path={routes.menu.accountSetting}
+              exact={true}
+              render={() => <UpdateProfile />}
+            ></Route>
+            <Route
+              path={routes.menu.noticeSetting}
+              exact={true}
+              render={() => <NoticeSetUp />}
+            />
+            <Route
+              path={routes.menu.passwordChange}
+              exact={true}
+              render={() => <PasswordChange />}
+            />
+            <Route
+              path={routes.menu.invoice}
+              exact={true}
+              render={() => <Invoice />}
+            />
 
-          <Route
-            path={routes.storages}
-            exact={true}
-            render={() => <Storages />}
-          />
-          <Route
-            path={routes.blacklist}
-            exact={true}
-            render={() => <Blacklist />}
-          />
+            <Route
+              path={routes.storages}
+              exact={true}
+              render={() => <Storages />}
+            />
+            <Route
+              path={routes.blacklist}
+              exact={true}
+              render={() => <Blacklist />}
+            />
 
-          <Route
-            path={routes.chatroomPage}
-            exact={true}
-            render={() => <ChatroomPage />}
-          />
-          <Route
-            path={routes.chatroom(":id")}
-            exact={true}
-            render={() => <Chatroom />}
-          />
-          {/* 
+            <Route
+              path={routes.chatroomPage}
+              exact={true}
+              render={() => <ChatroomPage />}
+            />
+            <Route
+              path={routes.chatroom(":id")}
+              exact={true}
+              render={() => <Chatroom />}
+            />
+            {/* 
           <Route
             path={routes.payment}
             exact={true}
             render={() => <Payment />}
           /> */}
 
-          <Route
-            path={routes.package}
-            exact={true}
-            render={() => <Package />}
-          />
+            <Route
+              path={routes.package}
+              exact={true}
+              render={() => <Package />}
+            />
+            <Route
+              path={routes.mainNotice}
+              exact={true}
+              render={() => <MainNotice />}
+            />
+          </Switch>
 
           <Route path="/tab">
             <IonTabs>
               <IonRouterOutlet>
-                <Switch>
-                  <Route
-                    path={routes.tab.mainPage}
-                    exact={true}
-                    render={() => <MainPage />}
-                  />
+                <Route
+                  path={routes.tab.mainPage}
+                  exact={true}
+                  render={() => <MainPage />}
+                />
 
-                  <Route
-                    path={routes.tab.pickPhoto}
-                    exact={true}
-                    render={() => <PickPhoto />}
-                  />
+                <Route
+                  path={routes.tab.pickPhoto}
+                  exact={true}
+                  render={() => <PickPhoto />}
+                />
 
-                  <Route
-                    path={routes.tab.notices}
-                    exact={true}
-                    render={() => <Notices />}
-                  />
-                  <Route
-                    path={routes.tab.profile(":id")}
-                    exact={true}
-                    render={() => <Profile user={jwtState.id} />}
-                  />
-                  <Route
-                    path={routes.tab.login}
-                    exact={true}
-                    render={() => <Login />}
-                  />
-                  <Route
-                    path={routes.tab.adminPanel}
-                    exact={true}
-                    render={() => <AdminPanel />}
-                  />
-                </Switch>
+                <Route
+                  path={routes.tab.notices}
+                  exact={true}
+                  render={() => <Notices />}
+                />
+                <Route
+                  path={routes.tab.profile(":id")}
+                  exact={true}
+                  render={() => <Profile user={jwtState.id} />}
+                />
+                <Route
+                  path={routes.tab.login}
+                  exact={true}
+                  render={() => <Login />}
+                />
+                <Route
+                  path={routes.tab.adminPanel}
+                  exact={true}
+                  render={() => <AdminPanel />}
+                />
               </IonRouterOutlet>
 
               <IonTabBar slot="bottom">

@@ -147,7 +147,8 @@ export class ChatroomService {
         'buyers.nickname',
         'sellers.nickname',
         'posts.user_id',
-      );
+      )
+      .orderBy('latest_send_times');
     return rooms;
   }
 

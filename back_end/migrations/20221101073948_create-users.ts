@@ -15,7 +15,11 @@ export async function up(knex: Knex): Promise<void> {
     table
       .text('icon_name')
       .defaultTo('/default/new_usericon.jpeg+1+1669717126192');
-    table.text('icon_src').defaultTo("https://firebasestorage.googleapis.com/v0/b/test-6e6e8.appspot.com/o/default%2Fnew_usericon.jpeg%2B1%2B1669717126192?alt=media&token=aad5a75f-811c-48a2-80d1-673cef3e5d3d");
+    table
+      .text('icon_src')
+      .defaultTo(
+        'https://firebasestorage.googleapis.com/v0/b/test-6e6e8.appspot.com/o/default%2Fnew_usericon.jpeg%2B1%2B1669717126192?alt=media&token=aad5a75f-811c-48a2-80d1-673cef3e5d3d',
+      );
     table.text('firebase_token');
   });
   await knex.schema.createTableIfNotExists('banks', (table) => {
@@ -138,9 +142,17 @@ export async function up(knex: Knex): Promise<void> {
     table.integer('sender_id').notNullable().references('users.id');
     table.timestamp('send_time').defaultTo(knex.fn.now());
   });
+
+  await knex.schema.createTableIfNotExists('notifications', (table) => {
+    table.increments('id');
+    table.integer('receiver_id').notNullable().references('users.id');
+    table.text('content').notNullable();
+    table.timestamp('receive_time').defaultTo(knex.fn.now());
+  });
 }
 
 export async function down(knex: Knex): Promise<void> {
+  await knex.schema.dropTableIfExists('notifications');
   await knex.schema.dropTableIfExists('chat_histories');
   await knex.schema.dropTableIfExists('chatrooms');
   await knex.schema.dropTableIfExists('search_histories');

@@ -2,6 +2,7 @@ import {
   createAnimation,
   IonAvatar,
   IonBackButton,
+  IonBadge,
   IonButton,
   IonButtons,
   IonContent,
@@ -27,6 +28,7 @@ import Post, { PostObj } from "../Posts/Posts";
 import {
   checkmarkDoneCircleOutline,
   chevronBackOutline,
+  notificationsOutline,
   personOutline,
 } from "ionicons/icons";
 import styles from "./MainPage.module.css";
@@ -133,9 +135,25 @@ const MainPage: React.FC = () => {
     dismiss();
   }
 
+  function goNotification() {
+    router.push(routes.mainNotice);
+  }
+
   return (
     <IonPage>
       <IonContent fullscreen={true}>
+        <IonHeader translucent={true}>
+          <IonToolbar>
+            <IonLabel slot="end">
+              <IonIcon
+                icon={notificationsOutline}
+                size="large"
+                onClick={() => goNotification()}
+              />
+              <IonBadge>1</IonBadge>
+            </IonLabel>
+          </IonToolbar>
+        </IonHeader>
         <IonList>
           <div slot="content">
             <IonSearchbar

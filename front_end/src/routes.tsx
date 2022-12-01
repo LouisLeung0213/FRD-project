@@ -22,4 +22,5 @@ export let routes = {
   post: (id: string | number) => `/post/${id}`,
   payment: "/Payment",
   package: "/Package",
+  mainNotice: "/mainNotice",
 };

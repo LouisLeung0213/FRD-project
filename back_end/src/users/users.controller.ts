@@ -29,9 +29,10 @@ export class UsersController {
     }
   }
 
-  @Get('findOne/:username')
-  findOne(@Param('username') username: string) {
-    return { msg: 'bye' };
+  @Get('findOne/:id')
+  findOne(@Param('id') id: number) {
+    let userInfo = this.usersService.findOneById(id);
+    return userInfo;
     // return this.usersService.findOne(username);
   }
 
