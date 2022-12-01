@@ -217,106 +217,106 @@ const App: React.FC = () => {
         {/* <AppUrlListener></AppUrlListener> */}
         {/*DeepLink Setup end */}
         <IonRouterOutlet>
-          <Switch>
-            <Route path="/" exact={true}>
-              <Redirect to={routes.tab.mainPage} />
-            </Route>
-            <Route
-              path={routes.menu.accountSetting}
-              exact={true}
-              render={() => <UpdateProfile />}
-            ></Route>
-            <Route
-              path={routes.menu.noticeSetting}
-              exact={true}
-              render={() => <NoticeSetUp />}
-            />
-            <Route
-              path={routes.menu.passwordChange}
-              exact={true}
-              render={() => <PasswordChange />}
-            />
-            <Route
-              path={routes.menu.invoice}
-              exact={true}
-              render={() => <Invoice />}
-            />
+          <Route path="/" exact={true}>
+            <Redirect to={routes.tab.mainPage} />
+          </Route>
+          <Route
+            path={routes.menu.accountSetting}
+            exact={true}
+            render={() => <UpdateProfile />}
+          ></Route>
+          <Route
+            path={routes.menu.noticeSetting}
+            exact={true}
+            render={() => <NoticeSetUp />}
+          />
+          <Route
+            path={routes.menu.passwordChange}
+            exact={true}
+            render={() => <PasswordChange />}
+          />
+          <Route
+            path={routes.menu.invoice}
+            exact={true}
+            render={() => <Invoice />}
+          />
 
-            <Route
-              path={routes.storages}
-              exact={true}
-              render={() => <Storages />}
-            />
-            <Route
-              path={routes.blacklist}
-              exact={true}
-              render={() => <Blacklist />}
-            />
+          <Route
+            path={routes.storages}
+            exact={true}
+            render={() => <Storages />}
+          />
+          <Route
+            path={routes.blacklist}
+            exact={true}
+            render={() => <Blacklist />}
+          />
 
-            <Route
-              path={routes.chatroomPage}
-              exact={true}
-              render={() => <ChatroomPage />}
-            />
-            <Route
-              path={routes.chatroom(":id")}
-              exact={true}
-              render={() => <Chatroom />}
-            />
-            {/* 
+          <Route
+            path={routes.chatroomPage}
+            exact={true}
+            render={() => <ChatroomPage />}
+          />
+          <Route
+            path={routes.chatroom(":id")}
+            exact={true}
+            render={() => <Chatroom />}
+          />
+          {/* 
           <Route
             path={routes.payment}
             exact={true}
             render={() => <Payment />}
           /> */}
 
-            <Route
-              path={routes.package}
-              exact={true}
-              render={() => <Package />}
-            />
-            <Route
-              path={routes.mainNotice}
-              exact={true}
-              render={() => <MainNotice />}
-            />
-          </Switch>
+          <Route
+            path={routes.package}
+            exact={true}
+            render={() => <Package />}
+          />
+          <Route
+            path={routes.mainNotice}
+            exact={true}
+            render={() => <MainNotice />}
+          />
 
           <Route path="/tab">
             <IonTabs>
               <IonRouterOutlet>
-                <Route
-                  path={routes.tab.mainPage}
-                  exact={true}
-                  render={() => <MainPage />}
-                />
+                <Switch>
+                  <Route
+                    path={routes.tab.mainPage}
+                    exact={true}
+                    render={() => <MainPage />}
+                  />
 
-                <Route
-                  path={routes.tab.pickPhoto}
-                  exact={true}
-                  render={() => <PickPhoto />}
-                />
+                  <Route
+                    path={routes.tab.pickPhoto}
+                    exact={true}
+                    render={() => <PickPhoto />}
+                  />
 
-                <Route
-                  path={routes.tab.notices}
-                  exact={true}
-                  render={() => <Notices />}
-                />
-                <Route
-                  path={routes.tab.profile(":id")}
-                  exact={true}
-                  render={() => <Profile user={jwtState.id} />}
-                />
-                <Route
-                  path={routes.tab.login}
-                  exact={true}
-                  render={() => <Login />}
-                />
-                <Route
-                  path={routes.tab.adminPanel}
-                  exact={true}
-                  render={() => <AdminPanel />}
-                />
+                  <Route
+                    path={routes.tab.notices}
+                    exact={true}
+                    render={() => <Notices />}
+                  />
+                  <Route
+                    path={routes.tab.profile(":id")}
+                    exact={true}
+                    render={() => <Profile user={jwtState.id} />}
+                  />
+                  <Route
+                    path={routes.tab.login}
+                    exact={true}
+                    render={() => <Login />}
+                  />
+                  <Route
+                    path={routes.tab.adminPanel}
+                    exact={true}
+                    render={() => <AdminPanel />}
+                  />
+                </Switch>
               </IonRouterOutlet>
 
               <IonTabBar slot="bottom">
