@@ -169,6 +169,35 @@ export class PostsService {
     // console.log('showAllList', showAllList);
     return showAllList;
   }
+  async showSomeone(id: number) {
+    let showSomeoneList = await this.knex
+      .select(
+        'posts.id',
+        'user_id',
+        'post_title',
+        'post_description',
+        'original_price',
+        'q_mark',
+        'admin_title',
+        'admin_comment',
+        'status',
+        'auto_adjust_plan',
+        'post_time',
+        'nickname',
+        'username',
+        this.knex.raw('json_agg(src)'),
+        this.knex.raw('max(bid_price)'),
+      )
+      .from('posts')
+      .join('users', 'user_id', 'users.id')
+      .join('images', 'posts.id', 'images.post_id')
+      .fullOuterJoin('bid_records', 'bid_records.post_id', 'posts.id')
+      .where('status', 'selling')
+      .andWhere('user_id', id)
+      .groupBy('posts.id', 'users.username', 'users.nickname');
+    // console.log('showAllList', showAllList);
+    return showSomeoneList;
+  }
 
   async findOne(id: number) {
     // let postDetail = await this.knex

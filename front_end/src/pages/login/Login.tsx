@@ -138,7 +138,7 @@ const Login: React.FC = () => {
       );
       // history.push(`/tab/Profile`);
       socket.emit("join-TJroom", { userId: userInfo.id });
-      router.push(routes.tab.profile(":id"), "forward", "replace");
+      router.push(routes.tab.profile(userInfo.id), "forward", "replace");
     } else {
       setIsUserCorrect(false);
       // alert(JSON.stringify("冇人識你喎...", null, 2));
