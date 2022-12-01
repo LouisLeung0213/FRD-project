@@ -173,8 +173,8 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
           joinedTime: userInfo.joinedTime,
           isAdmin: userInfo.is_admin,
           bankAccount: [{}],
-          icon_name: null,
-          icon_src: null,
+          icon_name: undefined,
+          icon_src: undefined,
         })
       );
 

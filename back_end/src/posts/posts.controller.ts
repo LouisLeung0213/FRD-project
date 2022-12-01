@@ -66,7 +66,8 @@ export class PostsController {
         post_id[0].id,
       );
     }
-
+    let newPostList = await this.postsService.showAll();
+    io.emit('new-post', { newPost: newPostList });
     return { status: 200, message: 'create post successfully' };
   }
   // } else {

@@ -6,16 +6,7 @@ export class ProfilesService {
   constructor(@InjectKnex() private readonly knex: Knex) {}
   async getUserInfo(userId: number) {
     let userInfo = await this.knex
-      .select(
-        'username',
-        'nickname',
-        'phone',
-        'email',
-        'joinedTime',
-        'id',
-        'is_admin',
-        'points',
-      )
+      .select('*')
       .from('users')
       .where('id', userId);
 

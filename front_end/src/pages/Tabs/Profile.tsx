@@ -52,8 +52,8 @@ import { PostObj } from "../Posts/Posts";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
 
-const Profile: React.FC<{ user: number | null }> = (props: {
-  user: number | null;
+const Profile: React.FC<{ user: number | undefined }> = (props: {
+  user: number | undefined;
 }) => {
   let jwtState = useSelector((state: RootState) => state.jwt);
   let pointsState = useSelector((state: RootState) => state.points);
@@ -127,16 +127,16 @@ const Profile: React.FC<{ user: number | null }> = (props: {
     dispatch(
       updateJwt({
         jwtKey: null,
-        id: null,
-        username: null,
-        nickname: null,
-        phone: null,
-        email: null,
-        joinedTime: null,
+        id: undefined,
+        username: undefined,
+        nickname: undefined,
+        phone: undefined,
+        email: undefined,
+        joinedTime: undefined,
         isAdmin: false,
         bankAccount: [{}],
-        icon_name: null,
-        icon_src: null,
+        icon_name: undefined,
+        icon_src: undefined,
       })
     );
   }

@@ -19,7 +19,9 @@ export class PostsService {
       if (createPostDto.promotion === 't') {
         promotion_plan = true;
       }
-
+      if (createPostDto.qualityPlan === 't') {
+        quality_plan = true;
+      }
       let createPost = await this.knex('posts')
         .insert({
           user_id: +createPostDto.user_id,
@@ -35,7 +37,6 @@ export class PostsService {
         .returning('id');
 
       if (createPostDto.qualityPlan === 't' && createPostDto.bankName != '') {
-        quality_plan = true;
         pending_in = 'pending_in';
         let location = await this.knex('store_locations')
           .select('*')
@@ -63,7 +64,6 @@ export class PostsService {
         createPostDto.qualityPlan === 't' &&
         createPostDto.newBankName != ''
       ) {
-        quality_plan = true;
         pending_in = 'pending_in';
         let bankId = await this.knex('banks')
           .select('id')
