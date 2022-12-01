@@ -172,6 +172,10 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
     }
   }
 
+  function adjustPrice() {
+    console.log("adjustPrice TODO");
+  }
+
   return (
     <IonList className="post-modal">
       <h1 className="ion-padding">{props.post.nickname}</h1>
@@ -228,7 +232,16 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
           })}
           <IonItem className="inputBox">
             {!jwtState.id ? null : jwtState.id == props.post.user_id ? (
-              <IonButton>I am the seller</IonButton>
+              <>
+                <IonButton
+                  onClick={() => {
+                    adjustPrice();
+                  }}
+                >
+                  調整底價
+                </IonButton>
+                <IonButton>成交！！</IonButton>
+              </>
             ) : (
               <>
                 <IonInput
