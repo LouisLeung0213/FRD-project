@@ -23,7 +23,7 @@ export class BidService {
         .select('original_price')
         .from('posts')
         .where('id', createBidDto.postId);
-      if (originalPrice[0].original_price > +createBidDto.bidPrice) {
+      if (originalPrice[0].original_price >= +createBidDto.bidPrice) {
         return {
           status: '09',
           message: 'invalid bid due to bidPrice lower than originalPrice',
@@ -43,7 +43,16 @@ export class BidService {
               content: `買家[${createBidDto.buyerNickname}]在[${createBidDto.postTitle}]出價:$${createBidDto.bidPrice}!`,
             })
             .returning('content');
-          return { bid: bid[0], firstBidNoti: firstBidNoti[0] };
+
+          let newBidList = await this.knex
+            .select('post_id', 'buyer_id', 'bid_price', 'nickname')
+            .from('bid_records')
+            .join('users', 'buyer_id', 'users.id')
+            .where('post_id', createBidDto.postId)
+            .limit(5)
+            .orderBy('bid_price', 'desc');
+
+          return { bid: newBidList, firstBidNoti: firstBidNoti[0] };
         }
 
         return { message: 'insert failed' };
@@ -71,7 +80,7 @@ export class BidService {
             .limit(5)
             .orderBy('bid_price', 'desc');
 
-          return newBidList;
+          return { bid: newBidList };
         } else {
           return { status: '99', message: 'unexpected error occurred' };
         }
