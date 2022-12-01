@@ -35,10 +35,12 @@ import { setValue } from "../../service/localStorage";
 import { chevronBackOutline } from "ionicons/icons";
 import { useSocket } from "../../hooks/use-socket";
 import { Socket } from "socket.io-client";
+import { Root } from "react-dom/client";
+import { updatePoints } from "../../redux/points/actions";
 
 const Login: React.FC = () => {
   const jwtState = useSelector((state: RootState) => state.jwt);
-
+  const pointsState = useSelector((state: RootState) => state.points);
   const dispatch = useDispatch();
   const router = useIonRouter();
 
@@ -101,7 +103,6 @@ const Login: React.FC = () => {
       let json = await res3.json();
       let savedBankArr: any = [];
 
-      console.log("here!", json);
       if (json.banks_id.length > 0) {
         let savedBankNameArr: any = json.bank_name_arr;
         let savedBankAccount: any = json.banks_id;
@@ -121,7 +122,12 @@ const Login: React.FC = () => {
         console.log("saved bank Array 2222222222:", savedBankArr);
       }
 
-      console.log("userInfo: ", userInfo);
+      let getPointsInfoJson = await fetch(
+        `${API_ORIGIN}/profiles/${userInfo.id}`
+      );
+      let getPointsInfo = await getPointsInfoJson.json();
+
+      console.log("userInfo: ", getPointsInfo);
       dispatch(
         updateJwt({
           jwtKey: token,
@@ -137,6 +143,12 @@ const Login: React.FC = () => {
           icon_src: userInfo.icon_src,
         })
       );
+      dispatch(
+        updatePoints({
+          points: getPointsInfo.userInfo.points,
+        })
+      );
+
       // history.push(`/tab/Profile`);
       socket.emit("join-TJroom", { userId: userInfo.id });
       router.push(routes.tab.profile(userInfo.id), "forward", "replace");

@@ -85,6 +85,7 @@ import { forceUpdate } from "ionicons/dist/types/stencil-public-runtime";
 setupIonicReact();
 const App: React.FC = () => {
   let jwtState = useSelector((state: RootState) => state.jwt);
+  let pointsState = useSelector((state: RootState) => state.points);
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const router = useIonRouter();
@@ -126,7 +127,7 @@ const App: React.FC = () => {
       })
     );
 
-    console.log("!!!!!!!!!!!!!!!!!!!", jwtState);
+    console.log("!!!!!!!!!!!!!!!!!!!", jwtState, pointsState);
     return userInfo.userInfo.username;
   };
 
@@ -216,70 +217,68 @@ const App: React.FC = () => {
         {/* <AppUrlListener></AppUrlListener> */}
         {/*DeepLink Setup end */}
         <IonRouterOutlet>
-          <Switch>
-            <Route path="/" exact={true}>
-              <Redirect to={routes.tab.mainPage} />
-            </Route>
-            <Route
-              path={routes.menu.accountSetting}
-              exact={true}
-              render={() => <UpdateProfile />}
-            ></Route>
-            <Route
-              path={routes.menu.noticeSetting}
-              exact={true}
-              render={() => <NoticeSetUp />}
-            />
-            <Route
-              path={routes.menu.passwordChange}
-              exact={true}
-              render={() => <PasswordChange />}
-            />
-            <Route
-              path={routes.menu.invoice}
-              exact={true}
-              render={() => <Invoice />}
-            />
+          <Route path="/" exact={true}>
+            <Redirect to={routes.tab.mainPage} />
+          </Route>
+          <Route
+            path={routes.menu.accountSetting}
+            exact={true}
+            render={() => <UpdateProfile />}
+          ></Route>
+          <Route
+            path={routes.menu.noticeSetting}
+            exact={true}
+            render={() => <NoticeSetUp />}
+          />
+          <Route
+            path={routes.menu.passwordChange}
+            exact={true}
+            render={() => <PasswordChange />}
+          />
+          <Route
+            path={routes.menu.invoice}
+            exact={true}
+            render={() => <Invoice />}
+          />
 
-            <Route
-              path={routes.storages}
-              exact={true}
-              render={() => <Storages />}
-            />
-            <Route
-              path={routes.blacklist}
-              exact={true}
-              render={() => <Blacklist />}
-            />
+          <Route
+            path={routes.storages}
+            exact={true}
+            render={() => <Storages />}
+          />
+          <Route
+            path={routes.blacklist}
+            exact={true}
+            render={() => <Blacklist />}
+          />
 
-            <Route
-              path={routes.chatroomPage}
-              exact={true}
-              render={() => <ChatroomPage />}
-            />
-            <Route
-              path={routes.chatroom(":id")}
-              exact={true}
-              render={() => <Chatroom />}
-            />
-            {/* 
+          <Route
+            path={routes.chatroomPage}
+            exact={true}
+            render={() => <ChatroomPage />}
+          />
+          <Route
+            path={routes.chatroom(":id")}
+            exact={true}
+            render={() => <Chatroom />}
+          />
+          {/* 
           <Route
             path={routes.payment}
             exact={true}
             render={() => <Payment />}
           /> */}
 
-            <Route
-              path={routes.package}
-              exact={true}
-              render={() => <Package />}
-            />
-            <Route
-              path={routes.mainNotice}
-              exact={true}
-              render={() => <MainNotice />}
-            />
-          </Switch>
+          <Route
+            path={routes.package}
+            exact={true}
+            render={() => <Package />}
+          />
+          <Route
+            path={routes.mainNotice}
+            exact={true}
+            render={() => <MainNotice />}
+          />
 
           <Route path="/tab">
             <IonTabs>
@@ -330,13 +329,8 @@ const App: React.FC = () => {
                     <IonIcon icon={duplicateOutline} />
                     <IonLabel>交易</IonLabel>
                   </IonTabButton>
-                ) : (
-                  <IonTabButton tab="PickPhoto" href={routes.tab.pickPhoto}>
-                    <IonIcon icon={duplicateOutline} />
-                    <IonLabel>交易</IonLabel>
-                  </IonTabButton>
-                )}
-                {jwtState.username === "caleb" ? (
+                ) : null}
+                {!!jwtState.jwtKey ? (
                   <IonTabButton tab="Notices" href={routes.tab.notices}>
                     <IonIcon icon={chatbubblesOutline} />
                     <IonLabel>聊天</IonLabel>

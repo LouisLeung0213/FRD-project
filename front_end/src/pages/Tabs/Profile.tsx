@@ -147,7 +147,7 @@ const Profile: React.FC<{ user: number | undefined }> = (props: {
   }
 
   function func() {
-    console.log("Current jwtState: ", jwtState);
+    console.log("Current pointsState: ", pointsState.points);
     // console.log(pointsState);
   }
   return (

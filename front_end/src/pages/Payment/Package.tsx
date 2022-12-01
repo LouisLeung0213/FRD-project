@@ -159,7 +159,9 @@ const Package: React.FC = () => {
         </div>
         <br />
 
-        <IonLabel>戶口餘額:{pointsState.points}</IonLabel>
+        <IonLabel className="ion-padding">
+          戶口餘額:{pointsState.points}
+        </IonLabel>
         {item({
           name: "amount",
           renderLabel: () => (
