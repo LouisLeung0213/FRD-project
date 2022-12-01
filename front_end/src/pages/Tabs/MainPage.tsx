@@ -92,6 +92,12 @@ const MainPage: React.FC = () => {
     setIsOpen(false);
   }
 
+  useEffect(() => {
+    if (jwtState.username === "caleb") {
+      router.push(routes.tab.mainPage);
+    }
+  }, [jwtState.username]);
+
   // const enterAnimation = (baseEl: HTMLElement) => {
   //   const root = baseEl.shadowRoot;
 
