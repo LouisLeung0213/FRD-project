@@ -249,8 +249,10 @@ export class PostsService {
         admin_comment: updatePostDto.postDescription,
         status: 'selling',
       })
-      .where('id', updatePostDto.postId);
+      .where('id', updatePostDto.postId)
+      .returning('id');
     // console.log(updatePostInfo);
+    console.log('updatePostInfo', updatePostInfo);
     if ('id' in updatePostInfo[0]) {
       let postNoti = await this.knex('notifications')
         .insert({

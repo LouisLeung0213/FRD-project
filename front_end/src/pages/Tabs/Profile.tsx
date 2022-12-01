@@ -11,10 +11,12 @@ import {
   IonMenu,
   IonMenuButton,
   IonMenuToggle,
+  IonModal,
   IonPage,
   IonSearchbar,
   IonTitle,
   IonToolbar,
+  useIonRouter,
 } from "@ionic/react";
 import {
   heartOutline,
@@ -35,7 +37,7 @@ import {
 import "./Profile.scss";
 import icon from "../../image/usericon.png";
 import { useDispatch, useSelector } from "react-redux";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import moment from "moment";
 import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
@@ -48,7 +50,7 @@ import { useSocket } from "../../hooks/use-socket";
 import { Socket } from "socket.io-client";
 import { routes } from "../../routes";
 import styles from "./MainPage.module.css";
-import { PostObj } from "../Posts/Posts";
+import Post, { PostObj } from "../Posts/Posts";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
 
@@ -77,6 +79,7 @@ const Profile: React.FC<{ user: number | undefined }> = (props: {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
+  const router = useIonRouter();
 
   const dispatch = useDispatch();
   let params: any = useParams();
@@ -122,6 +125,9 @@ const Profile: React.FC<{ user: number | undefined }> = (props: {
     postsList();
   }, [jwtState]);
 
+  const modal = useRef<HTMLIonModalElement>(null);
+
+
   function destroyUserInfo() {
     removeValue("Jwt");
     dispatch(
@@ -144,6 +150,16 @@ const Profile: React.FC<{ user: number | undefined }> = (props: {
   function openPost(e: PostObj) {
     setCurrentPost(e);
     setIsOpen(true);
+  }
+
+  function dismiss() {
+    modal.current?.dismiss();
+    setIsOpen(false);
+  }
+
+  function goChat(id: number) {
+    router.push(routes.chatroom(id), "forward", "replace");
+    dismiss();
   }
 
   function func() {
@@ -340,6 +356,32 @@ const Profile: React.FC<{ user: number | undefined }> = (props: {
         </IonList>
 
         </IonContent>
+
+        <IonModal
+        id="post-modal"
+        ref={modal}
+        isOpen={isOpen}
+        // enterAnimation={enterAnimation}
+        // leaveAnimation={leaveAnimation}
+      >
+        <IonHeader>
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonButton
+                onClick={() => {
+                  dismiss();
+                }}
+              >
+                <IonIcon size="large" icon={chevronBackOutline}></IonIcon> Back
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <Post post={currentPost as PostObj} goChat={goChat} />
+        </IonContent>
+      </IonModal>
+
       </IonPage>
     </>
   );

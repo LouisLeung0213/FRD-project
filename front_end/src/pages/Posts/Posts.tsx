@@ -59,14 +59,14 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         socket.emit("join-room", props.post.id);
         socket.on("newBidReceived", (msg) => {
           console.log("received", msg);
-          if (msg.newBidContent[0].post_id != +props.post.id) {
+          if (msg.newBidContent.bid[0].post_id != +props.post.id) {
             console.log("wrong, bye bye");
             return;
           }
           console.log("newBidList", msg);
-          setBidList(msg.newBidContent);
-          setHighestBidder(msg.newBidContent[0].nickname);
-          setNowPrice(msg.newBidContent[0].bid_price);
+          setBidList(msg.newBidContent.bid);
+          setHighestBidder(msg.newBidContent.bid[0].nickname);
+          setNowPrice(msg.newBidContent.bid[0].bid_price);
           return;
         });
         return () => {
@@ -172,6 +172,10 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
     }
   }
 
+  function adjustPrice() {
+    console.log("adjustPrice TODO");
+  }
+
   return (
     <IonList className="post-modal">
       <h1 className="ion-padding">{props.post.nickname}</h1>
@@ -227,7 +231,18 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
             );
           })}
           <IonItem className="inputBox">
-            {!jwtState.id ? null : (
+            {!jwtState.id ? null : jwtState.id == props.post.user_id ? (
+              <>
+                <IonButton
+                  onClick={() => {
+                    adjustPrice();
+                  }}
+                >
+                  調整底價
+                </IonButton>
+                <IonButton>成交！！</IonButton>
+              </>
+            ) : (
               <>
                 <IonInput
                   value={bidPrice}
