@@ -31,7 +31,7 @@ export class UsersController {
 
   @Get('findOne/:id')
   findOne(@Param('id') id: number) {
-    let userInfo = this.usersService.findOneById(id)
+    let userInfo = this.usersService.findOneById(id);
     return userInfo;
     // return this.usersService.findOne(username);
   }
@@ -50,7 +50,7 @@ export class UsersController {
     try {
       return this.usersService.updateUserInfo(+id, updateUserInfoDto);
     } catch (error) {
-       return error;
+      return error;
     }
   }
 
