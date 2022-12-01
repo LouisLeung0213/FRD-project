@@ -21,6 +21,7 @@ const CheckoutForm: React.FC<{
   const [clientSecret, setClientSecret] = useState(props.clientSecret);
   const pointsState = useSelector((state: RootState) => state.points);
   const jwtState = useSelector((state: RootState) => state.jwt);
+  const [userId, setUserId] = useState(jwtState.id);
 
   useEffect(() => {
     if (!stripe) {
@@ -72,12 +73,13 @@ const CheckoutForm: React.FC<{
         clientSecret: props.clientSecret,
       }),
     });
+    setUserId(jwtState.id);
 
     const result = await stripe.confirmPayment({
       //`Elements` instance that was used to create the Payment Element
       elements,
       confirmParams: {
-        return_url: `${FRONT_ORIGIN}/tab/Profile/${jwtState.id}`,
+        return_url: `${FRONT_ORIGIN}/tab/Profile/${userId}`,
       },
     });
     console.log(result);

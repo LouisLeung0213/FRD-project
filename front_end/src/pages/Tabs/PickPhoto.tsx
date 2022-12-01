@@ -255,6 +255,17 @@ const PickPhoto: React.FC = () => {
       ) {
         setIsBankAccountOk(true);
       }
+
+      if (
+        data.qualityPlan == true &&
+        data.bankAccount.bank_name != "" &&
+        data.newBankName != ""
+      ) {
+        alert("只可選擇一個銀行戶口");
+        setIsBankAccountOk(false);
+        ok = false;
+      }
+
       if (data.startPrice.length == 0 || !data.startPrice.match(numReg)) {
         setStartPriceOk(false);
         ok = false;

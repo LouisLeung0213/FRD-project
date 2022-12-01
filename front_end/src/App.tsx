@@ -80,7 +80,6 @@ import Chatroom from "./pages/Chatroom/Chatroom";
 import { updatePoints } from "./redux/points/actions";
 import MainNotice from "./pages/MainNotice/MainNotice";
 import { Router } from "workbox-routing";
-import { forceUpdate } from "ionicons/dist/types/stencil-public-runtime";
 
 setupIonicReact();
 const App: React.FC = () => {
