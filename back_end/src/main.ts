@@ -12,7 +12,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(helmet());
   app.enableCors({
-    // origin: 'https://app.example.com',
+    //   // origin: 'https://app.example.com',
   });
   const server = await app.listen(env.PORT);
   const io = new socketIO.Server(server, { cors: { origin: '*' } });
