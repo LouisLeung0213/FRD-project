@@ -90,6 +90,25 @@ export class UsersService {
     }
   }
 
+  async findOneById(id: number) {
+    try {
+      let result = await this.knex
+        .select('username')
+        .from('users')
+        .where('id', id);
+
+      if (result.length > 0) {
+        let username = result[0].username;
+        let userInfo = this.findOne(username)
+        return userInfo;
+      } else {
+        throw new HttpException('No this user', 401);
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   async updateUserInfo(id: number, updateUserInfoDto: UpdateUserInfoDto) {
     try {
       let users = await this.knex.select('id').from('users').where('id', id);

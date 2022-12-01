@@ -45,6 +45,11 @@ import "@ionic/react/css/ionic-swiper.css";
 import "swiper/swiper.min.css";
 import "@ionic/react/css/ionic-swiper.css";
 import { routes } from "../../routes";
+import { useSelector, useDispatch } from "react-redux";
+import { updatePoints } from "../../redux/points/actions";
+import { updateJwt } from "../../redux/user/actions";
+import { getValue } from "../../service/localStorage";
+import { RootState } from "../../store";
 
 const MainPage: React.FC = () => {
   let [postsList, setPostsList] = useState<[any]>([] as any);
@@ -52,6 +57,7 @@ const MainPage: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
   const router = useIonRouter();
+  let jwtState = useSelector((state: RootState) => state.jwt);
 
   const socket = useSocket(
     useCallback((socket: Socket) => {
@@ -87,6 +93,12 @@ const MainPage: React.FC = () => {
     modal.current?.dismiss();
     setIsOpen(false);
   }
+
+  useEffect(() => {
+    if (jwtState.username === "caleb") {
+      router.push(routes.tab.mainPage);
+    }
+  }, [jwtState.username]);
 
   // const enterAnimation = (baseEl: HTMLElement) => {
   //   const root = baseEl.shadowRoot;

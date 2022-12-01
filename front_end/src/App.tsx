@@ -9,6 +9,9 @@ import {
   IonTabButton,
   IonTabs,
   setupIonicReact,
+  useIonRouter,
+  useIonViewDidEnter,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route, Switch } from "react-router-dom";
@@ -76,14 +79,16 @@ import { updateJwt } from "./redux/user/actions";
 import Chatroom from "./pages/Chatroom/Chatroom";
 import { updatePoints } from "./redux/points/actions";
 import MainNotice from "./pages/MainNotice/MainNotice";
+import { Router } from "workbox-routing";
+import { forceUpdate } from "ionicons/dist/types/stencil-public-runtime";
 
 setupIonicReact();
-
 const App: React.FC = () => {
-  const [username, setUsername] = useState("");
   let jwtState = useSelector((state: RootState) => state.jwt);
-
   const dispatch = useDispatch();
+  const [username, setUsername] = useState("");
+  const router = useIonRouter();
+
   const getProfile = async () => {
     let userId = await getValue("userId");
     let token = await getValue("Jwt");
@@ -93,7 +98,12 @@ const App: React.FC = () => {
 
     let userInfo = await res.json();
     console.log("userInfo: ", userInfo);
-    setUsername(userInfo.userInfo.username);
+
+    let arr = [];
+
+    for (let i = 0; i < userInfo.bankInfo.length; i++) {
+      arr.push(userInfo.bankInfo[i]);
+    }
     dispatch(
       updateJwt({
         jwtKey: token,
@@ -104,24 +114,36 @@ const App: React.FC = () => {
         email: userInfo.userInfo.email,
         joinedTime: userInfo.userInfo.joinedTime,
         isAdmin: userInfo.userInfo.is_admin,
-        bankAccount: userInfo.bankInfo.bank_account,
-        icon_name: userInfo.icon_name,
+        bankAccount: arr,
+        icon_name: userInfo.userInfo.icon_name,
         icon_src: userInfo.userInfo.icon_src,
       })
     );
+
     dispatch(
       updatePoints({
         points: userInfo.userInfo.points,
       })
     );
 
-    console.log("!!!!!!!!!!!!!!!!!!!", jwtState.isAdmin);
+    console.log("!!!!!!!!!!!!!!!!!!!", jwtState);
+    return userInfo.userInfo.username;
   };
+
+  useIonViewDidEnter(() => {
+    console.log("hi");
+  });
 
   useEffect(() => {
     // setLoginLoad(true);
-    getProfile();
-    console.log(username);
+
+    const get = async () => {
+      let jwtResult = await getProfile();
+      setUsername(jwtResult);
+      console.log(jwtResult);
+    };
+
+    get();
 
     const registerNotifications = async () => {
       let permStatus = await PushNotifications.checkPermissions();
@@ -172,7 +194,8 @@ const App: React.FC = () => {
     }
 
     listenToDeepLinkOpen();
-  }, [username]);
+  }, []);
+
   let profileHref;
 
   if (!jwtState.id) {
@@ -183,8 +206,8 @@ const App: React.FC = () => {
   }
 
   useEffect(() => {
-    console.log("123123131", username);
-  }, [username]);
+    console.log(jwtState.username);
+  }, [jwtState.username]);
 
   return (
     <IonApp>
@@ -307,8 +330,13 @@ const App: React.FC = () => {
                     <IonIcon icon={duplicateOutline} />
                     <IonLabel>交易</IonLabel>
                   </IonTabButton>
-                ) : null}
-                {!!jwtState.jwtKey ? (
+                ) : (
+                  <IonTabButton tab="PickPhoto" href={routes.tab.pickPhoto}>
+                    <IonIcon icon={duplicateOutline} />
+                    <IonLabel>交易</IonLabel>
+                  </IonTabButton>
+                )}
+                {jwtState.username === "caleb" ? (
                   <IonTabButton tab="Notices" href={routes.tab.notices}>
                     <IonIcon icon={chatbubblesOutline} />
                     <IonLabel>聊天</IonLabel>
@@ -320,7 +348,7 @@ const App: React.FC = () => {
                   <IonLabel>個人資料</IonLabel>
                 </IonTabButton>
 
-                {!!jwtState.isAdmin ? (
+                {jwtState.isAdmin ? (
                   <IonTabButton tab="AdminPanel" href={routes.tab.adminPanel}>
                     <IonIcon icon={planetOutline} />
                     <IonLabel>管理員</IonLabel>

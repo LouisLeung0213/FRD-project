@@ -12,6 +12,7 @@ import {
   IonMenuButton,
   IonMenuToggle,
   IonPage,
+  IonSearchbar,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -27,6 +28,8 @@ import {
   logOutOutline,
   walletOutline,
   cubeOutline,
+  checkmarkDoneCircleOutline,
+  chevronBackOutline,
 } from "ionicons/icons";
 
 import "./Profile.scss";
@@ -44,17 +47,15 @@ import { useParams } from "react-router";
 import { useSocket } from "../../hooks/use-socket";
 import { Socket } from "socket.io-client";
 import { routes } from "../../routes";
+import styles from "./MainPage.module.css";
+import { PostObj } from "../Posts/Posts";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
 
-const Profile: React.FC<{ user: number | null }> = (props: {
-  user: number | null;
+const Profile: React.FC<{ user: number | undefined }> = (props: {
+  user: number | undefined;
 }) => {
   let jwtState = useSelector((state: RootState) => state.jwt);
-  // if (jwtState.icon_src && jwtState.icon_src.includes("$1")) {
-  //   real_icon_src = jwtState.icon_src.split("$1").join("?");
-  // } else if (jwtState.icon_src) {
-  //   real_icon_src = jwtState.icon_src;
-  // }
-
   let pointsState = useSelector((state: RootState) => state.points);
 
   let real_icon_src = "";
@@ -72,6 +73,11 @@ const Profile: React.FC<{ user: number | null }> = (props: {
   let [joinTime, setJoinTime] = useState(jwtState.joinedTime);
   let [showedIcon, setShowedIcon] = useState(real_icon_src as string);
   let [points, setPoints] = useState(pointsState.points);
+  let [postsList, setPostsList] = useState<[any]>([] as any);
+  const [query, setQuery] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentPost, setCurrentPost] = useState({});
+
   const dispatch = useDispatch();
   let params: any = useParams();
 
@@ -85,37 +91,59 @@ const Profile: React.FC<{ user: number | null }> = (props: {
     setJoinTime(moment(jwtState.joinedTime).format("MMMM Do YYYY"));
   };
 
-  const getOtherProfile = async () => {
-    //TODO
+  const getOtherProfile = async (userId: number) => {
+    let userInfo = await fetch(`${API_ORIGIN}/users/findOne/${userId}`)
+    console.log("userInfo: ", userInfo)
   };
 
   useEffect(() => {
     if (props.user === jwtState.id || params.id == jwtState.id) {
       getOwnProfile();
     } else {
-      getOtherProfile();
+      if (props.user){
+        getOtherProfile(props.user)
+      }
     }
   }, [jwtState, pointsState]);
 
-  //jwtKey, reduxNickname
+  useEffect(() => {
+    const postsList = async () => {
+      if (props.user){
+        let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${props.user}`);
+        let result = await res.json();
+        setPostsList(result);
+      } else {
+        let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${jwtState.id}`);
+        let result = await res.json();
+        setPostsList(result);
+      }
+    };
+
+    postsList();
+  }, [jwtState]);
 
   function destroyUserInfo() {
     removeValue("Jwt");
     dispatch(
       updateJwt({
         jwtKey: null,
-        id: null,
-        username: null,
-        nickname: null,
-        phone: null,
-        email: null,
-        joinedTime: null,
+        id: undefined,
+        username: undefined,
+        nickname: undefined,
+        phone: undefined,
+        email: undefined,
+        joinedTime: undefined,
         isAdmin: false,
         bankAccount: [{}],
-        icon_name: null,
-        icon_src: null,
+        icon_name: undefined,
+        icon_src: undefined,
       })
     );
+  }
+
+  function openPost(e: PostObj) {
+    setCurrentPost(e);
+    setIsOpen(true);
   }
 
   function func() {
@@ -221,6 +249,96 @@ const Profile: React.FC<{ user: number | null }> = (props: {
           </IonItem>
 
           <IonButton onClick={func}>Show the redux state</IonButton>
+          <IonList>
+          <div slot="content">
+            <IonSearchbar
+              debounce={1000}
+              onIonChange={(ev: any) => setQuery(ev.target.value)}
+            ></IonSearchbar>
+            {postsList
+              .filter((postsList) => postsList.post_title.includes(query))
+              .map((post: any) => {
+                return (
+                  // <IonItem key={e.id} onClick={() => openPost(e)}>
+                  //   <img src={e.json_agg[0]}></img>
+                  //   {!e.admin_title ? (
+                  //     <IonLabel>{e.post_title}</IonLabel>
+                  //   ) : (
+                  //     <IonLabel>{e.admin_title}</IonLabel>
+                  //   )}
+                  //   {!post.max ? (
+                  //     <IonLabel>${post.original_price}</IonLabel>
+                  //   ) : (
+                  //     <IonLabel>${post.max}</IonLabel>
+                  //   )}
+                  //   <IonLabel>{e.nickname}</IonLabel>
+                  // </IonItem>
+                  <div
+                    className={styles.postContainer}
+                    key={post.id}
+                    onClick={() => openPost(post)}
+                  >
+                    <div className={styles.nameContainer}>
+                      <h4 className={styles.nameText}>
+                        <IonIcon
+                          className={styles.personIcon}
+                          icon={personOutline}
+                        ></IonIcon>
+                        {post.nickname}
+                      </h4>
+                      <h2 className={styles.title}>
+                        {!post.admin_title ? post.post_title : post.admin_title}
+
+                        {post.q_mark ? (
+                          <IonIcon
+                            className={styles.q_mark_icon}
+                            icon={checkmarkDoneCircleOutline}
+                          ></IonIcon>
+                        ) : null}
+                      </h2>
+                    </div>
+                    <Swiper
+                      modules={[
+                        Autoplay,
+                        Keyboard,
+                        Pagination,
+                        Scrollbar,
+                        Zoom,
+                      ]}
+                      autoplay={true}
+                      keyboard={true}
+                      pagination={true}
+                      slidesPerView={1}
+                      //scrollbar={true}
+                      zoom={true}
+                      effect={"fade"}
+                      className={styles.slide}
+                    >
+                      {post.json_agg.map((photo: any, index: any) => {
+                        return (
+                          <SwiperSlide
+                            className={styles.image_slide}
+                            key={index}
+                          >
+                            <img src={photo} key={index} />
+                          </SwiperSlide>
+                        );
+                      })}
+                    </Swiper>
+                    {/* <img src={post.json_agg}></img> */}
+                    <div className={styles.priceContainer}>
+                      {!post.max ? (
+                        <h3>現價：${post.original_price}</h3>
+                      ) : (
+                        <h3>現價：${post.max}</h3>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </IonList>
+
         </IonContent>
       </IonPage>
     </>

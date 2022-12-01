@@ -9,7 +9,7 @@ export const setValue = async (key: string, value: string) => {
 
 export const getValue = async (key: string) => {
   const { value } = await Preferences.get({
-    key: key,
+    key: key as string,
   });
   return value;
 };

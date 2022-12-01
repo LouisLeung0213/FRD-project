@@ -29,7 +29,7 @@ import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
 
 import { useIonFormState } from "react-use-ionic-form";
-import { API_ORIGIN } from "../../api";
+import { API_ORIGIN, FRONT_ORIGIN } from "../../api";
 import { Preferences } from "@capacitor/preferences";
 import { setValue } from "../../service/localStorage";
 import { chevronBackOutline } from "ionicons/icons";
@@ -68,6 +68,7 @@ const Login: React.FC = () => {
 
     let res = await fetch(`${API_ORIGIN}/auth/login`, {
       method: "POST",
+      // referrer: FRONT_ORIGIN,
       headers: {
         "Content-Type": "application/json",
       },
@@ -138,7 +139,7 @@ const Login: React.FC = () => {
       );
       // history.push(`/tab/Profile`);
       socket.emit("join-TJroom", { userId: userInfo.id });
-      router.push(routes.tab.profile(":id"), "forward", "replace");
+      router.push(routes.tab.profile(userInfo.id), "forward", "replace");
     } else {
       setIsUserCorrect(false);
       // alert(JSON.stringify("冇人識你喎...", null, 2));

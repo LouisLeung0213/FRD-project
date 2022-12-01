@@ -19,7 +19,9 @@ export class PostsService {
       if (createPostDto.promotion === 't') {
         promotion_plan = true;
       }
-
+      if (createPostDto.qualityPlan === 't') {
+        quality_plan = true;
+      }
       let createPost = await this.knex('posts')
         .insert({
           user_id: +createPostDto.user_id,
@@ -35,7 +37,6 @@ export class PostsService {
         .returning('id');
 
       if (createPostDto.qualityPlan === 't' && createPostDto.bankName != '') {
-        quality_plan = true;
         pending_in = 'pending_in';
         let location = await this.knex('store_locations')
           .select('*')
@@ -63,7 +64,6 @@ export class PostsService {
         createPostDto.qualityPlan === 't' &&
         createPostDto.newBankName != ''
       ) {
-        quality_plan = true;
         pending_in = 'pending_in';
         let bankId = await this.knex('banks')
           .select('id')
@@ -168,6 +168,35 @@ export class PostsService {
       .groupBy('posts.id', 'users.username', 'users.nickname');
     // console.log('showAllList', showAllList);
     return showAllList;
+  }
+  async showSomeone(id: number) {
+    let showSomeoneList = await this.knex
+      .select(
+        'posts.id',
+        'user_id',
+        'post_title',
+        'post_description',
+        'original_price',
+        'q_mark',
+        'admin_title',
+        'admin_comment',
+        'status',
+        'auto_adjust_plan',
+        'post_time',
+        'nickname',
+        'username',
+        this.knex.raw('json_agg(src)'),
+        this.knex.raw('max(bid_price)'),
+      )
+      .from('posts')
+      .join('users', 'user_id', 'users.id')
+      .join('images', 'posts.id', 'images.post_id')
+      .fullOuterJoin('bid_records', 'bid_records.post_id', 'posts.id')
+      .where('status', 'selling')
+      .andWhere('user_id', id)
+      .groupBy('posts.id', 'users.username', 'users.nickname');
+    // console.log('showAllList', showAllList);
+    return showSomeoneList;
   }
 
   async findOne(id: number) {

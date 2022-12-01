@@ -94,8 +94,9 @@ const PickPhoto: React.FC = () => {
   const [isBankAccountOk, setIsBankAccountOk] = useState(true);
   const [isPhotoOk, setIsPhotoOk] = useState(true);
   const [percent, setPercent] = useState(0);
-  const [bankState, setBankState] = useState(jwtState.bankAccount);
+  const [bankState, setBankState] = useState(jwtState.bankAccount) as any;
   const [banks, setBanks] = useState([]) as any;
+  const [savedBanks, setSavedBanks] = useState() as any;
 
   const { state, item } = useIonFormState({
     title: "",
@@ -110,38 +111,38 @@ const PickPhoto: React.FC = () => {
     promotion: false,
   });
 
-  // async function getSavedBank() {
-  //   let result = await fetch(
-  //     `${API_ORIGIN}/information/savedBank/${jwtState.id}`
-  //   );
+  async function getSavedBank() {
+    let result = await fetch(
+      `${API_ORIGIN}/information/savedBank/${jwtState.id}`
+    );
 
-  //   console.log("HALO:", jwtState.bankAccount);
-  //   let json = await result.json();
-  //   console.log("here!", json);
+    let json = await result.json();
+    console.log("here!", json);
 
-  //   if (json.banks_id.length > 0) {
-  //     let savedBankNameArr: any = json.bank_name_arr;
-  //     let savedBankAccount: any = json.banks_id;
-  //     // console.log(
-  //     //   "!!!!!!!!!!!!!!!!!!!!!!!!!!!",
-  //     //   savedBankNameArr,
-  //     //   savedBankAccount
-  //     // );
-  //     let savedBankArr: any = [];
+    if (json.banks_id.length > 0) {
+      let savedBankNameArr: any = json.bank_name_arr;
+      let savedBankAccount: any = json.banks_id;
+      console.log(
+        "!!!!!!!!in pick   photo!!!!!!!!!!",
+        savedBankNameArr,
+        savedBankAccount
+      );
+      let savedBankArr: any = [];
 
-  //     for (let i = 0; i < json.bank_name_arr.length; i++) {
-  //       console.log("saved bank:", json[i]);
-  //       savedBankArr.push({
-  //         bankName: savedBankNameArr[i].bank_name,
-  //         bankAccount: savedBankAccount[i].bank_account,
-  //       });
-  //     }
-  //     console.log("saved bank Array PickPhoto:", savedBankArr);
-  //     return savedBankArr;
-  //   } else {
-  //     return;
-  //   }
-  // }
+      for (let i = 0; i < json.bank_name_arr.length; i++) {
+        // console.log("saved bank:", json[i]);
+        savedBankArr.push({
+          bankName: savedBankNameArr[i].bank_name,
+          bankAccount: savedBankAccount[i].bank_account,
+        });
+      }
+      console.log("saved bank Array 2222222222:", savedBankArr);
+      return savedBankArr;
+    } else {
+      return;
+    }
+  }
+
   async function getBankSelect() {
     let result = await fetch(`${API_ORIGIN}/information/banks`, {
       method: "GET",
@@ -156,11 +157,15 @@ const PickPhoto: React.FC = () => {
 
     setBanks(bankArr);
   }
+
   useEffect(() => {
     async function get() {
-      getBankSelect();
+      await getBankSelect();
+      let userBank = await getSavedBank();
+      setSavedBanks(userBank);
     }
     get();
+    console.log(bankState, "on99", savedBanks);
   }, []);
 
   function findMIMEType(ext: string) {
@@ -673,7 +678,7 @@ const PickPhoto: React.FC = () => {
                   ),
                   renderContent: (props) => (
                     <IonSelect {...props}>
-                      {bankState.map((account: any) => (
+                      {savedBanks.map((account: any) => (
                         <IonSelectOption key={account} value={account}>
                           {account.bankName}: {account.bankAccount}
                         </IonSelectOption>
@@ -686,7 +691,7 @@ const PickPhoto: React.FC = () => {
               ? item({
                   name: "newBankName",
                   renderLabel: () => (
-                    <IonLabel position="floating">新增銀行戶口:</IonLabel>
+                    <IonLabel position="floating">新增銀行</IonLabel>
                   ),
                   renderContent: (props) => (
                     <IonSelect {...props}>
@@ -703,7 +708,7 @@ const PickPhoto: React.FC = () => {
               ? item({
                   name: "newBankAccount",
                   renderLabel: () => (
-                    <IonLabel position="floating">新增銀行戶口:</IonLabel>
+                    <IonLabel position="floating">輸入戶口</IonLabel>
                   ),
                   renderContent: (props) => (
                     <IonInput placeholder="新增銀行" {...props}></IonInput>
