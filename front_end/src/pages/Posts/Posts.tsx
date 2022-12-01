@@ -59,14 +59,14 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         socket.emit("join-room", props.post.id);
         socket.on("newBidReceived", (msg) => {
           console.log("received", msg);
-          if (msg.newBidContent[0].post_id != +props.post.id) {
+          if (msg.newBidContent.bid[0].post_id != +props.post.id) {
             console.log("wrong, bye bye");
             return;
           }
           console.log("newBidList", msg);
-          setBidList(msg.newBidContent);
-          setHighestBidder(msg.newBidContent[0].nickname);
-          setNowPrice(msg.newBidContent[0].bid_price);
+          setBidList(msg.newBidContent.bid);
+          setHighestBidder(msg.newBidContent.bid[0].nickname);
+          setNowPrice(msg.newBidContent.bid[0].bid_price);
           return;
         });
         return () => {
