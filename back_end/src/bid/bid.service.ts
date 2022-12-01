@@ -36,7 +36,17 @@ export class BidService {
             bid_price: createBidDto.bidPrice,
           })
           .returning('id');
-        return bid[0];
+        if ('id' in bid[0]) {
+          let firstBidNoti = await this.knex('notifications')
+            .insert({
+              receiver_id: createBidDto.sellerId,
+              content: `買家[${createBidDto.buyerNickname}]在[${createBidDto.postTitle}]出價:$${createBidDto.bidPrice}!`,
+            })
+            .returning('content');
+          return { bid: bid[0], firstBidNoti: firstBidNoti[0] };
+        }
+
+        return { message: 'insert failed' };
       }
     } else {
       if (+checkBid[0].bid_price >= +createBidDto.bidPrice) {
@@ -60,6 +70,7 @@ export class BidService {
             .where('post_id', createBidDto.postId)
             .limit(5)
             .orderBy('bid_price', 'desc');
+
           return newBidList;
         } else {
           return { status: '99', message: 'unexpected error occurred' };

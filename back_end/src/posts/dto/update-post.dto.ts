@@ -14,4 +14,8 @@ export class UpdatePostDto extends PartialType(CreatePostDto) {
   @IsString()
   @IsNotEmpty()
   postDescription: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  ownerId: number;
 }

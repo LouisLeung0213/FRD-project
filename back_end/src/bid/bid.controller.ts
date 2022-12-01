@@ -58,6 +58,7 @@ export class BidController {
         newPrice: newPriceList,
       });
     }
+    console.log('newBidList', newBidList);
     return newBidList;
   }
 

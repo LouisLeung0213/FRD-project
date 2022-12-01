@@ -14,6 +14,7 @@ import { ChatroomModule } from './chatroom/chatroom.module';
 import { PaymentModule } from './payment/payment.module';
 import { BidModule } from './bid/bid.module';
 import { InformationModule } from './information/information.module';
+import { MainNoticeModule } from './main-notice/main-notice.module';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyD243djxwnLoP4tSfW0CUqOlE-3z0UQGL4',
@@ -40,6 +41,7 @@ const firebaseConfig = {
     PaymentModule,
     BidModule,
     InformationModule,
+    MainNoticeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

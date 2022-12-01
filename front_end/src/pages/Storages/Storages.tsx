@@ -81,6 +81,7 @@ const Storages: React.FC = () => {
         postId: productId,
         postTitle: productTitle,
         postDescription: productDescription,
+        ownerId: sellerId,
       }),
     });
 

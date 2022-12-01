@@ -151,6 +151,9 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         postId: props.post.id,
         buyerId: jwtState.id,
         bidPrice: bidPrice,
+        sellerId: props.post.user_id,
+        buyerNickname: jwtState.nickname,
+        postTitle: props.post.admin_title,
       }),
     });
     let result = await res.json();

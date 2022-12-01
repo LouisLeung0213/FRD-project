@@ -222,6 +222,15 @@ export class PostsService {
       })
       .where('id', updatePostDto.postId);
     // console.log(updatePostInfo);
+    if ('id' in updatePostInfo[0]) {
+      let postNoti = await this.knex('notifications')
+        .insert({
+          receiver_id: updatePostDto.ownerId,
+          content: `您的貨品${updatePostDto.postTitle}現已上架`,
+        })
+        .returning('content');
+      return postNoti[0];
+    }
     return `This action updates a #${id} post`;
   }
 

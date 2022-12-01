@@ -75,6 +75,7 @@ import { API_ORIGIN } from "./api";
 import { updateJwt } from "./redux/user/actions";
 import Chatroom from "./pages/Chatroom/Chatroom";
 import { updatePoints } from "./redux/points/actions";
+import MainNotice from "./pages/MainNotice/MainNotice";
 
 setupIonicReact();
 
@@ -249,6 +250,11 @@ const App: React.FC = () => {
               path={routes.package}
               exact={true}
               render={() => <Package />}
+            />
+            <Route
+              path={routes.mainNotice}
+              exact={true}
+              render={() => <MainNotice />}
             />
           </Switch>
 
