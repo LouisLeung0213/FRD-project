@@ -227,7 +227,9 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
             );
           })}
           <IonItem className="inputBox">
-            {!jwtState.id ? null : (
+            {!jwtState.id ? null : jwtState.id == props.post.user_id ? (
+              <IonButton>I am the seller</IonButton>
+            ) : (
               <>
                 <IonInput
                   value={bidPrice}
