@@ -162,16 +162,24 @@ export class PostsService {
         'json_agg',
         'max'
       )
+
       .from('posts')
       .join('users', 'user_id', 'users.id')
-      .join('tem_imgs', 'posts.id', 'post_id')
       .fullOuterJoin('tem_bid_records', 'tem_bid_records.post_id', 'posts.id')
       .where('status', 'selling')
-
     return showAllList;
   }
   async showSomeone(id: number) {
-    let showSomeoneList = await this.knex
+    // let newPrice = await this.knex
+    //   .select('posts.id', this.knex.raw('max(bid_price)'))
+
+    //   .from('posts')
+    //   .join('bid_records', 'post_id', 'posts.id')
+    //   .groupBy('posts.id');
+    // console.log('newPrice', newPrice);
+    let showSomeone = await this.knex
+      .with('tem_imgs', this.knex.select('post_id', this.knex.raw('json_agg(src) as json_agg')).from('images').groupBy('post_id'))
+      .with('tem_bid_records', this.knex.select('post_id', this.knex.raw('max(bid_price) as max')).from('bid_records').groupBy('post_id'))
       .select(
         'posts.id',
         'user_id',
@@ -186,42 +194,16 @@ export class PostsService {
         'post_time',
         'nickname',
         'username',
-        this.knex.raw('json_agg(src)'),
-        this.knex.raw('max(bid_price)'),
+        'json_agg',
+        'max'
       )
+
       .from('posts')
       .join('users', 'user_id', 'users.id')
-      .join('images', 'posts.id', 'images.post_id')
-      .fullOuterJoin('bid_records', 'bid_records.post_id', 'posts.id')
+      .fullOuterJoin('tem_bid_records', 'tem_bid_records.post_id', 'posts.id')
       .where('status', 'selling')
-      .andWhere('user_id', id)
-      .groupBy('posts.id', 'users.username', 'users.nickname');
-    // console.log('showAllList', showAllList);
-    return showSomeoneList;
-  }
-
-  async findOne(id: number) {
-    // let postDetail = await this.knex
-    //   .select(
-    //     'user_id',
-    //     'post_title',
-    //     'post_description',
-    //     'original_price',
-    //     'q_mark',
-    //     'admin_title',
-    //     'admin_comment',
-    //     'status',
-    //     'post_time',
-    //     'auto_adjust_plan',
-    //     'nickname',
-    //     'username',
-    //     this.knex.raw('json_agg(src)'),
-    //   )
-    //   .from('posts')
-    //   .join('users', 'user_id', 'users.id')
-    //   .join('images', 'posts.id', 'post_id')
-    //   .where('posts.id', id);
-    return 'postDetail[0]';
+      .andWhere('users.id', id)
+    return showSomeone;
   }
 
   async showVerify() {
@@ -260,7 +242,7 @@ export class PostsService {
           receiver_id: updatePostDto.ownerId,
           content: `您的貨品${updatePostDto.postTitle}現已上架`,
         })
-        .returning('content');
+        .returning(['receiver_id', 'content']);
       return postNoti[0];
     }
     return `This action updates a #${id} post`;

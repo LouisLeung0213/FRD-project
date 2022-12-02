@@ -22,12 +22,15 @@ import { join } from 'path';
 import { mkdirSync } from 'fs';
 import { UpdateStatusDto } from './dto/updateStatus-post.dto';
 import { io } from 'src/io';
+import { Server } from 'socket.io';
 
 mkdirSync('uploads', { recursive: true });
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
+
+  setupIO(io: Server) {}
 
   @Post('postItem')
   @UseInterceptors(
@@ -92,19 +95,24 @@ export class PostsController {
     return this.postsService.showSomeone(id);
   }
 
-  @Get('findOne/:id')
-  findOne(@Param('id') id: string) {
-    return this.postsService.findOne(+id);
-  }
-
   @Get('showVerify')
   showVerify() {
     return this.postsService.showVerify();
   }
 
   @Patch('ready/:id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(+id, updatePostDto);
+  async update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+    let result = await this.postsService.update(+id, updatePostDto);
+    console.log('here');
+    console.log(result.receiver_id);
+    if (result.receiver_id) {
+      console.log('result', result);
+      io.to('TJroom: ' + result.receiver_id).emit('post-is-uploaded', {
+        msg: result.content,
+      });
+      return result;
+    }
+    return { message: 'cannot upload' };
   }
 
   @Patch('updateStatus/:id')

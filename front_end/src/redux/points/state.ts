@@ -1,5 +1,5 @@
 export interface UpdatePointsState {
-  points: number | string | null;
+  points: number | string;
 }
 
 export const initialState: UpdatePointsState = {
