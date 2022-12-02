@@ -151,17 +151,16 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   async function makeDeal() {
     console.log(nowPrice);
 
-    //TODO //TODO
-    // let dealRes = await fetch(`${API_ORIGIN}/payment/capturePaymentIntent`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     bidPrice:nowPrice,
-    //     userId:
-    //   }),
-    // });
+    let dealRes = await fetch(`${API_ORIGIN}/payment/capturePaymentIntent`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        bidPrice: nowPrice,
+        postId: props.post.id,
+      }),
+    });
   }
 
   async function submitBid() {
