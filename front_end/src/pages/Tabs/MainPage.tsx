@@ -109,7 +109,7 @@ const MainPage: React.FC = () => {
     };
 
     const dotStatus = async () => {
-      let res = await fetch(`${API_ORIGIN}/users/hide`);
+      let res = await fetch(`${API_ORIGIN}/users/dots/${jwtState.id}`);
       let result = await res.json();
 
       setNoticeDots(result.notice_dots);
