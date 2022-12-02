@@ -5,10 +5,10 @@ import { CreatePaymentDto } from './create-payment.dto';
 export class UpdatePointsDto extends PartialType(CreatePaymentDto) {
   @IsNumber()
   @IsNotEmpty()
-  points: string;
+  points?: string;
 
   @IsNumber()
-  userId: number;
+  userId?: number;
 
   @IsString()
   @IsNotEmpty()
@@ -18,4 +18,6 @@ export class UpdatePointsDto extends PartialType(CreatePaymentDto) {
   bidPrice?: number;
 
   post_id?: number;
+
+  bidder_id?: number;
 }

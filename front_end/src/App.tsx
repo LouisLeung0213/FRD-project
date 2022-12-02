@@ -389,7 +389,7 @@ const App: React.FC = () => {
                     <IonLabel>交易</IonLabel>
                   </IonTabButton>
                 )}
-                {jwtState.username === "caleb" ? (
+                {!!jwtState.jwtKey ? (
                   <IonTabButton
                     tab="Notices"
                     href={routes.tab.notices}

@@ -95,11 +95,6 @@ export class PostsController {
     return this.postsService.showSomeone(id);
   }
 
-  @Get('findOne/:id')
-  findOne(@Param('id') id: string) {
-    return this.postsService.findOne(+id);
-  }
-
   @Get('showVerify')
   showVerify() {
     return this.postsService.showVerify();

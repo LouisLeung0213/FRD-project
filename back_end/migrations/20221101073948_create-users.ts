@@ -83,7 +83,7 @@ export async function up(knex: Knex): Promise<void> {
         'deny', // deny due to some reason (eg 18+)
         'selling', // posted on mainPage
         'cancel', // seller cancel the post
-        'holding', // sold but buyer still doesn't collect the product
+        'sold&holding', // sold but buyer still doesn't collect the product
         'sold&out', // sold and buyer collected the product
       ])
       .notNullable()

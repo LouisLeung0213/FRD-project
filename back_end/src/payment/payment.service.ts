@@ -39,109 +39,129 @@ export class PaymentService {
   }
 
   async capturePaymentIntent(updatePointsDto: UpdatePointsDto) {
-    let required_amount = updatePointsDto.amount;
+    console.log('I am here');
+    let required_amount = updatePointsDto.bidPrice;
     const stripe = new Stripe(env.STRIPE_KEY, { apiVersion: '2022-11-15' });
 
-    let origin_points_result = await this.knex('users')
+    let buyer_origin_points_result = await this.knex('users')
       .select('points')
-      .where('id', updatePointsDto.userId);
+      .where('id', updatePointsDto.bidder_id);
 
-    let origin_points: number = origin_points_result[0].points;
-    let new_points = origin_points - required_amount;
+    let buyer_origin_points: number = buyer_origin_points_result[0].points;
+    let new_points = buyer_origin_points - required_amount;
     if (new_points < 0) {
-      return { message: "your account didn't have enough money" };
+      return { status: 99, message: "your account didn't have enough money" };
     }
 
     let held_intent = await this.knex('client_secrets')
       .select('*')
-      .where('user_id', updatePointsDto.userId)
+      .where('user_id', updatePointsDto.bidder_id)
       .andWhere('captured', false);
     //console.log(held_intent);
     let total_intent_should_capture = [];
     let amount_should_capture = 0;
-
+    console.log('held_intent: ', held_intent);
     for (let intent of held_intent) {
-      if (required_amount > intent.amount) {
-        amount_should_capture = intent.amount;
-        total_intent_should_capture.push({
-          client_secret_should_capture: `${intent.client_secret}`,
-          amount_should_capture: amount_should_capture,
-        });
-        required_amount = required_amount - intent.amount;
-        console.log(
-          '>:',
-          'required_amount: ',
-          required_amount,
-          'amount_should_capture: ',
-          amount_should_capture,
-          'intent.client_secret:',
-          intent.client_secret,
-        );
-      } else if (required_amount == intent.amount) {
-        amount_should_capture = intent.amount;
-        total_intent_should_capture.push({
-          client_secret_should_capture: `${intent.client_secret}`,
-          amount_should_capture: amount_should_capture,
-        });
-        required_amount = required_amount - intent.amount;
+      console.log('here I am ', required_amount);
+      try {
+        if (required_amount > intent.amount) {
+          amount_should_capture = intent.amount;
+          total_intent_should_capture.push({
+            client_secret_should_capture: `${intent.client_secret}`,
+            amount_should_capture: amount_should_capture,
+          });
+          required_amount = required_amount - intent.amount;
+          console.log(
+            '>:',
+            'required_amount: ',
+            required_amount,
+            'amount_should_capture: ',
+            amount_should_capture,
+            'intent.client_secret:',
+            intent.client_secret,
+          );
+          console.log('text');
+        } else if (required_amount == intent.amount) {
+          amount_should_capture = intent.amount;
+          total_intent_should_capture.push({
+            client_secret_should_capture: `${intent.client_secret}`,
+            amount_should_capture: amount_should_capture,
+          });
+          required_amount = required_amount - intent.amount;
 
-        console.log(
-          '=:',
-          required_amount,
-          amount_should_capture,
-          intent.client_secret,
-        );
-      } else if (required_amount < intent.mount) {
-        amount_should_capture = intent.amount - required_amount;
+          console.log(
+            '=:',
+            required_amount,
+            amount_should_capture,
+            intent.client_secret,
+          );
+        } else if (required_amount < intent.amount) {
+          let amount_should_remain = intent.amount - required_amount;
+          amount_should_capture = intent.amount - amount_should_remain;
+          total_intent_should_capture.push({
+            client_secret_should_capture: `${intent.client_secret}`,
+            amount_should_capture: amount_should_capture,
+          });
+          required_amount = 0;
+          console.log(
+            '<:',
+            required_amount,
+            amount_should_capture,
+            intent.client_secret,
+          );
+        }
 
-        total_intent_should_capture.push({
-          client_secret_should_capture: `${intent.client_secret}`,
-          amount_should_capture: amount_should_capture,
-        });
-        required_amount = 0;
-        console.log(
-          '<:',
-          required_amount,
-          amount_should_capture,
-          intent.client_secret,
-        );
-      }
-
-      if (required_amount == 0) {
-        break;
+        if (required_amount == 0) {
+          console.log('required_amount == 0');
+          break;
+        }
+      } catch (error) {
+        console.log(error);
       }
     }
-    console.log(total_intent_should_capture);
-
+    console.log('total_intent_should_capture:::', total_intent_should_capture);
+    console.log('After forLoop required_amount: ', required_amount);
     let remain_capture = required_amount;
-    for (let intent2 of total_intent_should_capture) {
-      remain_capture = remain_capture - intent2.amount_should_capture;
-      const result = await stripe.paymentIntents.capture(
-        intent2.client_secret_should_capture,
-        {
-          amount_to_capture: intent2.amount_should_capture * 100,
-        },
-      );
-      console.log(result);
-      let captured_result = await this.knex('client_secrets')
-        .update('captured', true)
-        .where('client_secrets', intent2.client_secret_should_capture);
+    try {
+      for (let intent2 of total_intent_should_capture) {
+        remain_capture = remain_capture - intent2.amount_should_capture;
+        console.log('remain_capture?:', remain_capture);
+        const result = await stripe.paymentIntents.capture(
+          intent2.client_secret_should_capture,
+          {
+            amount_to_capture: intent2.amount_should_capture * 100,
+          },
+        );
+        console.log('!!!!!!!!!!!!!!', result);
+        let captured_result = await this.knex('client_secrets')
+          .update('captured', true)
+          .where('client_secret', intent2.client_secret_should_capture);
 
-      if (remain_capture == 0) {
-        break;
+        if (remain_capture == 0) {
+          break;
+        }
       }
-    }
 
-    let deductResult = await this.knex('users')
-      .update('points', new_points)
-      .where('id', updatePointsDto.userId);
+      let deductResult = await this.knex('users')
+        .update('points', new_points)
+        .where('id', updatePointsDto.bidder_id);
+
+      let changePostStatus = await this.knex('posts')
+        .update('status', 'sold&holding')
+        .where('id', updatePointsDto.post_id);
+    } catch (error) {
+      console.log(error);
+      throw new Error(error);
+    }
 
     return {
+      status: 200,
       message: 'transaction complete',
+
       message2: 'required_amount:',
       required_amount,
       message3: 'origin_points:',
-      origin_points,
+      buyer_origin_points,
       message4: 'new_points',
       new_points,
     };
