@@ -45,3 +45,13 @@
   padding: 0px;
   align-items: baseline;
 }
+
+.badge {
+  position: absolute;
+  width: 1.2rem;
+  height: 1.2rem;
+  top: 16px;
+  right: 19px;
+  z-index: 100;
+  border-radius: 50%;
+}

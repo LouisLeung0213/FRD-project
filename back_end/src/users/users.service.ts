@@ -5,6 +5,7 @@ import { UpdatePasswordDto, UpdateUserInfoDto } from './dto/update-user.dto';
 import { InjectKnex, Knex } from 'nestjs-knex';
 import * as bcrypt from 'bcrypt';
 import passport from 'passport';
+import { UpdateDotsDto } from './dto/update-dots-dto';
 
 @Injectable()
 export class UsersService {
@@ -99,7 +100,7 @@ export class UsersService {
 
       if (result.length > 0) {
         let username = result[0].username;
-        let userInfo = this.findOne(username)
+        let userInfo = this.findOne(username);
         return userInfo;
       } else {
         throw new HttpException('No this user', 401);
@@ -179,6 +180,24 @@ export class UsersService {
     } else {
       throw new HttpException('No such user', 401);
     }
+  }
+
+  async dotsUpdate(id: number, updateDotsDto: UpdateDotsDto) {
+    let result = await this.knex('users')
+      .where('id', id)
+      .update({
+        [updateDotsDto.statusLocation]: updateDotsDto.status,
+      })
+      .returning(`${updateDotsDto.statusLocation}`);
+    return result[0];
+  }
+
+  async getDots(id: number) {
+    let result = await this.knex
+      .select('chat_dots', 'notice_dots')
+      .from('users')
+      .where('id', id);
+    return result[0];
   }
 
   remove(id: number) {

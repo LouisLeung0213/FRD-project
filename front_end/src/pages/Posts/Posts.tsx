@@ -56,6 +56,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   const [bidPrice, setBidPrice] = useState("");
   const [bidList, setBidList] = useState([]);
   const [highestBidder, setHighestBidder] = useState("");
+  const [highestBidder_id, setHighestBidder_id] = useState(0);
   const [nowPrice, setNowPrice] = useState(0);
   const [adjustedPrice, setAdjustedPrice] = useState("");
   let numReg = /^\d+$/;
@@ -152,18 +153,24 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   }
 
   async function makeDeal() {
-    console.log(nowPrice);
-
+    // console.log(nowPrice);
+    // console.log(highestBidder_id);
     let dealRes = await fetch(`${API_ORIGIN}/payment/capturePaymentIntent`, {
-      method: "POST",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         bidPrice: nowPrice,
-        postId: props.post.id,
+        post_id: props.post.id,
+        bidder_id: highestBidder_id,
       }),
     });
+    let result = await dealRes.json();
+    console.log("deal: ", result);
+    if (result.status == 200) {
+      router.push(routes.tab.mainPage);
+    }
   }
 
   async function submitBid() {
