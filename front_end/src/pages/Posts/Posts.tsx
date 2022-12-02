@@ -137,6 +137,22 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
     }
   }
 
+  async function makeDeal() {
+    console.log(nowPrice);
+
+    //TODO //TODO
+    // let dealRes = await fetch(`${API_ORIGIN}/payment/capturePaymentIntent`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     bidPrice:nowPrice,
+    //     userId:
+    //   }),
+    // });
+  }
+
   async function submitBid() {
     if (!bidPrice.match(numReg)) {
       alert("請輸入有效金額");
@@ -240,7 +256,13 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
                 >
                   調整底價
                 </IonButton>
-                <IonButton>成交！！</IonButton>
+                <IonButton
+                  onClick={() => {
+                    makeDeal();
+                  }}
+                >
+                  成交！！
+                </IonButton>
               </>
             ) : (
               <>

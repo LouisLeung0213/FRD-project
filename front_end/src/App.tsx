@@ -303,7 +303,7 @@ const App: React.FC = () => {
                   <Route
                     path={routes.tab.profile(":id")}
                     exact={true}
-                    render={() => <Profile user={jwtState.id} />}
+                    render={() => <Profile />}
                   />
                   <Route
                     path={routes.tab.login}
