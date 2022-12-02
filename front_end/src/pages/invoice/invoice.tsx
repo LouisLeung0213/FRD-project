@@ -53,15 +53,15 @@ const Invoice: React.FC = () => {
             <div className="ion-padding invoiceContainer" slot="content">
               {invoiceList.map((e: any) => {
                 return (
-                  <IonItem key={e.product_id}>
+                  <IonItem key={e.product_id} className="ion-padding">
                     收據號碼：
-                    <IonLabel>{e.receipt_code}</IonLabel>
+                    {e.receipt_code}
+                    <br />
                     貨品名稱：
-                    <IonLabel>{e.post_title}</IonLabel>
+                    {e.post_title}
+                    <br />
                     存倉時間：
-                    <IonLabel>
-                      {moment(e.in_time).format("MMMM Do YYYY, h:mm:ss a")}
-                    </IonLabel>
+                    {moment(e.in_time).format("MMMM Do YYYY, h:mm:ss a")}
                   </IonItem>
                 );
               })}

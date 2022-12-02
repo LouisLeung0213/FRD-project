@@ -237,7 +237,7 @@ const PickPhoto: React.FC = () => {
       } else {
         setIsDescriptionOk(true);
       }
-      if (data.qualityPlan == true && !data.location) {
+      if (data.qualityPlan == true && data.location == "") {
         setIsLocationOk(false);
         ok = false;
       } else {
@@ -294,7 +294,6 @@ const PickPhoto: React.FC = () => {
       photoQTY = photos.length;
     }
     let urls = [];
-
     function uploadBytesResumablePromise(photo: any): Promise<string> {
       return new Promise((resolve, reject) => {
         // console.log(photo.file.type);
@@ -327,32 +326,33 @@ const PickPhoto: React.FC = () => {
       });
     }
 
-    for (let photo of photos) {
-      let url = await uploadBytesResumablePromise(photo);
-      urls.push(url);
-    }
-    // console.log("finished for loop");
-    // console.log({ urls });
+    if (ok == true) {
+      for (let photo of photos) {
+        let url = await uploadBytesResumablePromise(photo);
+        urls.push(url);
+      }
+      // console.log("finished for loop");
+      // console.log({ urls });
 
-    let formDataUpload = formAppend();
-    formDataUpload.append("photo_qty", photoQTY as any);
-    // console.log("url", urls);
-    for (let url of urls) {
-      formDataUpload.append("photo", url);
-    }
-    // console.log(formDataUpload.getAll("photo"));
-    let res = await fetch(`${API_ORIGIN}/posts/postItem`, {
-      method: "POST",
+      let formDataUpload = formAppend();
+      formDataUpload.append("photo_qty", photoQTY as any);
+      // console.log("url", urls);
+      for (let url of urls) {
+        formDataUpload.append("photo", url);
+      }
+      // console.log(formDataUpload.getAll("photo"));
+      let res = await fetch(`${API_ORIGIN}/posts/postItem`, {
+        method: "POST",
 
-      body: formDataUpload,
-    });
-    let result = await res.json();
-    // console.log(result);
-    if (result.status == 200) {
-      router.push(routes.tab.mainPage);
-      console.log("done");
+        body: formDataUpload,
+      });
+      let result = await res.json();
+      // console.log(result);
+      if (result.status == 200) {
+        router.push(routes.tab.mainPage);
+        console.log("done");
+      }
     }
-
     // photos.map((photo) => {
     //   const storageRef = ref(storage, `/files/${photo.name}`);
     //   const uploadTask = uploadBytesResumable(storageRef, photo.file);

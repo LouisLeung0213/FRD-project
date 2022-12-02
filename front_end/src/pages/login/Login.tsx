@@ -45,6 +45,7 @@ const Login: React.FC = () => {
   const router = useIonRouter();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [userId, setUserId] = useState("");
 
   const [isUsernameOk, setIsUsernameOk] = useState(true);
   const [isPasswordOk, setIsPasswordOk] = useState(true);
@@ -126,7 +127,7 @@ const Login: React.FC = () => {
         `${API_ORIGIN}/profiles/${userInfo.id}`
       );
       let getPointsInfo = await getPointsInfoJson.json();
-
+      setUserId(userInfo.id);
       console.log("userInfo: ", getPointsInfo);
       dispatch(
         updateJwt({
@@ -176,9 +177,9 @@ const Login: React.FC = () => {
     <IonPage>
       <IonRouterOutlet>
         <Route
-          path={routes.tab.profile(":id")}
+          path={routes.tab.profile(userId)}
           exact={true}
-          render={() => <Profile user={jwtState.id} />}
+          render={() => <Profile />}
         />
       </IonRouterOutlet>
       <IonHeader>
