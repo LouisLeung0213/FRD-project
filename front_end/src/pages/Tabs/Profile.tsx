@@ -127,7 +127,7 @@ const Profile: React.FC = () => {
     };
 
     postsList();
-  }, [jwtState]);
+  }, [jwtState, isPostOpen]);
 
   const postModal = useRef<HTMLIonModalElement>(null);
 

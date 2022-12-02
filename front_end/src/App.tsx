@@ -111,7 +111,6 @@ const App: React.FC = () => {
         presentToast("top");
       });
       socket.on("bid-received", (data) => {
-        console.log("bid-received", data);
         notiMSG = data.msg;
         presentToast("top");
       });
