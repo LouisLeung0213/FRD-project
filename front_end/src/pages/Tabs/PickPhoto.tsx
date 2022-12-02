@@ -286,13 +286,12 @@ const PickPhoto: React.FC = () => {
 
     checkStatus();
 
-    console.log("pass");
     // console.log("ok", ok);
 
     // console.log("photos", photos);
     let photoQTY = 0;
 
-    if (!photos) {
+    if (photos.length < 1) {
       alert("不能沒有圖片");
       return;
     } else if (photos.length > 1) {
@@ -334,6 +333,7 @@ const PickPhoto: React.FC = () => {
     }
 
     if (ok == true) {
+      console.log("pass");
       for (let photo of photos) {
         let url = await uploadBytesResumablePromise(photo);
         urls.push(url);
