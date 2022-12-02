@@ -80,7 +80,6 @@ const Profile: React.FC = () => {
   let [postsList, setPostsList] = useState<[any]>([] as any);
   const [query, setQuery] = useState("");
   const [isPostOpen, setIsPostOpen] = useState(false);
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
   const router = useIonRouter();
 
