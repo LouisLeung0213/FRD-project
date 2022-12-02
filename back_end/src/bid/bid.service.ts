@@ -12,7 +12,7 @@ export class BidService {
     return 'This action adds a new bid';
   }
 
-  async biding(createBidDto: CreateBidDto) {
+  async bidding(createBidDto: CreateBidDto) {
     let checkBid = await this.knex
       .select('bid_price', 'buyer_id')
       .from('bid_records')
@@ -104,6 +104,36 @@ export class BidService {
         }
       }
     }
+  }
+
+  async updateBidding(updateBidDto: UpdateBidDto){
+    console.log('postId: ', updateBidDto.postId)
+    console.log('updatedPrice: ', updateBidDto.updatedPrice)
+    let newPrice = await this.knex('posts')
+    .where('id', updateBidDto.postId)
+    .update(
+      {original_price: updateBidDto.updatedPrice}
+    )
+    .returning(['post_title','original_price'])
+
+    if (!newPrice){
+      return { status: '77', message: 'The post id does not exist' }
+    }
+
+    let content = `貨品[${newPrice[0].post_title}]的賣家已更改貨品底價為[${newPrice[0].original_price}]，您的預售權將會全數退回`
+
+    let bidderList = await this.knex
+    .select('buyer_id', this.knex.raw('max(bid_price)'))
+    .from('bid_records')
+    .where('post_id', updateBidDto.postId)
+    .groupBy('buyer_id')
+
+    await this.knex('bid_records')
+    .where('post_id', updateBidDto.postId)
+    .del()
+
+
+    return {bidderList, content}
   }
 
   async findAll(id: number) {

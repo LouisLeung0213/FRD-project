@@ -69,7 +69,6 @@ const MainPage: React.FC = () => {
   const socket = useSocket(
     useCallback((socket: Socket) => {
       socket.on("priceUpdated", (msg) => {
-        console.log("msg", msg.newPrice);
         setPostsList(msg.newPrice);
         return;
       });

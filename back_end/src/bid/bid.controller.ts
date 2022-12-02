@@ -45,9 +45,9 @@ export class BidController {
     return this.bidService.create(createBidDto);
   }
 
-  @Post('biding')
-  async biding(@Body() createBidDto: CreateBidDto) {
-    let newBidList = await this.bidService.biding(createBidDto);
+  @Post('bidding')
+  async bidding(@Body() createBidDto: CreateBidDto) {
+    let newBidList = await this.bidService.bidding(createBidDto);
     let newPriceList = await this.postsService.showAll();
     if (!('status' in newBidList)) {
       console.log('newBidList', newBidList);
@@ -73,6 +73,37 @@ export class BidController {
     console.log('newBidList', newBidList);
     return newBidList;
   }
+
+  @Post('updateBidding')
+  async updateBidding(@Body() updateBidDto: UpdateBidDto) {
+    let result = await this.bidService.updateBidding(updateBidDto);
+    let newPriceList = await this.postsService.showAll();
+    let newBidContent = [{
+      post_id: "",
+      buyer_id: "",
+      bid_price: "",
+      nickname: ""
+    }]
+      io.to('room: ' + updateBidDto.postId).emit('newBidReceived', {
+        newBidContent
+      });
+      io.emit('priceUpdated', {
+        newPrice: newPriceList,
+      });
+      for (let bidder of result.bidderList){
+        io.to('TJroom: ' + bidder.buyer_id).emit(
+          'bid-received',
+          {
+            msg: result.content,
+          },
+
+          );
+      }
+
+    return {msg: result.content};
+  }
+
+
 
   @Get('bidList/:id')
   findAll(@Param('id') id: string) {
