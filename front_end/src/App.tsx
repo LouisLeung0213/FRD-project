@@ -47,6 +47,7 @@ import {
   options,
   planetOutline,
   chatbubblesOutline,
+  flashOffOutline,
 } from "ionicons/icons";
 
 import MainPage from "./pages/Tabs/MainPage";
@@ -80,18 +81,20 @@ import { updateJwt } from "./redux/user/actions";
 import Chatroom from "./pages/Chatroom/Chatroom";
 import { updatePoints } from "./redux/points/actions";
 import MainNotice from "./pages/MainNotice/MainNotice";
-import { Router } from "workbox-routing";
-import { forceUpdate } from "ionicons/dist/types/stencil-public-runtime";
 import { useSocket } from "./hooks/use-socket";
 import { Socket } from "socket.io-client";
+import { updateDot } from "./updateDot";
+import { updateDots } from "./redux/dots/actions";
+import styles from "./App.module.css";
 
 setupIonicReact();
 const App: React.FC = () => {
   let jwtState = useSelector((state: RootState) => state.jwt);
+  let dotState = useSelector((state: RootState) => state.dots);
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const router = useIonRouter();
-
+  const [chatDots, setChatDots] = useState(false);
   let notiMSG: string;
   const [present] = useIonToast();
 
@@ -105,19 +108,31 @@ const App: React.FC = () => {
 
   useSocket(
     useCallback((socket: Socket) => {
-      socket.on("post-is-uploaded", (data) => {
+      socket.on("post-is-uploaded", async (data) => {
         console.log("received", data);
         notiMSG = data.msg;
         presentToast("top");
       });
-      socket.on("bid-received", (data) => {
+      socket.on("bid-received", async (data) => {
         console.log("bid-received", data);
         notiMSG = data.msg;
         presentToast("top");
       });
-      socket.on("info-seller", (data) => {
+      socket.on("info-seller", async (data) => {
         notiMSG = data.msg;
         presentToast("top");
+      });
+      socket.on("new-msg", async (data) => {
+        if (jwtState.id) {
+          let result = await updateDot(jwtState.id, "chat_dots", true);
+          setChatDots(result.status);
+          dispatch(
+            updateDots({
+              chatDot: result.status,
+              noticeDot: dotState.noticeDot,
+            })
+          );
+        }
       });
       return () => {};
     }, [])
@@ -160,6 +175,12 @@ const App: React.FC = () => {
       })
     );
 
+    dispatch(
+      updateDots({
+        chatDot: userInfo.userInfo.chat_dots,
+        noticeDot: userInfo.userInfo.notice_dots,
+      })
+    );
     console.log("!!!!!!!!!!!!!!!!!!!", jwtState);
     return userInfo.userInfo.username;
   };
@@ -369,7 +390,18 @@ const App: React.FC = () => {
                   </IonTabButton>
                 )}
                 {jwtState.username === "caleb" ? (
-                  <IonTabButton tab="Notices" href={routes.tab.notices}>
+                  <IonTabButton
+                    tab="Notices"
+                    href={routes.tab.notices}
+                    onClick={() => setChatDots(false)}
+                  >
+                    {chatDots ? (
+                      <IonBadge color="warning" className={styles.badge}>
+                        !
+                      </IonBadge>
+                    ) : (
+                      <></>
+                    )}
                     <IonIcon icon={chatbubblesOutline} />
                     <IonLabel>聊天</IonLabel>
                   </IonTabButton>

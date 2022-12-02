@@ -167,8 +167,8 @@ export class PostsService {
       // .join('images', 'posts.id', 'images.post_id')
       .fullOuterJoin('bid_records', 'bid_records.post_id', 'posts.id')
       .where('status', 'selling')
-      .groupBy('posts.id', 'users.username', 'users.nickname');
-    // .orderBy('posts.id', 'desc');
+      .groupBy('posts.id', 'users.username', 'users.nickname')
+      .orderBy('posts.id', 'desc');
 
     // let max_bidPrice = await this.knex.max('bid_price').from('bid_records');
     let photo_array = await this.knex
@@ -199,6 +199,7 @@ export class PostsService {
       });
     }
 
+    // console.log(photo_array[0].json_agg);
     // console.log(photo_array[0].json_agg);
     // console.log('showAllList', showAllList);
 

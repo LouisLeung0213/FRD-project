@@ -13,6 +13,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto, UpdateUserInfoDto } from './dto/update-user.dto';
 import { get } from 'http';
+import { UpdateDotsDto } from './dto/update-dots-dto';
 // import { get } from 'http';
 
 @Controller('users')
@@ -34,6 +35,11 @@ export class UsersController {
     let userInfo = this.usersService.findOneById(id);
     return userInfo;
     // return this.usersService.findOne(username);
+  }
+
+  @Get('dots/:id')
+  getDots(@Param('id') id: string) {
+    return this.usersService.getDots(+id);
   }
 
   @Post('checkSignUp')
@@ -64,6 +70,11 @@ export class UsersController {
     } catch (error) {
       return error;
     }
+  }
+
+  @Patch('updateDots/:id')
+  updateDots(@Param('id') id: string, @Body() updateDotsDto: UpdateDotsDto) {
+    return this.usersService.dotsUpdate(+id, updateDotsDto);
   }
 
   @Delete(':id')

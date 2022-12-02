@@ -50,12 +50,18 @@ import { updatePoints } from "../../redux/points/actions";
 import { updateJwt } from "../../redux/user/actions";
 import { getValue } from "../../service/localStorage";
 import { RootState } from "../../store";
+import { updateDot } from "../../updateDot";
+import { updateDots } from "../../redux/dots/actions";
 
 const MainPage: React.FC = () => {
+  let dotState = useSelector((state: RootState) => state.dots);
   let [postsList, setPostsList] = useState<[any]>([] as any);
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
+  // const [pingNumber, setPingNumber] = useState(0);
+  const [noticeDots, setNoticeDots] = useState(dotState.noticeDot);
+
   const router = useIonRouter();
   let jwtState = useSelector((state: RootState) => state.jwt);
 
@@ -71,6 +77,24 @@ const MainPage: React.FC = () => {
         setPostsList(msg.newPost);
         return;
       });
+      socket.on("post-is-uploaded", async (msg) => {
+        if (jwtState.id) {
+          let result = await updateDot(jwtState.id, "notice_dots", true);
+          setNoticeDots(result.status);
+        }
+      });
+      socket.on("bid-received", async (msg) => {
+        if (jwtState.id) {
+          let result = await updateDot(jwtState.id, "notice_dots", true);
+          setNoticeDots(result.status);
+        }
+      });
+      socket.on("info-seller", async (msg) => {
+        if (jwtState.id) {
+          let result = await updateDot(jwtState.id, "notice_dots", true);
+          setNoticeDots(result.status);
+        }
+      });
       return () => {};
     }, [])
   );
@@ -84,6 +108,19 @@ const MainPage: React.FC = () => {
       console.log("result", result);
     };
 
+    const dotStatus = async () => {
+      let res = await fetch(`${API_ORIGIN}/users/hide`);
+      let result = await res.json();
+
+      setNoticeDots(result.notice_dots);
+      dispatch(
+        updateDots({
+          chatDot: result.chat_dots,
+          noticeDot: result.notice_dots,
+        })
+      );
+    };
+    dotStatus();
     postsList();
   }, []);
 
@@ -129,8 +166,25 @@ const MainPage: React.FC = () => {
     dismiss();
   }
 
-  function goNotification() {
-    router.push(routes.mainNotice);
+  async function goNotification() {
+    if (jwtState.id) {
+      let res = await updateDot(jwtState.id, "notice_dots", false);
+      if (res.ok) {
+        router.push(routes.mainNotice);
+        dispatch(
+          updateDots({
+            chatDot: dotState.chatDot,
+            noticeDot: false,
+          })
+        );
+      } else {
+        alert("fail to update");
+        return;
+      }
+    } else {
+      alert("請先登入");
+      return;
+    }
   }
 
   return (
@@ -138,10 +192,17 @@ const MainPage: React.FC = () => {
       <IonContent fullscreen={true}>
         <IonHeader translucent={true}>
           <IonToolbar>
-            <IonLabel slot="end">
-              <IonBadge>1</IonBadge>
+            <IonLabel slot="end" className={styles.card}>
+              {noticeDots ? (
+                <IonBadge color="warning" className={styles.badge}>
+                  !
+                </IonBadge>
+              ) : (
+                <></>
+              )}
               <IonIcon
                 className="ion-padding"
+                // className={styles.icon}
                 icon={notificationsOutline}
                 size="large"
                 onClick={() => goNotification()}
@@ -270,3 +331,9 @@ const MainPage: React.FC = () => {
 };
 
 export default MainPage;
+function dispatch(arg0: {
+  type: "update_Dots";
+  dots: import("../../redux/dots/state").UpdateDotsState;
+}) {
+  throw new Error("Function not implemented.");
+}

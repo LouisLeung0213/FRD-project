@@ -21,6 +21,8 @@ export async function up(knex: Knex): Promise<void> {
         'https://firebasestorage.googleapis.com/v0/b/test-6e6e8.appspot.com/o/default%2Fnew_usericon.jpeg%2B1%2B1669717126192?alt=media&token=aad5a75f-811c-48a2-80d1-673cef3e5d3d',
       );
     table.text('firebase_token');
+    table.boolean('notice_dots').defaultTo(false);
+    table.boolean('chat_dots').defaultTo(false);
   });
   await knex.schema.createTableIfNotExists('banks', (table) => {
     table.increments('id');

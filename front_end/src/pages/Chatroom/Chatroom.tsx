@@ -123,11 +123,11 @@ const Chatroom: React.FC = () => {
     getChatroomDetail();
   }, []);
 
-  async function backToMain() {
+  function backToMain() {
     router.push("/", "forward", "replace");
   }
 
-  async function backToChat() {
+  function backToChat() {
     router.push(routes.tab.notices, "forward", "replace");
   }
 
