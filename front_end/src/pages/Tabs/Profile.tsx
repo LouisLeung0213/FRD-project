@@ -32,6 +32,10 @@ import {
   cubeOutline,
   checkmarkDoneCircleOutline,
   chevronBackOutline,
+  heart,
+  chatbubble,
+  wallet,
+  calendar,
 } from "ionicons/icons";
 
 import profileStyles from "./Profile.module.css";
@@ -157,7 +161,6 @@ const Profile: React.FC = () => {
     setIsPostOpen(false);
   }
 
-
   function goChat(id: number) {
     router.push(routes.chatroom(id), "forward", "replace");
     dismissPost();
@@ -236,44 +239,56 @@ const Profile: React.FC = () => {
                 <div className={profileStyles.personalInfo_name}>
                   <IonLabel>{nickname}</IonLabel>
                 </div>
-                <IonLabel>可用點數: {pointsState.points}</IonLabel>
+                <IonLabel>
+                  <IonIcon
+                    style={{ color: "gold", marginRight: "10px" }}
+                    size="small"
+                    icon={wallet}
+                  />
+                  點數: {pointsState.points}
+                </IonLabel>
                 <div>
-                  <IonLabel>{joinTime}</IonLabel>
+                  <IonLabel>
+                    <IonIcon
+                      style={{ color: "skyBlue", marginRight: "5px" }}
+                      icon={calendar}
+                    ></IonIcon>
+                    {joinTime}
+                  </IonLabel>
                 </div>
               </div>
             </div>
           </IonItem>
-          <div className={profileStyles.contentContainer}>
-            <IonList>
-              <IonItem>
-                <IonIcon icon={heartOutline} className={profileStyles.chat} />
-              </IonItem>
-              <IonItem>
-                <IonIcon
-                  icon={chatbubbleOutline}
-                  className={profileStyles.chat}
-                />
-              </IonItem>
-              <IonItem>
-                <IonIcon icon={ribbonOutline} className={profileStyles.chat} />
-              </IonItem>
-            </IonList>
+          <div className={profileStyles.IconContainer}>
+            <IonIcon
+              style={{ color: "red" }}
+              size="large"
+              icon={heart}
+              className={profileStyles.chat}
+            />
+
+            <IonIcon
+              style={{ color: "skyBlue" }}
+              size="large"
+              icon={chatbubble}
+              className={profileStyles.chat}
+            />
+
+            <IonIcon
+              style={{ color: "gold" }}
+              size="large"
+              icon={ribbonOutline}
+              className={profileStyles.chat}
+            />
           </div>
 
-          <IonItem className={profileStyles.search}>
-            <IonIcon
-              className={profileStyles.searchIcon}
-              icon={searchOutline}
-            />
-            <IonInput placeholder="搜尋此賣家的產品"></IonInput>
-          </IonItem>
           <IonItem className={profileStyles.portfolioContainer}>
             <IonLabel>
               <IonIcon icon={cubeOutline}></IonIcon> 拍賣產品
             </IonLabel>
           </IonItem>
 
-          <IonButton onClick={func}>Show the redux state</IonButton>
+          {/* <IonButton onClick={func}>Show the redux state</IonButton> */}
 
           <div className={profileStyles.productContainer}>
             <IonList>
@@ -371,30 +386,30 @@ const Profile: React.FC = () => {
         </IonContent>
 
         <IonModal
-        id="post-modal"
-        ref={postModal}
-        isOpen={isPostOpen}
-        // enterAnimation={enterAnimation}
-        // leaveAnimation={leaveAnimation}
-      >
-        <IonHeader>
-          <IonToolbar>
-            <IonButtons slot="start">
-              <IonButton
-                onClick={() => {
-                  dismissPost();
-                }}
-              >
-                <IonIcon size="large" icon={chevronBackOutline}></IonIcon> Back
-              </IonButton>
-            </IonButtons>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <Post post={currentPost as PostObj} goChat={goChat} />
-        </IonContent>
-      </IonModal>
-
+          id="post-modal"
+          ref={postModal}
+          isOpen={isPostOpen}
+          // enterAnimation={enterAnimation}
+          // leaveAnimation={leaveAnimation}
+        >
+          <IonHeader>
+            <IonToolbar>
+              <IonButtons slot="start">
+                <IonButton
+                  onClick={() => {
+                    dismissPost();
+                  }}
+                >
+                  <IonIcon size="large" icon={chevronBackOutline}></IonIcon>{" "}
+                  Back
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            <Post post={currentPost as PostObj} goChat={goChat} />
+          </IonContent>
+        </IonModal>
       </IonPage>
     </>
   );

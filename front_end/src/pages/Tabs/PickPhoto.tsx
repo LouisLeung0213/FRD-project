@@ -26,8 +26,15 @@ import {
   add,
   arrowRedo,
   camera,
+  checkmarkDoneCircleOutline,
+  documentText,
+  flag,
   images,
   imagesOutline,
+  informationCircle,
+  locationOutline,
+  logoUsd,
+  pricetagsSharp,
   trash,
 } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
@@ -534,7 +541,15 @@ const PickPhoto: React.FC = () => {
             </div>
             {item({
               name: "title",
-              renderLabel: () => <IonLabel position="floating">標題</IonLabel>,
+              renderLabel: () => (
+                <IonLabel position="floating">
+                  <IonIcon
+                    style={{ color: "gold", marginRight: "8px" }}
+                    icon={flag}
+                  ></IonIcon>
+                  標題
+                </IonLabel>
+              ),
               renderContent: (props) => (
                 <IonInput placeholder="請輸入帖文標題" {...props}></IonInput>
               ),
@@ -547,7 +562,13 @@ const PickPhoto: React.FC = () => {
               name: "description",
 
               renderLabel: () => (
-                <IonLabel position="floating">產品描述</IonLabel>
+                <IonLabel position="floating">
+                  <IonIcon
+                    style={{ color: "gold", marginRight: "8px" }}
+                    icon={informationCircle}
+                  ></IonIcon>
+                  產品描述
+                </IonLabel>
               ),
               renderContent: (props) => (
                 <IonTextarea
@@ -567,7 +588,13 @@ const PickPhoto: React.FC = () => {
               name: "tags",
 
               renderLabel: () => (
-                <IonLabel position="floating">加入標籤 #</IonLabel>
+                <IonLabel position="floating">
+                  <IonIcon
+                    style={{ color: "gold", marginRight: "8px" }}
+                    icon={pricetagsSharp}
+                  ></IonIcon>
+                  加入標籤
+                </IonLabel>
               ),
               renderContent: (props) => (
                 <IonInput
@@ -580,7 +607,15 @@ const PickPhoto: React.FC = () => {
             <br />
             {item({
               name: "startPrice",
-              renderLabel: () => <IonLabel position="floating">底價</IonLabel>,
+              renderLabel: () => (
+                <IonLabel position="floating">
+                  <IonIcon
+                    style={{ color: "gold", marginRight: "8px" }}
+                    icon={logoUsd}
+                  ></IonIcon>
+                  底價
+                </IonLabel>
+              ),
               renderContent: (props) => (
                 <IonInput
                   placeholder="請輸入底價 ( 港幣 )"
@@ -597,7 +632,20 @@ const PickPhoto: React.FC = () => {
             <br />
             {item({
               name: "qualityPlan",
-              renderLabel: () => <IonLabel>加入認證拍賣計劃</IonLabel>,
+              renderLabel: () => (
+                <IonLabel>
+                  加入認證拍賣計劃
+                  <IonIcon
+                    style={{
+                      color: "#3880ff",
+                      marginLeft: "8px",
+                      width: "1.5rem",
+                      height: "1.5rem",
+                    }}
+                    icon={checkmarkDoneCircleOutline}
+                  ></IonIcon>
+                </IonLabel>
+              ),
               renderContent: (props) => (
                 <IonCheckbox
                   slot="start"
@@ -659,7 +707,18 @@ const PickPhoto: React.FC = () => {
               ? item({
                   name: "location",
                   renderLabel: () => (
-                    <IonLabel position="floating">請選擇存放於門市:</IonLabel>
+                    <IonLabel position="floating">
+                      <IonIcon
+                        style={{
+                          color: "gold",
+                          marginRight: "8px",
+                          width: "1.5rem",
+                          height: "1.5rem",
+                        }}
+                        icon={locationOutline}
+                      ></IonIcon>
+                      請選擇存放於門市:
+                    </IonLabel>
                   ),
                   renderContent: (props) => (
                     <IonSelect {...props}>

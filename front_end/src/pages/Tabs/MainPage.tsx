@@ -145,7 +145,7 @@ const MainPage: React.FC = () => {
                 icon={notificationsOutline}
                 size="large"
                 onClick={() => goNotification()}
-              />
+              ></IonIcon>
             </IonLabel>
           </IonToolbar>
         </IonHeader>
@@ -191,6 +191,7 @@ const MainPage: React.FC = () => {
 
                         {post.q_mark ? (
                           <IonIcon
+                            size="large"
                             className={styles.q_mark_icon}
                             icon={checkmarkDoneCircleOutline}
                           ></IonIcon>

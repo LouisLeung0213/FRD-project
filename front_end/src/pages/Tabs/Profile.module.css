@@ -32,3 +32,10 @@
   font-size: 2rem;
   text-align: center;
 }
+
+.IconContainer {
+  display: flex;
+  justify-content: space-around;
+  height: 3rem;
+  align-items: center;
+}
