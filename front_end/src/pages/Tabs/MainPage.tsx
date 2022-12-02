@@ -61,6 +61,7 @@ const MainPage: React.FC = () => {
   const [currentPost, setCurrentPost] = useState({});
   // const [pingNumber, setPingNumber] = useState(0);
   const [noticeDots, setNoticeDots] = useState(dotState.noticeDot);
+  const dispatch = useDispatch();
 
   const router = useIonRouter();
   let jwtState = useSelector((state: RootState) => state.jwt);
@@ -80,19 +81,43 @@ const MainPage: React.FC = () => {
       socket.on("post-is-uploaded", async (msg) => {
         if (jwtState.id) {
           let result = await updateDot(jwtState.id, "notice_dots", true);
-          setNoticeDots(result.status);
+          if (!dotState.noticeDot) {
+            setNoticeDots(result.notice_dots);
+          }
+          dispatch(
+            updateDots({
+              chatDot: dotState.chatDot,
+              noticeDot: result.notice_dots,
+            })
+          );
         }
       });
       socket.on("bid-received", async (msg) => {
         if (jwtState.id) {
           let result = await updateDot(jwtState.id, "notice_dots", true);
-          setNoticeDots(result.status);
+          if (!dotState.noticeDot) {
+            setNoticeDots(result.notice_dots);
+          }
+          dispatch(
+            updateDots({
+              chatDot: dotState.chatDot,
+              noticeDot: result.notice_dots,
+            })
+          );
         }
       });
       socket.on("info-seller", async (msg) => {
         if (jwtState.id) {
           let result = await updateDot(jwtState.id, "notice_dots", true);
-          setNoticeDots(result.status);
+          if (!dotState.noticeDot) {
+            setNoticeDots(result.notice_dots);
+          }
+          dispatch(
+            updateDots({
+              chatDot: dotState.chatDot,
+              noticeDot: result.notice_dots,
+            })
+          );
         }
       });
       return () => {};
@@ -111,8 +136,9 @@ const MainPage: React.FC = () => {
     const dotStatus = async () => {
       let res = await fetch(`${API_ORIGIN}/users/dots/${jwtState.id}`);
       let result = await res.json();
-
-      setNoticeDots(result.notice_dots);
+      if (!result.notice_dots) {
+        setNoticeDots(result.notice_dots);
+      }
       dispatch(
         updateDots({
           chatDot: result.chat_dots,
@@ -169,7 +195,8 @@ const MainPage: React.FC = () => {
   async function goNotification() {
     if (jwtState.id) {
       let res = await updateDot(jwtState.id, "notice_dots", false);
-      if (res.ok) {
+      console.log(res);
+      if (res) {
         router.push(routes.mainNotice);
         dispatch(
           updateDots({
@@ -192,7 +219,7 @@ const MainPage: React.FC = () => {
       <IonContent fullscreen={true}>
         <IonHeader translucent={true}>
           <IonToolbar>
-            <IonLabel slot="end" className={styles.card}>
+            <IonLabel slot="end">
               {noticeDots ? (
                 <IonBadge color="warning" className={styles.badge}>
                   !
@@ -311,9 +338,9 @@ const MainPage: React.FC = () => {
 };
 
 export default MainPage;
-function dispatch(arg0: {
-  type: "update_Dots";
-  dots: import("../../redux/dots/state").UpdateDotsState;
-}) {
-  throw new Error("Function not implemented.");
-}
+// function dispatch(arg0: {
+//   type: "update_Dots";
+//   dots: import("../../redux/dots/state").UpdateDotsState;
+// }) {
+//   throw new Error("Function not implemented.");
+// }

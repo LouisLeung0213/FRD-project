@@ -188,7 +188,7 @@ export class UsersService {
       .update({
         [updateDotsDto.statusLocation]: updateDotsDto.status,
       })
-      .returning('status');
+      .returning(`${updateDotsDto.statusLocation}`);
     return result[0];
   }
 

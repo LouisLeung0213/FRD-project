@@ -94,7 +94,7 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const router = useIonRouter();
-  const [chatDots, setChatDots] = useState(false);
+  const [chatDots, setChatDots] = useState(dotState.chatDot);
   let notiMSG: string;
   const [present] = useIonToast();
 
@@ -126,13 +126,23 @@ const App: React.FC = () => {
         console.log("received");
         if (jwtState.id) {
           let result = await updateDot(jwtState.id, "chat_dots", true);
-          setChatDots(result.status);
-          dispatch(
-            updateDots({
-              chatDot: result.status,
-              noticeDot: dotState.noticeDot,
-            })
-          );
+          console.log(result);
+          if (dotState.noticeDot) {
+            dispatch(
+              updateDots({
+                chatDot: result.status,
+                noticeDot: dotState.noticeDot,
+              })
+            );
+          } else {
+            setChatDots(result.chat_dots);
+            dispatch(
+              updateDots({
+                chatDot: result.status,
+                noticeDot: dotState.noticeDot,
+              })
+            );
+          }
         }
       });
       return () => {};
