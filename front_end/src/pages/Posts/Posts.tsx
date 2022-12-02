@@ -9,8 +9,9 @@ import {
   IonCard,
   IonContent,
   useIonRouter,
+  IonModal,
 } from "@ionic/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import moment from "moment";
 import { API_ORIGIN } from "../../api";
 import { useSelector } from "react-redux";
@@ -51,6 +52,8 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   const [nowPrice, setNowPrice] = useState(0);
   let numReg = /^\d+$/;
   const router = useIonRouter();
+
+  const confirmModal = useRef<HTMLIonModalElement>(null);
 
   const socket = useSocket(
     useCallback(
@@ -173,7 +176,12 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   }
 
   function adjustPrice() {
+    confirmModal.current?.dismiss();
     console.log("adjustPrice TODO");
+  }
+
+  function dismissConfirm() {
+    confirmModal.current?.dismiss();
   }
 
   return (
@@ -233,13 +241,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
           <IonItem className="inputBox">
             {!jwtState.id ? null : jwtState.id == props.post.user_id ? (
               <>
-                <IonButton
-                  onClick={() => {
-                    adjustPrice();
-                  }}
-                >
-                  調整底價
-                </IonButton>
+                <IonButton id="confirm">調整底價</IonButton>
                 <IonButton>成交！！</IonButton>
               </>
             ) : (
@@ -264,6 +266,22 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
               </>
             )}
           </IonItem>
+          <IonModal
+            id="adjustPriceConfirm-modal"
+            ref={confirmModal}
+            trigger="confirm"
+          >
+            <IonContent className="ion-padding">
+              <ul>
+                <li>如確定調整此貨品的底價，截至目前所有對此貨品的投標將會清空，所有已保留的預售權將會全數歸還給投標者。</li>
+              </ul>
+            </IonContent>
+
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <IonButton onClick={() => dismissConfirm()}>返回</IonButton>
+              <IonButton onClick={() => adjustPrice()}>確定</IonButton>
+            </div>
+          </IonModal>
         </>
       )}
     </IonList>

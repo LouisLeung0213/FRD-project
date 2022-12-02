@@ -77,7 +77,8 @@ const Profile: React.FC<{ user: number | undefined }> = (props: {
   let [points, setPoints] = useState(pointsState.points);
   let [postsList, setPostsList] = useState<[any]>([] as any);
   const [query, setQuery] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [isPostOpen, setIsPostOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
   const router = useIonRouter();
 
@@ -125,8 +126,7 @@ const Profile: React.FC<{ user: number | undefined }> = (props: {
     postsList();
   }, [jwtState]);
 
-  const modal = useRef<HTMLIonModalElement>(null);
-
+  const postModal = useRef<HTMLIonModalElement>(null);
 
   function destroyUserInfo() {
     removeValue("Jwt");
@@ -149,17 +149,18 @@ const Profile: React.FC<{ user: number | undefined }> = (props: {
 
   function openPost(e: PostObj) {
     setCurrentPost(e);
-    setIsOpen(true);
+    setIsPostOpen(true);
   }
 
-  function dismiss() {
-    modal.current?.dismiss();
-    setIsOpen(false);
+  function dismissPost() {
+    postModal.current?.dismiss();
+    setIsPostOpen(false);
   }
+
 
   function goChat(id: number) {
     router.push(routes.chatroom(id), "forward", "replace");
-    dismiss();
+    dismissPost();
   }
 
   function func() {
@@ -359,8 +360,8 @@ const Profile: React.FC<{ user: number | undefined }> = (props: {
 
         <IonModal
         id="post-modal"
-        ref={modal}
-        isOpen={isOpen}
+        ref={postModal}
+        isOpen={isPostOpen}
         // enterAnimation={enterAnimation}
         // leaveAnimation={leaveAnimation}
       >
@@ -369,7 +370,7 @@ const Profile: React.FC<{ user: number | undefined }> = (props: {
             <IonButtons slot="start">
               <IonButton
                 onClick={() => {
-                  dismiss();
+                  dismissPost();
                 }}
               >
                 <IonIcon size="large" icon={chevronBackOutline}></IonIcon> Back
