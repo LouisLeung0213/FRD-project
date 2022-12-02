@@ -123,6 +123,7 @@ const App: React.FC = () => {
         presentToast("top");
       });
       socket.on("new-msg", async (data) => {
+        console.log("received");
         if (jwtState.id) {
           let result = await updateDot(jwtState.id, "chat_dots", true);
           setChatDots(result.status);
