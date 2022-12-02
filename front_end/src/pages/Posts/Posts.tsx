@@ -50,6 +50,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   const [bidList, setBidList] = useState([]);
   const [highestBidder, setHighestBidder] = useState("");
   const [nowPrice, setNowPrice] = useState(0);
+  const [adjustedPrice, setAdjustedPrice] = useState("");
   let numReg = /^\d+$/;
   const router = useIonRouter();
 
@@ -193,7 +194,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
 
   function adjustPrice() {
     confirmModal.current?.dismiss();
-    console.log("adjustPrice TODO");
+    console.log("New adjusted price: ", adjustedPrice);
   }
 
   function dismissConfirm() {
@@ -297,6 +298,16 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
               <ul>
                 <li>如確定調整此貨品的底價，截至目前所有對此貨品的投標將會清空，所有已保留的預售權將會全數歸還給投標者。</li>
               </ul>
+              <IonInput
+                  value={adjustedPrice}
+                  placeholder="請輸入週整後底價"
+                  onIonChange={(e: any) => setAdjustedPrice(e.target.value)}
+                ></IonInput>
+                {!adjustedPrice.match(numReg) && adjustedPrice !== "" ? (
+                  <div className="ion-text-center">
+                    <IonText color="warning">請輸入有效數字</IonText>
+                  </div>
+                ) : null}
             </IonContent>
 
             <div style={{ display: "flex", justifyContent: "center" }}>

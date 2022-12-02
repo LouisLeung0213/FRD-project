@@ -143,6 +143,8 @@ export class PostsService {
     //   .groupBy('posts.id');
     // console.log('newPrice', newPrice);
     let showAllList = await this.knex
+      .with('tem_imgs', this.knex.select('post_id', this.knex.raw('json_agg(src) as json_agg')).from('images').groupBy('post_id'))
+      .with('tem_bid_records', this.knex.select('post_id', this.knex.raw('max(bid_price) as max')).from('bid_records').groupBy('post_id'))
       .select(
         'posts.id',
         'user_id',
@@ -157,16 +159,15 @@ export class PostsService {
         'post_time',
         'nickname',
         'username',
-        this.knex.raw('json_agg(src)'),
-        this.knex.raw('max(bid_price)'),
+        'json_agg',
+        'max'
       )
       .from('posts')
       .join('users', 'user_id', 'users.id')
-      .join('images', 'posts.id', 'images.post_id')
-      .fullOuterJoin('bid_records', 'bid_records.post_id', 'posts.id')
+      .join('tem_imgs', 'posts.id', 'post_id')
+      .fullOuterJoin('tem_bid_records', 'tem_bid_records.post_id', 'posts.id')
       .where('status', 'selling')
-      .groupBy('posts.id', 'users.username', 'users.nickname');
-    // console.log('showAllList', showAllList);
+
     return showAllList;
   }
   async showSomeone(id: number) {
