@@ -216,19 +216,6 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
 
   return (
     <IonList className="post-modal">
-      <h1 className="ion-padding">{props.post.nickname}</h1>
-      {props.post.json_agg.map((e: any, index) => {
-        return (
-          <div className="imageDiv" key={e}>
-            <img className="image" src={e}></img>
-          </div>
-        );
-      })}
-      <IonIcon
-        icon={chatbubbleOutline}
-        slot="start"
-        onClick={() => getChatDetail()}
-      ></IonIcon>
       {!props.post.admin_title ? (
         <>
           <h2 className="ion-padding">{props.post.post_title}</h2>
