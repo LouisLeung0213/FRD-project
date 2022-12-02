@@ -157,13 +157,14 @@ export class PostsService {
         'post_time',
         'nickname',
         'username',
-        // this.knex.raw('json_agg(src)'),
+        this.knex.raw('json_agg(src)'),
         this.knex.raw('max(bid_price)'),
+        // 'bid_price',
       )
       // .max('bid_price')
       .from('posts')
       .join('users', 'user_id', 'users.id')
-      // .join('images', 'posts.id', 'images.post_id')
+      .join('images', 'posts.id', 'images.post_id')
       .fullOuterJoin('bid_records', 'bid_records.post_id', 'posts.id')
       .where('status', 'selling')
       .groupBy('posts.id', 'users.username', 'users.nickname');
