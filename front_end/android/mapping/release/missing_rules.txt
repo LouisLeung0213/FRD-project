@@ -1,0 +1,12 @@
+# Please add these rules to your existing keep rules in order to suppress warnings.
+# This is generated automatically by the Android Gradle plugin.
+-dontwarn com.facebook.CallbackManager$Factory
+-dontwarn com.facebook.CallbackManager
+-dontwarn com.facebook.FacebookCallback
+-dontwarn com.facebook.login.LoginManager
+-dontwarn com.facebook.login.widget.LoginButton
+-dontwarn com.google.android.gms.auth.GoogleAuthException
+-dontwarn com.google.android.gms.auth.GoogleAuthUtil
+-dontwarn com.google.android.gms.auth.api.signin.GoogleSignIn
+-dontwarn com.google.android.gms.auth.api.signin.GoogleSignInClient
+-dontwarn com.google.firebase.messaging.TopicOperation$TopicOperations

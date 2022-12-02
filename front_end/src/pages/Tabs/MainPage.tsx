@@ -139,12 +139,13 @@ const MainPage: React.FC = () => {
         <IonHeader translucent={true}>
           <IonToolbar>
             <IonLabel slot="end">
+              <IonBadge>1</IonBadge>
               <IonIcon
+                className="ion-padding"
                 icon={notificationsOutline}
                 size="large"
                 onClick={() => goNotification()}
-              />
-              <IonBadge>1</IonBadge>
+              ></IonIcon>
             </IonLabel>
           </IonToolbar>
         </IonHeader>
@@ -190,6 +191,7 @@ const MainPage: React.FC = () => {
 
                         {post.q_mark ? (
                           <IonIcon
+                            size="large"
                             className={styles.q_mark_icon}
                             icon={checkmarkDoneCircleOutline}
                           ></IonIcon>

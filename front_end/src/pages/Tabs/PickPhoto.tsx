@@ -26,8 +26,15 @@ import {
   add,
   arrowRedo,
   camera,
+  checkmarkDoneCircleOutline,
+  documentText,
+  flag,
   images,
   imagesOutline,
+  informationCircle,
+  locationOutline,
+  logoUsd,
+  pricetagsSharp,
   trash,
 } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
@@ -237,7 +244,7 @@ const PickPhoto: React.FC = () => {
       } else {
         setIsDescriptionOk(true);
       }
-      if (data.qualityPlan == true && !data.location) {
+      if (data.qualityPlan == true && data.location == "") {
         setIsLocationOk(false);
         ok = false;
       } else {
@@ -255,6 +262,17 @@ const PickPhoto: React.FC = () => {
       ) {
         setIsBankAccountOk(true);
       }
+
+      if (
+        data.qualityPlan == true &&
+        data.bankAccount.bank_name != "" &&
+        data.newBankName != ""
+      ) {
+        alert("只可選擇一個銀行戶口");
+        setIsBankAccountOk(false);
+        ok = false;
+      }
+
       if (data.startPrice.length == 0 || !data.startPrice.match(numReg)) {
         setStartPriceOk(false);
         ok = false;
@@ -283,7 +301,6 @@ const PickPhoto: React.FC = () => {
       photoQTY = photos.length;
     }
     let urls = [];
-
     function uploadBytesResumablePromise(photo: any): Promise<string> {
       return new Promise((resolve, reject) => {
         // console.log(photo.file.type);
@@ -316,32 +333,33 @@ const PickPhoto: React.FC = () => {
       });
     }
 
-    for (let photo of photos) {
-      let url = await uploadBytesResumablePromise(photo);
-      urls.push(url);
-    }
-    // console.log("finished for loop");
-    // console.log({ urls });
+    if (ok == true) {
+      for (let photo of photos) {
+        let url = await uploadBytesResumablePromise(photo);
+        urls.push(url);
+      }
+      // console.log("finished for loop");
+      // console.log({ urls });
 
-    let formDataUpload = formAppend();
-    formDataUpload.append("photo_qty", photoQTY as any);
-    // console.log("url", urls);
-    for (let url of urls) {
-      formDataUpload.append("photo", url);
-    }
-    // console.log(formDataUpload.getAll("photo"));
-    let res = await fetch(`${API_ORIGIN}/posts/postItem`, {
-      method: "POST",
+      let formDataUpload = formAppend();
+      formDataUpload.append("photo_qty", photoQTY as any);
+      // console.log("url", urls);
+      for (let url of urls) {
+        formDataUpload.append("photo", url);
+      }
+      // console.log(formDataUpload.getAll("photo"));
+      let res = await fetch(`${API_ORIGIN}/posts/postItem`, {
+        method: "POST",
 
-      body: formDataUpload,
-    });
-    let result = await res.json();
-    // console.log(result);
-    if (result.status == 200) {
-      router.push(routes.tab.mainPage);
-      console.log("done");
+        body: formDataUpload,
+      });
+      let result = await res.json();
+      // console.log(result);
+      if (result.status == 200) {
+        router.push(routes.tab.mainPage);
+        console.log("done");
+      }
     }
-
     // photos.map((photo) => {
     //   const storageRef = ref(storage, `/files/${photo.name}`);
     //   const uploadTask = uploadBytesResumable(storageRef, photo.file);
@@ -523,7 +541,15 @@ const PickPhoto: React.FC = () => {
             </div>
             {item({
               name: "title",
-              renderLabel: () => <IonLabel position="floating">標題</IonLabel>,
+              renderLabel: () => (
+                <IonLabel position="floating">
+                  <IonIcon
+                    style={{ color: "gold", marginRight: "8px" }}
+                    icon={flag}
+                  ></IonIcon>
+                  標題
+                </IonLabel>
+              ),
               renderContent: (props) => (
                 <IonInput placeholder="請輸入帖文標題" {...props}></IonInput>
               ),
@@ -536,7 +562,13 @@ const PickPhoto: React.FC = () => {
               name: "description",
 
               renderLabel: () => (
-                <IonLabel position="floating">產品描述</IonLabel>
+                <IonLabel position="floating">
+                  <IonIcon
+                    style={{ color: "gold", marginRight: "8px" }}
+                    icon={informationCircle}
+                  ></IonIcon>
+                  產品描述
+                </IonLabel>
               ),
               renderContent: (props) => (
                 <IonTextarea
@@ -556,7 +588,13 @@ const PickPhoto: React.FC = () => {
               name: "tags",
 
               renderLabel: () => (
-                <IonLabel position="floating">加入標籤 #</IonLabel>
+                <IonLabel position="floating">
+                  <IonIcon
+                    style={{ color: "gold", marginRight: "8px" }}
+                    icon={pricetagsSharp}
+                  ></IonIcon>
+                  加入標籤
+                </IonLabel>
               ),
               renderContent: (props) => (
                 <IonInput
@@ -569,7 +607,15 @@ const PickPhoto: React.FC = () => {
             <br />
             {item({
               name: "startPrice",
-              renderLabel: () => <IonLabel position="floating">底價</IonLabel>,
+              renderLabel: () => (
+                <IonLabel position="floating">
+                  <IonIcon
+                    style={{ color: "gold", marginRight: "8px" }}
+                    icon={logoUsd}
+                  ></IonIcon>
+                  底價
+                </IonLabel>
+              ),
               renderContent: (props) => (
                 <IonInput
                   placeholder="請輸入底價 ( 港幣 )"
@@ -586,7 +632,20 @@ const PickPhoto: React.FC = () => {
             <br />
             {item({
               name: "qualityPlan",
-              renderLabel: () => <IonLabel>加入認證拍賣計劃</IonLabel>,
+              renderLabel: () => (
+                <IonLabel>
+                  加入認證拍賣計劃
+                  <IonIcon
+                    style={{
+                      color: "#3880ff",
+                      marginLeft: "8px",
+                      width: "1.5rem",
+                      height: "1.5rem",
+                    }}
+                    icon={checkmarkDoneCircleOutline}
+                  ></IonIcon>
+                </IonLabel>
+              ),
               renderContent: (props) => (
                 <IonCheckbox
                   slot="start"
@@ -648,7 +707,18 @@ const PickPhoto: React.FC = () => {
               ? item({
                   name: "location",
                   renderLabel: () => (
-                    <IonLabel position="floating">請選擇存放於門市:</IonLabel>
+                    <IonLabel position="floating">
+                      <IonIcon
+                        style={{
+                          color: "gold",
+                          marginRight: "8px",
+                          width: "1.5rem",
+                          height: "1.5rem",
+                        }}
+                        icon={locationOutline}
+                      ></IonIcon>
+                      請選擇存放於門市:
+                    </IonLabel>
                   ),
                   renderContent: (props) => (
                     <IonSelect {...props}>

@@ -11,10 +11,12 @@ import {
   IonMenu,
   IonMenuButton,
   IonMenuToggle,
+  IonModal,
   IonPage,
   IonSearchbar,
   IonTitle,
   IonToolbar,
+  useIonRouter,
 } from "@ionic/react";
 import {
   heartOutline,
@@ -30,12 +32,16 @@ import {
   cubeOutline,
   checkmarkDoneCircleOutline,
   chevronBackOutline,
+  heart,
+  chatbubble,
+  wallet,
+  calendar,
 } from "ionicons/icons";
 
-import "./Profile.scss";
+import profileStyles from "./Profile.module.css";
 import icon from "../../image/usericon.png";
 import { useDispatch, useSelector } from "react-redux";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import moment from "moment";
 import { updateJwt } from "../../redux/user/actions";
 import { RootState } from "../../store";
@@ -48,13 +54,11 @@ import { useSocket } from "../../hooks/use-socket";
 import { Socket } from "socket.io-client";
 import { routes } from "../../routes";
 import styles from "./MainPage.module.css";
-import { PostObj } from "../Posts/Posts";
+import Post, { PostObj } from "../Posts/Posts";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
 
-const Profile: React.FC<{ user: number | undefined }> = (props: {
-  user: number | undefined;
-}) => {
+const Profile: React.FC = () => {
   let jwtState = useSelector((state: RootState) => state.jwt);
   let pointsState = useSelector((state: RootState) => state.points);
 
@@ -75,8 +79,10 @@ const Profile: React.FC<{ user: number | undefined }> = (props: {
   let [points, setPoints] = useState(pointsState.points);
   let [postsList, setPostsList] = useState<[any]>([] as any);
   const [query, setQuery] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [isPostOpen, setIsPostOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
+  const router = useIonRouter();
 
   const dispatch = useDispatch();
   let params: any = useParams();
@@ -92,24 +98,26 @@ const Profile: React.FC<{ user: number | undefined }> = (props: {
   };
 
   const getOtherProfile = async (userId: number) => {
-    let userInfo = await fetch(`${API_ORIGIN}/users/findOne/${userId}`)
-    console.log("userInfo: ", userInfo)
+    let userInfo = await fetch(`${API_ORIGIN}/users/findOne/${userId}`);
+    console.log("userInfo: ", userInfo);
   };
 
   useEffect(() => {
-    if (props.user === jwtState.id || params.id == jwtState.id) {
+    if (params.id == jwtState.id) {
+      console.log("ownFile", params.id);
       getOwnProfile();
     } else {
-      if (props.user){
-        getOtherProfile(props.user)
+      if (params.id !== jwtState.id) {
+        console.log("otherFile,", params.id);
+        getOtherProfile(params.id);
       }
     }
   }, [jwtState, pointsState]);
 
   useEffect(() => {
     const postsList = async () => {
-      if (props.user){
-        let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${props.user}`);
+      if (params.id) {
+        let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${params.id}`);
         let result = await res.json();
         setPostsList(result);
       } else {
@@ -121,6 +129,8 @@ const Profile: React.FC<{ user: number | undefined }> = (props: {
 
     postsList();
   }, [jwtState]);
+
+  const postModal = useRef<HTMLIonModalElement>(null);
 
   function destroyUserInfo() {
     removeValue("Jwt");
@@ -143,7 +153,17 @@ const Profile: React.FC<{ user: number | undefined }> = (props: {
 
   function openPost(e: PostObj) {
     setCurrentPost(e);
-    setIsOpen(true);
+    setIsPostOpen(true);
+  }
+
+  function dismissPost() {
+    postModal.current?.dismiss();
+    setIsPostOpen(false);
+  }
+
+  function goChat(id: number) {
+    router.push(routes.chatroom(id), "forward", "replace");
+    dismissPost();
   }
 
   function func() {
@@ -210,136 +230,186 @@ const Profile: React.FC<{ user: number | undefined }> = (props: {
           </IonToolbar>
         </IonHeader>
         <IonContent fullscreen>
-          <div className="personalInfoContainer">
-            <div className="personalIconContainer">
-              <img src={showedIcon} className="personalIcon" />
-            </div>
-            <div className="personalInfo">
-              <div className="personalInfo_name">
-                <IonLabel>{nickname}</IonLabel>
+          <IonItem>
+            <div className={profileStyles.personalInfoContainer}>
+              <div className={profileStyles.personalIconContainer}>
+                <img src={showedIcon} className={profileStyles.personalIcon} />
               </div>
-              <IonLabel>可用點數: {pointsState.points}</IonLabel>
-              <div>
-                <IonLabel>{joinTime}</IonLabel>
+              <div className={profileStyles.personalInfo}>
+                <div className={profileStyles.personalInfo_name}>
+                  <IonLabel>{nickname}</IonLabel>
+                </div>
+                <IonLabel>
+                  <IonIcon
+                    style={{ color: "gold", marginRight: "10px" }}
+                    size="small"
+                    icon={wallet}
+                  />
+                  點數: {pointsState.points}
+                </IonLabel>
+                <div>
+                  <IonLabel>
+                    <IonIcon
+                      style={{ color: "skyBlue", marginRight: "5px" }}
+                      icon={calendar}
+                    ></IonIcon>
+                    {joinTime}
+                  </IonLabel>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="">
-            <IonList>
-              <IonItem>
-                <IonIcon icon={heartOutline} className="chat" />
-              </IonItem>
-              <IonItem>
-                <IonIcon icon={chatbubbleOutline} className="chat" />
-              </IonItem>
-              <IonItem>
-                <IonIcon icon={ribbonOutline} className="chat" />
-              </IonItem>
-            </IonList>
+          </IonItem>
+          <div className={profileStyles.IconContainer}>
+            <IonIcon
+              style={{ color: "red" }}
+              size="large"
+              icon={heart}
+              className={profileStyles.chat}
+            />
+
+            <IonIcon
+              style={{ color: "skyBlue" }}
+              size="large"
+              icon={chatbubble}
+              className={profileStyles.chat}
+            />
+
+            <IonIcon
+              style={{ color: "gold" }}
+              size="large"
+              icon={ribbonOutline}
+              className={profileStyles.chat}
+            />
           </div>
 
-          <IonItem className="search">
-            <IonIcon className="searchIcon" icon={searchOutline} />
-            <IonInput placeholder="搜尋此賣家的產品"></IonInput>
-          </IonItem>
-          <IonItem className="portfolioContainer">
+          <IonItem className={profileStyles.portfolioContainer}>
             <IonLabel>
               <IonIcon icon={cubeOutline}></IonIcon> 拍賣產品
             </IonLabel>
           </IonItem>
 
-          <IonButton onClick={func}>Show the redux state</IonButton>
-          <IonList>
-          <div slot="content">
-            <IonSearchbar
-              debounce={1000}
-              onIonChange={(ev: any) => setQuery(ev.target.value)}
-            ></IonSearchbar>
-            {postsList
-              .filter((postsList) => postsList.post_title.includes(query))
-              .map((post: any) => {
-                return (
-                  // <IonItem key={e.id} onClick={() => openPost(e)}>
-                  //   <img src={e.json_agg[0]}></img>
-                  //   {!e.admin_title ? (
-                  //     <IonLabel>{e.post_title}</IonLabel>
-                  //   ) : (
-                  //     <IonLabel>{e.admin_title}</IonLabel>
-                  //   )}
-                  //   {!post.max ? (
-                  //     <IonLabel>${post.original_price}</IonLabel>
-                  //   ) : (
-                  //     <IonLabel>${post.max}</IonLabel>
-                  //   )}
-                  //   <IonLabel>{e.nickname}</IonLabel>
-                  // </IonItem>
-                  <div
-                    className={styles.postContainer}
-                    key={post.id}
-                    onClick={() => openPost(post)}
-                  >
-                    <div className={styles.nameContainer}>
-                      <h4 className={styles.nameText}>
-                        <IonIcon
-                          className={styles.personIcon}
-                          icon={personOutline}
-                        ></IonIcon>
-                        {post.nickname}
-                      </h4>
-                      <h2 className={styles.title}>
-                        {!post.admin_title ? post.post_title : post.admin_title}
+          {/* <IonButton onClick={func}>Show the redux state</IonButton> */}
 
-                        {post.q_mark ? (
-                          <IonIcon
-                            className={styles.q_mark_icon}
-                            icon={checkmarkDoneCircleOutline}
-                          ></IonIcon>
-                        ) : null}
-                      </h2>
-                    </div>
-                    <Swiper
-                      modules={[
-                        Autoplay,
-                        Keyboard,
-                        Pagination,
-                        Scrollbar,
-                        Zoom,
-                      ]}
-                      autoplay={true}
-                      keyboard={true}
-                      pagination={true}
-                      slidesPerView={1}
-                      //scrollbar={true}
-                      zoom={true}
-                      effect={"fade"}
-                      className={styles.slide}
-                    >
-                      {post.json_agg.map((photo: any, index: any) => {
-                        return (
-                          <SwiperSlide
-                            className={styles.image_slide}
-                            key={index}
-                          >
-                            <img src={photo} key={index} />
-                          </SwiperSlide>
-                        );
-                      })}
-                    </Swiper>
-                    {/* <img src={post.json_agg}></img> */}
-                    <div className={styles.priceContainer}>
-                      {!post.max ? (
-                        <h3>現價：${post.original_price}</h3>
-                      ) : (
-                        <h3>現價：${post.max}</h3>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+          <div className={profileStyles.productContainer}>
+            <IonList>
+              <div slot="content">
+                <IonSearchbar
+                  debounce={1000}
+                  onIonChange={(ev: any) => setQuery(ev.target.value)}
+                ></IonSearchbar>
+                {postsList
+                  .filter((postsList) => postsList.post_title.includes(query))
+                  .map((post: any) => {
+                    return (
+                      // <IonItem key={e.id} onClick={() => openPost(e)}>
+                      //   <img src={e.json_agg[0]}></img>
+                      //   {!e.admin_title ? (
+                      //     <IonLabel>{e.post_title}</IonLabel>
+                      //   ) : (
+                      //     <IonLabel>{e.admin_title}</IonLabel>
+                      //   )}
+                      //   {!post.max ? (
+                      //     <IonLabel>${post.original_price}</IonLabel>
+                      //   ) : (
+                      //     <IonLabel>${post.max}</IonLabel>
+                      //   )}
+                      //   <IonLabel>{e.nickname}</IonLabel>
+                      // </IonItem>
+                      <div
+                        className={styles.postContainer}
+                        key={post.id}
+                        onClick={() => openPost(post)}
+                      >
+                        <div className={styles.nameContainer}>
+                          <h4 className={styles.nameText}>
+                            <IonIcon
+                              className={styles.personIcon}
+                              icon={personOutline}
+                            ></IonIcon>
+                            {post.nickname}
+                          </h4>
+                          <h2 className={styles.title}>
+                            {!post.admin_title
+                              ? post.post_title
+                              : post.admin_title}
+
+                            {post.q_mark ? (
+                              <IonIcon
+                                className={styles.q_mark_icon}
+                                icon={checkmarkDoneCircleOutline}
+                              ></IonIcon>
+                            ) : null}
+                          </h2>
+                        </div>
+                        <Swiper
+                          modules={[
+                            Autoplay,
+                            Keyboard,
+                            Pagination,
+                            Scrollbar,
+                            Zoom,
+                          ]}
+                          autoplay={true}
+                          keyboard={true}
+                          pagination={true}
+                          slidesPerView={1}
+                          //scrollbar={true}
+                          zoom={true}
+                          effect={"fade"}
+                          className={styles.slide}
+                        >
+                          {post.json_agg.map((photo: any, index: any) => {
+                            return (
+                              <SwiperSlide
+                                className={styles.image_slide}
+                                key={index}
+                              >
+                                <img src={photo} key={index} />
+                              </SwiperSlide>
+                            );
+                          })}
+                        </Swiper>
+                        {/* <img src={post.json_agg}></img> */}
+                        <div className={styles.priceContainer}>
+                          {!post.max ? (
+                            <h3>現價：${post.original_price}</h3>
+                          ) : (
+                            <h3>現價：${post.max}</h3>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </IonList>
           </div>
-        </IonList>
-
         </IonContent>
+
+        <IonModal
+          id="post-modal"
+          ref={postModal}
+          isOpen={isPostOpen}
+          // enterAnimation={enterAnimation}
+          // leaveAnimation={leaveAnimation}
+        >
+          <IonHeader>
+            <IonToolbar>
+              <IonButtons slot="start">
+                <IonButton
+                  onClick={() => {
+                    dismissPost();
+                  }}
+                >
+                  <IonIcon size="large" icon={chevronBackOutline}></IonIcon>{" "}
+                  Back
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            <Post post={currentPost as PostObj} goChat={goChat} />
+          </IonContent>
+        </IonModal>
       </IonPage>
     </>
   );
