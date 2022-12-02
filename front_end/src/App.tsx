@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   IonApp,
   IonBadge,
@@ -10,6 +10,7 @@ import {
   IonTabs,
   setupIonicReact,
   useIonRouter,
+  useIonToast,
   useIonViewDidEnter,
   useIonViewWillEnter,
 } from "@ionic/react";
@@ -81,14 +82,46 @@ import { updatePoints } from "./redux/points/actions";
 import MainNotice from "./pages/MainNotice/MainNotice";
 import { Router } from "workbox-routing";
 import { forceUpdate } from "ionicons/dist/types/stencil-public-runtime";
+import { useSocket } from "./hooks/use-socket";
+import { Socket } from "socket.io-client";
 
 setupIonicReact();
 const App: React.FC = () => {
   let jwtState = useSelector((state: RootState) => state.jwt);
-  let pointsState = useSelector((state: RootState) => state.points);
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const router = useIonRouter();
+
+  let notiMSG: string;
+  const [present] = useIonToast();
+
+  const presentToast = (position: "top") => {
+    present({
+      message: notiMSG,
+      duration: 10000,
+      position: position,
+    });
+  };
+
+  useSocket(
+    useCallback((socket: Socket) => {
+      socket.on("post-is-uploaded", (data) => {
+        console.log("received", data);
+        notiMSG = data.msg;
+        presentToast("top");
+      });
+      socket.on("bid-received", (data) => {
+        console.log("bid-received", data);
+        notiMSG = data.msg;
+        presentToast("top");
+      });
+      socket.on("info-seller", (data) => {
+        notiMSG = data.msg;
+        presentToast("top");
+      });
+      return () => {};
+    }, [])
+  );
 
   const getProfile = async () => {
     let userId = await getValue("userId");
@@ -127,7 +160,7 @@ const App: React.FC = () => {
       })
     );
 
-    console.log("!!!!!!!!!!!!!!!!!!!", jwtState, pointsState);
+    console.log("!!!!!!!!!!!!!!!!!!!", jwtState);
     return userInfo.userInfo.username;
   };
 
@@ -217,68 +250,70 @@ const App: React.FC = () => {
         {/* <AppUrlListener></AppUrlListener> */}
         {/*DeepLink Setup end */}
         <IonRouterOutlet>
-          <Route path="/" exact={true}>
-            <Redirect to={routes.tab.mainPage} />
-          </Route>
-          <Route
-            path={routes.menu.accountSetting}
-            exact={true}
-            render={() => <UpdateProfile />}
-          ></Route>
-          <Route
-            path={routes.menu.noticeSetting}
-            exact={true}
-            render={() => <NoticeSetUp />}
-          />
-          <Route
-            path={routes.menu.passwordChange}
-            exact={true}
-            render={() => <PasswordChange />}
-          />
-          <Route
-            path={routes.menu.invoice}
-            exact={true}
-            render={() => <Invoice />}
-          />
+          <Switch>
+            <Route path="/" exact={true}>
+              <Redirect to={routes.tab.mainPage} />
+            </Route>
+            <Route
+              path={routes.menu.accountSetting}
+              exact={true}
+              render={() => <UpdateProfile />}
+            ></Route>
+            <Route
+              path={routes.menu.noticeSetting}
+              exact={true}
+              render={() => <NoticeSetUp />}
+            />
+            <Route
+              path={routes.menu.passwordChange}
+              exact={true}
+              render={() => <PasswordChange />}
+            />
+            <Route
+              path={routes.menu.invoice}
+              exact={true}
+              render={() => <Invoice />}
+            />
 
-          <Route
-            path={routes.storages}
-            exact={true}
-            render={() => <Storages />}
-          />
-          <Route
-            path={routes.blacklist}
-            exact={true}
-            render={() => <Blacklist />}
-          />
+            <Route
+              path={routes.storages}
+              exact={true}
+              render={() => <Storages />}
+            />
+            <Route
+              path={routes.blacklist}
+              exact={true}
+              render={() => <Blacklist />}
+            />
 
-          <Route
-            path={routes.chatroomPage}
-            exact={true}
-            render={() => <ChatroomPage />}
-          />
-          <Route
-            path={routes.chatroom(":id")}
-            exact={true}
-            render={() => <Chatroom />}
-          />
-          {/* 
+            <Route
+              path={routes.chatroomPage}
+              exact={true}
+              render={() => <ChatroomPage />}
+            />
+            <Route
+              path={routes.chatroom(":id")}
+              exact={true}
+              render={() => <Chatroom />}
+            />
+            {/* 
           <Route
             path={routes.payment}
             exact={true}
             render={() => <Payment />}
           /> */}
 
-          <Route
-            path={routes.package}
-            exact={true}
-            render={() => <Package />}
-          />
-          <Route
-            path={routes.mainNotice}
-            exact={true}
-            render={() => <MainNotice />}
-          />
+            <Route
+              path={routes.package}
+              exact={true}
+              render={() => <Package />}
+            />
+            <Route
+              path={routes.mainNotice}
+              exact={true}
+              render={() => <MainNotice />}
+            />
+          </Switch>
 
           <Route path="/tab">
             <IonTabs>
@@ -329,8 +364,13 @@ const App: React.FC = () => {
                     <IonIcon icon={duplicateOutline} />
                     <IonLabel>交易</IonLabel>
                   </IonTabButton>
-                ) : null}
-                {!!jwtState.jwtKey ? (
+                ) : (
+                  <IonTabButton tab="PickPhoto" href={routes.tab.pickPhoto}>
+                    <IonIcon icon={duplicateOutline} />
+                    <IonLabel>交易</IonLabel>
+                  </IonTabButton>
+                )}
+                {jwtState.username === "caleb" ? (
                   <IonTabButton tab="Notices" href={routes.tab.notices}>
                     <IonIcon icon={chatbubblesOutline} />
                     <IonLabel>聊天</IonLabel>
