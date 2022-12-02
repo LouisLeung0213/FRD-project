@@ -69,15 +69,15 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         console.log("join room", props.post.id);
         socket.emit("join-room", props.post.id);
         socket.on("newBidReceived", (msg) => {
-          console.log("received", msg);
-          if (msg.newBidContent.bid[0].post_id != +props.post.id) {
+          console.log("received", msg.newBidContent);
+          if (msg.newBidContent[0].post_id != +props.post.id) {
             console.log("wrong, bye bye");
             return;
           }
           console.log("newBidList", msg);
-          setBidList(msg.newBidContent.bid);
-          setHighestBidder(msg.newBidContent.bid[0].nickname);
-          setNowPrice(msg.newBidContent.bid[0].bid_price);
+          setBidList(msg.newBidContent);
+          setHighestBidder(msg.newBidContent[0].nickname);
+          setNowPrice(msg.newBidContent[0].bid_price);
           return;
         });
         return () => {
@@ -103,6 +103,8 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   };
 
   useEffect(() => {
+    console.log("props.post.json_agg", props.post.json_agg);
+
     console.log(jwtState.id);
     const bidRecord = async () => {
       let res = await fetch(`${API_ORIGIN}/bid/bidList/${props.post.id}`);
@@ -214,6 +216,19 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
 
   return (
     <IonList className="post-modal">
+      <h1 className="ion-padding">{props.post.nickname}</h1>
+      {props.post.json_agg.map((e: any, index) => {
+        return (
+          <div className="imageDiv" key={e}>
+            <img className="image" src={e}></img>
+          </div>
+        );
+      })}
+      <IonIcon
+        icon={chatbubbleOutline}
+        slot="start"
+        onClick={() => getChatDetail()}
+      ></IonIcon>
       {!props.post.admin_title ? (
         <>
           <h2 className="ion-padding">{props.post.post_title}</h2>
@@ -269,8 +284,8 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
           </IonItem>
           {bidList.map((e: any, index) => {
             return (
-              <div className="ionCardContainer">
-                <IonCard key={index}>
+              <div className="ionCardContainer" key={index}>
+                <IonCard>
                   {e.nickname}: $ {e.bid_price}
                 </IonCard>
               </div>

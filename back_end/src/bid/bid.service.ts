@@ -14,7 +14,7 @@ export class BidService {
 
   async biding(createBidDto: CreateBidDto) {
     let checkBid = await this.knex
-      .select('bid_price')
+      .select('bid_price', 'buyer_id')
       .from('bid_records')
       .where('post_id', createBidDto.postId)
       .orderBy('bid_price', 'desc');
@@ -42,7 +42,7 @@ export class BidService {
               receiver_id: createBidDto.sellerId,
               content: `買家[${createBidDto.buyerNickname}]在[${createBidDto.postTitle}]出價:$${createBidDto.bidPrice}!`,
             })
-            .returning('content');
+            .returning(['receiver_id', 'content']);
 
           let newBidList = await this.knex
             .select('post_id', 'buyer_id', 'bid_price', 'nickname')
@@ -51,7 +51,6 @@ export class BidService {
             .where('post_id', createBidDto.postId)
             .limit(5)
             .orderBy('bid_price', 'desc');
-
           return { bid: newBidList, firstBidNoti: firstBidNoti[0] };
         }
 
@@ -80,7 +79,26 @@ export class BidService {
             .limit(5)
             .orderBy('bid_price', 'desc');
 
-          return { bid: newBidList };
+          let infoSecondBuyer = await this.knex('notifications')
+            .insert({
+              receiver_id: checkBid[0].buyer_id,
+              content: `您在[${createBidDto.postTitle}]的出價被超越了！`,
+            })
+            .returning(['receiver_id', 'content']);
+
+          let infoSeller = await this.knex('notifications')
+            .insert({
+              receiver_id: createBidDto.sellerId,
+              content: `您的貨品[${createBidDto.postTitle}]，最新價錢為$${newBidList[0].bid_price}!`,
+            })
+            .returning(['receiver_id', 'content']);
+
+          console.log('infoSecondBuyer', infoSecondBuyer[1]);
+          return {
+            bid: newBidList,
+            firstBidNoti: infoSecondBuyer[0],
+            infoSeller: infoSeller[0],
+          };
         } else {
           return { status: '99', message: 'unexpected error occurred' };
         }

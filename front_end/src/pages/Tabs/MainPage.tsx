@@ -157,7 +157,7 @@ const MainPage: React.FC = () => {
             ></IonSearchbar>
             {postsList
               .filter((postsList) => postsList.post_title.includes(query))
-              .map((post: any) => {
+              .map((post: any, index) => {
                 return (
                   // <IonItem key={e.id} onClick={() => openPost(e)}>
                   //   <img src={e.json_agg[0]}></img>
@@ -175,7 +175,7 @@ const MainPage: React.FC = () => {
                   // </IonItem>
                   <div
                     className={styles.postContainer}
-                    key={post.id}
+                    key={index}
                     onClick={() => openPost(post)}
                   >
                     <div className={styles.nameContainer}>

@@ -142,7 +142,7 @@ export class PostsService {
     //   .join('bid_records', 'post_id', 'posts.id')
     //   .groupBy('posts.id');
     // console.log('newPrice', newPrice);
-    let showAllList = await this.knex
+    let allList = await this.knex
       .select(
         'posts.id',
         'user_id',
@@ -157,17 +157,51 @@ export class PostsService {
         'post_time',
         'nickname',
         'username',
-        this.knex.raw('json_agg(src)'),
+        // this.knex.raw('json_agg(src)'),
         this.knex.raw('max(bid_price)'),
       )
+      // .max('bid_price')
       .from('posts')
       .join('users', 'user_id', 'users.id')
-      .join('images', 'posts.id', 'images.post_id')
+      // .join('images', 'posts.id', 'images.post_id')
       .fullOuterJoin('bid_records', 'bid_records.post_id', 'posts.id')
       .where('status', 'selling')
       .groupBy('posts.id', 'users.username', 'users.nickname');
+    // .orderBy('posts.id', 'desc');
+
+    // let max_bidPrice = await this.knex.max('bid_price').from('bid_records');
+    let photo_array = await this.knex
+      .select('post_id', this.knex.raw('json_agg(src)'))
+      .from('images')
+      .groupBy('post_id')
+      .orderBy('post_id', 'desc');
+
+    let showAllList = [];
+
+    for (let i = 0; i < allList.length; i++) {
+      showAllList.push({
+        id: allList[i].id,
+        user_id: allList[i].user_id,
+        post_title: allList[i].post_title,
+        post_description: allList[i].post_description,
+        original_price: allList[i].original_price,
+        q_mark: allList[i].q_mark,
+        admin_title: allList[i].admin_title,
+        admin_comment: allList[i].admin_comment,
+        status: allList[i].status,
+        auto_adjust_plan: allList[i].auto_adjust_plan,
+        post_time: allList[i].post_time,
+        nickname: allList[i].nickname,
+        username: allList[i].username,
+        max: allList[i].max,
+        photo_array: photo_array[i].json_agg,
+      });
+    }
+
+    // console.log(photo_array[0].json_agg);
     // console.log('showAllList', showAllList);
-    return showAllList;
+
+    return { showAllList };
   }
   async showSomeone(id: number) {
     let showSomeoneList = await this.knex
@@ -259,7 +293,7 @@ export class PostsService {
           receiver_id: updatePostDto.ownerId,
           content: `您的貨品${updatePostDto.postTitle}現已上架`,
         })
-        .returning('content');
+        .returning(['receiver_id', 'content']);
       return postNoti[0];
     }
     return `This action updates a #${id} post`;

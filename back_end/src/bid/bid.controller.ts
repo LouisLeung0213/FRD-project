@@ -52,11 +52,23 @@ export class BidController {
     if (!('status' in newBidList)) {
       console.log('newBidList', newBidList);
       io.to('room: ' + createBidDto.postId).emit('newBidReceived', {
-        newBidContent: newBidList,
+        newBidContent: newBidList.bid,
       });
       io.emit('priceUpdated', {
         newPrice: newPriceList,
       });
+      io.to('TJroom: ' + newBidList.firstBidNoti.receiver_id).emit(
+        'bid-received',
+        {
+          msg: newBidList.firstBidNoti.content,
+        },
+      );
+      io.to('TJroom: ' + newBidList.infoSeller.receiver_id).emit(
+        'info-seller',
+        {
+          msg: newBidList.infoSeller.content,
+        },
+      );
     }
     console.log('newBidList', newBidList);
     return newBidList;
