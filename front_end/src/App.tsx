@@ -394,12 +394,7 @@ const App: React.FC = () => {
                     <IonIcon icon={duplicateOutline} />
                     <IonLabel>交易</IonLabel>
                   </IonTabButton>
-                ) : (
-                  <IonTabButton tab="PickPhoto" href={routes.tab.pickPhoto}>
-                    <IonIcon icon={duplicateOutline} />
-                    <IonLabel>交易</IonLabel>
-                  </IonTabButton>
-                )}
+                ) : null}
                 {!!jwtState.jwtKey ? (
                   <IonTabButton
                     tab="Notices"
