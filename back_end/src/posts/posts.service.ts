@@ -194,14 +194,14 @@ export class PostsService {
         nickname: allList[i].nickname,
         username: allList[i].username,
         max: allList[i].max,
-        photo_array: photo_array[i].json_agg,
+        json_agg: photo_array[i].json_agg,
       });
     }
 
     // console.log(photo_array[0].json_agg);
     // console.log('showAllList', showAllList);
 
-    return { showAllList };
+    return showAllList;
   }
   async showSomeone(id: number) {
     let showSomeoneList = await this.knex
