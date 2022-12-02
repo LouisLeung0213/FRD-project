@@ -159,20 +159,6 @@ const MainPage: React.FC = () => {
               .filter((postsList) => postsList.post_title.includes(query))
               .map((post: any, index) => {
                 return (
-                  // <IonItem key={e.id} onClick={() => openPost(e)}>
-                  //   <img src={e.json_agg[0]}></img>
-                  //   {!e.admin_title ? (
-                  //     <IonLabel>{e.post_title}</IonLabel>
-                  //   ) : (
-                  //     <IonLabel>{e.admin_title}</IonLabel>
-                  //   )}
-                  //   {!post.max ? (
-                  //     <IonLabel>${post.original_price}</IonLabel>
-                  //   ) : (
-                  //     <IonLabel>${post.max}</IonLabel>
-                  //   )}
-                  //   <IonLabel>{e.nickname}</IonLabel>
-                  // </IonItem>
                   <div
                     className={styles.postContainer}
                     key={index}
@@ -241,13 +227,7 @@ const MainPage: React.FC = () => {
         </IonList>
       </IonContent>
 
-      <IonModal
-        id="post-modal"
-        ref={modal}
-        isOpen={isOpen}
-        // enterAnimation={enterAnimation}
-        // leaveAnimation={leaveAnimation}
-      >
+      <IonModal id="post-modal" ref={modal} isOpen={isOpen}>
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">

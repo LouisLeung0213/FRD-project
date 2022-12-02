@@ -57,6 +57,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   const [bidIsSubmitted, setBidIsSubmitted] = useState(false);
   const [bidList, setBidList] = useState([]);
   const [highestBidder, setHighestBidder] = useState("");
+  const [highestBidder_id, setHighestBidder_id] = useState(0);
   const [nowPrice, setNowPrice] = useState(0);
   let numReg = /^\d+$/;
   const router = useIonRouter();
@@ -69,14 +70,17 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         console.log("join room", props.post.id);
         socket.emit("join-room", props.post.id);
         socket.on("newBidReceived", (msg) => {
-          console.log("received", msg.newBidContent);
+          console.log("received", msg.newBidContent[0]);
+          console.log(props.post.id);
           if (msg.newBidContent[0].post_id != +props.post.id) {
             console.log("wrong, bye bye");
             return;
           }
-          console.log("newBidList", msg);
+          console.log("newBidList", msg.newBidContent);
+
           setBidList(msg.newBidContent);
           setHighestBidder(msg.newBidContent[0].nickname);
+          setHighestBidder_id(msg.newBidContent[0].buyer_id);
           setNowPrice(msg.newBidContent[0].bid_price);
           return;
         });
@@ -151,18 +155,24 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   }
 
   async function makeDeal() {
-    console.log(nowPrice);
-
+    // console.log(nowPrice);
+    // console.log(highestBidder_id);
     let dealRes = await fetch(`${API_ORIGIN}/payment/capturePaymentIntent`, {
-      method: "POST",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         bidPrice: nowPrice,
-        postId: props.post.id,
+        post_id: props.post.id,
+        bidder_id: highestBidder_id,
       }),
     });
+    let result = await dealRes.json();
+    console.log("deal: ", result);
+    if (result.status == 200) {
+      router.push(routes.tab.mainPage);
+    }
   }
 
   async function submitBid() {
