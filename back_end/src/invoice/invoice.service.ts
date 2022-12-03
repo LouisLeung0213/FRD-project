@@ -21,8 +21,6 @@ export class InvoiceService {
       .join('posts', 'product_id', 'posts.id')
       .where('seller_id', id);
 
-    // let dealInvoice =
-
     return storagesInvoiceList;
   }
 

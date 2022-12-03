@@ -15,6 +15,7 @@ import { PaymentModule } from './payment/payment.module';
 import { BidModule } from './bid/bid.module';
 import { InformationModule } from './information/information.module';
 import { MainNoticeModule } from './main-notice/main-notice.module';
+import { ReportModule } from './report/report.module';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyD243djxwnLoP4tSfW0CUqOlE-3z0UQGL4',
@@ -42,6 +43,7 @@ const firebaseConfig = {
     BidModule,
     InformationModule,
     MainNoticeModule,
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

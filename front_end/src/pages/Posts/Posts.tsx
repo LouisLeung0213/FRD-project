@@ -70,8 +70,8 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         console.log("join room", props.post.id);
         socket.emit("join-room", props.post.id);
         socket.on("newBidReceived", (msg) => {
-          if (msg.newBidContent != ""){
-            if (msg.newBidContent[0].post_id){
+          if (msg.newBidContent != "") {
+            if (msg.newBidContent[0].post_id) {
               if (msg.newBidContent[0].post_id != +props.post.id) {
                 console.log("wrong, bye bye");
                 return;
@@ -128,7 +128,6 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
       }
     };
     bidRecord();
-
   }, []);
 
   async function getChatDetail() {
@@ -221,16 +220,15 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
       },
       body: JSON.stringify({
         postId: props.post.id,
-        updatedPrice: adjustedPrice
+        updatedPrice: adjustedPrice,
       }),
     });
     let result = await res.json();
 
-    setBidList([])
-    setNowPrice(+adjustedPrice)
+    setBidList([]);
+    setNowPrice(+adjustedPrice);
     setAdjustedPrice("");
-    
-    
+
     confirmModal.current?.dismiss();
     alert("調整底價成功");
 
@@ -245,8 +243,19 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
     <IonList className="post-modal">
       {!props.post.admin_title ? (
         <>
-          <h2 className="ion-padding">{props.post.post_title}</h2>
-          <h2 className="ion-padding">{props.post.post_description}</h2>
+          <h2 className="ion-padding">
+            {props.post.post_title}
+            {props.post.q_mark ? (
+              <IonIcon
+                style={{
+                  marginLeft: "10px",
+                  paddingTop: "3px",
+                  color: "#3880ff",
+                }}
+                icon={checkmarkDoneCircleOutline}
+              ></IonIcon>
+            ) : null}
+          </h2>
         </>
       ) : (
         <>
@@ -281,7 +290,12 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
           slot="start"
         ></IonIcon>
       </IonItem>
-      <h3 className="ion-padding">產品描述: {props.post.admin_comment}</h3>
+      <h3 className="ion-padding">
+        產品描述:{" "}
+        {props.post.admin_comment
+          ? props.post.admin_comment
+          : props.post.post_description}
+      </h3>
       <IonItem>
         <IonIcon style={{ color: "red" }} icon={flame}></IonIcon> 現價: $
         {nowPrice}
