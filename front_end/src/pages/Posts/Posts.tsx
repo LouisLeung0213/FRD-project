@@ -70,8 +70,8 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         console.log("join room", props.post.id);
         socket.emit("join-room", props.post.id);
         socket.on("newBidReceived", (msg) => {
-          if (msg.newBidContent != ""){
-            if (msg.newBidContent[0].post_id){
+          if (msg.newBidContent != "") {
+            if (msg.newBidContent[0].post_id) {
               if (msg.newBidContent[0].post_id != +props.post.id) {
                 console.log("wrong, bye bye");
                 return;
@@ -122,12 +122,13 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
       }
       if (!result[0]) {
         setNowPrice(props.post.original_price);
+        setAdjustedPrice(props.post.original_price.toString());
       } else {
         setNowPrice(result[0].bid_price);
+        setAdjustedPrice(result[0].bid_price);
       }
     };
     bidRecord();
-
   }, []);
 
   async function getChatDetail() {
@@ -220,16 +221,15 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
       },
       body: JSON.stringify({
         postId: props.post.id,
-        updatedPrice: adjustedPrice
+        updatedPrice: adjustedPrice,
       }),
     });
     let result = await res.json();
 
-    setBidList([])
-    setNowPrice(+adjustedPrice)
-    setAdjustedPrice("");
-    
-    
+    setBidList([]);
+    setNowPrice(+adjustedPrice);
+    setAdjustedPrice(nowPrice.toString());
+
     confirmModal.current?.dismiss();
     alert("調整底價成功");
 
@@ -305,18 +305,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
             );
           })}
           <IonItem className="inputBox">
-            {!jwtState.id ? null : jwtState.id == props.post.user_id ? (
-              <>
-                <IonButton id="confirm">調整底價</IonButton>
-                <IonButton
-                  onClick={() => {
-                    makeDeal();
-                  }}
-                >
-                  成交！！
-                </IonButton>
-              </>
-            ) : (
+            {!jwtState.id ? null : jwtState.id !== props.post.user_id ? (
               <>
                 <IonInput
                   value={bidPrice}
@@ -332,13 +321,31 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
                   出價
                 </IonButton>
               </>
-            )}
+            ) : null}
           </IonItem>
           {!bidPrice.match(numReg) && bidPrice !== "" ? (
             <div className="ion-text-center">
               <IonText color="warning">請輸入有效數字</IonText>
             </div>
           ) : null}
+        </>
+      )}
+      {!jwtState.id ? null : jwtState.id == props.post.user_id ? (
+        <>
+          <IonItem className="inputBox">
+            {!jwtState.id ? null : jwtState.id == props.post.user_id ? (
+              <>
+                <IonButton id="confirm">調整底價</IonButton>
+                <IonButton
+                  onClick={() => {
+                    makeDeal();
+                  }}
+                >
+                  成交！！
+                </IonButton>
+              </>
+            ) : null}
+          </IonItem>
 
           <IonModal
             id="adjustPriceConfirm-modal"
@@ -351,16 +358,19 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
                   如確定調整此貨品的底價，截至目前所有對此貨品的投標將會清空，所有已保留的預售權將會全數歸還給投標者。
                 </li>
               </ul>
-              <IonInput
+              <IonItem>
+                <IonLabel position="floating">請輸入週整後底價</IonLabel>
+                <IonInput
                   value={adjustedPrice}
-                  placeholder="請輸入週整後底價"
+                  placeholder="請輸入"
                   onIonChange={(e: any) => setAdjustedPrice(e.target.value)}
                 ></IonInput>
-                {!adjustedPrice.match(numReg) && adjustedPrice !== "" ? (
-                  <div className="ion-text-center">
-                    <IonText color="warning">請輸入有效數字</IonText>
-                  </div>
-                ) : null}
+              </IonItem>
+              {!adjustedPrice.match(numReg) && adjustedPrice !== "" ? (
+                <div className="ion-text-center">
+                  <IonText color="warning">請輸入有效數字</IonText>
+                </div>
+              ) : null}
             </IonContent>
 
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -369,7 +379,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
             </div>
           </IonModal>
         </>
-      )}
+      ) : null}
     </IonList>
   );
 };
