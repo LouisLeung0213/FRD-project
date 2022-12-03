@@ -100,6 +100,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('receipt_code').notNullable();
     table.integer('product_id').notNullable().references('posts.id');
     table.integer('seller_id').notNullable().references('users.id');
+    table.integer('buyer_id').references('users.id');
     table.timestamp('in_time').notNullable().defaultTo(knex.fn.now());
     table.timestamp('out_time');
   });

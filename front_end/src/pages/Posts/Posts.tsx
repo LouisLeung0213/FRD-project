@@ -121,6 +121,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         setHighestBidder("");
       } else {
         setHighestBidder(result[0].nickname);
+        setHighestBidder_id(result[0].buyer_id);
       }
       if (!result[0]) {
         setNowPrice(props.post.original_price);
@@ -156,8 +157,8 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   }
 
   async function makeDeal() {
-    // console.log(nowPrice);
-    // console.log(highestBidder_id);
+    console.log(nowPrice);
+    console.log(highestBidder_id);
     let dealRes = await fetch(`${API_ORIGIN}/payment/capturePaymentIntent`, {
       method: "PATCH",
       headers: {
@@ -337,15 +338,15 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
                 </li>
               </ul>
               <IonInput
-                  value={adjustedPrice}
-                  placeholder="請輸入週整後底價"
-                  onIonChange={(e: any) => setAdjustedPrice(e.target.value)}
-                ></IonInput>
-                {!adjustedPrice.match(numReg) && adjustedPrice !== "" ? (
-                  <div className="ion-text-center">
-                    <IonText color="warning">請輸入有效數字</IonText>
-                  </div>
-                ) : null}
+                value={adjustedPrice}
+                placeholder="請輸入週整後底價"
+                onIonChange={(e: any) => setAdjustedPrice(e.target.value)}
+              ></IonInput>
+              {!adjustedPrice.match(numReg) && adjustedPrice !== "" ? (
+                <div className="ion-text-center">
+                  <IonText color="warning">請輸入有效數字</IonText>
+                </div>
+              ) : null}
             </IonContent>
 
             <div style={{ display: "flex", justifyContent: "center" }}>
