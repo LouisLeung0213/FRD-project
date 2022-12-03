@@ -128,8 +128,18 @@ const App: React.FC = () => {
         // if (jwtState.id) {
         console.log("here");
         console.log(jwtState.id);
-        let result = await updateDot(jwtState.id!, "chat_dots", true);
-        console.log(result);
+        if(data.newMSG[data.newMSG.length - 1].sender_id != jwtState.id){
+          if(jwtState.id){
+
+            let result = await updateDot(jwtState.id, "chat_dots", true);
+            console.log(result);
+          } else {
+            alert('unable to get id')
+            return
+          }
+        } else {
+         console.log('you are the sender')
+        }
         // if (dotState.noticeDot) {
         console.log("here1", dotState.noticeDot);
         // setChatDots(result.chat_dots);
@@ -141,6 +151,7 @@ const App: React.FC = () => {
         //   })
         // );
         if (data.newMSG[data.newMSG.length - 1].sender_id != jwtState.id) {
+          console.log('i am the receiver')
           dispatch(
             updateDots({
               chatDot: true,
@@ -149,6 +160,7 @@ const App: React.FC = () => {
           );
           setChatDots(true);
         } else {
+          console.log('i am the sender')
           dispatch(
             updateDots({
               chatDot: false,
@@ -170,6 +182,10 @@ const App: React.FC = () => {
         // }
         // }
       });
+      socket.on('are-u-here', async (data)=> {
+        await updateDot(data.msg,'chat_dots',false)
+        setChatDots(false)
+      })
       return () => {};
     }, [])
   );
