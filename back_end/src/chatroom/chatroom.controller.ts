@@ -46,13 +46,16 @@ export class ChatroomController {
     let newMSGList = await this.chatroomService.msg(ownerId.chatroom_id);
 
     console.log('send', newMSGList);
-    if ('id' in send) {
+    if ('id' in send.send) {
       console.log('send');
       io.to('TJroom: ' + ownerId.room_user_id).emit('new-msg', {
         newMSG: newMSGList,
       });
       io.to('TJroom: ' + ownerId.id).emit('new-msg', {
         newMSG: newMSGList,
+      });
+      io.to('TJroom: ' + send.receiver_id).emit('are-u-here', {
+        msg: send.receiver_id,
       });
     }
     return send;

@@ -100,14 +100,17 @@ const Chatroom: React.FC = () => {
       let result = await res.json();
       console.log("msg:", result);
       setMsgList(result);
-      let latestMSG = document.querySelector(
-        `[dataset-message-id="${result[result.length - 1].id}"]`
-      );
+      if(result.length > 0){
 
-      if (latestMSG) {
-        latestMSG.scrollIntoView({
-          block: "end",
-        });
+        let latestMSG = document.querySelector(
+          `[dataset-message-id="${result[result.length - 1].id}"]`
+        );
+  
+        if (latestMSG) {
+          latestMSG.scrollIntoView({
+            block: "end",
+          });
+        }
       }
     };
 

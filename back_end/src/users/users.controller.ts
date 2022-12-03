@@ -74,6 +74,7 @@ export class UsersController {
 
   @Patch('updateDots/:id')
   updateDots(@Param('id') id: string, @Body() updateDotsDto: UpdateDotsDto) {
+    console.log('XDID', id)
     return this.usersService.dotsUpdate(+id, updateDotsDto);
   }
 
