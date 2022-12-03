@@ -1,22 +1,17 @@
 import {
-  createAnimation,
-  IonAvatar,
-  IonBackButton,
   IonBadge,
   IonButton,
   IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
-  IonImg,
-  IonInput,
   IonItem,
   IonLabel,
   IonList,
   IonModal,
   IonPage,
   IonSearchbar,
-  IonTitle,
+  IonTextarea,
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
@@ -30,6 +25,7 @@ import {
   chevronBackOutline,
   notificationsOutline,
   personOutline,
+  warningOutline,
 } from "ionicons/icons";
 import styles from "./MainPage.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -46,9 +42,7 @@ import "swiper/swiper.min.css";
 import "@ionic/react/css/ionic-swiper.css";
 import { routes } from "../../routes";
 import { useSelector, useDispatch } from "react-redux";
-import { updatePoints } from "../../redux/points/actions";
-import { updateJwt } from "../../redux/user/actions";
-import { getValue } from "../../service/localStorage";
+
 import { RootState } from "../../store";
 import { updateDot } from "../../updateDot";
 import { updateDots } from "../../redux/dots/actions";
@@ -58,9 +52,11 @@ const MainPage: React.FC = () => {
   let [postsList, setPostsList] = useState<[any]>([] as any);
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [isReportOpen, setIsReportOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
   // const [pingNumber, setPingNumber] = useState(0);
   const [noticeDots, setNoticeDots] = useState(dotState.noticeDot);
+
   const dispatch = useDispatch();
 
   const router = useIonRouter();
@@ -150,10 +146,29 @@ const MainPage: React.FC = () => {
   }, []);
 
   const modal = useRef<HTMLIonModalElement>(null);
-
-  function dismiss() {
+  const reportModal = useRef<HTMLIonModalElement>(null);
+  function modelDismiss() {
     modal.current?.dismiss();
+
     setIsOpen(false);
+  }
+  function cancelReport() {
+    reportModal.current?.dismiss();
+    setIsReportOpen(false);
+  }
+
+  async function dismissReport() {
+    reportModal.current?.dismiss();
+    let report = await fetch(`${API_ORIGIN}/report/report`, {
+      method: "POST",
+      body: JSON.stringify({
+        userId: isOpen,
+      }),
+    });
+    let result = await report.json();
+
+    setIsReportOpen(false);
+    alert("此帖子已傳送給管理員審查");
   }
 
   // const enterAnimation = (baseEl: HTMLElement) => {
@@ -185,10 +200,13 @@ const MainPage: React.FC = () => {
     setCurrentPost(e);
     setIsOpen(true);
   }
+  function openReport() {
+    setIsReportOpen(true);
+  }
 
   function goChat(id: number) {
     router.push(routes.chatroom(id), "forward", "replace");
-    dismiss();
+    modelDismiss();
   }
 
   async function goNotification() {
@@ -227,6 +245,7 @@ const MainPage: React.FC = () => {
                 <></>
               )}
               <IonIcon
+                style={{ color: "gold" }}
                 className="ion-padding"
                 // className={styles.icon}
                 icon={notificationsOutline}
@@ -314,16 +333,61 @@ const MainPage: React.FC = () => {
         </IonList>
       </IonContent>
 
+      <IonModal id="report-Modal" ref={reportModal} isOpen={isReportOpen}>
+        <IonContent>
+          <IonItem className="ion-padding">
+            <IonLabel position="floating">
+              <IonIcon style={{ color: "red" }} icon={warningOutline}></IonIcon>{" "}
+              請註明舉報原因：
+            </IonLabel>
+            <IonTextarea></IonTextarea>
+          </IonItem>
+          <IonButtons style={{ display: "flex", justifyContent: "center" }}>
+            <IonButton
+              slot="center"
+              onClick={() => cancelReport()}
+              expand="block"
+            >
+              取消
+            </IonButton>
+            <IonButton
+              slot="center"
+              style={{ color: "red" }}
+              onClick={() => dismissReport()}
+              expand="block"
+            >
+              舉報
+            </IonButton>
+          </IonButtons>
+        </IonContent>
+      </IonModal>
+
       <IonModal id="post-modal" ref={modal} isOpen={isOpen}>
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">
               <IonButton
+                style={{ color: "gold" }}
                 onClick={() => {
-                  dismiss();
+                  modelDismiss();
                 }}
               >
                 <IonIcon size="large" icon={chevronBackOutline}></IonIcon> Back
+              </IonButton>
+            </IonButtons>
+
+            <IonButtons slot="end">
+              <IonButton
+                id="reportNow"
+                onClick={() => {
+                  openReport();
+                }}
+              >
+                <IonIcon
+                  size="large"
+                  style={{ color: "red" }}
+                  icon={warningOutline}
+                ></IonIcon>
               </IonButton>
             </IonButtons>
           </IonToolbar>

@@ -70,8 +70,8 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         console.log("join room", props.post.id);
         socket.emit("join-room", props.post.id);
         socket.on("newBidReceived", (msg) => {
-          if (msg.newBidContent != ""){
-            if (msg.newBidContent[0].post_id){
+          if (msg.newBidContent != "") {
+            if (msg.newBidContent[0].post_id) {
               if (msg.newBidContent[0].post_id != +props.post.id) {
                 console.log("wrong, bye bye");
                 return;
@@ -119,6 +119,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         setHighestBidder("");
       } else {
         setHighestBidder(result[0].nickname);
+        setHighestBidder_id(result[0].buyer_id);
       }
       if (!result[0]) {
         setNowPrice(props.post.original_price);
@@ -127,7 +128,6 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
       }
     };
     bidRecord();
-
   }, []);
 
   async function getChatDetail() {
@@ -153,8 +153,8 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   }
 
   async function makeDeal() {
-    // console.log(nowPrice);
-    // console.log(highestBidder_id);
+    console.log(nowPrice);
+    console.log(highestBidder_id);
     let dealRes = await fetch(`${API_ORIGIN}/payment/capturePaymentIntent`, {
       method: "PATCH",
       headers: {
@@ -220,16 +220,15 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
       },
       body: JSON.stringify({
         postId: props.post.id,
-        updatedPrice: adjustedPrice
+        updatedPrice: adjustedPrice,
       }),
     });
     let result = await res.json();
 
-    setBidList([])
-    setNowPrice(+adjustedPrice)
+    setBidList([]);
+    setNowPrice(+adjustedPrice);
     setAdjustedPrice("");
-    
-    
+
     confirmModal.current?.dismiss();
     alert("調整底價成功");
 
@@ -244,8 +243,19 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
     <IonList className="post-modal">
       {!props.post.admin_title ? (
         <>
-          <h2 className="ion-padding">{props.post.post_title}</h2>
-          <h2 className="ion-padding">{props.post.post_description}</h2>
+          <h2 className="ion-padding">
+            {props.post.post_title}
+            {props.post.q_mark ? (
+              <IonIcon
+                style={{
+                  marginLeft: "10px",
+                  paddingTop: "3px",
+                  color: "#3880ff",
+                }}
+                icon={checkmarkDoneCircleOutline}
+              ></IonIcon>
+            ) : null}
+          </h2>
         </>
       ) : (
         <>
@@ -280,7 +290,12 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
           slot="start"
         ></IonIcon>
       </IonItem>
-      <h3 className="ion-padding">產品描述: {props.post.admin_comment}</h3>
+      <h3 className="ion-padding">
+        產品描述:{" "}
+        {props.post.admin_comment
+          ? props.post.admin_comment
+          : props.post.post_description}
+      </h3>
       <IonItem>
         <IonIcon style={{ color: "red" }} icon={flame}></IonIcon> 現價: $
         {nowPrice}
@@ -352,15 +367,15 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
                 </li>
               </ul>
               <IonInput
-                  value={adjustedPrice}
-                  placeholder="請輸入週整後底價"
-                  onIonChange={(e: any) => setAdjustedPrice(e.target.value)}
-                ></IonInput>
-                {!adjustedPrice.match(numReg) && adjustedPrice !== "" ? (
-                  <div className="ion-text-center">
-                    <IonText color="warning">請輸入有效數字</IonText>
-                  </div>
-                ) : null}
+                value={adjustedPrice}
+                placeholder="請輸入週整後底價"
+                onIonChange={(e: any) => setAdjustedPrice(e.target.value)}
+              ></IonInput>
+              {!adjustedPrice.match(numReg) && adjustedPrice !== "" ? (
+                <div className="ion-text-center">
+                  <IonText color="warning">請輸入有效數字</IonText>
+                </div>
+              ) : null}
             </IonContent>
 
             <div style={{ display: "flex", justifyContent: "center" }}>

@@ -90,6 +90,14 @@ const Profile: React.FC = () => {
 
   const getOwnProfile = async () => {
     let userId = await getValue("userId");
+    let res = await fetch(`${API_ORIGIN}/profiles/${userId}`);
+
+    let userInfo = await res.json();
+    dispatch(
+      updatePoints({
+        points: userInfo.userInfo.points,
+      })
+    );
     setNickname(jwtState.nickname);
     setUsername(jwtState.username);
     setPoints(pointsState.points);
@@ -127,7 +135,7 @@ const Profile: React.FC = () => {
     };
 
     postsList();
-  }, [jwtState, isPostOpen]);
+  }, [jwtState, isPostOpen, pointsState.points]);
 
   const postModal = useRef<HTMLIonModalElement>(null);
 

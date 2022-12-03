@@ -149,12 +149,17 @@ const Package: React.FC = () => {
       </IonHeader>
 
       <IonContent>
-        <div className="ion-padding">
+        <div className="ion-padding" style={{ fontSize: "1.25rem" }}>
           <ul>
             <IonLabel>充值前注意事項</IonLabel>
             <li>此金額只是授權預授權涷結資金</li>
             <li>預授權只會於賣家確認成交後過數</li>
             <li>為保障買家，5日後如果未成功使用預授權將會自動取消</li>
+            <li style={{ color: "red" }}>
+              注意! 當扣除點後，點數會以戶口餘下每組預授權金額總和
+            </li>
+            例如充值A：$100，充值B：$100，充值C：$100。 <br />
+            若交易金額為＄150， 扣款蓋括預授權A,B， 成交後點數餘額將會為$100
           </ul>
         </div>
         <br />

@@ -1,6 +1,6 @@
 import { Injectable, Module, Res } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { UpdatePointsDto } from './dto/update-payment.dto';
+import { UpdatePointsDto } from './dto/update-points.dto';
 import { Stripe } from 'stripe';
 import { env } from 'env';
 import { Knex } from 'knex';
@@ -39,8 +39,8 @@ export class PaymentService {
   }
 
   async capturePaymentIntent(updatePointsDto: UpdatePointsDto) {
-    console.log('I am here');
-    let required_amount = updatePointsDto.bidPrice;
+    console.log('I am here', updatePointsDto);
+    let required_amount = +updatePointsDto.bidPrice;
     const stripe = new Stripe(env.STRIPE_KEY, { apiVersion: '2022-11-15' });
 
     let buyer_origin_points_result = await this.knex('users')
@@ -62,11 +62,12 @@ export class PaymentService {
     let amount_should_capture = 0;
     console.log('held_intent: ', held_intent);
     for (let intent of held_intent) {
-      console.log('here I am ', required_amount);
+      console.log('here I am  charge_amount,', required_amount);
       try {
         if (required_amount > intent.amount) {
           amount_should_capture = intent.amount;
           total_intent_should_capture.push({
+            id: intent.id,
             client_secret_should_capture: `${intent.client_secret}`,
             amount_should_capture: amount_should_capture,
           });
@@ -84,6 +85,7 @@ export class PaymentService {
         } else if (required_amount == intent.amount) {
           amount_should_capture = intent.amount;
           total_intent_should_capture.push({
+            id: intent.id,
             client_secret_should_capture: `${intent.client_secret}`,
             amount_should_capture: amount_should_capture,
           });
@@ -99,14 +101,18 @@ export class PaymentService {
           let amount_should_remain = intent.amount - required_amount;
           amount_should_capture = intent.amount - amount_should_remain;
           total_intent_should_capture.push({
+            id: intent.id,
             client_secret_should_capture: `${intent.client_secret}`,
             amount_should_capture: amount_should_capture,
           });
           required_amount = 0;
           console.log(
             '<:',
+            'required_amount: ',
             required_amount,
+            'amount_should_capture: ',
             amount_should_capture,
+            'intent.client_secret:',
             intent.client_secret,
           );
         }
@@ -121,34 +127,54 @@ export class PaymentService {
     }
     console.log('total_intent_should_capture:::', total_intent_should_capture);
     console.log('After forLoop required_amount: ', required_amount);
-    let remain_capture = required_amount;
+    let remain_capture = +updatePointsDto.bidPrice;
     try {
       for (let intent2 of total_intent_should_capture) {
         remain_capture = remain_capture - intent2.amount_should_capture;
-        console.log('remain_capture?:', remain_capture);
+
         const result = await stripe.paymentIntents.capture(
           intent2.client_secret_should_capture,
           {
             amount_to_capture: intent2.amount_should_capture * 100,
           },
         );
+
         console.log('!!!!!!!!!!!!!!', result);
         let captured_result = await this.knex('client_secrets')
           .update('captured', true)
           .where('client_secret', intent2.client_secret_should_capture);
-
+        console.log('remain_capture?:', remain_capture);
         if (remain_capture == 0) {
           break;
         }
       }
 
+      let intent_should_remain = held_intent.filter(
+        (objA) =>
+          total_intent_should_capture.filter((objB) => objA.id === objB.id)
+            .length === 0,
+      );
+
+      ///TODO ////TODO ////TODO
+      console.log('intent_should_remain', intent_should_remain);
+      let total_point_remain = 0;
+      for (let obj of intent_should_remain) {
+        total_point_remain += obj.amount;
+      }
+
+      console.log('total_point_remain!!!!!!!!!', total_point_remain);
       let deductResult = await this.knex('users')
-        .update('points', new_points)
-        .where('id', updatePointsDto.bidder_id);
+        .update('points', total_point_remain)
+        .where('id', +updatePointsDto.bidder_id);
 
       let changePostStatus = await this.knex('posts')
         .update('status', 'sold&holding')
-        .where('id', updatePointsDto.post_id);
+        .where('id', +updatePointsDto.post_id);
+
+      let changeStorageStatus = await this.knex('storages').update({
+        buyer_id: +updatePointsDto.bidder_id,
+        out_time: this.knex.fn.now(),
+      });
     } catch (error) {
       console.log(error);
       throw new Error(error);

@@ -91,6 +91,7 @@ setupIonicReact();
 const App: React.FC = () => {
   let jwtState = useSelector((state: RootState) => state.jwt);
   let dotState = useSelector((state: RootState) => state.dots);
+  let pointsState = useSelector((state: RootState) => state.points);
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const router = useIonRouter();
@@ -257,8 +258,6 @@ const App: React.FC = () => {
   });
 
   useEffect(() => {
-    // setLoginLoad(true);
-
     const get = async () => {
       let jwtResult = await getProfile();
       setUsername(jwtResult);
@@ -266,6 +265,10 @@ const App: React.FC = () => {
     };
 
     get();
+  }, []);
+
+  useEffect(() => {
+    // setLoginLoad(true);
 
     const registerNotifications = async () => {
       let permStatus = await PushNotifications.checkPermissions();

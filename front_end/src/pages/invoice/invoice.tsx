@@ -19,13 +19,14 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import "./Invoice.css";
 import moment from "moment";
+import { API_ORIGIN } from "../../api";
 
 const Invoice: React.FC = () => {
   const jwtState = useSelector((state: RootState) => state.jwt);
   let [invoiceList, setInvoiceList] = useState([]);
   useEffect(() => {
     const getInvoice = async () => {
-      let res = await fetch(`http://localhost:1688/invoice/${jwtState.id}`);
+      let res = await fetch(`${API_ORIGIN}/invoice/${jwtState.id}`);
       let result = await res.json();
       setInvoiceList(result);
       console.log("invoice:", result);
