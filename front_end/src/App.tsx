@@ -94,7 +94,7 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const router = useIonRouter();
-  const [chatDots, setChatDots] = useState(false);
+  const [chatDots, setChatDots] = useState(dotState.chatDot);
   let notiMSG: string;
   const [present] = useIonToast();
 
@@ -124,20 +124,70 @@ const App: React.FC = () => {
       });
       socket.on("new-msg", async (data) => {
         console.log("received");
-        if (jwtState.id) {
-          let result = await updateDot(jwtState.id, "chat_dots", true);
-          setChatDots(result.status);
+        console.log(data);
+        // if (jwtState.id) {
+        console.log("here");
+        console.log(jwtState.id);
+        let result = await updateDot(jwtState.id!, "chat_dots", true);
+        console.log(result);
+        // if (dotState.noticeDot) {
+        console.log("here1", dotState.noticeDot);
+        // setChatDots(result.chat_dots);
+
+        // dispatch(
+        //   updateDots({
+        //     chatDot: result.chat_dots,
+        //     noticeDot: dotState.noticeDot,
+        //   })
+        // );
+        if (data.newMSG[data.newMSG.length - 1].sender_id != jwtState.id) {
           dispatch(
             updateDots({
-              chatDot: result.status,
+              chatDot: true,
               noticeDot: dotState.noticeDot,
             })
           );
+          setChatDots(true);
+        } else {
+          dispatch(
+            updateDots({
+              chatDot: false,
+              noticeDot: dotState.noticeDot,
+            })
+          );
+          setChatDots(false);
         }
+        // } else {
+        //   console.log("here2", dotState.noticeDot);
+
+        //   setChatDots(result.chat_dots);
+        //   dispatch(
+        //     updateDots({
+        //       chatDot: result.chat_dots,
+        //       noticeDot: dotState.noticeDot,
+        //     })
+        //   );
+        // }
+        // }
       });
       return () => {};
     }, [])
   );
+  async function setChat() {
+    if (jwtState.id) {
+      await updateDot(jwtState.id, "chat_dots", false);
+      dispatch(
+        updateDots({
+          chatDot: false,
+          noticeDot: dotState.noticeDot,
+        })
+      );
+      setChatDots(false);
+    } else {
+      alert("setChat error");
+      return;
+    }
+  }
 
   const getProfile = async () => {
     let userId = await getValue("userId");
@@ -260,10 +310,6 @@ const App: React.FC = () => {
   if (jwtState.id) {
     profileHref = `/tab/Profile/${jwtState.id}`;
   }
-
-  useEffect(() => {
-    console.log(jwtState.username);
-  }, [jwtState.username]);
 
   return (
     <IonApp>
@@ -389,7 +435,7 @@ const App: React.FC = () => {
                   <IonTabButton
                     tab="Notices"
                     href={routes.tab.notices}
-                    onClick={() => setChatDots(false)}
+                    onClick={() => setChat()}
                   >
                     {chatDots ? (
                       <IonBadge color="warning" className={styles.badge}>

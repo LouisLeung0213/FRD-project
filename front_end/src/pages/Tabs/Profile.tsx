@@ -127,7 +127,7 @@ const Profile: React.FC = () => {
     };
 
     postsList();
-  }, [jwtState]);
+  }, [jwtState, isPostOpen]);
 
   const postModal = useRef<HTMLIonModalElement>(null);
 
@@ -287,7 +287,7 @@ const Profile: React.FC = () => {
             </IonLabel>
           </IonItem>
 
-          {/* <IonButton onClick={func}>Show the redux state</IonButton> */}
+          <IonButton onClick={func}>Show the redux state</IonButton>
 
           <div className={profileStyles.productContainer}>
             <IonList>

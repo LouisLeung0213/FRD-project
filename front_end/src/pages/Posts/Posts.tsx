@@ -54,7 +54,6 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   const pointsState = useSelector((state: RootState) => state.points);
 
   const [bidPrice, setBidPrice] = useState("");
-  const [bidIsSubmitted, setBidIsSubmitted] = useState(false);
   const [bidList, setBidList] = useState([]);
   const [highestBidder, setHighestBidder] = useState("");
   const [highestBidder_id, setHighestBidder_id] = useState(0);
@@ -71,18 +70,17 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         console.log("join room", props.post.id);
         socket.emit("join-room", props.post.id);
         socket.on("newBidReceived", (msg) => {
-          console.log("received", msg.newBidContent[0]);
-          console.log(props.post.id);
-          if (msg.newBidContent[0].post_id != +props.post.id) {
-            console.log("wrong, bye bye");
-            return;
+          if (msg.newBidContent != ""){
+            if (msg.newBidContent[0].post_id){
+              if (msg.newBidContent[0].post_id != +props.post.id) {
+                console.log("wrong, bye bye");
+                return;
+              }
+            }
           }
-          console.log("newBidList", msg.newBidContent);
-
           setBidList(msg.newBidContent);
           setHighestBidder(msg.newBidContent[0].nickname);
-          setHighestBidder_id(msg.newBidContent[0].buyer_id);
-          setNowPrice(msg.newBidContent[0].bid_price);
+          setNowPrice(msg.newBidContent[0].bid_pric);
           return;
         });
         return () => {
@@ -131,7 +129,6 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
     };
     bidRecord();
 
-    setBidIsSubmitted(false);
   }, []);
 
   async function getChatDetail() {
@@ -187,7 +184,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
       return;
     }
 
-    let res = await fetch(`${API_ORIGIN}/bid/biding`, {
+    let res = await fetch(`${API_ORIGIN}/bid/bidding`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -211,14 +208,32 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
       return;
     } else {
       alert("出價成功");
-      setBidIsSubmitted(true);
       setBidPrice("");
       return;
     }
   }
 
-  function adjustPrice() {
+  async function adjustPrice() {
+    let res = await fetch(`${API_ORIGIN}/bid/updateBidding`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postId: props.post.id,
+        updatedPrice: adjustedPrice
+      }),
+    });
+    let result = await res.json();
+
+    setBidList([])
+    setNowPrice(+adjustedPrice)
+    setAdjustedPrice("");
+    
+    
     confirmModal.current?.dismiss();
+    alert("調整底價成功");
+
     console.log("New adjusted price: ", adjustedPrice);
   }
 
