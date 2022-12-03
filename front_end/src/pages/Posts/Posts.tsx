@@ -119,6 +119,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         setHighestBidder("");
       } else {
         setHighestBidder(result[0].nickname);
+        setHighestBidder_id(result[0].buyer_id);
       }
       if (!result[0]) {
         setNowPrice(props.post.original_price);
@@ -154,8 +155,8 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   }
 
   async function makeDeal() {
-    // console.log(nowPrice);
-    // console.log(highestBidder_id);
+    console.log(nowPrice);
+    console.log(highestBidder_id);
     let dealRes = await fetch(`${API_ORIGIN}/payment/capturePaymentIntent`, {
       method: "PATCH",
       headers: {
@@ -244,8 +245,19 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
     <IonList className="post-modal">
       {!props.post.admin_title ? (
         <>
-          <h2 className="ion-padding">{props.post.post_title}</h2>
-          <h2 className="ion-padding">{props.post.post_description}</h2>
+          <h2 className="ion-padding">
+            {props.post.post_title}
+            {props.post.q_mark ? (
+              <IonIcon
+                style={{
+                  marginLeft: "10px",
+                  paddingTop: "3px",
+                  color: "#3880ff",
+                }}
+                icon={checkmarkDoneCircleOutline}
+              ></IonIcon>
+            ) : null}
+          </h2>
         </>
       ) : (
         <>
@@ -280,7 +292,12 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
           slot="start"
         ></IonIcon>
       </IonItem>
-      <h3 className="ion-padding">產品描述: {props.post.admin_comment}</h3>
+      <h3 className="ion-padding">
+        產品描述:{" "}
+        {props.post.admin_comment
+          ? props.post.admin_comment
+          : props.post.post_description}
+      </h3>
       <IonItem>
         <IonIcon style={{ color: "red" }} icon={flame}></IonIcon> 現價: $
         {nowPrice}

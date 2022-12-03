@@ -15,12 +15,13 @@ export class InvoiceService {
   }
 
   async findThisUserInvoice(id: number) {
-    let userInvoiceList = await this.knex
+    let storagesInvoiceList = await this.knex
       .select('receipt_code', 'in_time', 'post_title', 'product_id')
       .from('storages')
       .join('posts', 'product_id', 'posts.id')
       .where('seller_id', id);
-    return userInvoiceList;
+
+    return storagesInvoiceList;
   }
 
   update(id: number, updateInvoiceDto: UpdateInvoiceDto) {

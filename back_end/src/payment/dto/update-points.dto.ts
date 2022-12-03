@@ -15,9 +15,9 @@ export class UpdatePointsDto extends PartialType(CreatePaymentDto) {
   clientSecret?;
 
   @IsNumber()
-  bidPrice?: number;
+  bidPrice?: string;
 
-  post_id?: number;
+  post_id?: string;
 
-  bidder_id?: number;
+  bidder_id?: string;
 }
