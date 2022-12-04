@@ -192,16 +192,7 @@ const App: React.FC = () => {
         // }
         // }
       });
-      socket.on('are-u-here', async (data)=> {
-        await updateDot(data.msg,'chat_dots',false)
-        // setChatDots(false)
-        dispatch(
-          updateDots({
-            chatDot: false,
-            noticeDot: dotState.noticeDot
-          })
-        )
-      })
+      
       return () => {};
     }, [])
   );
