@@ -1,11 +1,11 @@
 PODS:
-  - Capacitor (4.6.0):
+  - Capacitor (4.4.0):
     - CapacitorCordova
   - CapacitorApp (4.1.0):
     - Capacitor
   - CapacitorCamera (4.1.3):
     - Capacitor
-  - CapacitorCordova (4.6.0)
+  - CapacitorCordova (4.4.0)
   - CapacitorFilesystem (4.1.3):
     - Capacitor
   - CapacitorFirebaseAuthentication (1.2.0):
@@ -118,24 +118,24 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/AppDelegateSwizzler (7.10.0):
+  - GoogleUtilities/AppDelegateSwizzler (7.8.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (7.10.0):
+  - GoogleUtilities/Environment (7.8.0):
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/Logger (7.10.0):
+  - GoogleUtilities/Logger (7.8.0):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (7.10.0):
+  - GoogleUtilities/MethodSwizzler (7.8.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (7.10.0):
+  - GoogleUtilities/Network (7.8.0):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (7.10.0)"
-  - GoogleUtilities/Reachability (7.10.0):
+  - "GoogleUtilities/NSData+zlib (7.8.0)"
+  - GoogleUtilities/Reachability (7.8.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (7.10.0):
+  - GoogleUtilities/UserDefaults (7.8.0):
     - GoogleUtilities/Logger
   - GTMSessionFetcher/Core (2.3.0)
   - nanopb (2.30909.0):
@@ -212,10 +212,10 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@pantrist/capacitor-firebase-dynamic-links"
 
 SPEC CHECKSUMS:
-  Capacitor: e5d04bcfb7b1b227b5c36fb930a109cff079b368
+  Capacitor: 868367fcfeb3ba6bfabaefc63c072e6478bd046d
   CapacitorApp: 6e250f9e67560a340aac4078af357fb5e5c303e0
   CapacitorCamera: 69ca2f87102e93757829cf350a85287035c153d3
-  CapacitorCordova: 0440dd7ffdc96172d5dd35d7a37e221cb60df472
+  CapacitorCordova: 0c0b4edc7ce94fd560eadc3a6d36d5ee6453ada6
   CapacitorFilesystem: e0136871c89a0b69654de0729d35c0b4fd1b12d8
   CapacitorFirebaseAuthentication: b79821eb5f7a184f07ea8159837acd2e63d426f2
   CapacitorHaptics: 02d48e2efca06ccf3273dbb638b68b0e145f623a
@@ -235,7 +235,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 0bf5caa621182ccc66ba3be3b15e68d800d98e9f
   GoogleAppMeasurement: 8ecc717f2abe3f9ee95a5d38db08827852894acc
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
-  GoogleUtilities: bad72cb363809015b1f7f19beb1f1cd23c589f95
+  GoogleUtilities: 1d20a6ad97ef46f67bbdec158ce00563a671ebb7
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PantristCapacitorFirebaseDynamicLinks: e4c083f27d6783e0b189cbdf3fe13c04aecf81eb
