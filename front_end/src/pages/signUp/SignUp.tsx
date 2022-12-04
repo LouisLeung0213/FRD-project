@@ -1,15 +1,20 @@
 import {
   IonButton,
+  IonButtons,
   IonCheckbox,
   IonContent,
+  IonHeader,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
+  IonModal,
   IonPage,
   IonText,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/react";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useIonFormState } from "react-use-ionic-form";
 import { updateJwt } from "../../redux/user/actions";
@@ -22,6 +27,7 @@ import { API_ORIGIN } from "../../api";
 import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
 import { useSocket } from "../../hooks/use-socket";
 import { Socket } from "socket.io-client";
+import PrivacyDisclaimer from "../../components/Privacy";
 
 const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
   onSignUp: () => void;
@@ -32,11 +38,21 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
   const [isNicknameOk, setIsNicknameOk] = useState(true);
   const [isPhoneOk, setIsPhoneOk] = useState(true);
   const [isEmailOk, setIsEmailOk] = useState(true);
+  const [isAgree, setIsAgree] = useState(false);
 
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const modal = useRef<HTMLIonModalElement>(null);
+  function confirm() {
+    modal.current?.dismiss();
+  }
+
   const register = async (data: any) => {
+    if (isAgree == false) {
+      alert("必須同意使用條款及私隱政策");
+      return;
+    }
     if (data.username.length == 0) {
       setIsUsernameOk(false);
       return;
@@ -294,6 +310,14 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
               <IonText color="warning">請輸入有效電子郵件</IonText>
             </div>
           ) : null}
+          <IonItem>
+            <IonCheckbox
+              onClick={() => (isAgree ? setIsAgree(false) : setIsAgree(true))}
+              slot="start"
+            ></IonCheckbox>
+            <IonLabel>同意使用條款及私隱政策</IonLabel>
+          </IonItem>
+          <IonItem id="agreement">查看使用條款及私隱政策</IonItem>
           <IonButton
             className="ion-margin-top"
             onClick={() => {
@@ -304,6 +328,20 @@ const SignUp: React.FC<{ onSignUp: () => void }> = (props: {
             註冊
           </IonButton>
         </IonList>
+
+        <IonModal ref={modal} trigger="agreement">
+          <IonHeader>
+            <IonToolbar>
+              <IonButtons slot="end">
+                <IonButton strong={true} onClick={() => confirm()}>
+                  Confirm
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+
+          <PrivacyDisclaimer />
+        </IonModal>
       </IonContent>
     </IonPage>
   );

@@ -104,6 +104,7 @@ const PickPhoto: React.FC = () => {
   const [bankState, setBankState] = useState(jwtState.bankAccount) as any;
   const [banks, setBanks] = useState([]) as any;
   const [savedBanks, setSavedBanks] = useState() as any;
+  const [blueTickModel, setBlueTickModel] = useState(false);
 
   const { state, item } = useIonFormState({
     title: "",
@@ -441,6 +442,14 @@ const PickPhoto: React.FC = () => {
   // }
 
   defineCustomElements(window);
+
+  function changeBlueTick() {
+    if (!state.qualityPlan) {
+      setBlueTickModel(true);
+      state.qualityPlan = true;
+    }
+  }
+
   return (
     <IonPage className={styles.PickPhoto}>
       <IonHeader>
@@ -649,7 +658,11 @@ const PickPhoto: React.FC = () => {
               renderContent: (props) => (
                 <IonCheckbox
                   slot="start"
-                  id="open-custom-dialog"
+                  onClick={() => {
+                    changeBlueTick();
+                  }}
+                  // onClick={() => {console.log("Changed!")}}
+                  // id="open-custom-dialog"
                   {...props}
                 ></IonCheckbox>
               ),
@@ -658,7 +671,8 @@ const PickPhoto: React.FC = () => {
             <IonModal
               id="qualityPlan-modal"
               ref={qualityModal}
-              trigger="open-custom-dialog"
+              isOpen={blueTickModel}
+              // trigger="open-custom-dialog"
             >
               <div className={styles.wrapper}>
                 <IonItem className="ion-padding">
@@ -698,7 +712,13 @@ const PickPhoto: React.FC = () => {
                   </IonText>
                 </IonItem>
 
-                <IonButton slot="center" onClick={dismiss} expand="block">
+                <IonButton
+                  slot="center"
+                  onClick={() => {
+                    setBlueTickModel(false);
+                  }}
+                  expand="block"
+                >
                   我明白了
                 </IonButton>
               </div>
@@ -753,11 +773,17 @@ const PickPhoto: React.FC = () => {
                           {account.bankName}: {account.bankAccount}
                         </IonSelectOption>
                       ))}
+                      <IonSelectOption
+                        key="empty"
+                        value={{ bankName: "", bankAccount: "" }}
+                      >
+                        新增銀行
+                      </IonSelectOption>
                     </IonSelect>
                   ),
                 })
               : null}
-            {state.qualityPlan === true
+            {state.qualityPlan === true && state.bankAccount.bankName == ""
               ? item({
                   name: "newBankName",
                   renderLabel: () => (
@@ -774,7 +800,7 @@ const PickPhoto: React.FC = () => {
                   ),
                 })
               : null}
-            {state.qualityPlan === true
+            {state.qualityPlan === true && state.bankAccount.bankName == ""
               ? item({
                   name: "newBankAccount",
                   renderLabel: () => (
