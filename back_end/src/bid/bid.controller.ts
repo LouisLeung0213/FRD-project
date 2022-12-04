@@ -37,6 +37,15 @@ export class BidController {
         socket.join('TJroom: ' + data.userId);
         console.log('TJroom', data.userId);
       });
+      socket.on('join-chat-room', (data) => {
+        socket.join('makeDealRoom: ' + data);
+      });
+      socket.on('leave-room', (data) => {
+        socket.leave('room: ' + data);
+      });
+      socket.on('leave-chat-room', (data) => {
+        socket.leave('makeDealRoom: ' + data);
+      });
     });
   }
 
@@ -78,32 +87,28 @@ export class BidController {
   async updateBidding(@Body() updateBidDto: UpdateBidDto) {
     let result = await this.bidService.updateBidding(updateBidDto);
     let newPriceList = await this.postsService.showAll();
-    let newBidContent = [{
-      post_id: "",
-      buyer_id: "",
-      bid_price: "",
-      nickname: ""
-    }]
-      io.to('room: ' + updateBidDto.postId).emit('newBidReceived', {
-        newBidContent
+    let newBidContent = [
+      {
+        post_id: '',
+        buyer_id: '',
+        bid_price: '',
+        nickname: '',
+      },
+    ];
+    io.to('room: ' + updateBidDto.postId).emit('newBidReceived', {
+      newBidContent,
+    });
+    io.emit('priceUpdated', {
+      newPrice: newPriceList,
+    });
+    for (let bidder of result.bidderList) {
+      io.to('TJroom: ' + bidder.buyer_id).emit('bid-received', {
+        msg: result.content,
       });
-      io.emit('priceUpdated', {
-        newPrice: newPriceList,
-      });
-      for (let bidder of result.bidderList){
-        io.to('TJroom: ' + bidder.buyer_id).emit(
-          'bid-received',
-          {
-            msg: result.content,
-          },
+    }
 
-          );
-      }
-
-    return {msg: result.content};
+    return { msg: result.content };
   }
-
-
 
   @Get('bidList/:id')
   findAll(@Param('id') id: string) {

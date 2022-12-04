@@ -57,6 +57,7 @@ const Chatroom: React.FC = () => {
   let dotState = useSelector((state: RootState) => state.dots);
 
   let jwtState = useSelector((state: RootState) => state.jwt);
+  let chatroomId: any = useParams();
   
 
   useSocket(
@@ -68,6 +69,7 @@ const Chatroom: React.FC = () => {
         setNewWsMessageId(data.newMSG[data.newMSG.length - 1].id);
       });
       socket.on('are-u-here', async (data)=> {
+        console.log('i am here')
         await updateDot(data.msg,'chat_dots',false)
         // setChatDots(false)
         dispatch(
@@ -77,8 +79,11 @@ const Chatroom: React.FC = () => {
           })
         )
       })
-      return () => {};
-    }, [])
+      socket.emit("join-chat-room", chatroomId.id)
+      return () => {
+        socket.emit('leave-chat-room', chatroomId.id)
+      };
+    }, [chatroomId.id])
   );
 
   useLayoutEffect(() => {
@@ -108,7 +113,6 @@ const Chatroom: React.FC = () => {
   } as PostDetail);
   const [currentMsg, setCurrentMsg] = useState("");
   const [msgList, setMsgList] = useState([]) as any;
-  let chatroomId: any = useParams();
 
   useEffect(() => {
     console.log("chat", chatroomId.id);
