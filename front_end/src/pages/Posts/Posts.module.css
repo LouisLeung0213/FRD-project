@@ -30,4 +30,6 @@ ion-card {
 .inputBox {
   margin-top: 1.5rem;
   height: 5rem;
+  display: flex;
+  justify-content: center;
 }

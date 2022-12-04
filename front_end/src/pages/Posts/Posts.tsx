@@ -26,7 +26,7 @@ import {
   checkmarkDoneCircleOutline,
   flame,
 } from "ionicons/icons";
-import "./Posts.css";
+import "./Posts.module.css";
 import { routes } from "../../routes";
 
 export type PostObj = {
@@ -59,7 +59,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   const [highestBidder_id, setHighestBidder_id] = useState(0);
   const [nowPrice, setNowPrice] = useState(0);
   const [adjustedPrice, setAdjustedPrice] = useState("");
-  const [bidStatus, setBidStatus] = useState(false)
+  const [bidStatus, setBidStatus] = useState(false);
   let numReg = /^\d+$/;
   const router = useIonRouter();
 
@@ -131,8 +131,8 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
       }
     };
     bidRecord();
-    if (props.post.status.toString() == 'selling'){
-      setBidStatus(true)
+    if (props.post.status.toString() == "selling") {
+      setBidStatus(true);
     }
   }, []);
 
@@ -266,7 +266,9 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
                 icon={checkmarkDoneCircleOutline}
               ></IonIcon>
             ) : null}
-            {(props.post.status.toString() == "sold&holding" )? '[此貨品已售出]' : null}
+            {props.post.status.toString() == "sold&holding"
+              ? "[此貨品已售出]"
+              : null}
           </h2>
         </>
       ) : (
@@ -281,7 +283,9 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
                 icon={checkmarkDoneCircleOutline}
               ></IonIcon>
             ) : null}
-            {props.post.status.toString() == "sold&holding" ? '[此貨品已售出]' : null}
+            {props.post.status.toString() == "sold&holding"
+              ? "[此貨品已售出]"
+              : null}
           </h2>
         </>
       )}
