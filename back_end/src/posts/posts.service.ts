@@ -227,8 +227,7 @@ export class PostsService {
       .join('users', 'user_id', 'users.id')
       .fullOuterJoin('tem_imgs', 'tem_imgs.post_id', 'posts.id')
       .fullOuterJoin('tem_bid_records', 'tem_bid_records.post_id', 'posts.id')
-      .where('status', 'selling')
-      .andWhere('users.id', id);
+      .whereIn(['user_id', 'status'], [[id, 'selling'],[id, 'sold&holding'],[id, 'sold&out']]);
     return showSomeone;
   }
 

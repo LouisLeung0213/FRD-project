@@ -347,6 +347,8 @@ const Profile: React.FC = () => {
                                 icon={checkmarkDoneCircleOutline}
                               ></IonIcon>
                             ) : null}
+
+                            {post.status.toString() != "selling" ? "[此貨品已售出]" : null}
                           </h2>
                         </div>
                         <Swiper
