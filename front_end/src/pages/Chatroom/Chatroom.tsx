@@ -51,10 +51,13 @@ type MSG = {
 const Chatroom: React.FC = () => {
   const [newWsMessageId, setNewWsMessageId] = useState(null);
   const router = useIonRouter();
+  let jwtState = useSelector((state: RootState) => state.jwt);
+  
 
   useSocket(
     useCallback((socket: Socket) => {
       socket.on("new-msg", (data) => {
+        console.log("whoAmI", jwtState)
         console.log("received", data);
         setMsgList(data.newMSG);
         setNewWsMessageId(data.newMSG[data.newMSG.length - 1].id);
@@ -78,7 +81,6 @@ const Chatroom: React.FC = () => {
     }
   }, [newWsMessageId]);
 
-  let jwtState = useSelector((state: RootState) => state.jwt);
 
   // const [chatList, setChatList] = useState<
   //   { id: number; image: string; name: string; message: string }[]
@@ -154,6 +156,14 @@ const Chatroom: React.FC = () => {
     console.log("jwtState", jwtState);
   }
 
+  function realIcon (photoUrl: string){
+    if(photoUrl.includes("$1")){
+      return photoUrl.split("$1").join("?")
+    } else {
+      return photoUrl
+    }
+  }
+
   return (
     <IonPage className="ChatListTab">
       <IonHeader>
@@ -209,7 +219,8 @@ const Chatroom: React.FC = () => {
                           }}
                         >
                           <IonAvatar>
-                            <img src={msg.icon_src}></img>
+                            
+                            <img src={realIcon(msg.icon_src)}></img>
                           </IonAvatar>
                           <IonLabel>{msg.content}</IonLabel>
                         </div>
@@ -228,7 +239,7 @@ const Chatroom: React.FC = () => {
                           }}
                         >
                           <IonAvatar>
-                            <img src={msg.icon_src}></img>
+                            <img src={realIcon(msg.icon_src)}></img>
                           </IonAvatar>
                           <IonLabel>{msg.content}</IonLabel>
                         </div>

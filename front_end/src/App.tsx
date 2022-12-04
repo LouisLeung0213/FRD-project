@@ -98,11 +98,12 @@ const App: React.FC = () => {
   const [chatDots, setChatDots] = useState(dotState.chatDot);
   let notiMSG: string;
   const [present] = useIonToast();
-
+  let userId: number;
+  const [receivedMsg, setReceivedMsg] = useState(false)
   const presentToast = (position: "top") => {
     present({
       message: notiMSG,
-      duration: 10000,
+      duration: 2500,
       position: position,
     });
   };
@@ -128,20 +129,27 @@ const App: React.FC = () => {
         console.log(data);
         // if (jwtState.id) {
         console.log("here");
-        let userId = await getValue("userId")
-        console.log("userId", userId)
-        if(data.newMSG[data.newMSG.length - 1].sender_id != userId){
-          if(userId){
+        // let userId = await getValue("userId")
+        console.log("username", username)
+      await updateDot(+data.receiverId,'chat_dots',true)
+      if(receivedMsg){
+        setReceivedMsg(false)
+      } else {
 
-            let result = await updateDot(+userId, "chat_dots", true);
-            console.log(result);
-          } else {
-            alert(userId)
-            return
-          }
-        } else {
-         console.log('you are the sender')
-        }
+        setReceivedMsg(true)
+      }
+        // if(data.newMSG[data.newMSG.length - 1].sender_id != userId){
+        //   if(userId){
+
+        //     let result = await updateDot(+userId, "chat_dots", true);
+        //     console.log(result);
+        //   } else {
+        //     alert(userId)
+        //     return
+        //   }
+        // } else {
+        //  console.log('you are the sender')
+        // }
         // if (dotState.noticeDot) {
         console.log("here1", dotState.noticeDot);
         // setChatDots(result.chat_dots);
@@ -160,7 +168,7 @@ const App: React.FC = () => {
               noticeDot: dotState.noticeDot,
             })
           );
-          setChatDots(true);
+          // setChatDots(true);
         } else {
           console.log('i am the sender')
           dispatch(
@@ -169,7 +177,7 @@ const App: React.FC = () => {
               noticeDot: dotState.noticeDot,
             })
           );
-          setChatDots(false);
+          // setChatDots(false);
         }
         // } else {
         //   console.log("here2", dotState.noticeDot);
@@ -186,7 +194,13 @@ const App: React.FC = () => {
       });
       socket.on('are-u-here', async (data)=> {
         await updateDot(data.msg,'chat_dots',false)
-        setChatDots(false)
+        // setChatDots(false)
+        dispatch(
+          updateDots({
+            chatDot: false,
+            noticeDot: dotState.noticeDot
+          })
+        )
       })
       return () => {};
     }, [])
@@ -200,7 +214,7 @@ const App: React.FC = () => {
           noticeDot: dotState.noticeDot,
         })
       );
-      setChatDots(false);
+      // setChatDots(false);
     } else {
       alert("setChat error");
       return;
@@ -222,6 +236,7 @@ const App: React.FC = () => {
     for (let i = 0; i < userInfo.bankInfo.length; i++) {
       arr.push(userInfo.bankInfo[i]);
     }
+    userId = userInfo.userInfo.id
     dispatch(
       updateJwt({
         jwtKey: token,
@@ -263,10 +278,11 @@ const App: React.FC = () => {
       let jwtResult = await getProfile();
       setUsername(jwtResult);
       console.log(jwtResult);
+      // console.log()
     };
 
     get();
-  }, []);
+  }, [receivedMsg]);
 
   useEffect(() => {
     // setLoginLoad(true);
@@ -445,6 +461,10 @@ const App: React.FC = () => {
                   <IonIcon icon={homeOutline} />
                   <IonLabel>主頁</IonLabel>
                 </IonTabButton>
+                <IonTabButton onClick={()=>{console.log('tab jwtState: ', jwtState)}}>
+                  <IonIcon icon={homeOutline} />
+                  <IonLabel>Hi</IonLabel>
+                </IonTabButton>
                 {!!jwtState.jwtKey ? (
                   <IonTabButton tab="PickPhoto" href={routes.tab.pickPhoto}>
                     <IonIcon icon={duplicateOutline} />
@@ -457,7 +477,7 @@ const App: React.FC = () => {
                     href={routes.tab.notices}
                     onClick={() => setChat()}
                   >
-                    {chatDots ? (
+                    {dotState.chatDot ? (
                       <IonBadge color="warning" className={styles.badge}>
                         !
                       </IonBadge>

@@ -62,10 +62,14 @@ import styles from "./MainPage.module.css";
 import Post, { PostObj } from "../Posts/Posts";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
+import { updateDot } from "../../updateDot";
+import { updateDots } from "../../redux/dots/actions";
 
 const Profile: React.FC = () => {
   let jwtState = useSelector((state: RootState) => state.jwt);
   let pointsState = useSelector((state: RootState) => state.points);
+  let dotsState = useSelector((state: RootState) => state.dots);
+
 
   let real_icon_src = "";
   useEffect(() => {
@@ -161,6 +165,17 @@ const Profile: React.FC = () => {
         icon_src: undefined,
       })
     );
+    dispatch(
+      updateDots({
+        chatDot: false,
+        noticeDot: false
+      })
+    )
+    dispatch(
+      updatePoints({
+        points: 0
+      })
+    )
   }
 
   function openPost(e: PostObj) {
@@ -181,6 +196,7 @@ const Profile: React.FC = () => {
   function func() {
     console.log("Current pointsState: ", pointsState.points);
     console.log("Current jwtState: ", jwtState);
+    console.log('current Dots',dotsState)
     // console.log(pointsState);
   }
   return (
