@@ -53,14 +53,30 @@ export class ChatroomService {
   }
 
   async send(chatroomId: number, insertChatroomDto: InsertChatroomDto) {
+    let receiver: number;
     let send = await this.knex('chat_histories')
       .insert({
         chatroom_id: chatroomId,
         content: insertChatroomDto.msg,
         sender_id: insertChatroomDto.senderId,
       })
-      .returning('id');
-    return send[0];
+      .returning(['id', 'chatroom_id', 'sender_id']);
+    console.log(send);
+    let whoIsReceiver = await this.knex
+      .select('sender_id', 'post_id', 'user_id', 'room_user_id')
+      .from('chatrooms')
+      .join('chat_histories', 'chatrooms.id', 'chatroom_id')
+      .join('posts', 'post_id', 'posts.id')
+      .where('chatrooms.id', send[0].chatroom_id);
+
+    if (whoIsReceiver[0].room_user_id == send[0].sender_id) {
+      receiver = whoIsReceiver[0].user_id;
+    } else {
+      receiver = whoIsReceiver[0].room_user_id;
+    }
+
+    await this.knex('users').where('id', receiver).update({ chat_dots: true });
+    return { send: send[0], receiver_id: receiver };
   }
 
   async getOwnerId(chatroomId: number) {
