@@ -187,6 +187,7 @@ export class UsersService {
   }
 
   async dotsUpdate(id: number, updateDotsDto: UpdateDotsDto) {
+    console.log('updateding', updateDotsDto);
     let result = await this.knex('users')
       .where('id', id)
       .update({

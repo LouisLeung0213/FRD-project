@@ -70,7 +70,11 @@ const Chatroom: React.FC = () => {
       });
       socket.on('are-u-here', async (data)=> {
         console.log('i am here')
-        await updateDot(data.msg,'chat_dots',false)
+        console.log(jwtState.id)
+        if(jwtState.id){
+
+          await updateDot(jwtState.id,'chat_dots',false)
+        }
         // setChatDots(false)
         dispatch(
           updateDots({
