@@ -9,7 +9,7 @@ export const updatePointsReducer = (
   if (action.type === "update_Points") {
     newState = action.points;
 
-    console.log(newState);
+    // console.log(newState);
     return newState;
   }
   return oldState;

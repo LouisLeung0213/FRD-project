@@ -59,6 +59,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   const [highestBidder_id, setHighestBidder_id] = useState(0);
   const [nowPrice, setNowPrice] = useState(0);
   const [adjustedPrice, setAdjustedPrice] = useState("");
+  const [bidStatus, setBidStatus] = useState(false)
   let numReg = /^\d+$/;
   const router = useIonRouter();
 
@@ -91,8 +92,8 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
       [props.post.id]
     )
   );
-  console.log("props.post.q_mark:", props.post.q_mark);
-  console.log("rendering, socket:", socket);
+  // console.log("props.post.q_mark:", props.post.q_mark);
+  // console.log("rendering, socket:", socket);
   const bidRecord = async () => {
     let res = await fetch(`${API_ORIGIN}/bid/bidList/${props.post.id}`);
     let result = await res.json();
@@ -126,10 +127,13 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         setAdjustedPrice(props.post.original_price.toString());
       } else {
         setNowPrice(result[0].bid_price);
-        setAdjustedPrice(result[0].bid_price);
+        setAdjustedPrice(result[0].bid_price.toString());
       }
     };
     bidRecord();
+    if (props.post.status.toString() == 'selling'){
+      setBidStatus(true)
+    }
   }, []);
 
   async function getChatDetail() {
@@ -262,6 +266,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
                 icon={checkmarkDoneCircleOutline}
               ></IonIcon>
             ) : null}
+            {(props.post.status.toString() == "sold&holding" )? '[此貨品已售出]' : null}
           </h2>
         </>
       ) : (
@@ -276,6 +281,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
                 icon={checkmarkDoneCircleOutline}
               ></IonIcon>
             ) : null}
+            {props.post.status.toString() == "sold&holding" ? '[此貨品已售出]' : null}
           </h2>
         </>
       )}
@@ -314,7 +320,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         <IonIcon style={{ color: "#fcd92b" }} icon={calendar}></IonIcon>
         <h5>上架時間：{moment(props.post.post_time).format("MMMM Do YYYY")}</h5>
       </IonItem>
-      {!props.post.q_mark ? null : (
+      {!props.post.q_mark || bidStatus == false ? null : (
         <>
           <IonItem>
             <h3>現時最高出價者：{highestBidder}</h3>
@@ -354,7 +360,8 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
           ) : null}
         </>
       )}
-      {!jwtState.id ? null : jwtState.id == props.post.user_id ? (
+
+      {!jwtState.id ? null : jwtState.id == props.post.user_id && bidStatus ? (
         <>
           <IonItem className="inputBox">
             {!jwtState.id ? null : jwtState.id == props.post.user_id ? (
