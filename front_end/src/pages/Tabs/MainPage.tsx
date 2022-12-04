@@ -134,6 +134,7 @@ const MainPage: React.FC = () => {
 
         let res = await fetch(`${API_ORIGIN}/users/dots/${jwtState.id}`);
         let result = await res.json();
+        console.log("dotResult", result)
         if (!result.notice_dots) {
           setNoticeDots(result.notice_dots);
         }
