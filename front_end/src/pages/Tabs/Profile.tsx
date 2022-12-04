@@ -62,6 +62,8 @@ import styles from "./MainPage.module.css";
 import Post, { PostObj } from "../Posts/Posts";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
+import { updateDot } from "../../updateDot";
+import { updateDots } from "../../redux/dots/actions";
 
 const Profile: React.FC = () => {
   let jwtState = useSelector((state: RootState) => state.jwt);
@@ -163,6 +165,17 @@ const Profile: React.FC = () => {
         icon_src: undefined,
       })
     );
+    dispatch(
+      updateDots({
+        chatDot: false,
+        noticeDot: false
+      })
+    )
+    dispatch(
+      updatePoints({
+        points: 0
+      })
+    )
   }
 
   function openPost(e: PostObj) {

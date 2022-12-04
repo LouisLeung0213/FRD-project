@@ -97,7 +97,7 @@ const Login: React.FC = () => {
       let userInfo = await res2.json();
 
       setValue("userId", userInfo.id);
-
+      console.log("userInfo", userInfo)
       let res3 = await fetch(
         `${API_ORIGIN}/information/savedBank/${userInfo.id}`
       );

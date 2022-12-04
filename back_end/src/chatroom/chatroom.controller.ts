@@ -50,6 +50,7 @@ export class ChatroomController {
       console.log('send');
       io.to('TJroom: ' + ownerId.room_user_id).emit('new-msg', {
         newMSG: newMSGList,
+        receiverId: send.receiver_id,
       });
       io.to('TJroom: ' + ownerId.id).emit('new-msg', {
         newMSG: newMSGList,

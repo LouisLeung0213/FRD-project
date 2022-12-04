@@ -51,10 +51,13 @@ type MSG = {
 const Chatroom: React.FC = () => {
   const [newWsMessageId, setNewWsMessageId] = useState(null);
   const router = useIonRouter();
+  let jwtState = useSelector((state: RootState) => state.jwt);
+  
 
   useSocket(
     useCallback((socket: Socket) => {
       socket.on("new-msg", (data) => {
+        console.log("whoAmI", jwtState)
         console.log("received", data);
         setMsgList(data.newMSG);
         setNewWsMessageId(data.newMSG[data.newMSG.length - 1].id);
@@ -78,7 +81,6 @@ const Chatroom: React.FC = () => {
     }
   }, [newWsMessageId]);
 
-  let jwtState = useSelector((state: RootState) => state.jwt);
 
   // const [chatList, setChatList] = useState<
   //   { id: number; image: string; name: string; message: string }[]
