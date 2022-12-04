@@ -131,6 +131,7 @@ const App: React.FC = () => {
         console.log("here");
         // let userId = await getValue("userId")
         console.log("username", username)
+        console.log(data.receiverId)
       await updateDot(+data.receiverId,'chat_dots',true)
       if(receivedMsg){
         setReceivedMsg(false)
