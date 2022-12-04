@@ -161,25 +161,25 @@ const App: React.FC = () => {
         //     noticeDot: dotState.noticeDot,
         //   })
         // );
-        if (data.newMSG[data.newMSG.length - 1].sender_id != userId) {
-          console.log('i am the receiver')
-          dispatch(
-            updateDots({
-              chatDot: true,
-              noticeDot: dotState.noticeDot,
-            })
-          );
-          // setChatDots(true);
-        } else {
-          console.log('i am the sender')
-          dispatch(
-            updateDots({
-              chatDot: false,
-              noticeDot: dotState.noticeDot,
-            })
-          );
-          // setChatDots(false);
-        }
+        // if (data.newMSG[data.newMSG.length - 1].sender_id != userId) {
+        //   console.log('i am the receiver')
+        //   dispatch(
+        //     updateDots({
+        //       chatDot: true,
+        //       noticeDot: dotState.noticeDot,
+        //     })
+        //   );
+        //   // setChatDots(true);
+        // } else {
+        //   console.log('i am the sender')
+        //   dispatch(
+        //     updateDots({
+        //       chatDot: false,
+        //       noticeDot: dotState.noticeDot,
+        //     })
+        //   );
+        //   // setChatDots(false);
+        // }
         // } else {
         //   console.log("here2", dotState.noticeDot);
 
