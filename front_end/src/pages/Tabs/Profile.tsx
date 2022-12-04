@@ -61,6 +61,8 @@ import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
 const Profile: React.FC = () => {
   let jwtState = useSelector((state: RootState) => state.jwt);
   let pointsState = useSelector((state: RootState) => state.points);
+  let dotsState = useSelector((state: RootState) => state.dots);
+
 
   let real_icon_src = "";
   useEffect(() => {
@@ -176,6 +178,7 @@ const Profile: React.FC = () => {
   function func() {
     console.log("Current pointsState: ", pointsState.points);
     console.log("Current jwtState: ", jwtState);
+    console.log('current Dots',dotsState)
     // console.log(pointsState);
   }
   return (

@@ -263,6 +263,7 @@ const App: React.FC = () => {
       let jwtResult = await getProfile();
       setUsername(jwtResult);
       console.log(jwtResult);
+      // console.log()
     };
 
     get();
@@ -457,7 +458,7 @@ const App: React.FC = () => {
                     href={routes.tab.notices}
                     onClick={() => setChat()}
                   >
-                    {chatDots ? (
+                    {dotState.chatDot || chatDots ? (
                       <IonBadge color="warning" className={styles.badge}>
                         !
                       </IonBadge>
