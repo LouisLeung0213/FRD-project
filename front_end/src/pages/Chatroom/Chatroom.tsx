@@ -23,14 +23,16 @@ import {
 } from "ionicons/icons";
 import moment from "moment";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { Socket } from "socket.io-client";
 import { resultingClientExists } from "workbox-core/_private";
 import { API_ORIGIN } from "../../api";
 import { useSocket } from "../../hooks/use-socket";
+import { updateDots } from "../../redux/dots/actions";
 import { routes } from "../../routes";
 import { RootState } from "../../store";
+import { updateDot } from "../../updateDot";
 
 type PostDetail = {
   post_title: string;
@@ -51,6 +53,9 @@ type MSG = {
 const Chatroom: React.FC = () => {
   const [newWsMessageId, setNewWsMessageId] = useState(null);
   const router = useIonRouter();
+  const dispatch = useDispatch();
+  let dotState = useSelector((state: RootState) => state.dots);
+
   let jwtState = useSelector((state: RootState) => state.jwt);
   
 
@@ -62,6 +67,16 @@ const Chatroom: React.FC = () => {
         setMsgList(data.newMSG);
         setNewWsMessageId(data.newMSG[data.newMSG.length - 1].id);
       });
+      socket.on('are-u-here', async (data)=> {
+        await updateDot(data.msg,'chat_dots',false)
+        // setChatDots(false)
+        dispatch(
+          updateDots({
+            chatDot: false,
+            noticeDot: dotState.noticeDot
+          })
+        )
+      })
       return () => {};
     }, [])
   );
