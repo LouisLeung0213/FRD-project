@@ -111,7 +111,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
     console.log(jwtState.id);
     const bidRecord = async () => {
       let res = await fetch(`${API_ORIGIN}/bid/bidList/${props.post.id}`);
-      let result = await res.json();
+      let result = await res.json(); 
       console.log(props);
       console.log(result);
       setBidList(result);

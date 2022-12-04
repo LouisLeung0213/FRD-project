@@ -111,11 +111,11 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     if (params.id == jwtState.id) {
-      console.log("ownFile", params.id);
+      // console.log("ownFile", params.id);
       getOwnProfile();
     } else {
       if (params.id !== jwtState.id) {
-        console.log("otherFile,", params.id);
+        // console.log("otherFile,", params.id);
         getOtherProfile(params.id);
       }
     }
@@ -175,6 +175,7 @@ const Profile: React.FC = () => {
 
   function func() {
     console.log("Current pointsState: ", pointsState.points);
+    console.log("Current jwtState: ", jwtState);
     // console.log(pointsState);
   }
   return (

@@ -129,17 +129,22 @@ const MainPage: React.FC = () => {
     };
 
     const dotStatus = async () => {
-      let res = await fetch(`${API_ORIGIN}/users/dots/${jwtState.id}`);
-      let result = await res.json();
-      if (!result.notice_dots) {
-        setNoticeDots(result.notice_dots);
+      if(jwtState.id){
+
+        let res = await fetch(`${API_ORIGIN}/users/dots/${jwtState.id}`);
+        let result = await res.json();
+        if (!result.notice_dots) {
+          setNoticeDots(result.notice_dots);
+        }
+        dispatch(
+          updateDots({
+            chatDot: result.chat_dots,
+            noticeDot: result.notice_dots,
+          })
+        );
+      } else {
+        return 
       }
-      dispatch(
-        updateDots({
-          chatDot: result.chat_dots,
-          noticeDot: result.notice_dots,
-        })
-      );
     };
     dotStatus();
     postsList();
