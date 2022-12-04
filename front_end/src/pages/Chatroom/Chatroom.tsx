@@ -52,16 +52,16 @@ const Chatroom: React.FC = () => {
   const [newWsMessageId, setNewWsMessageId] = useState(null);
   const router = useIonRouter();
 
-  useSocket(
-    useCallback((socket: Socket) => {
-      socket.on("new-msg", (data) => {
-        console.log("received", data);
-        setMsgList(data.newMSG);
-        setNewWsMessageId(data.newMSG[data.newMSG.length - 1].id);
-      });
-      return () => {};
-    }, [])
-  );
+  // useSocket(
+  //   useCallback((socket: Socket) => {
+  //     socket.on("new-msg", (data) => {
+  //       console.log("received", data);
+  //       setMsgList(data.newMSG);
+  //       setNewWsMessageId(data.newMSG[data.newMSG.length - 1].id);
+  //     });
+  //     return () => {};
+  //   }, [])
+  // );
 
   useLayoutEffect(() => {
     if (!newWsMessageId) return;
@@ -144,12 +144,14 @@ const Chatroom: React.FC = () => {
       body: JSON.stringify({ msg, senderId: jwtState.id }),
     });
     let result = await send.json();
-    if (!("id" in result)) {
+    if (!("receiver_id" in result)) {
+      console.log(result)
       alert("something wrong");
       return;
     }
     console.log("msg", result);
     setCurrentMsg("");
+    console.log("jwtState", jwtState);
   }
 
   return (

@@ -120,7 +120,7 @@ const Profile: React.FC = () => {
       getOwnProfile();
     } else {
       if (params.id !== jwtState.id) {
-        console.log("otherFile,", params.id);
+        // console.log("otherFile,", params.id);
         getOtherProfile(params.id);
       }
     }
