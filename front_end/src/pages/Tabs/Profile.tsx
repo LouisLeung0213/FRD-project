@@ -111,7 +111,7 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     if (params.id == jwtState.id) {
-      console.log("ownFile", params.id);
+      // console.log("ownFile", params.id);
       getOwnProfile();
     } else {
       if (params.id !== jwtState.id) {
@@ -175,6 +175,7 @@ const Profile: React.FC = () => {
 
   function func() {
     console.log("Current pointsState: ", pointsState.points);
+    console.log("Current jwtState: ", jwtState);
     // console.log(pointsState);
   }
   return (
@@ -346,6 +347,8 @@ const Profile: React.FC = () => {
                                 icon={checkmarkDoneCircleOutline}
                               ></IonIcon>
                             ) : null}
+
+                            {post.status.toString() != "selling" ? "[此貨品已售出]" : null}
                           </h2>
                         </div>
                         <Swiper

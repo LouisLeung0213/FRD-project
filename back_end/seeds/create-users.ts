@@ -16,7 +16,7 @@ export async function seed(knex: Knex): Promise<void> {
         nickname: 'caleb',
         phone: '12345678',
         email: '123@gmail.com',
-        points: 0,
+        points: 10000,
         is_admin: true,
       },
       {
@@ -25,7 +25,7 @@ export async function seed(knex: Knex): Promise<void> {
         nickname: 'louis',
         phone: '12345678',
         email: '123@gmail.com',
-        points: 0,
+        points: 10000,
         is_admin: true,
       },
       {
@@ -34,7 +34,7 @@ export async function seed(knex: Knex): Promise<void> {
         nickname: 'scott',
         phone: '12345678',
         email: '123@gmail.com',
-        points: 0,
+        points: 10000,
         is_admin: true,
       },
     ]);
@@ -73,7 +73,7 @@ export async function seed(knex: Knex): Promise<void> {
 
     await txn('posts').insert([
       {
-        id: '1',
+        // id: '1',
         user_id: '2',
         post_title: '333',
         post_description: 'title',
@@ -92,7 +92,7 @@ export async function seed(knex: Knex): Promise<void> {
 
     await txn('images').insert([
       {
-        id: 1,
+        // id: 1,
         src: 'https://firebasestorage.googleapis.com/v0/b/test-6e6e8.appspot.com/o/files%2F780d3dba9b731cc41a0efa2988db990a.jpg%2B2%2B1669993264270?alt=media&token=26900633-8cc1-46ed-a780-24c64a7860c4',
         post_id: 1,
       },
