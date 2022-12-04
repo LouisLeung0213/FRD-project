@@ -56,7 +56,7 @@ export class ChatroomController {
         newMSG: newMSGList,
         receiverId: send.receiver_id,
       });
-      io.to('TJroom: ' + send.receiver_id).emit('are-u-here', {
+      io.to('makeDealRoom: ' + send.send.chatroom_id).emit('are-u-here', {
         msg: send.receiver_id,
       });
     }
