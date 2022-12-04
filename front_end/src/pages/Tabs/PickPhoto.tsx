@@ -125,7 +125,7 @@ const PickPhoto: React.FC = () => {
     );
 
     let json = await result.json();
-    console.log("here!", json);
+    //console.log("here!", json);
 
     if (json.banks_id.length > 0) {
       let savedBankNameArr: any = json.bank_name_arr;
@@ -144,7 +144,7 @@ const PickPhoto: React.FC = () => {
           bankAccount: savedBankAccount[i].bank_account,
         });
       }
-      console.log("saved bank Array 2222222222:", savedBankArr);
+      //console.log("saved bank Array 2222222222:", savedBankArr);
       return savedBankArr;
     } else {
       return;
@@ -159,7 +159,7 @@ const PickPhoto: React.FC = () => {
     let bankArr: any = [];
 
     for (let bank of banks) {
-      console.log(bank.bank_name);
+      //console.log(bank.bank_name);
       bankArr.push(bank.bank_name);
     }
 
@@ -173,7 +173,7 @@ const PickPhoto: React.FC = () => {
       setSavedBanks(userBank);
     }
     get();
-    console.log(bankState, "on99", savedBanks);
+    //console.log(bankState, savedBanks);
   }, []);
 
   function findMIMEType(ext: string) {
@@ -324,7 +324,7 @@ const PickPhoto: React.FC = () => {
           () => {
             // download url
             getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-              console.log("url", url);
+              //console.log("url", url);
               // setUrls((prevState) => [...prevState, url]);
               resolve(url);
             });
@@ -523,7 +523,7 @@ const PickPhoto: React.FC = () => {
                         <IonFabButton
                           className={styles.preview_box}
                           onClick={() => {
-                            console.log("456");
+                            //console.log("456");
                             setPhotos(photos.filter((p) => p != photo));
                             // let newPhotoArr = [
                             //   ...photos.filter(

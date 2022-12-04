@@ -1,6 +1,11 @@
 import {
   IonButton,
   IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
   IonContent,
   IonHeader,
   IonIcon,
@@ -238,24 +243,35 @@ const Profile: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent fullscreen>
-          <IonItem>
-            <div className={profileStyles.personalInfoContainer}>
-              <div className={profileStyles.personalIconContainer}>
-                <img src={showedIcon} className={profileStyles.personalIcon} />
+          <IonCard style={{ backgroundColor: "#0f0f619a" }}>
+            <div className={profileStyles.personalIconContainer}>
+              <img src={showedIcon} className={profileStyles.personalIcon} />
+            </div>
+            <IonCardHeader>
+              <div className={profileStyles.personalInfo_name}>
+                <IonIcon
+                  style={{ color: "gold" }}
+                  size="small"
+                  icon={ribbonOutline}
+                  className={profileStyles.miniIcon}
+                />
+                <IonLabel>{nickname}</IonLabel>
               </div>
-              <div className={profileStyles.personalInfo}>
-                <div className={profileStyles.personalInfo_name}>
-                  <IonLabel>{nickname}</IonLabel>
-                </div>
-                <IonLabel>
-                  <IonIcon
-                    style={{ color: "gold", marginRight: "10px" }}
-                    size="small"
-                    icon={wallet}
-                  />
-                  點數: {pointsState.points}
-                </IonLabel>
-                <div>
+            </IonCardHeader>
+
+            <IonCardContent>
+              <div className={profileStyles.personalInfoContainer}>
+                <div className={profileStyles.personalInfo}>
+                  <IonLabel>
+                    <IonIcon
+                      style={{ color: "gold", marginRight: "10px" }}
+                      size="small"
+                      icon={wallet}
+                    />
+                    點數 : {pointsState.points}
+                  </IonLabel>
+                </div>{" "}
+                <div className={profileStyles.personalInfo}>
                   <IonLabel>
                     <IonIcon
                       style={{ color: "skyBlue", marginRight: "5px" }}
@@ -265,78 +281,34 @@ const Profile: React.FC = () => {
                   </IonLabel>
                 </div>
               </div>
-            </div>
-          </IonItem>
-          <div className={profileStyles.IconContainer}>
-            <IonIcon
-              style={{ color: "red" }}
-              size="large"
-              icon={heart}
-              className={profileStyles.chat}
-            />
-
-            <IonIcon
-              style={{ color: "skyBlue" }}
-              size="large"
-              icon={chatbubble}
-              className={profileStyles.chat}
-            />
-
-            <IonIcon
-              style={{ color: "gold" }}
-              size="large"
-              icon={ribbonOutline}
-              className={profileStyles.chat}
-            />
-          </div>
-
+            </IonCardContent>
+          </IonCard>
           <IonItem className={profileStyles.portfolioContainer}>
             <IonLabel>
-              <IonIcon icon={cubeOutline}></IonIcon> 拍賣產品
+              <h1>
+                <IonIcon icon={cubeOutline}></IonIcon> 拍賣產品
+              </h1>
             </IonLabel>
           </IonItem>
-
-          <IonButton onClick={func}>Show the redux state</IonButton>
-
-          <div className={profileStyles.productContainer}>
+          {/* <IonButton onClick={func}>Show the redux state</IonButton> */}
+          <IonSearchbar
+            debounce={1000}
+            onIonChange={(ev: any) => setQuery(ev.target.value)}
+          ></IonSearchbar>{" "}
+          <div>
             <IonList>
-              <div slot="content">
-                <IonSearchbar
-                  debounce={1000}
-                  onIonChange={(ev: any) => setQuery(ev.target.value)}
-                ></IonSearchbar>
+              <div className={profileStyles.productContainer}>
                 {postsList
                   .filter((postsList) => postsList.post_title.includes(query))
                   .map((post: any) => {
                     return (
-                      // <IonItem key={e.id} onClick={() => openPost(e)}>
-                      //   <img src={e.json_agg[0]}></img>
-                      //   {!e.admin_title ? (
-                      //     <IonLabel>{e.post_title}</IonLabel>
-                      //   ) : (
-                      //     <IonLabel>{e.admin_title}</IonLabel>
-                      //   )}
-                      //   {!post.max ? (
-                      //     <IonLabel>${post.original_price}</IonLabel>
-                      //   ) : (
-                      //     <IonLabel>${post.max}</IonLabel>
-                      //   )}
-                      //   <IonLabel>{e.nickname}</IonLabel>
-                      // </IonItem>
-                      <div
+                      <IonCard
                         className={styles.postContainer}
                         key={post.id}
                         onClick={() => openPost(post)}
                       >
-                        <div className={styles.nameContainer}>
-                          <h4 className={styles.nameText}>
-                            <IonIcon
-                              className={styles.personIcon}
-                              icon={personOutline}
-                            ></IonIcon>
-                            {post.nickname}
-                          </h4>
-                          <h2 className={styles.title}>
+                        <IonCardHeader>
+                          <IonCardTitle className={styles.title}>
                             {!post.admin_title
                               ? post.post_title
                               : post.admin_title}
@@ -348,46 +320,50 @@ const Profile: React.FC = () => {
                               ></IonIcon>
                             ) : null}
 
-                            {post.status.toString() != "selling" ? "[此貨品已售出]" : null}
-                          </h2>
-                        </div>
-                        <Swiper
-                          modules={[
-                            Autoplay,
-                            Keyboard,
-                            Pagination,
-                            Scrollbar,
-                            Zoom,
-                          ]}
-                          autoplay={true}
-                          keyboard={true}
-                          pagination={true}
-                          slidesPerView={1}
-                          //scrollbar={true}
-                          zoom={true}
-                          effect={"fade"}
-                          className={styles.slide}
-                        >
-                          {post.json_agg.map((photo: any, index: any) => {
-                            return (
-                              <SwiperSlide
-                                className={styles.image_slide}
-                                key={index}
-                              >
-                                <img src={photo} key={index} />
-                              </SwiperSlide>
-                            );
-                          })}
-                        </Swiper>
-                        {/* <img src={post.json_agg}></img> */}
-                        <div className={styles.priceContainer}>
+                            {post.status.toString() != "selling"
+                              ? "[此貨品已售出]"
+                              : null}
+                          </IonCardTitle>
+                        </IonCardHeader>
+                        <IonCardContent>
+                          <Swiper
+                            modules={[
+                              Autoplay,
+                              Keyboard,
+                              Pagination,
+                              Scrollbar,
+                              Zoom,
+                            ]}
+                            autoplay={true}
+                            keyboard={true}
+                            pagination={true}
+                            slidesPerView={1}
+                            //scrollbar={true}
+                            zoom={true}
+                            effect={"fade"}
+                            className={styles.slide}
+                          >
+                            {post.json_agg.map((photo: any, index: any) => {
+                              return (
+                                <SwiperSlide
+                                  className={styles.image_slide}
+                                  key={index}
+                                >
+                                  <img src={photo} key={index} />
+                                </SwiperSlide>
+                              );
+                            })}
+                          </Swiper>
+
+                          {/* <img src={post.json_agg}></img> */}
+
                           {!post.max ? (
-                            <h3>現價：${post.original_price}</h3>
+                            <h1>現價：${post.original_price}</h1>
                           ) : (
-                            <h3>現價：${post.max}</h3>
+                            <h1>現價：${post.max}</h1>
                           )}
-                        </div>
-                      </div>
+                        </IonCardContent>
+                      </IonCard>
                     );
                   })}
               </div>

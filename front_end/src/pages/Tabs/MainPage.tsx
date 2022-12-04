@@ -2,6 +2,7 @@ import {
   IonBadge,
   IonButton,
   IonButtons,
+  IonCard,
   IonContent,
   IonHeader,
   IonIcon,
@@ -265,7 +266,7 @@ const MainPage: React.FC = () => {
               .filter((postsList) => postsList.post_title.includes(query))
               .map((post: any, index) => {
                 return (
-                  <div
+                  <IonCard
                     className={styles.postContainer}
                     key={index}
                     onClick={() => openPost(post)}
@@ -326,7 +327,7 @@ const MainPage: React.FC = () => {
                         <h3>現價：${post.max}</h3>
                       )}
                     </div>
-                  </div>
+                  </IonCard>
                 );
               })}
           </div>
