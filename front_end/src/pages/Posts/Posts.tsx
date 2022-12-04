@@ -215,6 +215,11 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
   }
 
   async function adjustPrice() {
+    if (!adjustedPrice.match(numReg) || adjustedPrice == "") {
+      alert("請輸入有效金額");
+      return;
+    }
+
     let res = await fetch(`${API_ORIGIN}/bid/updateBidding`, {
       method: "POST",
       headers: {
@@ -282,16 +287,18 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
           </div>
         );
       })}
-      <IonItem onClick={() => getChatDetail()}>
-        <IonLabel>聯絡賣家 : {props.post.nickname}</IonLabel>
+      {!jwtState.id ? null : jwtState.id == props.post.user_id ? null : (
+        <IonItem onClick={() => getChatDetail()}>
+          <IonLabel>聯絡賣家 : {props.post.nickname}</IonLabel>
 
-        <IonIcon
-          style={{ color: "skyBlue" }}
-          icon={chatbubbles}
-          size="large"
-          slot="start"
-        ></IonIcon>
-      </IonItem>
+          <IonIcon
+            style={{ color: "skyBlue" }}
+            icon={chatbubbles}
+            size="large"
+            slot="start"
+          ></IonIcon>
+        </IonItem>
+      )}
       <h3 className="ion-padding">
         產品描述:{" "}
         {props.post.admin_comment
