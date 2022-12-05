@@ -140,6 +140,7 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
   }, [nowPrice]);
 
   async function getChatDetail() {
+    // alert(`props.post.id: ${props.post.id}, jwtState.id: ${jwtState.id}`)
     let res = await fetch(
       `${API_ORIGIN}/chatroom/createRoom/${props.post.id}/${jwtState.id}`,
       {
@@ -151,9 +152,9 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
           userId: props.post.user_id,
         }),
       }
-    );
-    let result = await res.json();
-    console.log(result);
+      );
+      let result = await res.json();
+      console.log(result);
     if ("id" in result[0]) {
       props.goChat(result[0].id);
     } else {

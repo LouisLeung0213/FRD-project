@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { Server } from 'socket.io';
+import { io } from 'src/io';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
@@ -15,15 +17,28 @@ import { UpdateAdminDto } from './dto/update-admin.dto';
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
+  setupIO(io: Server) {}
+
   @Post()
   create(@Body() createAdminDto: CreateAdminDto) {
     return this.adminService.create(createAdminDto);
   }
 
   @Post(':id')
-  bannedUser(@Param('id') id: number, @Body() updateAdminDto: UpdateAdminDto) {
-    this.adminService.bannedUser(id, updateAdminDto);
-    return `${updateAdminDto.userId} is now banned`;
+  async bannedUser(
+    @Param('id') id: number,
+    @Body() updateAdminDto: UpdateAdminDto,
+  ) {
+    let banUser = await this.adminService.bannedUser(id, updateAdminDto);
+    console.log(banUser);
+    if ('user_id' in banUser) {
+      io.to('TJroom: ' + banUser.user_id).emit('ban', {
+        msg: 'You have been banned',
+      });
+    } else {
+      return { message: 'unable to ban' };
+    }
+    return banUser;
   }
 
   @Get()
@@ -43,7 +58,10 @@ export class AdminController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminService.remove(+id);
+  async remove(
+    @Param('id') id: string,
+    @Body() updateAdminDto: UpdateAdminDto,
+  ) {
+    return this.adminService.remove(+id, updateAdminDto);
   }
 }

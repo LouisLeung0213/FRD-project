@@ -19,17 +19,23 @@ export class AdminService {
     if (checkIsAdmin[0] == false) {
       return { message: "You don't have the authority to ban users" };
     } else {
-      await this.knex('banned_users').insert({
-        user_id: updateAdminDto.userId,
-      });
+      let banUser = await this.knex('banned_users')
+        .insert({
+          user_id: updateAdminDto.userId,
+        })
+        .returning('user_id');
 
-      return `${updateAdminDto.userId} is now banned`;
+      return banUser[0];
     }
   }
 
   async findAll() {
     let users = await this.knex.select('id', 'nickname').from('users');
-    return users;
+    let bannedUsers = await this.knex
+      .select('user_id', 'banned_time', 'nickname')
+      .from('banned_users')
+      .join('users', 'user_id', 'users.id');
+    return { users, bannedUsers };
   }
 
   findOne(id: number) {
@@ -40,7 +46,20 @@ export class AdminService {
     return 'hi';
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} admin`;
+  async remove(id: number, updateAdminDto: UpdateAdminDto) {
+    let checkIsAdmin = await this.knex
+      .select('is_admin')
+      .from('users')
+      .where('id', id);
+    console.log(checkIsAdmin[0]);
+    if (checkIsAdmin[0] == false) {
+      return { message: "You don't have the authority to ban users" };
+    } else {
+      await this.knex('banned_users')
+        .where('user_id', updateAdminDto.userId)
+        .del();
+
+      return { message: `${updateAdminDto.userId} has been unbanned` };
+    }
   }
 }
