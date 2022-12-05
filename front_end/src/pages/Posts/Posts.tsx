@@ -47,9 +47,10 @@ export type PostObj = {
   username: "";
 };
 
-const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
+const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
   post: PostObj;
   goChat: any;
+  afterDeal: any;
 }) => {
   const jwtState = useSelector((state: RootState) => state.jwt);
   const pointsState = useSelector((state: RootState) => state.points);
@@ -159,6 +160,11 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
       alert("cannot open chatroom");
     }
   }
+
+  function goAfterDeal() {
+    props.afterDeal();
+  }
+
   const [presentingElement, setPresentingElement] =
     useState<HTMLElement | null>(null);
   const [present] = useIonActionSheet();
@@ -198,7 +204,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
             let result = await dealRes.json();
             console.log("deal: ", result);
             if (result.status == 200) {
-              router.push(routes.tab.profile(+jwtState.id!));
+              goAfterDeal();
             }
           } else {
             reject();

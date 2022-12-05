@@ -192,6 +192,10 @@ const Profile: React.FC = () => {
     router.push(routes.chatroom(id), "forward", "replace");
     dismissPost();
   }
+  function afterDeal(id: number) {
+    router.push(routes.tab.mainPage);
+    dismissPost();
+  }
 
   function func() {
     console.log("Current pointsState: ", pointsState.points);
@@ -259,9 +263,7 @@ const Profile: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent fullscreen>
-          <IonCard
-            style={{ backgroundColor: "#0f0f619a", marginBottom: "10px" }}
-          >
+          <IonCard style={{ backgroundColor: "black", marginBottom: "10px" }}>
             <div className={profileStyles.personalIconContainer}>
               <img src={showedIcon} className={profileStyles.personalIcon} />
             </div>
@@ -411,7 +413,11 @@ const Profile: React.FC = () => {
             </IonToolbar>
           </IonHeader>
           <IonContent>
-            <Post post={currentPost as PostObj} goChat={goChat} />
+            <Post
+              post={currentPost as PostObj}
+              goChat={goChat}
+              afterDeal={afterDeal}
+            />
           </IonContent>
         </IonModal>
       </IonPage>
