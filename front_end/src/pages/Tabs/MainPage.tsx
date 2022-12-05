@@ -158,7 +158,6 @@ const MainPage: React.FC = () => {
   const reportModal = useRef<HTMLIonModalElement>(null);
   function modelDismiss() {
     modal.current?.dismiss();
-
     setIsOpen(false);
     setIsProfileOpen(false);
   }
@@ -222,8 +221,9 @@ const MainPage: React.FC = () => {
     router.push(routes.chatroom(id), "forward", "replace");
     modelDismiss();
   }
-  function afterDeal(id: number) {
-    router.push(routes.tab.mainPage);
+
+  function afterDeal() {
+    router.push(routes.tab.mainPage, 'forward', 'replace');
     modelDismiss();
   }
 

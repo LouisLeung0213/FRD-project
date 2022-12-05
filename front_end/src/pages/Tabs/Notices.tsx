@@ -63,9 +63,11 @@ const Notices: React.FC = () => {
                       <IonAvatar>
                         <img src={realIcon(chat.buyer_icon)}></img>
                       </IonAvatar>
+                      
                       <IonLabel>{chat.buyer_nickname}</IonLabel>
                       <IonLabel>{chat.post_title}</IonLabel>
                       <IonLabel>{chat.latest_content}</IonLabel>
+                    
                       <IonItem slot="end">
                         <IonLabel>{chat.latest_send_times}</IonLabel>
                         <IonAvatar>
@@ -78,13 +80,17 @@ const Notices: React.FC = () => {
                       <IonAvatar>
                         <img src={realIcon(chat.seller_icon)}></img>
                       </IonAvatar>
+                      
+
                       <IonLabel>{chat.seller_nickname}</IonLabel>
                       <IonLabel>{chat.post_title}</IonLabel>
                       <IonLabel>{chat.latest_content}</IonLabel>
+                      
+
                       <IonItem slot="end">
                         <IonLabel>{chat.latest_send_times}</IonLabel>
-                        <IonAvatar>
-                          <img src={chat.image}></img>
+                        <IonAvatar className="endIcon">
+                          <img src={chat.image} ></img>
                         </IonAvatar>
                       </IonItem>
                     </IonItem>

@@ -216,7 +216,7 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
     router.push(routes.chatroom(id), "forward", "replace");
     dismissPost();
   }
-  function afterDeal(id: number) {
+  function afterDeal() {
     router.push(routes.tab.mainPage);
     dismissPost();
   }
