@@ -53,7 +53,7 @@ const MainPage: React.FC = () => {
   let dotState = useSelector((state: RootState) => state.dots);
   let [postsList, setPostsList] = useState<[any]>([] as any);
   const [query, setQuery] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [isPostOpen, setIsPostOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
@@ -154,12 +154,15 @@ const MainPage: React.FC = () => {
     postsList();
   }, []);
 
-  const modal = useRef<HTMLIonModalElement>(null);
+  const postModal = useRef<HTMLIonModalElement>(null);
+  const profileModal = useRef<HTMLIonModalElement>(null);
   const reportModal = useRef<HTMLIonModalElement>(null);
   function modelDismiss() {
-    modal.current?.dismiss();
+    postModal.current?.dismiss();
+    profileModal.current?.dismiss()
+    reportModal.current?.dismiss()
 
-    setIsOpen(false);
+    setIsPostOpen(false);
     setIsProfileOpen(false);
   }
   function cancelReport() {
@@ -172,7 +175,7 @@ const MainPage: React.FC = () => {
     let report = await fetch(`${API_ORIGIN}/report/report`, {
       method: "POST",
       body: JSON.stringify({
-        userId: isOpen,
+        userId: true,
       }),
     });
     let result = await report.json();
@@ -208,7 +211,7 @@ const MainPage: React.FC = () => {
 
   function openPost(e: PostObj) {
     setCurrentPost(e);
-    setIsOpen(true);
+    setIsPostOpen(true);
   }
   function openReport() {
     setIsReportOpen(true);
@@ -219,8 +222,9 @@ const MainPage: React.FC = () => {
   }
 
   function goChat(id: number) {
-    router.push(routes.chatroom(id), "forward", "replace");
     modelDismiss();
+    // router.push(routes.chatroom(id), "forward", "replace");
+    router.push(routes.chatroom(id));
   }
   function afterDeal(id: number) {
     router.push(routes.tab.mainPage);
@@ -386,7 +390,7 @@ const MainPage: React.FC = () => {
         </IonContent>
       </IonModal>
 
-      <IonModal id="post-modal" ref={modal} isOpen={isOpen}>
+      <IonModal id="post-modal" ref={postModal} isOpen={isPostOpen}>
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">
@@ -425,7 +429,7 @@ const MainPage: React.FC = () => {
         </IonContent>
       </IonModal>
 
-      <IonModal id="post-modal" ref={modal} isOpen={isProfileOpen}>
+      <IonModal id="profile-modal" ref={profileModal} isOpen={isProfileOpen}>
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">
