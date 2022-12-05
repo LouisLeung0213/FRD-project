@@ -36,10 +36,10 @@ export class BidService {
           .andWhere('captured', false)
           .andWhere('used_for_bidding', false);
 
-        console.log(
-          'FUCK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! client_secret_amount_list',
-          client_secret_amount_list,
-        );
+        // console.log(
+        //   'FUCK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! client_secret_amount_list',
+        //   client_secret_amount_list,
+        // );
 
         let total_unused_points = 0;
 
