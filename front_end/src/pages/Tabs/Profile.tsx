@@ -259,7 +259,9 @@ const Profile: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent fullscreen>
-          <IonCard style={{ backgroundColor: "#0f0f619a" }}>
+          <IonCard
+            style={{ backgroundColor: "#0f0f619a", marginBottom: "10px" }}
+          >
             <div className={profileStyles.personalIconContainer}>
               <img src={showedIcon} className={profileStyles.personalIcon} />
             </div>
@@ -299,13 +301,11 @@ const Profile: React.FC = () => {
               </div>
             </IonCardContent>
           </IonCard>
-          <IonItem className={profileStyles.portfolioContainer}>
-            <IonLabel>
-              <h1>
-                <IonIcon icon={cubeOutline}></IonIcon> 拍賣產品
-              </h1>
-            </IonLabel>
-          </IonItem>
+          <IonLabel className="ion-text-center">
+            <h1>
+              <IonIcon icon={cubeOutline}></IonIcon> 拍賣產品
+            </h1>
+          </IonLabel>
           {/* <IonButton onClick={func}>Show the redux state</IonButton> */}
           <IonSearchbar
             debounce={1000}
@@ -323,24 +323,19 @@ const Profile: React.FC = () => {
                         key={post.id}
                         onClick={() => openPost(post)}
                       >
-                        <IonCardHeader>
-                          <IonCardTitle className={styles.title}>
-                            {!post.admin_title
-                              ? post.post_title
-                              : post.admin_title}
+                        <IonCardTitle className={styles.title}>
+                          {!post.admin_title
+                            ? post.post_title
+                            : post.admin_title}
 
-                            {post.q_mark ? (
-                              <IonIcon
-                                className={styles.q_mark_icon}
-                                icon={checkmarkDoneCircleOutline}
-                              ></IonIcon>
-                            ) : null}
+                          {post.q_mark ? (
+                            <IonIcon
+                              className={styles.q_mark_icon}
+                              icon={checkmarkDoneCircleOutline}
+                            ></IonIcon>
+                          ) : null}
+                        </IonCardTitle>
 
-                            {post.status.toString() != "selling"
-                              ? "[此貨品已售出]"
-                              : null}
-                          </IonCardTitle>
-                        </IonCardHeader>
                         <IonCardContent>
                           <Swiper
                             modules={[
@@ -366,6 +361,13 @@ const Profile: React.FC = () => {
                                   key={index}
                                 >
                                   <img src={photo} key={index} />
+                                  {post.status.toString() != "selling" ? (
+                                    <div className={profileStyles.sold}>
+                                      <span className={profileStyles.soldText}>
+                                        此貨品已售出
+                                      </span>
+                                    </div>
+                                  ) : null}
                                 </SwiperSlide>
                               );
                             })}

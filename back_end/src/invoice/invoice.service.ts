@@ -10,8 +10,8 @@ export class InvoiceService {
     return 'This action adds a new invoice';
   }
 
-  findAll() {
-    return `This action returns all invoice`;
+  dealInvoice(id: number) {
+    return `This action returns all deal invoice`;
   }
 
   async findThisUserInvoice(id: number) {

@@ -99,7 +99,7 @@ const App: React.FC = () => {
   let notiMSG: string;
   const [present] = useIonToast();
   // let userId: number;
-  const [receivedMsg, setReceivedMsg] = useState(false)
+  const [receivedMsg, setReceivedMsg] = useState(false);
   const presentToast = (position: "top") => {
     present({
       message: notiMSG,
@@ -130,16 +130,15 @@ const App: React.FC = () => {
         // if (jwtState.id) {
         console.log("here");
         // let userId = await getValue("userId")
-        console.log("username", username)
-        console.log(data.receiverId)
-      await updateDot(+data.receiverId,'chat_dots',true)
-      if(receivedMsg){
-        setReceivedMsg(false)
-      } else {
-
-        setReceivedMsg(true)
-      }
-      console.log("fake toggle: ", receivedMsg)
+        console.log("username", username);
+        console.log(data.receiverId);
+        await updateDot(+data.receiverId, "chat_dots", true);
+        if (receivedMsg) {
+          setReceivedMsg(false);
+        } else {
+          setReceivedMsg(true);
+        }
+        console.log("fake toggle: ", receivedMsg);
         // if(data.newMSG[data.newMSG.length - 1].sender_id != userId){
         //   if(userId){
 
@@ -194,13 +193,13 @@ const App: React.FC = () => {
         // }
         // }
       });
-      
+
       return () => {};
     }, [])
   );
   async function setChat() {
     if (jwtState.id) {
-      console.log('you should not be here')
+      console.log("you should not be here");
       await updateDot(jwtState.id, "chat_dots", false);
       dispatch(
         updateDots({
@@ -230,7 +229,7 @@ const App: React.FC = () => {
     for (let i = 0; i < userInfo.bankInfo.length; i++) {
       arr.push(userInfo.bankInfo[i]);
     }
-    userId = userInfo.userInfo.id
+    userId = userInfo.userInfo.id;
     dispatch(
       updateJwt({
         jwtKey: token,
@@ -455,10 +454,7 @@ const App: React.FC = () => {
                   <IonIcon icon={homeOutline} />
                   <IonLabel>主頁</IonLabel>
                 </IonTabButton>
-                <IonTabButton onClick={()=>{console.log('tab jwtState: ', jwtState)}}>
-                  <IonIcon icon={homeOutline} />
-                  <IonLabel>Hi</IonLabel>
-                </IonTabButton>
+
                 {!!jwtState.jwtKey ? (
                   <IonTabButton tab="PickPhoto" href={routes.tab.pickPhoto}>
                     <IonIcon icon={duplicateOutline} />

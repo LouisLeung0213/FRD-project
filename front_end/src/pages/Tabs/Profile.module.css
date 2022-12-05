@@ -48,10 +48,29 @@
   color: gold;
 }
 
-.productContainer {
-  display: flex;
-  flex-direction: column;
-}
 .postContainer {
-  margin-bottom: 20px;
+  position: relative;
+}
+
+.sold {
+  position: absolute;
+  background-color: rgba(68, 56, 56, 0.863);
+
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.soldText {
+  color: rgb(255, 255, 255);
+  border: 3px solid white;
+  font-weight: bold;
+  font-size: larger;
+  width: 70%;
+  height: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
