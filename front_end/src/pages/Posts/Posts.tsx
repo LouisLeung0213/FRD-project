@@ -62,6 +62,8 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
   const [nowPrice, setNowPrice] = useState(0);
   const [adjustedPrice, setAdjustedPrice] = useState("");
   const [bidStatus, setBidStatus] = useState(false);
+  const [highestIsMe, setHightestIsMe] = useState(false);
+
   let numReg = /^\d+$/;
   const router = useIonRouter();
 
@@ -137,7 +139,7 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
     if (props.post.status.toString() == "selling") {
       setBidStatus(true);
     }
-  }, []);
+  }, [nowPrice]);
 
   async function getChatDetail() {
     // alert(`props.post.id: ${props.post.id}, jwtState.id: ${jwtState.id}`)
@@ -152,9 +154,9 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
           userId: props.post.user_id,
         }),
       }
-      );
-      let result = await res.json();
-      console.log(result);
+    );
+    let result = await res.json();
+    console.log(result);
     if ("id" in result[0]) {
       props.goChat(result[0].id);
     } else {
@@ -374,7 +376,9 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
             );
           })}
           <IonItem className="inputBox">
-            {!jwtState.id ? null : jwtState.id !== props.post.user_id ? (
+            {highestBidder_id ==
+            jwtState.id ? null : !jwtState.id ? null : jwtState.id !==
+              props.post.user_id ? (
               <>
                 <IonInput
                   value={bidPrice}

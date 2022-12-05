@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Console } from 'console';
 import { LargeNumberLike } from 'crypto';
 import { InjectKnex, Knex } from 'nestjs-knex';
+import { UpdatePointsDto } from 'src/payment/dto/update-points.dto';
 import { CreateBidDto } from './dto/create-bid.dto';
 import { UpdateBidDto } from './dto/update-bid.dto';
 
@@ -29,6 +30,64 @@ export class BidService {
           message: 'invalid bid due to bidPrice lower than originalPrice',
         };
       } else {
+        let client_secret_amount_list = await this.knex('client_secrets')
+          .select('*')
+          .where('user_id', createBidDto.buyerId)
+          .andWhere('captured', false)
+          .andWhere('used_for_bidding', false);
+
+        // console.log(
+        //   'FUCK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! client_secret_amount_list',
+        //   client_secret_amount_list,
+        // );
+
+        let total_unused_points = 0;
+
+        for (let account of client_secret_amount_list) {
+          console.log('account.amount::!!', account.amount);
+          total_unused_points += account.amount;
+        }
+
+        let used_secret_id_list = [];
+
+        for (let i = 0; i < client_secret_amount_list.length; i++) {
+          let amount_for_deduct = createBidDto.bidPrice;
+          console.log(
+            'amount_for_deduct:::::',
+            amount_for_deduct,
+            'client_secret_amount_list[i].amount',
+            client_secret_amount_list[i],
+          );
+          amount_for_deduct -= client_secret_amount_list[i].amount;
+          used_secret_id_list.push(client_secret_amount_list[i].id);
+
+          if (amount_for_deduct <= 0) {
+            break;
+          }
+        }
+        console.log('used_secret_list', used_secret_id_list);
+
+        let hold_secret = await this.knex('client_secrets')
+          .update('used_for_bidding', true)
+          .whereIn('id', used_secret_id_list);
+
+        let after_holding_points = 0;
+        let points_should_remain = client_secret_amount_list.filter(
+          (objA) =>
+            used_secret_id_list.filter((objB) => objA.id === objB).length === 0,
+        );
+
+        console.log(
+          'points_should_remain:!!:!!::!!::!------------------',
+          points_should_remain,
+        );
+        for (let obj of points_should_remain) {
+          after_holding_points += obj.amount;
+        }
+        let points_after_bidding = await this.knex('users')
+          .update('points', after_holding_points)
+          .where('id', createBidDto.buyerId);
+
         let bid = await this.knex('bid_records')
           .insert({
             post_id: createBidDto.postId,
@@ -93,7 +152,56 @@ export class BidService {
             })
             .returning(['receiver_id', 'content']);
 
-          console.log('infoSecondBuyer', infoSecondBuyer[1]);
+          let client_secret_amount_list = await this.knex('client_secrets')
+            .select('*')
+            .where('user_id', createBidDto.buyerId)
+            .andWhere('captured', false)
+            .andWhere('used_for_bidding', false);
+
+          let total_unused_points = 0;
+
+          for (let account of client_secret_amount_list) {
+            console.log('account.amount::!!', account.amount);
+            total_unused_points += account.amount;
+          }
+
+          let used_secret_id_list = [];
+
+          for (let i = 0; i < client_secret_amount_list.length; i++) {
+            let amount_for_deduct = createBidDto.bidPrice;
+            console.log(
+              'amount_for_deduct:::::',
+              amount_for_deduct,
+              'client_secret_amount_list[i].amount',
+              client_secret_amount_list[i].amount,
+            );
+            amount_for_deduct -= client_secret_amount_list[i].amount;
+            used_secret_id_list.push(client_secret_amount_list[i].id);
+
+            if (amount_for_deduct <= 0) {
+              break;
+            }
+          }
+          console.log('used_secret_list', used_secret_id_list);
+
+          let hold_secret = await this.knex('client_secrets')
+            .update('used_for_bidding', true)
+            .whereIn('id', used_secret_id_list);
+
+          let after_holding_points = 0;
+          let points_should_remain = client_secret_amount_list.filter(
+            (objA) =>
+              used_secret_id_list.filter((objB) => objA.id === objB.id)
+                .length === 0,
+          );
+
+          for (let obj of points_should_remain) {
+            after_holding_points += obj.amount;
+          }
+          let points_after_bidding = await this.knex('users')
+            .update('points', after_holding_points)
+            .where('id', createBidDto.buyerId);
+
           return {
             bid: newBidList,
             firstBidNoti: infoSecondBuyer[0],
@@ -106,34 +214,29 @@ export class BidService {
     }
   }
 
-  async updateBidding(updateBidDto: UpdateBidDto){
-    console.log('postId: ', updateBidDto.postId)
-    console.log('updatedPrice: ', updateBidDto.updatedPrice)
+  async updateBidding(updateBidDto: UpdateBidDto) {
+    console.log('postId: ', updateBidDto.postId);
+    console.log('updatedPrice: ', updateBidDto.updatedPrice);
     let newPrice = await this.knex('posts')
-    .where('id', updateBidDto.postId)
-    .update(
-      {original_price: updateBidDto.updatedPrice}
-    )
-    .returning(['post_title','original_price'])
+      .where('id', updateBidDto.postId)
+      .update({ original_price: updateBidDto.updatedPrice })
+      .returning(['post_title', 'original_price']);
 
-    if (!newPrice){
-      return { status: '77', message: 'The post id does not exist' }
+    if (!newPrice) {
+      return { status: '77', message: 'The post id does not exist' };
     }
 
-    let content = `貨品[${newPrice[0].post_title}]的賣家已更改貨品底價為[${newPrice[0].original_price}]，您的預售權將會全數退回`
+    let content = `貨品[${newPrice[0].post_title}]的賣家已更改貨品底價為[${newPrice[0].original_price}]，您的預售權將會全數退回`;
 
     let bidderList = await this.knex
-    .select('buyer_id', this.knex.raw('max(bid_price)'))
-    .from('bid_records')
-    .where('post_id', updateBidDto.postId)
-    .groupBy('buyer_id')
+      .select('buyer_id', this.knex.raw('max(bid_price)'))
+      .from('bid_records')
+      .where('post_id', updateBidDto.postId)
+      .groupBy('buyer_id');
 
-    await this.knex('bid_records')
-    .where('post_id', updateBidDto.postId)
-    .del()
+    await this.knex('bid_records').where('post_id', updateBidDto.postId).del();
 
-
-    return {bidderList, content}
+    return { bidderList, content };
   }
 
   async findAll(id: number) {
