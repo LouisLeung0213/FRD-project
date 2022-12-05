@@ -274,7 +274,7 @@ const App: React.FC = () => {
       // console.log()
     };
     get();
-    console.log("APPdotState:",dotState.chatDot)
+    // console.log("APPdotState:",dotState.chatDot)
   }, [receivedMsg]);
 
   useEffect(() => {
@@ -299,7 +299,7 @@ const App: React.FC = () => {
 
       await PushNotifications.addListener("registration", (token) => {
         console.log("Registration token: ", token.value);
-        alert(JSON.stringify(token.value));
+        // alert(JSON.stringify(token.value));
       });
 
       await PushNotifications.addListener(
