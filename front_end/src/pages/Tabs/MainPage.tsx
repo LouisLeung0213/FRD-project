@@ -47,6 +47,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { updateDot } from "../../updateDot";
 import { updateDots } from "../../redux/dots/actions";
+import Profile from "./Profile";
 
 const MainPage: React.FC = () => {
   let dotState = useSelector((state: RootState) => state.dots);
@@ -54,7 +55,9 @@ const MainPage: React.FC = () => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
+  const [currentProfile, setCurrentProfile] = useState(0);
   // const [pingNumber, setPingNumber] = useState(0);
   const [noticeDots, setNoticeDots] = useState(dotState.noticeDot);
 
@@ -157,6 +160,7 @@ const MainPage: React.FC = () => {
     modal.current?.dismiss();
 
     setIsOpen(false);
+    setIsProfileOpen(false);
   }
   function cancelReport() {
     reportModal.current?.dismiss();
@@ -208,6 +212,10 @@ const MainPage: React.FC = () => {
   }
   function openReport() {
     setIsReportOpen(true);
+  }
+  function openProfile(user_id: number) {
+    setCurrentProfile(user_id);
+    setIsProfileOpen(true);
   }
 
   function goChat(id: number) {
@@ -278,16 +286,20 @@ const MainPage: React.FC = () => {
                   <IonCard
                     className={styles.postContainer}
                     key={index}
-                    onClick={() => openPost(post)}
+                    
                   >
-                    <div className={styles.nameContainer}>
                       <h4 className={styles.nameText}>
+                        <div onClick={() => openProfile(post.user_id)}>
                         <IonIcon
                           className={styles.personIcon}
                           icon={personOutline}
                         ></IonIcon>
+
                         {post.nickname}
+                        </div>
                       </h4>
+                      <div onClick={() => openPost(post)}>
+                    <div className={styles.nameContainer}>
                       <h2 className={styles.title}>
                         {!post.admin_title ? post.post_title : post.admin_title}
 
@@ -336,6 +348,8 @@ const MainPage: React.FC = () => {
                         <h3>現價：${post.max}</h3>
                       )}
                     </div>
+
+                      </div>
                   </IonCard>
                 );
               })}
@@ -408,6 +422,41 @@ const MainPage: React.FC = () => {
             goChat={goChat}
             afterDeal={afterDeal}
           />
+        </IonContent>
+      </IonModal>
+
+      <IonModal id="post-modal" ref={modal} isOpen={isProfileOpen}>
+        <IonHeader>
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonButton
+                style={{ color: "gold" }}
+                onClick={() => {
+                  modelDismiss();
+                }}
+              >
+                <IonIcon size="large" icon={chevronBackOutline}></IonIcon> Back
+              </IonButton>
+            </IonButtons>
+
+            <IonButtons slot="end">
+              <IonButton
+                id="reportNow"
+                onClick={() => {
+                  openReport();
+                }}
+              >
+                <IonIcon
+                  size="large"
+                  style={{ color: "red" }}
+                  icon={warningOutline}
+                ></IonIcon>
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <Profile id={currentProfile}/>
         </IonContent>
       </IonModal>
     </IonPage>

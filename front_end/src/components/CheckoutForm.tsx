@@ -22,6 +22,7 @@ const CheckoutForm: React.FC<{
   const pointsState = useSelector((state: RootState) => state.points);
   const jwtState = useSelector((state: RootState) => state.jwt);
   const [userId, setUserId] = useState(jwtState.id);
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     if (!stripe) {
@@ -54,7 +55,10 @@ const CheckoutForm: React.FC<{
     // We don't want to let default form submission happen here,
     // which would refresh the page.
     event.preventDefault();
-
+    if (submitted){
+      return
+    }
+    setSubmitted(true)
     if (!stripe || !elements) {
       // Stripe.js has not yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.

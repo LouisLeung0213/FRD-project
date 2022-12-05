@@ -65,7 +65,7 @@ import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
 import { updateDot } from "../../updateDot";
 import { updateDots } from "../../redux/dots/actions";
 
-const Profile: React.FC = () => {
+const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
   let jwtState = useSelector((state: RootState) => state.jwt);
   let pointsState = useSelector((state: RootState) => state.points);
   let dotsState = useSelector((state: RootState) => state.dots);
@@ -135,30 +135,32 @@ const Profile: React.FC = () => {
   };
 
   const getOtherProfile = async (userId: number) => {
-    let userInfo = await fetch(`${API_ORIGIN}/users/findOne/${userId}`);
-    console.log("userInfo: ", userInfo);
+    let res = await fetch(`${API_ORIGIN}/users/findOne/${userId}`);
+    let userInfo = await res.json();
+
+    setNickname(userInfo.nickname);
+    setUsername(userInfo.username);
+    setJoinTime(moment(userInfo.joinedTime).format("MMMM Do YYYY"));
   };
 
   useEffect(() => {
-    if (params.id == jwtState.id) {
-      // console.log("ownFile", params.id);
-      getOwnProfile();
+    if (props.id) {
+      getOtherProfile(props.id);
+
     } else {
-      if (params.id !== jwtState.id) {
-        // console.log("otherFile,", params.id);
-        getOtherProfile(params.id);
-      }
+      getOwnProfile();
     }
   }, [jwtState, pointsState]);
 
   useEffect(() => {
     const postsList = async () => {
-      if (params.id) {
-        let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${params.id}`);
+      if (props.id) {
+        let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${props.id}`);
         let result = await res.json();
         setPostsList(result);
       } else {
-        let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${jwtState.id}`);
+        let userId = await getValue("userId");
+        let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${userId}`);
         let result = await res.json();
         setPostsList(result);
       }
@@ -303,16 +305,18 @@ const Profile: React.FC = () => {
 
             <IonCardContent>
               <div className={profileStyles.personalInfoContainer}>
-                <div className={profileStyles.personalInfo}>
-                  <IonLabel>
-                    <IonIcon
-                      style={{ color: "gold", marginRight: "10px" }}
-                      size="small"
-                      icon={wallet}
-                    />
-                    點數 : {pointsState.points}
-                  </IonLabel>
-                </div>{" "}
+                {!props.id || props.id == jwtState.id ? (
+                  <div className={profileStyles.personalInfo}>
+                    <IonLabel>
+                      <IonIcon
+                        style={{ color: "gold", marginRight: "10px" }}
+                        size="small"
+                        icon={wallet}
+                      />
+                      點數 : {pointsState.points}
+                    </IonLabel>
+                  </div>
+                ) : null}{" "}
                 <div className={profileStyles.personalInfo}>
                   <IonLabel>
                     <IonIcon
