@@ -81,7 +81,7 @@ const Invoice: React.FC = () => {
           </IonAccordion>
           <IonAccordion value="second">
             <IonItem slot="header" color="light">
-              <IonLabel>已成交電子收據</IonLabel>
+              <IonLabel>提貨電子收據</IonLabel>
             </IonItem>
             <div className="ion-padding invoiceContainer" slot="content">
               <IonLabel className="invoiceNumber">YOUBUYTHISITEM0201</IonLabel>

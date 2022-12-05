@@ -113,7 +113,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
     console.log(jwtState.id);
     const bidRecord = async () => {
       let res = await fetch(`${API_ORIGIN}/bid/bidList/${props.post.id}`);
-      let result = await res.json(); 
+      let result = await res.json();
       console.log(props);
       console.log(result);
       setBidList(result);
@@ -267,9 +267,6 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
                 icon={checkmarkDoneCircleOutline}
               ></IonIcon>
             ) : null}
-            {props.post.status.toString() == "sold&holding"
-              ? "[此貨品已售出]"
-              : null}
           </h2>
         </>
       ) : (
@@ -284,9 +281,11 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
                 icon={checkmarkDoneCircleOutline}
               ></IonIcon>
             ) : null}
-            {props.post.status.toString() == "sold&holding"
-              ? "[此貨品已售出]"
-              : null}
+            {props.post.status.toString() == "sold&holding" ? (
+              <span style={{ color: "red", marginLeft: "15px" }}>
+                貨品已售出
+              </span>
+            ) : null}
           </h2>
         </>
       )}
