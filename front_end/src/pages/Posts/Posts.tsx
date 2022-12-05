@@ -137,7 +137,7 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
     if (props.post.status.toString() == "selling") {
       setBidStatus(true);
     }
-  }, []);
+  }, [nowPrice]);
 
   async function getChatDetail() {
     let res = await fetch(

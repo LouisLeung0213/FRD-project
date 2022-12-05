@@ -89,7 +89,6 @@ const Notices: React.FC = () => {
                       </div>
                     </div>
                   )}
-                  <IonItem></IonItem>
                 </div>
               );
             })}

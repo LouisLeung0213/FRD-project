@@ -56,9 +56,9 @@ export async function seed(knex: Knex): Promise<void> {
     ]);
 
     await txn('bank_accounts').insert([
-      { bank_account: '123', user_id: '1', bank_id: '1' },
-      { bank_account: '123', user_id: '2', bank_id: '1' },
-      { bank_account: '123', user_id: '3', bank_id: '1' },
+      { bank_account: '123456789123', user_id: '1', bank_id: '1' },
+      { bank_account: '123456789123', user_id: '2', bank_id: '1' },
+      { bank_account: '123456789123', user_id: '3', bank_id: '1' },
     ]);
 
     await txn('store_locations').insert([
