@@ -14,6 +14,7 @@ import {
   IonSearchbar,
   IonTextarea,
   IonToolbar,
+  useIonLoading,
   useIonRouter,
 } from "@ionic/react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -50,6 +51,7 @@ import { updateDots } from "../../redux/dots/actions";
 import Profile from "./Profile";
 
 const MainPage: React.FC = () => {
+  const [present, dismiss] = useIonLoading();
   let dotState = useSelector((state: RootState) => state.dots);
   let [postsList, setPostsList] = useState<[any]>([] as any);
   const [query, setQuery] = useState("");
@@ -159,8 +161,8 @@ const MainPage: React.FC = () => {
   const reportModal = useRef<HTMLIonModalElement>(null);
   function modelDismiss() {
     postModal.current?.dismiss();
-    profileModal.current?.dismiss()
-    reportModal.current?.dismiss()
+    profileModal.current?.dismiss();
+    reportModal.current?.dismiss();
 
     setIsPostOpen(false);
     setIsProfileOpen(false);
@@ -283,77 +285,85 @@ const MainPage: React.FC = () => {
               debounce={1000}
               onIonChange={(ev: any) => setQuery(ev.target.value)}
             ></IonSearchbar>
+            <IonButton
+              onClick={() => {
+                present({
+                  message: "載入中...",
+                  duration: 3000,
+                  spinner: "lines-small",
+                });
+              }}
+            >
+              loading
+            </IonButton>
             {postsList
               .filter((postsList) => postsList.post_title.includes(query))
               .map((post: any, index) => {
                 return (
-                  <IonCard
-                    className={styles.postContainer}
-                    key={index}
-                    
-                  >
-                      <h4 className={styles.nameText}>
-                        <div onClick={() => openProfile(post.user_id)}>
+                  <IonCard className={styles.postContainer} key={index}>
+                    <h4 className={styles.nameText}>
+                      <div onClick={() => openProfile(post.user_id)}>
                         <IonIcon
                           className={styles.personIcon}
                           icon={personOutline}
                         ></IonIcon>
 
                         {post.nickname}
-                        </div>
-                      </h4>
-                      <div onClick={() => openPost(post)}>
-                    <div className={styles.nameContainer}>
-                      <h2 className={styles.title}>
-                        {!post.admin_title ? post.post_title : post.admin_title}
-
-                        {post.q_mark ? (
-                          <IonIcon
-                            size="large"
-                            className={styles.q_mark_icon}
-                            icon={checkmarkDoneCircleOutline}
-                          ></IonIcon>
-                        ) : null}
-                      </h2>
-                    </div>
-                    <Swiper
-                      modules={[
-                        Autoplay,
-                        Keyboard,
-                        Pagination,
-                        Scrollbar,
-                        Zoom,
-                      ]}
-                      autoplay={true}
-                      keyboard={true}
-                      pagination={true}
-                      slidesPerView={1}
-                      //scrollbar={true}
-                      zoom={true}
-                      effect={"fade"}
-                      className={styles.slide}
-                    >
-                      {post.json_agg.map((photo: any, index: any) => {
-                        return (
-                          <SwiperSlide
-                            className={styles.image_slide}
-                            key={index}
-                          >
-                            <img src={photo} key={index} />
-                          </SwiperSlide>
-                        );
-                      })}
-                    </Swiper>
-                    {/* <img src={post.json_agg}></img> */}
-                    <div className={styles.priceContainer}>
-                      {!post.max ? (
-                        <h3>現價：${post.original_price}</h3>
-                      ) : (
-                        <h3>現價：${post.max}</h3>
-                      )}
-                    </div>
-
                       </div>
+                    </h4>
+                    <div onClick={() => openPost(post)}>
+                      <div className={styles.nameContainer}>
+                        <h2 className={styles.title}>
+                          {!post.admin_title
+                            ? post.post_title
+                            : post.admin_title}
+
+                          {post.q_mark ? (
+                            <IonIcon
+                              size="large"
+                              className={styles.q_mark_icon}
+                              icon={checkmarkDoneCircleOutline}
+                            ></IonIcon>
+                          ) : null}
+                        </h2>
+                      </div>
+                      <Swiper
+                        modules={[
+                          Autoplay,
+                          Keyboard,
+                          Pagination,
+                          Scrollbar,
+                          Zoom,
+                        ]}
+                        autoplay={true}
+                        keyboard={true}
+                        pagination={true}
+                        slidesPerView={1}
+                        //scrollbar={true}
+                        zoom={true}
+                        effect={"fade"}
+                        className={styles.slide}
+                      >
+                        {post.json_agg.map((photo: any, index: any) => {
+                          return (
+                            <SwiperSlide
+                              className={styles.image_slide}
+                              key={index}
+                            >
+                              <img src={photo} key={index} />
+                            </SwiperSlide>
+                          );
+                        })}
+                      </Swiper>
+                      {/* <img src={post.json_agg}></img> */}
+                      <div className={styles.priceContainer}>
+                        {!post.max ? (
+                          <h3>現價：${post.original_price}</h3>
+                        ) : (
+                          <h3>現價：${post.max}</h3>
+                        )}
+                      </div>
+                    </div>
                   </IonCard>
                 );
               })}
@@ -460,7 +470,7 @@ const MainPage: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <Profile id={currentProfile}/>
+          <Profile id={currentProfile} />
         </IonContent>
       </IonModal>
     </IonPage>

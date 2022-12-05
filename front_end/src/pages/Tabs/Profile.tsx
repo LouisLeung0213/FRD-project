@@ -93,6 +93,7 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
   },[]))
 
   let real_icon_src = "";
+  let [showedIcon, setShowedIcon] = useState(real_icon_src as string);
   useEffect(() => {
     if (jwtState.icon_src && jwtState.icon_src.includes("$1")) {
       real_icon_src = jwtState.icon_src.split("$1").join("?");
@@ -105,7 +106,6 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
   let [nickname, setNickname] = useState(jwtState.nickname);
   let [username, setUsername] = useState(jwtState.username);
   let [joinTime, setJoinTime] = useState(jwtState.joinedTime);
-  let [showedIcon, setShowedIcon] = useState(real_icon_src as string);
   let [points, setPoints] = useState(pointsState.points);
   let [postsList, setPostsList] = useState<[any]>([] as any);
   const [query, setQuery] = useState("");
