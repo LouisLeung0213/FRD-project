@@ -171,6 +171,7 @@ const Profile: React.FC = () => {
 
   function destroyUserInfo() {
     removeValue("Jwt");
+    removeValue("userId");
     dispatch(
       updateJwt({
         jwtKey: null,
@@ -189,14 +190,14 @@ const Profile: React.FC = () => {
     dispatch(
       updateDots({
         chatDot: false,
-        noticeDot: false
+        noticeDot: false,
       })
-    )
+    );
     dispatch(
       updatePoints({
-        points: 0
+        points: 0,
       })
-    )
+    );
   }
 
   function openPost(e: PostObj) {
@@ -217,7 +218,7 @@ const Profile: React.FC = () => {
   function func() {
     console.log("Current pointsState: ", pointsState.points);
     console.log("Current jwtState: ", jwtState);
-    console.log('current Dots',dotsState)
+    console.log("current Dots", dotsState);
     // console.log(pointsState);
   }
   return (
@@ -245,7 +246,7 @@ const Profile: React.FC = () => {
               <IonLabel>更改密碼</IonLabel>
             </IonItem>
 
-            <IonItem routerLink="/Invoice">
+            <IonItem routerLink={`/Invoice/${jwtState.id}`}>
               <IonIcon icon={receiptOutline} slot="start" />
               <IonLabel>電子收據</IonLabel>
             </IonItem>

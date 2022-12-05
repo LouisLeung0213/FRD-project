@@ -11,7 +11,7 @@ export let routes = {
     accountSetting: `/AccountSetting`,
     noticeSetting: "/NoticeSetUp",
     passwordChange: "/PasswordChange",
-    invoice: "/Invoice",
+    invoice: (id: string | number) => `/Invoice/${id}`,
     signUp: "/SignUp",
   },
   storages: "/Storages",

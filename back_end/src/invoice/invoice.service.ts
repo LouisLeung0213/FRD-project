@@ -10,8 +10,14 @@ export class InvoiceService {
     return 'This action adds a new invoice';
   }
 
-  dealInvoice(id: number) {
-    return `This action returns all deal invoice`;
+  async dealInvoice(id: number) {
+    let result = await this.knex('storages')
+      .select('*')
+      .join('posts', 'product_id', 'posts.id')
+      .where('buyer_id', id);
+
+    console.log(result);
+    return result;
   }
 
   async findThisUserInvoice(id: number) {

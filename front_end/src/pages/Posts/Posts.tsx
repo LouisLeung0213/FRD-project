@@ -10,6 +10,7 @@ import {
   IonContent,
   useIonRouter,
   IonModal,
+  useIonActionSheet,
 } from "@ionic/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import moment from "moment";
@@ -71,7 +72,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         console.log("join room", props.post.id);
         socket.emit("join-room", props.post.id);
         socket.on("newBidReceived", (msg) => {
-          console.log('Still in room')
+          console.log("Still in room");
           if (msg.newBidContent != "") {
             if (msg.newBidContent[0].post_id) {
               if (msg.newBidContent[0].post_id != +props.post.id) {
@@ -158,26 +159,53 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
       alert("cannot open chatroom");
     }
   }
+  const [presentingElement, setPresentingElement] =
+    useState<HTMLElement | null>(null);
+  const [present] = useIonActionSheet();
 
   async function makeDeal() {
-    console.log(nowPrice);
-    console.log(highestBidder_id);
-    let dealRes = await fetch(`${API_ORIGIN}/payment/capturePaymentIntent`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        bidPrice: nowPrice,
-        post_id: props.post.id,
-        bidder_id: highestBidder_id,
-      }),
+    return new Promise<boolean>((resolve, reject) => {
+      present({
+        header: "確認成交 ?",
+        buttons: [
+          {
+            text: "成交",
+            role: "confirm",
+          },
+          {
+            text: "取消",
+            role: "cancel",
+          },
+        ],
+        onWillDismiss: async (ev) => {
+          if (ev.detail.role === "confirm") {
+            console.log(nowPrice);
+            console.log(highestBidder_id);
+            let dealRes = await fetch(
+              `${API_ORIGIN}/payment/capturePaymentIntent`,
+              {
+                method: "PATCH",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  bidPrice: nowPrice,
+                  post_id: props.post.id,
+                  bidder_id: highestBidder_id,
+                }),
+              }
+            );
+            let result = await dealRes.json();
+            console.log("deal: ", result);
+            if (result.status == 200) {
+              router.push(routes.tab.profile(+jwtState.id!));
+            }
+          } else {
+            reject();
+          }
+        },
+      });
     });
-    let result = await dealRes.json();
-    console.log("deal: ", result);
-    if (result.status == 200) {
-      router.push(routes.tab.mainPage);
-    }
   }
 
   async function submitBid() {
