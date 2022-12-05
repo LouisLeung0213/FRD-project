@@ -64,6 +64,8 @@ export class UsersService {
           'is_admin',
           'icon_name',
           'icon_src',
+          'chat_dots',
+          'notice_dots',
         )
         .from('users')
         .where('username', username);
@@ -82,6 +84,8 @@ export class UsersService {
           is_admin: user.is_admin,
           icon_name: user.icon_name,
           icon_src: user.icon_src,
+          chat_dots: user.chat_dots,
+          notice_dots: user.notice_dots,
         };
       } else {
         throw new HttpException('Wrong username or password', 401);
@@ -183,6 +187,7 @@ export class UsersService {
   }
 
   async dotsUpdate(id: number, updateDotsDto: UpdateDotsDto) {
+    console.log('updateding', updateDotsDto);
     let result = await this.knex('users')
       .where('id', id)
       .update({

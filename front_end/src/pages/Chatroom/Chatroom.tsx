@@ -23,14 +23,16 @@ import {
 } from "ionicons/icons";
 import moment from "moment";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { Socket } from "socket.io-client";
 import { resultingClientExists } from "workbox-core/_private";
 import { API_ORIGIN } from "../../api";
 import { useSocket } from "../../hooks/use-socket";
+import { updateDots } from "../../redux/dots/actions";
 import { routes } from "../../routes";
 import { RootState } from "../../store";
+import { updateDot } from "../../updateDot";
 
 type PostDetail = {
   post_title: string;
@@ -51,17 +53,42 @@ type MSG = {
 const Chatroom: React.FC = () => {
   const [newWsMessageId, setNewWsMessageId] = useState(null);
   const router = useIonRouter();
+  const dispatch = useDispatch();
+  let dotState = useSelector((state: RootState) => state.dots);
 
-  // useSocket(
-  //   useCallback((socket: Socket) => {
-  //     socket.on("new-msg", (data) => {
-  //       console.log("received", data);
-  //       setMsgList(data.newMSG);
-  //       setNewWsMessageId(data.newMSG[data.newMSG.length - 1].id);
-  //     });
-  //     return () => {};
-  //   }, [])
-  // );
+  let jwtState = useSelector((state: RootState) => state.jwt);
+  let chatroomId: any = useParams();
+  
+
+  useSocket(
+    useCallback((socket: Socket) => {
+      socket.on("new-msg", (data) => {
+        console.log("whoAmI", jwtState)
+        console.log("received", data);
+        setMsgList(data.newMSG);
+        setNewWsMessageId(data.newMSG[data.newMSG.length - 1].id);
+      });
+      socket.on('are-u-here', async (data)=> {
+        console.log('i am here')
+        console.log(jwtState.id)
+        if(jwtState.id){
+
+          await updateDot(jwtState.id,'chat_dots',false)
+        }
+        // setChatDots(false)
+        dispatch(
+          updateDots({
+            chatDot: false,
+            noticeDot: dotState.noticeDot
+          })
+        )
+      })
+      socket.emit("join-chat-room", chatroomId.id)
+      return () => {
+        socket.emit('leave-chat-room', chatroomId.id)
+      };
+    }, [chatroomId.id])
+  );
 
   useLayoutEffect(() => {
     if (!newWsMessageId) return;
@@ -78,7 +105,6 @@ const Chatroom: React.FC = () => {
     }
   }, [newWsMessageId]);
 
-  let jwtState = useSelector((state: RootState) => state.jwt);
 
   // const [chatList, setChatList] = useState<
   //   { id: number; image: string; name: string; message: string }[]
@@ -91,7 +117,6 @@ const Chatroom: React.FC = () => {
   } as PostDetail);
   const [currentMsg, setCurrentMsg] = useState("");
   const [msgList, setMsgList] = useState([]) as any;
-  let chatroomId: any = useParams();
 
   useEffect(() => {
     console.log("chat", chatroomId.id);
@@ -154,6 +179,14 @@ const Chatroom: React.FC = () => {
     console.log("jwtState", jwtState);
   }
 
+  function realIcon (photoUrl: string){
+    if(photoUrl.includes("$1")){
+      return photoUrl.split("$1").join("?")
+    } else {
+      return photoUrl
+    }
+  }
+
   return (
     <IonPage className="ChatListTab">
       <IonHeader>
@@ -209,7 +242,8 @@ const Chatroom: React.FC = () => {
                           }}
                         >
                           <IonAvatar>
-                            <img src={msg.icon_src}></img>
+                            
+                            <img src={realIcon(msg.icon_src)}></img>
                           </IonAvatar>
                           <IonLabel>{msg.content}</IonLabel>
                         </div>
@@ -228,7 +262,7 @@ const Chatroom: React.FC = () => {
                           }}
                         >
                           <IonAvatar>
-                            <img src={msg.icon_src}></img>
+                            <img src={realIcon(msg.icon_src)}></img>
                           </IonAvatar>
                           <IonLabel>{msg.content}</IonLabel>
                         </div>

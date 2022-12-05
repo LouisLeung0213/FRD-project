@@ -37,6 +37,7 @@ import { useSocket } from "../../hooks/use-socket";
 import { Socket } from "socket.io-client";
 import { Root } from "react-dom/client";
 import { updatePoints } from "../../redux/points/actions";
+import { updateDots } from "../../redux/dots/actions";
 
 const Login: React.FC = () => {
   const jwtState = useSelector((state: RootState) => state.jwt);
@@ -96,7 +97,7 @@ const Login: React.FC = () => {
       let userInfo = await res2.json();
 
       setValue("userId", userInfo.id);
-
+      console.log("userInfo", userInfo)
       let res3 = await fetch(
         `${API_ORIGIN}/information/savedBank/${userInfo.id}`
       );
@@ -149,7 +150,12 @@ const Login: React.FC = () => {
           points: getPointsInfo.userInfo.points,
         })
       );
-
+      dispatch(
+        updateDots({
+          chatDot: userInfo.chat_dots,
+          noticeDot: userInfo.notice_dots
+        })
+      );   
       // history.push(`/tab/Profile`);
       socket.emit("join-TJroom", { userId: userInfo.id });
       router.push(routes.tab.profile(userInfo.id), "forward", "replace");

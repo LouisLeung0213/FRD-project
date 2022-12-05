@@ -71,6 +71,7 @@ const Post: React.FC<{ post: PostObj; goChat: any }> = (props: {
         console.log("join room", props.post.id);
         socket.emit("join-room", props.post.id);
         socket.on("newBidReceived", (msg) => {
+          console.log('Still in room')
           if (msg.newBidContent != "") {
             if (msg.newBidContent[0].post_id) {
               if (msg.newBidContent[0].post_id != +props.post.id) {
