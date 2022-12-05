@@ -366,7 +366,7 @@ const App: React.FC = () => {
             render={() => <PasswordChange />}
           />
           <Route
-            path={routes.menu.invoice}
+            path={routes.menu.invoice(":id")}
             exact={true}
             render={() => <Invoice />}
           />

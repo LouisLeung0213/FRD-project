@@ -139,7 +139,6 @@ export class PaymentService {
           },
         );
 
-        console.log('!!!!!!!!!!!!!!', result);
         let captured_result = await this.knex('client_secrets')
           .update('captured', true)
           .where('client_secret', intent2.client_secret_should_capture);
@@ -155,7 +154,6 @@ export class PaymentService {
             .length === 0,
       );
 
-      ///TODO ////TODO ////TODO
       console.log('intent_should_remain', intent_should_remain);
       let total_point_remain = 0;
       for (let obj of intent_should_remain) {
@@ -171,10 +169,11 @@ export class PaymentService {
         .update('status', 'sold&holding')
         .where('id', +updatePointsDto.post_id);
 
-      let changeStorageStatus = await this.knex('storages').update({
-        buyer_id: +updatePointsDto.bidder_id,
-        out_time: this.knex.fn.now(),
-      });
+      let changeStorageStatus = await this.knex('storages')
+        .update({
+          buyer_id: +updatePointsDto.bidder_id,
+        })
+        .where('product_id', +updatePointsDto.post_id);
     } catch (error) {
       console.log(error);
       throw new Error(error);
@@ -183,7 +182,6 @@ export class PaymentService {
     return {
       status: 200,
       message: 'transaction complete',
-
       message2: 'required_amount:',
       required_amount,
       message3: 'origin_points:',

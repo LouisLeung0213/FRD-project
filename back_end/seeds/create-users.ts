@@ -16,7 +16,7 @@ export async function seed(knex: Knex): Promise<void> {
         nickname: 'caleb',
         phone: '12345678',
         email: '123@gmail.com',
-        points: 10000,
+
         is_admin: true,
       },
       {
@@ -25,7 +25,7 @@ export async function seed(knex: Knex): Promise<void> {
         nickname: 'louis',
         phone: '12345678',
         email: '123@gmail.com',
-        points: 10000,
+
         is_admin: true,
       },
       {
@@ -34,7 +34,7 @@ export async function seed(knex: Knex): Promise<void> {
         nickname: 'scott',
         phone: '12345678',
         email: '123@gmail.com',
-        points: 10000,
+
         is_admin: true,
       },
     ]);
@@ -75,13 +75,13 @@ export async function seed(knex: Knex): Promise<void> {
       {
         // id: '1',
         user_id: '2',
-        post_title: '333',
-        post_description: 'title',
-        original_price: 6500,
+        post_title: '進擊的巨人',
+        post_description: '99%新限量版團長',
+        original_price: 650,
         q_mark: true,
         admin_title: '',
         admin_comment: '',
-        status: 'selling',
+        status: 'pending_in',
         post_time: '2022-12-02 22:23:02.001428+08',
         priority: 0,
         location_id: 1,

@@ -20,8 +20,9 @@ export class InvoiceController {
     return this.invoiceService.create(createInvoiceDto);
   }
 
-  @Get('dealInvoice')
+  @Get('dealInvoice/:id')
   dealInvoice(@Param('id') id: string) {
+    console.log(id);
     return this.invoiceService.dealInvoice(+id);
   }
 
