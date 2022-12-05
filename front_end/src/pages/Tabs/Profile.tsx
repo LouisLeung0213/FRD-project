@@ -69,7 +69,28 @@ const Profile: React.FC = () => {
   let jwtState = useSelector((state: RootState) => state.jwt);
   let pointsState = useSelector((state: RootState) => state.points);
   let dotsState = useSelector((state: RootState) => state.dots);
-
+  
+  useSocket(useCallback((socket: Socket)=>{
+    socket.on('new-msg', async (data)=> {
+      let currentUserId = await getValue('userId')
+      let userStatus = await fetch(`${API_ORIGIN}/users/dots/${currentUserId}`)
+      let userDots = await userStatus.json()
+      console.log("received")
+      dispatch(
+        updateDots({
+          chatDot: userDots.chat_dots,
+          noticeDot: userDots.notice_dots,
+        })
+      );
+    })
+    getValue('userId').then((userId)=>{
+      console.log('become TJ')
+      socket.emit('leave-TJroom', userId)
+      console.log("reJoin")
+      socket.emit('join-TJroom', {userId} )
+    });
+    return ()=> {}
+  },[]))
 
   let real_icon_src = "";
   useEffect(() => {
