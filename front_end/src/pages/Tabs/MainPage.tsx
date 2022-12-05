@@ -133,11 +133,10 @@ const MainPage: React.FC = () => {
     };
 
     const dotStatus = async () => {
-      if(jwtState.id){
-
+      if (jwtState.id) {
         let res = await fetch(`${API_ORIGIN}/users/dots/${jwtState.id}`);
         let result = await res.json();
-        console.log("dotResult", result)
+        console.log("dotResult", result);
         if (!result.notice_dots) {
           setNoticeDots(result.notice_dots);
         }
@@ -148,7 +147,7 @@ const MainPage: React.FC = () => {
           })
         );
       } else {
-        return 
+        return;
       }
     };
     dotStatus();
@@ -221,6 +220,10 @@ const MainPage: React.FC = () => {
 
   function goChat(id: number) {
     router.push(routes.chatroom(id), "forward", "replace");
+    modelDismiss();
+  }
+  function afterDeal(id: number) {
+    router.push(routes.tab.mainPage);
     modelDismiss();
   }
 
@@ -414,7 +417,11 @@ const MainPage: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <Post post={currentPost as PostObj} goChat={goChat} />
+          <Post
+            post={currentPost as PostObj}
+            goChat={goChat}
+            afterDeal={afterDeal}
+          />
         </IonContent>
       </IonModal>
 

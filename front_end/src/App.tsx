@@ -273,8 +273,8 @@ const App: React.FC = () => {
       console.log(jwtResult);
       // console.log()
     };
-
     get();
+    // console.log("APPdotState:",dotState.chatDot)
   }, [receivedMsg]);
 
   useEffect(() => {
@@ -299,7 +299,7 @@ const App: React.FC = () => {
 
       await PushNotifications.addListener("registration", (token) => {
         console.log("Registration token: ", token.value);
-        alert(JSON.stringify(token.value));
+        // alert(JSON.stringify(token.value));
       });
 
       await PushNotifications.addListener(
@@ -366,7 +366,7 @@ const App: React.FC = () => {
             render={() => <PasswordChange />}
           />
           <Route
-            path={routes.menu.invoice}
+            path={routes.menu.invoice(":id")}
             exact={true}
             render={() => <Invoice />}
           />

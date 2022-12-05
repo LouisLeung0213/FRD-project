@@ -69,6 +69,28 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
   let jwtState = useSelector((state: RootState) => state.jwt);
   let pointsState = useSelector((state: RootState) => state.points);
   let dotsState = useSelector((state: RootState) => state.dots);
+  
+  useSocket(useCallback((socket: Socket)=>{
+    socket.on('new-msg', async (data)=> {
+      let currentUserId = await getValue('userId')
+      let userStatus = await fetch(`${API_ORIGIN}/users/dots/${currentUserId}`)
+      let userDots = await userStatus.json()
+      console.log("received")
+      dispatch(
+        updateDots({
+          chatDot: userDots.chat_dots,
+          noticeDot: userDots.notice_dots,
+        })
+      );
+    })
+    getValue('userId').then((userId)=>{
+      console.log('become TJ')
+      socket.emit('leave-TJroom', userId)
+      console.log("reJoin")
+      socket.emit('join-TJroom', {userId} )
+    });
+    return ()=> {}
+  },[]))
 
   let real_icon_src = "";
   useEffect(() => {
@@ -151,6 +173,7 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
 
   function destroyUserInfo() {
     removeValue("Jwt");
+    removeValue("userId");
     dispatch(
       updateJwt({
         jwtKey: null,
@@ -193,6 +216,10 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
     router.push(routes.chatroom(id), "forward", "replace");
     dismissPost();
   }
+  function afterDeal(id: number) {
+    router.push(routes.tab.mainPage);
+    dismissPost();
+  }
 
   function func() {
     console.log("Current pointsState: ", pointsState.points);
@@ -225,7 +252,7 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
               <IonLabel>更改密碼</IonLabel>
             </IonItem>
 
-            <IonItem routerLink="/Invoice">
+            <IonItem routerLink={`/Invoice/${jwtState.id}`}>
               <IonIcon icon={receiptOutline} slot="start" />
               <IonLabel>電子收據</IonLabel>
             </IonItem>
@@ -260,9 +287,7 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
           </IonToolbar>
         </IonHeader>
         <IonContent fullscreen>
-          <IonCard
-            style={{ backgroundColor: "#0f0f619a", marginBottom: "10px" }}
-          >
+          <IonCard style={{ backgroundColor: "black", marginBottom: "10px" }}>
             <div className={profileStyles.personalIconContainer}>
               <img src={showedIcon} className={profileStyles.personalIcon} />
             </div>
@@ -414,7 +439,11 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
             </IonToolbar>
           </IonHeader>
           <IonContent>
-            <Post post={currentPost as PostObj} goChat={goChat} />
+            <Post
+              post={currentPost as PostObj}
+              goChat={goChat}
+              afterDeal={afterDeal}
+            />
           </IonContent>
         </IonModal>
       </IonPage>

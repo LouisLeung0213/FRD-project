@@ -46,6 +46,9 @@ export class BidController {
       socket.on('leave-chat-room', (data) => {
         socket.leave('makeDealRoom: ' + data);
       });
+      socket.on('leave-TJroom', (data) => {
+        socket.leave('TJroom: ' + data);
+      });
     });
   }
 

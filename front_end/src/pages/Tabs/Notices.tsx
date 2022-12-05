@@ -41,7 +41,7 @@ const Notices: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>聊天室清單</IonTitle>
+          <IonTitle>聊天室</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding" fullscreen={true}>

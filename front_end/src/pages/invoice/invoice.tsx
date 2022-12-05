@@ -24,12 +24,21 @@ import { API_ORIGIN } from "../../api";
 const Invoice: React.FC = () => {
   const jwtState = useSelector((state: RootState) => state.jwt);
   let [invoiceList, setInvoiceList] = useState([]);
+  let [pickUpInvoiceList, setPickUpInvoiceList] = useState([]);
+
   useEffect(() => {
     const getInvoice = async () => {
       let res = await fetch(`${API_ORIGIN}/invoice/${jwtState.id}`);
       let result = await res.json();
       setInvoiceList(result);
-      console.log("invoice:", result);
+      console.log("storage invoice:", result);
+
+      let res2 = await fetch(
+        `${API_ORIGIN}/invoice/dealInvoice/${jwtState.id}`
+      );
+      let pickUpInvoice = await res2.json();
+      console.log(pickUpInvoice);
+      setPickUpInvoiceList(pickUpInvoice);
     };
 
     getInvoice();
@@ -66,17 +75,6 @@ const Invoice: React.FC = () => {
                   </IonItem>
                 );
               })}
-              {/* <IonLabel className="invoiceNumber"></IonLabel>
-              賣家：
-              <IonLabel className="sellerName">Louis</IonLabel>
-              買家：
-              <IonLabel className="buyerName">Scott</IonLabel>
-              拍賣物品：
-              <IonLabel>[HotToy] IronMan-Mark-42</IonLabel>
-              成交金額：
-              <IonLabel className="soldPrice">$8964</IonLabel>
-              成交日期：
-              <IonLabel className="soldTime">2022-03-01 03:33 am</IonLabel> */}
             </div>
           </IonAccordion>
           <IonAccordion value="second">
@@ -84,17 +82,20 @@ const Invoice: React.FC = () => {
               <IonLabel>提貨電子收據</IonLabel>
             </IonItem>
             <div className="ion-padding invoiceContainer" slot="content">
-              <IonLabel className="invoiceNumber">YOUBUYTHISITEM0201</IonLabel>
-              賣家：
-              <IonLabel className="sellerName">Louis</IonLabel>
-              買家：
-              <IonLabel className="buyerName">Scott</IonLabel>
-              拍賣物品：
-              <IonLabel>[HotToy] IronMan-Mark-41</IonLabel>
-              成交金額：
-              <IonLabel className="soldPrice">$8963</IonLabel>
-              成交日期：
-              <IonLabel className="soldTime">2022-02-01 02:22 am</IonLabel>
+              {pickUpInvoiceList.map((item: any) => {
+                return (
+                  <IonItem key={item.product_id} className="ion-padding">
+                    收據號碼：
+                    {item.receipt_code}
+                    <br />
+                    貨品名稱：
+                    {item.post_title}
+                    <br />
+                    存倉時間：
+                    {moment(item.in_time).format("MMMM Do YYYY, h:mm:ss a")}
+                  </IonItem>
+                );
+              })}
             </div>
           </IonAccordion>
         </IonAccordionGroup>
