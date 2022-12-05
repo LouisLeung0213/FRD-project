@@ -228,8 +228,9 @@ const MainPage: React.FC = () => {
     // router.push(routes.chatroom(id), "forward", "replace");
     router.push(routes.chatroom(id));
   }
-  function afterDeal(id: number) {
-    router.push(routes.tab.mainPage);
+
+  function afterDeal() {
+    router.push(routes.tab.mainPage, 'forward', 'replace');
     modelDismiss();
   }
 
