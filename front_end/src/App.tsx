@@ -273,8 +273,8 @@ const App: React.FC = () => {
       console.log(jwtResult);
       // console.log()
     };
-
     get();
+    console.log("APPdotState:",dotState.chatDot)
   }, [receivedMsg]);
 
   useEffect(() => {
