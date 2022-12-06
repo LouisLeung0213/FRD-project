@@ -62,25 +62,29 @@ export class BidController {
     let newBidList = await this.bidService.bidding(createBidDto);
     let newPriceList = await this.postsService.showAll();
     if (!('status' in newBidList)) {
-      console.log('newBidList', newBidList);
+      console.log('newBidList', newBidList.firstBidNoti);
       io.to('room: ' + createBidDto.postId).emit('newBidReceived', {
         newBidContent: newBidList.bid,
       });
       io.emit('priceUpdated', {
         newPrice: newPriceList,
       });
-      io.to('TJroom: ' + newBidList.firstBidNoti.receiver_id).emit(
-        'bid-received',
-        {
-          msg: newBidList.firstBidNoti.content,
-        },
-      );
-      io.to('TJroom: ' + newBidList.infoSeller.receiver_id).emit(
-        'info-seller',
-        {
-          msg: newBidList.infoSeller.content,
-        },
-      );
+      if (newBidList.firstBidNoti) {
+        io.to('TJroom: ' + newBidList.firstBidNoti.receiver_id).emit(
+          'bid-received',
+          {
+            msg: newBidList.firstBidNoti.content,
+          },
+        );
+      }
+      if (newBidList.infoSeller) {
+        io.to('TJroom: ' + newBidList.infoSeller.receiver_id).emit(
+          'info-seller',
+          {
+            msg: newBidList.infoSeller.content,
+          },
+        );
+      }
     }
     console.log('newBidList', newBidList);
     return newBidList;

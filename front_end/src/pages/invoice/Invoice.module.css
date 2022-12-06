@@ -1,0 +1,30 @@
+.invoiceContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.invoiceContainer > * {
+  margin-bottom: 1rem;
+}
+
+.numDiv {
+  display: flex;
+  flex-direction: column;
+}
+
+.pickUpDiv {
+  border: 3px whitesmoke solid;
+  padding: 5px;
+  margin-bottom: 15px;
+}
+
+.numContainer {
+  display: flex;
+  justify-content: space-between;
+}
+.afterPickUp {
+  border: 2px red solid;
+  padding: 8px;
+  color: red;
+  border-radius: 5px;
+}

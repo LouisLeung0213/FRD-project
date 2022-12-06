@@ -17,7 +17,7 @@ import {
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import "./Invoice.css";
+import invoiceStyles from "./Invoice.module.css";
 import moment from "moment";
 import { API_ORIGIN } from "../../api";
 
@@ -84,16 +84,26 @@ const Invoice: React.FC = () => {
             <div className="ion-padding invoiceContainer" slot="content">
               {pickUpInvoiceList.map((item: any) => {
                 return (
-                  <IonItem key={item.product_id} className="ion-padding">
-                    收據號碼： {item.out_time ? <div>已提貨</div> : null}
-                    {item.receipt_code}
+                  <div
+                    key={item.product_id}
+                    className={invoiceStyles.pickUpDiv}
+                  >
+                    <div className={invoiceStyles.numContainer}>
+                      <div className={invoiceStyles.numDiv}>
+                        收據號碼：
+                        <div> {item.receipt_code}</div>
+                      </div>
+                      {item.out_time ? (
+                        <div className={invoiceStyles.afterPickUp}>已提貨</div>
+                      ) : null}
+                    </div>
                     <br />
                     貨品名稱：
                     {item.post_title}
                     <br />
                     存倉時間：
-                    {moment(item.in_time).format("MMMM Do YYYY, h:mm:ss a")}
-                  </IonItem>
+                    {moment(item.in_time).format("MMMM Do YYYY")}
+                  </div>
                 );
               })}
             </div>
