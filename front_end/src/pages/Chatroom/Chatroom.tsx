@@ -222,7 +222,15 @@ const Chatroom: React.FC = () => {
             <IonAvatar style={{ width: "3rem", height: "3rem" }}>
               <img src={postDetail.json_agg[0]} />
             </IonAvatar>
-            <div style={{ color: "gold", fontSize: "25px" }}>
+            <div
+              style={{
+                color: "gold",
+                fontSize: "15px",
+                margin: "8px",
+                display: "flex",
+                textAlign: "center",
+              }}
+            >
               {postDetail.post_title}
             </div>
             <IonLabel>HK${postDetail.original_price}</IonLabel>

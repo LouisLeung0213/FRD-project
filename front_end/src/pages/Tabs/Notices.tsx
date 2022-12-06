@@ -103,7 +103,7 @@ const Notices: React.FC = () => {
                             </div>
                           </div>
                           <div className={noticesStyles.infoDiv}>
-                            <div style={{ color: "gold", fontSize: "1.15rem" }}>
+                            <div style={{ color: "gold", fontSize: "1rem" }}>
                               {chat.post_title}
                             </div>
 
