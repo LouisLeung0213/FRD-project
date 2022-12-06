@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { Console } from 'console';
 import { LargeNumberLike } from 'crypto';
 import { InjectKnex, Knex } from 'nestjs-knex';
@@ -24,7 +24,7 @@ export class BidService {
         .select('original_price')
         .from('posts')
         .where('id', createBidDto.postId);
-      if (originalPrice[0].original_price >= +createBidDto.bidPrice) {
+      if (originalPrice[0].original_price > +createBidDto.bidPrice) {
         return {
           status: '09',
           message: 'invalid bid due to bidPrice lower than originalPrice',
@@ -88,13 +88,14 @@ export class BidService {
         let pointRemain = await this.knex('users')
           .select('points')
           .where('id', +createBidDto.buyerId);
-
+        console.log('checkPoint', pointRemain);
         let remainPoints = pointRemain[0].points - +createBidDto.bidPrice;
-
+        console.log('how many left', remainPoints);
         let deduction = await this.knex('users')
           .update('points', remainPoints)
-          .where('id', +createBidDto.buyerId);
-
+          .where('id', +createBidDto.buyerId)
+          .returning('points');
+        console.log('reduced ', deduction);
         let bid = await this.knex('bid_records')
           .insert({
             post_id: createBidDto.postId,
@@ -129,6 +130,17 @@ export class BidService {
           message: 'invalid bid due to bidPrice lower than existing bidPrice',
         };
       } else {
+        let pointRemain = await this.knex('users')
+          .select('points')
+          .where('id', +createBidDto.buyerId);
+        console.log('checkPoint', pointRemain);
+        let remainPoints = pointRemain[0].points - +createBidDto.bidPrice;
+        console.log('how many left', remainPoints);
+        let deduction = await this.knex('users')
+          .update('points', remainPoints)
+          .where('id', +createBidDto.buyerId)
+          .returning('points');
+        console.log('reduced ', deduction);
         let bid = await this.knex('bid_records')
           .insert({
             post_id: createBidDto.postId,
@@ -136,6 +148,24 @@ export class BidService {
             bid_price: createBidDto.bidPrice,
           })
           .returning('id');
+        let bidderUser = await this.knex
+          .select('buyer_id', 'bid_price')
+          .from('bid_records')
+          .where('post_id', createBidDto.postId)
+          .orderBy('bid_price', 'desc');
+
+        if (bidderUser.length > 0) {
+          let refunder = await this.knex
+            .select('points')
+            .from('users')
+            .where('id', bidderUser[1].buyer_id);
+          if (refunder.length > 0) {
+            await this.knex('users')
+              .update({ points: refunder[0].points + bidderUser[1].bid_price })
+              .where('id', bidderUser[1].buyer_id);
+          }
+        }
+
         if (bid[0].id) {
           let newBidList = await this.knex
             .select('post_id', 'buyer_id', 'bid_price', 'nickname')

@@ -150,7 +150,8 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
     setNickname(jwtState.nickname);
     setUsername(jwtState.username);
     setPoints(pointsState.points);
-    setJoinTime(moment(jwtState.joinedTime).format("MMMM Do YYYY"));
+    // setJoinTime(moment(jwtState.joinedTime).format("MMMM Do YYYY"));
+    setJoinTime((jwtState.joinedTime));
   };
 
   const getOtherProfile = async (userId: number) => {
@@ -159,7 +160,9 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
 
     setNickname(userInfo.nickname);
     setUsername(userInfo.username);
-    setJoinTime(moment(userInfo.joinedTime).format("MMMM Do YYYY"));
+    // setJoinTime(moment(userInfo.joinedTime).format("MMMM Do YYYY"));
+    setJoinTime((jwtState.joinedTime)?.split('T')[0]);
+
   };
 
   useEffect(() => {
