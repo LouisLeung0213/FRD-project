@@ -198,40 +198,6 @@ const App: React.FC = () => {
         // }
         // }
       });
-      socket.on("ban", async (msg) => {
-        pushToLogin()
-        // removeValue("Jwt");
-        // removeValue("userId");
-        // dispatch(
-        //   updateJwt({
-        //     jwtKey: null,
-        //     id: undefined,
-        //     username: undefined,
-        //     nickname: undefined,
-        //     phone: undefined,
-        //     email: undefined,
-        //     joinedTime: undefined,
-        //     isAdmin: false,
-        //     bankAccount: [{}],
-        //     icon_name: undefined,
-        //     icon_src: undefined,
-        //   })
-        // );
-        // dispatch(
-        //   updateDots({
-        //     chatDot: false,
-        //     noticeDot: false,
-        //   })
-        // );
-        // dispatch(
-        //   updatePoints({
-        //     points: 0,
-        //   })
-        // );
-
-
-        // alert(jwtState.username);
-      });
       return () => {};
     }, [])
   );

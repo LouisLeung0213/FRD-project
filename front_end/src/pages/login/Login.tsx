@@ -82,9 +82,17 @@ const Login: React.FC = () => {
       }),
     });
     let result = await res.json();
+    console.log('this is login result', result)
     let token = result.access_token;
+    
     console.log(token);
+    if(result.banned_id){
+      alert('此帳號已被封鎖')
+      return
+    }
     if (token) {
+      console.log('here success login')
+      console.log("token",token)
       setValue("Jwt", token);
 
       setIsUserCorrect(true);
@@ -160,6 +168,7 @@ const Login: React.FC = () => {
       socket.emit("join-TJroom", { userId: userInfo.id });
       router.push(routes.tab.profile(userInfo.id), "forward", "replace");
     } else {
+      console.log("wrong username or password")
       setIsUserCorrect(false);
       // alert(JSON.stringify("冇人識你喎...", null, 2));
     }
@@ -175,8 +184,8 @@ const Login: React.FC = () => {
   );
 
   const { state, item } = useIonFormState({
-    username: "caleb",
-    password: "123",
+    username: "scott",
+    password: "hotbidadmin@2022",
   });
 
   return (

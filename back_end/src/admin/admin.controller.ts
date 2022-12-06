@@ -32,6 +32,7 @@ export class AdminController {
     let banUser = await this.adminService.bannedUser(id, updateAdminDto);
     console.log(banUser);
     if ('user_id' in banUser) {
+      console.log(banUser.user_id);
       io.to('TJroom: ' + banUser.user_id).emit('ban', {
         msg: 'You have been banned',
       });

@@ -41,6 +41,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('client_secret').notNullable();
     table.integer('user_id').notNullable().references('users.id');
     table.boolean('captured').defaultTo(false);
+    table.boolean('used_for_bidding').defaultTo(false);
   });
 
   await knex.schema.createTableIfNotExists('followers', (table) => {

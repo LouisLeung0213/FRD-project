@@ -49,6 +49,9 @@ import { RootState } from "../../store";
 import { updateDot } from "../../updateDot";
 import { updateDots } from "../../redux/dots/actions";
 import Profile from "./Profile";
+import { updatePoints } from "../../redux/points/actions";
+import { removeValue } from "../../service/localStorage";
+import { updateJwt } from "../../redux/user/actions";
 
 const MainPage: React.FC = () => {
   const [present, dismiss] = useIonLoading();
@@ -121,6 +124,38 @@ const MainPage: React.FC = () => {
           );
         }
       });
+      socket.on('ban', (msg)=> {
+        alert('您已被封鎖，如有疑問請聯絡管理員')
+        removeValue('Jwt')
+        removeValue('userId');
+        dispatch(
+          updateJwt({
+            jwtKey: null,
+            id: undefined,
+            username: undefined,
+            nickname: undefined,
+            phone: undefined,
+            email: undefined,
+            joinedTime: undefined,
+            isAdmin: false,
+            bankAccount: [{}],
+            icon_name: undefined,
+            icon_src: undefined,
+          })
+        );
+        dispatch(
+          updateDots({
+            chatDot: false,
+            noticeDot: false,
+          })
+        );
+        dispatch(
+          updatePoints({
+            points: 0,
+          })
+        );
+        router.push(routes.tab.login, "forward",'replace')
+      })
       return () => {};
     }, [])
   );
@@ -230,7 +265,7 @@ const MainPage: React.FC = () => {
   }
 
   function afterDeal() {
-    router.push(routes.tab.mainPage, 'forward', 'replace');
+    router.push(routes.tab.mainPage, "forward", "replace");
     modelDismiss();
   }
 
@@ -286,7 +321,7 @@ const MainPage: React.FC = () => {
               debounce={1000}
               onIonChange={(ev: any) => setQuery(ev.target.value)}
             ></IonSearchbar>
-            <IonButton
+            {/* <IonButton
               onClick={() => {
                 present({
                   message: "載入中...",
@@ -296,7 +331,7 @@ const MainPage: React.FC = () => {
               }}
             >
               loading
-            </IonButton>
+            </IonButton> */}
             {postsList
               .filter((postsList) => postsList.post_title.includes(query))
               .map((post: any, index) => {
