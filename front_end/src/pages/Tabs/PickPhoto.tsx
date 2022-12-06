@@ -61,7 +61,6 @@ import { useIonFormState } from "react-use-ionic-form";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { API_ORIGIN } from "../../api";
-
 import { routes } from "../../routes";
 
 //firebase storage

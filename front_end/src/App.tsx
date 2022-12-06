@@ -143,60 +143,6 @@ const App: React.FC = () => {
         } else {
           setReceivedMsg(true);
         }
-        console.log("fake toggle: ", receivedMsg);
-        // if(data.newMSG[data.newMSG.length - 1].sender_id != userId){
-        //   if(userId){
-
-        //     let result = await updateDot(+userId, "chat_dots", true);
-        //     console.log(result);
-        //   } else {
-        //     alert(userId)
-        //     return
-        //   }
-        // } else {
-        //  console.log('you are the sender')
-        // }
-        // if (dotState.noticeDot) {
-        console.log("here1", dotState.chatDot);
-        // setChatDots(result.chat_dots);
-
-        // dispatch(
-        //   updateDots({
-        //     chatDot: result.chat_dots,
-        //     noticeDot: dotState.noticeDot,
-        //   })
-        // );
-        // if (data.newMSG[data.newMSG.length - 1].sender_id != userId) {
-        //   console.log('i am the receiver')
-        //   dispatch(
-        //     updateDots({
-        //       chatDot: true,
-        //       noticeDot: dotState.noticeDot,
-        //     })
-        //   );
-        //   // setChatDots(true);
-        // } else {
-        //   console.log('i am the sender')
-        //   dispatch(
-        //     updateDots({
-        //       chatDot: false,
-        //       noticeDot: dotState.noticeDot,
-        //     })
-        //   );
-        //   // setChatDots(false);
-        // }
-        // } else {
-        //   console.log("here2", dotState.noticeDot);
-
-        //   setChatDots(result.chat_dots);
-        //   dispatch(
-        //     updateDots({
-        //       chatDot: result.chat_dots,
-        //       noticeDot: dotState.noticeDot,
-        //     })
-        //   );
-        // }
-        // }
       });
       return () => {};
     }, [])
@@ -223,6 +169,9 @@ const App: React.FC = () => {
     let token = await getValue("Jwt");
 
     console.log("id:", userId, "token:", token);
+    if(!userId){
+      return
+    }
     let res = await fetch(`${API_ORIGIN}/profiles/${userId}`);
 
     let userInfo = await res.json();
