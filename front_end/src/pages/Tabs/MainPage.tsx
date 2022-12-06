@@ -156,6 +156,82 @@ const MainPage: React.FC = () => {
         );
         router.push(routes.tab.login, "forward", "replace");
       });
+      socket.on("new-msg", async (data) => {
+        console.log("received");
+        console.log(data);
+        // if (jwtState.id) {
+        console.log("here");
+        // let userId = await getValue("userId")
+        // console.log("username", username);
+        console.log(data.receiverId);
+        await updateDot(+data.receiverId, "chat_dots", true);
+        dispatch(
+          updateDots({
+            chatDot: true,
+            noticeDot: dotState.noticeDot,
+          })
+        );
+        // if (receivedMsg) {
+        //   setReceivedMsg(false);
+        // } else {
+        //   setReceivedMsg(true);
+        // }
+        // console.log("fake toggle: ", receivedMsg);
+        // if(data.newMSG[data.newMSG.length - 1].sender_id != userId){
+        //   if(userId){
+
+        //     let result = await updateDot(+userId, "chat_dots", true);
+        //     console.log(result);
+        //   } else {
+        //     alert(userId)
+        //     return
+        //   }
+        // } else {
+        //  console.log('you are the sender')
+        // }
+        // if (dotState.noticeDot) {
+        console.log("here1", dotState.chatDot);
+        // setChatDots(result.chat_dots);
+
+        // dispatch(
+        //   updateDots({
+        //     chatDot: result.chat_dots,
+        //     noticeDot: dotState.noticeDot,
+        //   })
+        // );
+        // if (data.newMSG[data.newMSG.length - 1].sender_id != userId) {
+        //   console.log('i am the receiver')
+        //   dispatch(
+        //     updateDots({
+        //       chatDot: true,
+        //       noticeDot: dotState.noticeDot,
+        //     })
+        //   );
+        //   // setChatDots(true);
+        // } else {
+        //   console.log('i am the sender')
+        //   dispatch(
+        //     updateDots({
+        //       chatDot: false,
+        //       noticeDot: dotState.noticeDot,
+        //     })
+        //   );
+        //   // setChatDots(false);
+        // }
+        // } else {
+        //   console.log("here2", dotState.noticeDot);
+
+        //   setChatDots(result.chat_dots);
+        //   dispatch(
+        //     updateDots({
+        //       chatDot: result.chat_dots,
+        //       noticeDot: dotState.noticeDot,
+        //     })
+        //   );
+        // }
+        // }
+      });
+
       return () => {};
     }, [])
   );
