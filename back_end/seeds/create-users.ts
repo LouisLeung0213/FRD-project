@@ -17,6 +17,7 @@ export async function seed(knex: Knex): Promise<void> {
         phone: '12345678',
         email: '123@gmail.com',
         is_admin: true,
+        points: 10000,
       },
       {
         username: 'louis',
@@ -25,6 +26,7 @@ export async function seed(knex: Knex): Promise<void> {
         phone: '12345678',
         email: '123@gmail.com',
         is_admin: true,
+        points: 10000,
       },
       {
         username: 'scott',
@@ -33,6 +35,7 @@ export async function seed(knex: Knex): Promise<void> {
         phone: '12345678',
         email: '123@gmail.com',
         is_admin: true,
+        points: 10000,
       },
     ]);
 

@@ -132,6 +132,7 @@ const Storages: React.FC = () => {
       },
       body: JSON.stringify({
         status: "sold&out",
+        product_id: productId,
       }),
     });
 

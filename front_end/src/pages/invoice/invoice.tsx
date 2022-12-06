@@ -85,7 +85,7 @@ const Invoice: React.FC = () => {
               {pickUpInvoiceList.map((item: any) => {
                 return (
                   <IonItem key={item.product_id} className="ion-padding">
-                    收據號碼：
+                    收據號碼： {item.out_time ? <div>已提貨</div> : null}
                     {item.receipt_code}
                     <br />
                     貨品名稱：

@@ -8,4 +8,6 @@ export class UpdateStatusDto {
   @IsString()
   @IsNotEmpty()
   adminComment: string;
+  @IsNotEmpty()
+  product_id;
 }
