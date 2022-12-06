@@ -69,28 +69,32 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
   let jwtState = useSelector((state: RootState) => state.jwt);
   let pointsState = useSelector((state: RootState) => state.points);
   let dotsState = useSelector((state: RootState) => state.dots);
-  
-  useSocket(useCallback((socket: Socket)=>{
-    socket.on('new-msg', async (data)=> {
-      let currentUserId = await getValue('userId')
-      let userStatus = await fetch(`${API_ORIGIN}/users/dots/${currentUserId}`)
-      let userDots = await userStatus.json()
-      console.log("received")
-      dispatch(
-        updateDots({
-          chatDot: userDots.chat_dots,
-          noticeDot: userDots.notice_dots,
-        })
-      );
-    })
-    getValue('userId').then((userId)=>{
-      console.log('become TJ')
-      socket.emit('leave-TJroom', userId)
-      console.log("reJoin")
-      socket.emit('join-TJroom', {userId} )
-    });
-    return ()=> {}
-  },[]))
+
+  useSocket(
+    useCallback((socket: Socket) => {
+      socket.on("new-msg", async (data) => {
+        let currentUserId = await getValue("userId");
+        let userStatus = await fetch(
+          `${API_ORIGIN}/users/dots/${currentUserId}`
+        );
+        let userDots = await userStatus.json();
+        console.log("received");
+        dispatch(
+          updateDots({
+            chatDot: userDots.chat_dots,
+            noticeDot: userDots.notice_dots,
+          })
+        );
+      });
+      getValue("userId").then((userId) => {
+        console.log("become TJ");
+        socket.emit("leave-TJroom", userId);
+        console.log("reJoin");
+        socket.emit("join-TJroom", { userId });
+      });
+      return () => {};
+    }, [])
+  );
 
   let real_icon_src = "";
   let [showedIcon, setShowedIcon] = useState(real_icon_src as string);
@@ -146,7 +150,6 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
   useEffect(() => {
     if (props.id) {
       getOtherProfile(props.id);
-
     } else {
       getOwnProfile();
     }
@@ -154,12 +157,13 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
 
   useEffect(() => {
     const postsList = async () => {
-      if (props.id) {
-        let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${props.id}`);
-        let result = await res.json();
-        setPostsList(result);
-      } else {
-        let userId = await getValue("userId");
+      // if (props.id) {
+      let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${params.id}`);
+      let result = await res.json();
+      setPostsList(result);
+      // } else {
+      let userId = await getValue("userId");
+      if (userId) {
         let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${userId}`);
         let result = await res.json();
         setPostsList(result);

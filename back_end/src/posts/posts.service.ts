@@ -142,6 +142,7 @@ export class PostsService {
     //   .join('bid_records', 'post_id', 'posts.id')
     //   .groupBy('posts.id');
     // console.log('newPrice', newPrice);
+
     let showAllList = await this.knex
       .with(
         'tem_imgs',
