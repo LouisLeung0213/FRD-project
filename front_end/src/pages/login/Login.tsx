@@ -184,8 +184,8 @@ const Login: React.FC = () => {
   );
 
   const { state, item } = useIonFormState({
-    username: "scott",
-    password: "hotbidadmin@2022",
+    username: "",
+    password: "",
   });
 
   return (

@@ -23,6 +23,7 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import {
+  accessibilityOutline,
   add,
   arrowRedo,
   camera,
@@ -770,7 +771,7 @@ const PickPhoto: React.FC = () => {
                     <IonLabel position="floating">請選擇銀行戶口:</IonLabel>
                   ),
                   renderContent: (props) => (
-                    <IonSelect {...props}>
+                    <IonSelect interface="popover" {...props}>
                       {savedBanks.map((account: any) => (
                         <IonSelectOption key={account} value={account}>
                           {account.bankName}: {account.bankAccount}
@@ -786,7 +787,8 @@ const PickPhoto: React.FC = () => {
                   ),
                 })
               : null}
-            {state.qualityPlan === true && state.bankAccount.bankName == ""
+              
+            {state.qualityPlan === true && (state.bankAccount.bankName == "" || !state.bankAccount)
               ? item({
                   name: "newBankName",
                   renderLabel: () => (
@@ -803,7 +805,7 @@ const PickPhoto: React.FC = () => {
                   ),
                 })
               : null}
-            {state.qualityPlan === true && state.bankAccount.bankName == ""
+            {state.qualityPlan === true && (state.bankAccount?.bankName == "" || !state.bankAccount)
               ? item({
                   name: "newBankAccount",
                   renderLabel: () => (
