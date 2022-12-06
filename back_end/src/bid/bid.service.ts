@@ -30,63 +30,58 @@ export class BidService {
           message: 'invalid bid due to bidPrice lower than originalPrice',
         };
       } else {
-        let client_secret_amount_list = await this.knex('client_secrets')
-          .select('*')
-          .where('user_id', createBidDto.buyerId)
-          .andWhere('captured', false)
-          .andWhere('used_for_bidding', false);
+        // let client_secret_amount_list = await this.knex('client_secrets')
+        //   .select('*')
+        //   .where('user_id', createBidDto.buyerId)
+        //   .andWhere('captured', false)
+        //   .andWhere('used_for_bidding', false);
 
-        // console.log(
-        //   'FUCK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! client_secret_amount_list',
-        //   client_secret_amount_list,
+        // let total_unused_points = 0;
+
+        // for (let account of client_secret_amount_list) {
+        //   console.log('account.amount::!!', account.amount);
+        //   total_unused_points += account.amount;
+        // }
+
+        // let used_secret_id_list = [];
+
+        // for (let i = 0; i < client_secret_amount_list.length; i++) {
+        //   let amount_for_deduct = createBidDto.bidPrice;
+        //   console.log(
+        //     'amount_for_deduct:::::',
+        //     amount_for_deduct,
+        //     'client_secret_amount_list[i].amount',
+        //     client_secret_amount_list[i],
+        //   );
+        //   amount_for_deduct -= client_secret_amount_list[i].amount;
+        //   used_secret_id_list.push(client_secret_amount_list[i].id);
+
+        //   if (amount_for_deduct <= 0) {
+        //     break;
+        //   }
+        // }
+        // console.log('used_secret_list', used_secret_id_list);
+
+        // let hold_secret = await this.knex('client_secrets')
+        //   .update('used_for_bidding', true)
+        //   .whereIn('id', used_secret_id_list);
+
+        // let after_holding_points = 0;
+        // let points_should_remain = client_secret_amount_list.filter(
+        //   (objA) =>
+        //     used_secret_id_list.filter((objB) => objA.id === objB).length === 0,
         // );
 
-        let total_unused_points = 0;
-
-        for (let account of client_secret_amount_list) {
-          console.log('account.amount::!!', account.amount);
-          total_unused_points += account.amount;
-        }
-
-        let used_secret_id_list = [];
-
-        for (let i = 0; i < client_secret_amount_list.length; i++) {
-          let amount_for_deduct = createBidDto.bidPrice;
-          console.log(
-            'amount_for_deduct:::::',
-            amount_for_deduct,
-            'client_secret_amount_list[i].amount',
-            client_secret_amount_list[i],
-          );
-          amount_for_deduct -= client_secret_amount_list[i].amount;
-          used_secret_id_list.push(client_secret_amount_list[i].id);
-
-          if (amount_for_deduct <= 0) {
-            break;
-          }
-        }
-        console.log('used_secret_list', used_secret_id_list);
-
-        let hold_secret = await this.knex('client_secrets')
-          .update('used_for_bidding', true)
-          .whereIn('id', used_secret_id_list);
-
-        let after_holding_points = 0;
-        let points_should_remain = client_secret_amount_list.filter(
-          (objA) =>
-            used_secret_id_list.filter((objB) => objA.id === objB).length === 0,
-        );
-
-        console.log(
-          'points_should_remain:!!:!!::!!::!------------------',
-          points_should_remain,
-        );
-        for (let obj of points_should_remain) {
-          after_holding_points += obj.amount;
-        }
-        let points_after_bidding = await this.knex('users')
-          .update('points', after_holding_points)
-          .where('id', createBidDto.buyerId);
+        // console.log(
+        //   'points_should_remain:!!:!!::!!::!------------------',
+        //   points_should_remain,
+        // );
+        // for (let obj of points_should_remain) {
+        //   after_holding_points += obj.amount;
+        // }
+        // let points_after_bidding = await this.knex('users')
+        //   .update('points', after_holding_points)
+        //   .where('id', createBidDto.buyerId);
 
         let bid = await this.knex('bid_records')
           .insert({
@@ -152,55 +147,55 @@ export class BidService {
             })
             .returning(['receiver_id', 'content']);
 
-          let client_secret_amount_list = await this.knex('client_secrets')
-            .select('*')
-            .where('user_id', createBidDto.buyerId)
-            .andWhere('captured', false)
-            .andWhere('used_for_bidding', false);
+          // let client_secret_amount_list = await this.knex('client_secrets')
+          //   .select('*')
+          //   .where('user_id', createBidDto.buyerId)
+          //   .andWhere('captured', false)
+          //   .andWhere('used_for_bidding', false);
 
-          let total_unused_points = 0;
+          // let total_unused_points = 0;
 
-          for (let account of client_secret_amount_list) {
-            console.log('account.amount::!!', account.amount);
-            total_unused_points += account.amount;
-          }
+          // for (let account of client_secret_amount_list) {
+          //   console.log('account.amount::!!', account.amount);
+          //   total_unused_points += account.amount;
+          // }
 
-          let used_secret_id_list = [];
+          // let used_secret_id_list = [];
 
-          for (let i = 0; i < client_secret_amount_list.length; i++) {
-            let amount_for_deduct = createBidDto.bidPrice;
-            console.log(
-              'amount_for_deduct:::::',
-              amount_for_deduct,
-              'client_secret_amount_list[i].amount',
-              client_secret_amount_list[i].amount,
-            );
-            amount_for_deduct -= client_secret_amount_list[i].amount;
-            used_secret_id_list.push(client_secret_amount_list[i].id);
+          // for (let i = 0; i < client_secret_amount_list.length; i++) {
+          //   let amount_for_deduct = createBidDto.bidPrice;
+          //   console.log(
+          //     'amount_for_deduct:::::',
+          //     amount_for_deduct,
+          //     'client_secret_amount_list[i].amount',
+          //     client_secret_amount_list[i].amount,
+          //   );
+          //   amount_for_deduct -= client_secret_amount_list[i].amount;
+          //   used_secret_id_list.push(client_secret_amount_list[i].id);
 
-            if (amount_for_deduct <= 0) {
-              break;
-            }
-          }
-          console.log('used_secret_list', used_secret_id_list);
+          //   if (amount_for_deduct <= 0) {
+          //     break;
+          //   }
+          // }
+          // console.log('used_secret_list', used_secret_id_list);
 
-          let hold_secret = await this.knex('client_secrets')
-            .update('used_for_bidding', true)
-            .whereIn('id', used_secret_id_list);
+          // let hold_secret = await this.knex('client_secrets')
+          //   .update('used_for_bidding', true)
+          //   .whereIn('id', used_secret_id_list);
 
-          let after_holding_points = 0;
-          let points_should_remain = client_secret_amount_list.filter(
-            (objA) =>
-              used_secret_id_list.filter((objB) => objA.id === objB.id)
-                .length === 0,
-          );
+          // let after_holding_points = 0;
+          // let points_should_remain = client_secret_amount_list.filter(
+          //   (objA) =>
+          //     used_secret_id_list.filter((objB) => objA.id === objB.id)
+          //       .length === 0,
+          // );
 
-          for (let obj of points_should_remain) {
-            after_holding_points += obj.amount;
-          }
-          let points_after_bidding = await this.knex('users')
-            .update('points', after_holding_points)
-            .where('id', createBidDto.buyerId);
+          // for (let obj of points_should_remain) {
+          //   after_holding_points += obj.amount;
+          // }
+          // let points_after_bidding = await this.knex('users')
+          //   .update('points', after_holding_points)
+          //   .where('id', createBidDto.buyerId);
 
           return {
             bid: newBidList,

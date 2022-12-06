@@ -190,25 +190,25 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
           if (ev.detail.role === "confirm") {
             console.log(nowPrice);
             console.log(highestBidder_id);
-            let dealRes = await fetch(
-              `${API_ORIGIN}/payment/capturePaymentIntent`,
-              {
-                method: "PATCH",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  bidPrice: nowPrice,
-                  post_id: props.post.id,
-                  bidder_id: highestBidder_id,
-                }),
-              }
-            );
-            let result = await dealRes.json();
-            console.log("deal: ", result);
-            if (result.status == 200) {
-              goAfterDeal();
-            }
+            // let dealRes = await fetch(
+            //   `${API_ORIGIN}/payment/capturePaymentIntent`,
+            //   {
+            //     method: "PATCH",
+            //     headers: {
+            //       "Content-Type": "application/json",
+            //     },
+            //     body: JSON.stringify({
+            //       bidPrice: nowPrice,
+            //       post_id: props.post.id,
+            //       bidder_id: highestBidder_id,
+            //     }),
+            //   }
+            // );
+            // let result = await dealRes.json();
+            // console.log("deal: ", result);
+            // if (result.status == 200) {
+            goAfterDeal();
+            //}
           } else {
             reject();
           }
