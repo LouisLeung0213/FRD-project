@@ -265,7 +265,7 @@ const MainPage: React.FC = () => {
   }
 
   function afterDeal() {
-    router.push(routes.tab.mainPage, 'forward', 'replace');
+    router.push(routes.tab.mainPage, "forward", "replace");
     modelDismiss();
   }
 
@@ -321,7 +321,7 @@ const MainPage: React.FC = () => {
               debounce={1000}
               onIonChange={(ev: any) => setQuery(ev.target.value)}
             ></IonSearchbar>
-            <IonButton
+            {/* <IonButton
               onClick={() => {
                 present({
                   message: "載入中...",
@@ -331,7 +331,7 @@ const MainPage: React.FC = () => {
               }}
             >
               loading
-            </IonButton>
+            </IonButton> */}
             {postsList
               .filter((postsList) => postsList.post_title.includes(query))
               .map((post: any, index) => {
