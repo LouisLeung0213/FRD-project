@@ -69,10 +69,10 @@ export class UsersService {
         )
         .from('users')
         .where('username', username);
-
       if (result.length > 0) {
         let user = result[0];
-        // console.log("user: ", user)
+        console.log('user: ', user);
+
         return {
           id: user.id,
           username: user.username,
@@ -93,6 +93,14 @@ export class UsersService {
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  async checkIsBanned(id: number) {
+    let result = await this.knex
+      .select('user_id')
+      .from('banned_users')
+      .where('user_id', id);
+    return result[0];
   }
 
   async findOneById(id: number) {

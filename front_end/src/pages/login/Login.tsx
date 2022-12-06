@@ -83,8 +83,14 @@ const Login: React.FC = () => {
     });
     let result = await res.json();
     let token = result.access_token;
+    
     console.log(token);
+    if(result.banned_id){
+      alert('此帳號已被封鎖')
+      return
+    }
     if (token) {
+      let checkIsBan = await fetch(`${API_ORIGIN}/admin/`)
       setValue("Jwt", token);
 
       setIsUserCorrect(true);

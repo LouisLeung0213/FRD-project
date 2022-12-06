@@ -58,7 +58,7 @@ const Blacklist: React.FC = () => {
       }),
     });
     let result = await res.json();
-    alert(result.message);
+    console.log(result)
   }
 
   async function unBanUser(userId: number) {

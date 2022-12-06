@@ -1,48 +1,53 @@
-import { HttpException, Injectable, PayloadTooLargeException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  PayloadTooLargeException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import { JwtService } from '@nestjs/jwt'
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private usersService: UsersService,
-        private jwtService: JwtService
-      ) {}
-    
-      async validateUser(username: string, pass: string): Promise<any> {
-        try {
-          const user = await this.usersService.findOne(username);
-          if (user){
-            if (await bcrypt.compare(pass, user.password)) {
-              const { password, ...result } = user;
-              return result;
-            } else {
-              throw new HttpException('Wrong username or password',401);
-            }
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
-          } 
-        } catch (error) {
-          return error;
+  async validateUser(username: string, pass: string): Promise<any> {
+    try {
+      // console.log(`username: ${username}, password: ${pass}`);
+      const user = await this.usersService.findOne(username);
+      if (user) {
+        if (await bcrypt.compare(pass, user.password)) {
+          const { password, ...result } = user;
+          return result;
+        } else {
+          throw new HttpException('Wrong username or password', 401);
         }
       }
-    
-      async login(user: any) {
-        try {
-          const payload = { username: user.username, sub: user.id };
-          if (payload.username){
-            return {
-              access_token: this.jwtService.sign(payload),
-            };
-          } else {
-            throw new HttpException('Wrong username or password',401);
-          }
-        } catch (error) {
-          return error
-        }
-      }
+    } catch (error) {
+      return error;
+    }
+  }
 
-      async getUserInfo(username: string){
-        return await this.usersService.findOne(username);
+  async login(user: any) {
+    try {
+      const payload = { username: user.username, sub: user.id };
+      if (payload.username) {
+        return {
+          banned_id: await this.usersService.checkIsBanned(+user.id),
+          access_token: this.jwtService.sign(payload),
+        };
+      } else {
+        throw new HttpException('Wrong username or password', 401);
       }
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async getUserInfo(username: string) {
+    return await this.usersService.findOne(username);
+  }
 }
