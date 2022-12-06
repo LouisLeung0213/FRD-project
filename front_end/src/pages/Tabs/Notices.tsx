@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 import { API_ORIGIN } from "../../api";
 import { routes } from "../../routes";
 import { RootState } from "../../store";
-
+import moment from "moment";
 import noticesStyles from "./Notices.module.css";
 
 const Notices: React.FC = () => {
@@ -28,6 +28,7 @@ const Notices: React.FC = () => {
       let res = await fetch(`${API_ORIGIN}/chatroom/allRoom/${jwtState.id}`);
       let result = await res.json();
       console.log("result", result);
+
       setChatList(result);
     };
     getChatList();
@@ -57,35 +58,67 @@ const Notices: React.FC = () => {
           <>
             {chatList.map((chat: any) => {
               return (
-                <div key={chat.id} className={noticesStyles.chatDiv}>
+                <div key={chat.id}>
                   {jwtState.id == chat.seller_id ? (
                     <div onClick={() => goChatroom(chat.id)}>
-                      <IonAvatar>
-                        <img src={realIcon(chat.buyer_icon)}></img>
-                      </IonAvatar>
-                      <div>{chat.buyer_nickname}</div>
-                      <div>{chat.post_title}</div>
-                      <div>{chat.latest_content}</div>
-                      <div slot="end">
-                        <div>{chat.latest_send_times}</div>
-                        <IonAvatar>
-                          <img src={chat.image}></img>
-                        </IonAvatar>
+                      <div className={noticesStyles.chatDiv}>
+                        <div className={noticesStyles.container}>
+                          <div className={noticesStyles.leftDiv}>
+                            <div className={noticesStyles.iconDiv}>
+                              <IonAvatar>
+                                <img src={realIcon(chat.seller_icon)}></img>
+                              </IonAvatar>
+                              <div>{chat.seller_nickname}</div>
+                            </div>
+                          </div>
+                          <div className={noticesStyles.infoDiv}>
+                            <div style={{ color: "gold", fontSize: "1.15rem" }}>
+                              {chat.post_title}
+                            </div>
+
+                            <div>{chat.latest_content}</div>
+
+                            <div>
+                              {moment(chat.latest_send_times).format(
+                                "MMM-DD, HH:mm"
+                              )}
+                            </div>
+                          </div>
+                          <IonAvatar>
+                            <img src={chat.image}></img>
+                          </IonAvatar>
+                        </div>
                       </div>
                     </div>
                   ) : (
                     <div onClick={() => goChatroom(chat.id)}>
-                      <IonAvatar>
-                        <img src={realIcon(chat.seller_icon)}></img>
-                      </IonAvatar>
-                      <div>{chat.seller_nickname}</div>
-                      <div>{chat.post_title}</div>
-                      <div>{chat.latest_content}</div>
-                      <div slot="end">
-                        <div>{chat.latest_send_times}</div>
-                        <IonAvatar>
-                          <img src={chat.image}></img>
-                        </IonAvatar>
+                      <div className={noticesStyles.chatDiv}>
+                        <div className={noticesStyles.container}>
+                          <div className={noticesStyles.leftDiv}>
+                            <div className={noticesStyles.iconDiv}>
+                              <IonAvatar>
+                                <img src={realIcon(chat.seller_icon)}></img>
+                              </IonAvatar>
+                              <div>{chat.seller_nickname}</div>
+                            </div>
+                          </div>
+                          <div className={noticesStyles.infoDiv}>
+                            <div style={{ color: "gold", fontSize: "1.15rem" }}>
+                              {chat.post_title}
+                            </div>
+
+                            <div>{chat.latest_content}</div>
+
+                            <div>
+                              {moment(chat.latest_send_times).format(
+                                "MMM-DD, HH:mm"
+                              )}
+                            </div>
+                          </div>
+                          <IonAvatar>
+                            <img src={chat.image}></img>
+                          </IonAvatar>
+                        </div>
                       </div>
                     </div>
                   )}

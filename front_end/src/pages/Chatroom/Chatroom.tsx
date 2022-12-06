@@ -17,6 +17,8 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import {
+  caretBackOutline,
+  caretForwardOutline,
   chevronBackOutline,
   chevronForwardOutline,
   navigateOutline,
@@ -33,6 +35,7 @@ import { updateDots } from "../../redux/dots/actions";
 import { routes } from "../../routes";
 import { RootState } from "../../store";
 import { updateDot } from "../../updateDot";
+import chatroomStyles from "./Chatroom.module.css";
 
 type PostDetail = {
   post_title: string;
@@ -58,36 +61,37 @@ const Chatroom: React.FC = () => {
 
   let jwtState = useSelector((state: RootState) => state.jwt);
   let chatroomId: any = useParams();
-  
 
   useSocket(
-    useCallback((socket: Socket) => {
-      socket.on("new-msg", (data) => {
-        console.log("whoAmI", jwtState)
-        console.log("received", data);
-        setMsgList(data.newMSG);
-        setNewWsMessageId(data.newMSG[data.newMSG.length - 1].id);
-      });
-      socket.on('are-u-here', async (data)=> {
-        console.log('i am here')
-        console.log(jwtState.id)
-        if(jwtState.id){
-
-          await updateDot(jwtState.id,'chat_dots',false)
-        }
-        // setChatDots(false)
-        dispatch(
-          updateDots({
-            chatDot: false,
-            noticeDot: dotState.noticeDot
-          })
-        )
-      })
-      socket.emit("join-chat-room", chatroomId.id)
-      return () => {
-        socket.emit('leave-chat-room', chatroomId.id)
-      };
-    }, [chatroomId.id])
+    useCallback(
+      (socket: Socket) => {
+        socket.on("new-msg", (data) => {
+          console.log("whoAmI", jwtState);
+          console.log("received", data);
+          setMsgList(data.newMSG);
+          setNewWsMessageId(data.newMSG[data.newMSG.length - 1].id);
+        });
+        socket.on("are-u-here", async (data) => {
+          console.log("i am here");
+          console.log(jwtState.id);
+          if (jwtState.id) {
+            await updateDot(jwtState.id, "chat_dots", false);
+          }
+          // setChatDots(false)
+          dispatch(
+            updateDots({
+              chatDot: false,
+              noticeDot: dotState.noticeDot,
+            })
+          );
+        });
+        socket.emit("join-chat-room", chatroomId.id);
+        return () => {
+          socket.emit("leave-chat-room", chatroomId.id);
+        };
+      },
+      [chatroomId.id]
+    )
   );
 
   useLayoutEffect(() => {
@@ -104,7 +108,6 @@ const Chatroom: React.FC = () => {
       });
     }
   }, [newWsMessageId]);
-
 
   // const [chatList, setChatList] = useState<
   //   { id: number; image: string; name: string; message: string }[]
@@ -125,12 +128,11 @@ const Chatroom: React.FC = () => {
       let result = await res.json();
       console.log("msg:", result);
       setMsgList(result);
-      if(result.length > 0){
-
+      if (result.length > 0) {
         let latestMSG = document.querySelector(
           `[dataset-message-id="${result[result.length - 1].id}"]`
         );
-  
+
         if (latestMSG) {
           latestMSG.scrollIntoView({
             block: "end",
@@ -170,7 +172,7 @@ const Chatroom: React.FC = () => {
     });
     let result = await send.json();
     if (!("receiver_id" in result)) {
-      console.log(result)
+      console.log(result);
       alert("something wrong");
       return;
     }
@@ -179,11 +181,11 @@ const Chatroom: React.FC = () => {
     console.log("jwtState", jwtState);
   }
 
-  function realIcon (photoUrl: string){
-    if(photoUrl.includes("$1")){
-      return photoUrl.split("$1").join("?")
+  function realIcon(photoUrl: string) {
+    if (photoUrl.includes("$1")) {
+      return photoUrl.split("$1").join("?");
     } else {
-      return photoUrl
+      return photoUrl;
     }
   }
 
@@ -216,55 +218,82 @@ const Chatroom: React.FC = () => {
       </IonHeader>
       <IonContent className="ion-padding">
         <IonList>
-          <IonItem>
-            <IonAvatar>
+          <div className={chatroomStyles.productTitle}>
+            <IonAvatar style={{ width: "3rem", height: "3rem" }}>
               <img src={postDetail.json_agg[0]} />
             </IonAvatar>
-            <IonLabel>{postDetail.post_title}</IonLabel>
+            <div style={{ color: "gold", fontSize: "25px" }}>
+              {postDetail.post_title}
+            </div>
             <IonLabel>HK${postDetail.original_price}</IonLabel>
-          </IonItem>
+          </div>
           {msgList.length > 0 ? (
             <>
               {msgList.map((msg: MSG) => {
                 return (
-                  <div key={msg.id} dataset-message-id={msg.id}>
+                  <div
+                    key={msg.id}
+                    dataset-message-id={msg.id}
+                    className={chatroomStyles.talkDiv}
+                  >
                     {msg.sender_id == jwtState.id ? (
                       <>
-                        <IonLabel>{moment(msg.send_time).format("L")}</IonLabel>
-                        ：
-                        <IonLabel>
-                          {moment(msg.send_time).format("LT")}
-                        </IonLabel>
+                        <div>
+                          <div className={chatroomStyles.timeDiv}>
+                            {moment(msg.send_time).format("DD/MM")}
+                            <span style={{ width: "0.5rem" }}></span>
+                            {moment(msg.send_time).format("LT")}
+                          </div>
+                        </div>
                         <div
                           style={{
                             display: "flex",
                             flexDirection: "row-reverse",
+                            alignItems: "center",
                           }}
                         >
                           <IonAvatar>
-                            
                             <img src={realIcon(msg.icon_src)}></img>
                           </IonAvatar>
-                          <IonLabel>{msg.content}</IonLabel>
+                          <IonIcon
+                            icon={caretForwardOutline}
+                            className={chatroomStyles.ownTick}
+                          ></IonIcon>
+                          <div className={chatroomStyles.ownChatContentDiv}>
+                            <p className={chatroomStyles.chatContent}>
+                              {msg.content}
+                            </p>
+                          </div>
                         </div>
                       </>
                     ) : (
                       <>
-                        <IonLabel>{moment(msg.send_time).format("L")}</IonLabel>
-                        ：
-                        <IonLabel>
-                          {moment(msg.send_time).format("LT")}
-                        </IonLabel>
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                          }}
-                        >
-                          <IonAvatar>
-                            <img src={realIcon(msg.icon_src)}></img>
-                          </IonAvatar>
-                          <IonLabel>{msg.content}</IonLabel>
+                        <div>
+                          <div className={chatroomStyles.timeDiv}>
+                            {moment(msg.send_time).format("DD/MM")}
+                            <span style={{ width: "0.5rem" }}></span>
+                            {moment(msg.send_time).format("LT")}
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                          >
+                            <IonAvatar>
+                              <img src={realIcon(msg.icon_src)}></img>
+                            </IonAvatar>
+                            <IonIcon
+                              icon={caretBackOutline}
+                              className={chatroomStyles.otherTick}
+                            ></IonIcon>
+                            <div className={chatroomStyles.otherChatContentDiv}>
+                              <p className={chatroomStyles.chatContent}>
+                                {msg.content}
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       </>
                     )}
