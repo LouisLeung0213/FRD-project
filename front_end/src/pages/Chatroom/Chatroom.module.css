@@ -1,0 +1,68 @@
+.productTitle {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-bottom: 2px rgba(245, 222, 179, 0.534) solid;
+}
+
+.talkDiv {
+  height: 8rem;
+  padding: 0.5rem;
+}
+
+.timeDiv {
+  display: flex;
+  justify-content: center;
+  font-size: small;
+}
+
+.ownChatContentDiv {
+  display: flex;
+  align-items: center;
+  background-color: rgba(119, 136, 153, 0.233);
+  width: 90%;
+  flex-direction: row-reverse;
+  border: 2px solid white;
+  padding: 7px;
+  border-radius: 10px;
+  margin: 0px 0x 0px 7px;
+  min-height: 5rem;
+  height: fit-content;
+  max-width: 70%;
+}
+
+.otherChatContentDiv {
+  display: flex;
+  align-items: center;
+  background-color: rgba(119, 136, 153, 0.171);
+  width: 90%;
+  flex-direction: row;
+  border: 2px solid white;
+  padding: 7px;
+  border-radius: 10px;
+  margin: 0px 7px 0px 0px;
+  min-height: 5rem;
+  height: fit-content;
+  max-width: 70%;
+}
+
+.chatContent {
+  max-width: 95%;
+}
+
+.otherTick {
+  width: 15px;
+  min-height: 15px;
+  margin-right: 0px;
+  padding-right: 0px;
+}
+
+.ownTick {
+  width: 15px;
+  min-height: 15px;
+  margin-left: 0px;
+  padding-left: 0px;
+}

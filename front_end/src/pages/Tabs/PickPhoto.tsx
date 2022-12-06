@@ -467,10 +467,12 @@ const PickPhoto: React.FC = () => {
         <>
           <IonModal
             id={styles.preview_modal}
+            // id='preview_modal'
             ref={previewModal}
             trigger="preview_dialog"
+            
           >
-            <IonContent className="ion-padding">
+            <IonContent className="ion-padding" scroll-y="false">
               <ul>
                 <li>請再次確認帖文內容。</li>
                 <br />
@@ -484,6 +486,8 @@ const PickPhoto: React.FC = () => {
               <IonButton onClick={() => submitForm(state)}>發佈</IonButton>
             </div>
           </IonModal>
+
+          
 
           <div>
             <div className={styles.photoButtonDiv}>
