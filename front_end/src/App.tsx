@@ -108,6 +108,11 @@ const App: React.FC = () => {
     });
   };
 
+  function pushToLogin(){
+    // router.push(routes.tab.login, "forward", "replace");
+    console.log("I am banned T.T", jwtState);
+  }
+
   useSocket(
     useCallback((socket: Socket) => {
       socket.on("post-is-uploaded", async (data) => {
