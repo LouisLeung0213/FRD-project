@@ -83,6 +83,18 @@ export class BidService {
         //   .update('points', after_holding_points)
         //   .where('id', createBidDto.buyerId);
 
+        //TODO for demo purpose without using stripe
+
+        let pointRemain = await this.knex('users')
+          .select('points')
+          .where('id', +createBidDto.buyerId);
+
+        let remainPoints = pointRemain[0].points - +createBidDto.bidPrice;
+
+        let deduction = await this.knex('users')
+          .update('points', remainPoints)
+          .where('id', +createBidDto.buyerId);
+
         let bid = await this.knex('bid_records')
           .insert({
             post_id: createBidDto.postId,

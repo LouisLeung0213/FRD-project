@@ -38,158 +38,188 @@ export class PaymentService {
     }
   }
 
-  // async capturePaymentIntent(updatePointsDto: UpdatePointsDto) {
-  //   console.log('I am here', updatePointsDto);
-  //   let required_amount = +updatePointsDto.bidPrice;
-  //   const stripe = new Stripe(env.STRIPE_KEY, { apiVersion: '2022-11-15' });
+  async capturePaymentIntent(updatePointsDto: UpdatePointsDto) {
+    console.log('I am here', updatePointsDto);
+    // let required_amount = +updatePointsDto.bidPrice;
+    // const stripe = new Stripe(env.STRIPE_KEY, { apiVersion: '2022-11-15' });
 
-  //   let buyer_origin_points_result = await this.knex('users')
-  //     .select('points')
-  //     .where('id', updatePointsDto.bidder_id);
+    // let buyer_origin_points_result = await this.knex('users')
+    //   .select('points')
+    //   .where('id', updatePointsDto.bidder_id);
 
-  //   let buyer_origin_points: number = buyer_origin_points_result[0].points;
-  //   let new_points = buyer_origin_points - required_amount;
-  //   if (new_points < 0) {
-  //     return { status: 99, message: "your account didn't have enough money" };
-  //   }
+    // let buyer_origin_points: number = buyer_origin_points_result[0].points;
+    // let new_points = buyer_origin_points - required_amount;
+    // if (new_points < 0) {
+    //   return { status: 99, message: "your account didn't have enough money" };
+    // }
 
-  //   let held_intent = await this.knex('client_secrets')
-  //     .select('*')
-  //     .where('user_id', updatePointsDto.bidder_id)
-  //     .andWhere('captured', false);
-  //   //console.log(held_intent);
-  //   let total_intent_should_capture = [];
-  //   let amount_should_capture = 0;
-  //   console.log('held_intent: ', held_intent);
-  //   for (let intent of held_intent) {
-  //     console.log('here I am  charge_amount,', required_amount);
-  //     try {
-  //       if (required_amount > intent.amount) {
-  //         amount_should_capture = intent.amount;
-  //         total_intent_should_capture.push({
-  //           id: intent.id,
-  //           client_secret_should_capture: `${intent.client_secret}`,
-  //           amount_should_capture: amount_should_capture,
-  //         });
-  //         required_amount = required_amount - intent.amount;
-  //         console.log(
-  //           '>:',
-  //           'required_amount: ',
-  //           required_amount,
-  //           'amount_should_capture: ',
-  //           amount_should_capture,
-  //           'intent.client_secret:',
-  //           intent.client_secret,
-  //         );
-  //         console.log('text');
-  //       } else if (required_amount == intent.amount) {
-  //         amount_should_capture = intent.amount;
-  //         total_intent_should_capture.push({
-  //           id: intent.id,
-  //           client_secret_should_capture: `${intent.client_secret}`,
-  //           amount_should_capture: amount_should_capture,
-  //         });
-  //         required_amount = required_amount - intent.amount;
+    // let held_intent = await this.knex('client_secrets')
+    //   .select('*')
+    //   .where('user_id', updatePointsDto.bidder_id)
+    //   .andWhere('captured', false);
+    // //console.log(held_intent);
+    // let total_intent_should_capture = [];
+    // let amount_should_capture = 0;
+    // console.log('held_intent: ', held_intent);
+    // for (let intent of held_intent) {
+    //   console.log('here I am  charge_amount,', required_amount);
+    //   try {
+    //     if (required_amount > intent.amount) {
+    //       amount_should_capture = intent.amount;
+    //       total_intent_should_capture.push({
+    //         id: intent.id,
+    //         client_secret_should_capture: `${intent.client_secret}`,
+    //         amount_should_capture: amount_should_capture,
+    //       });
+    //       required_amount = required_amount - intent.amount;
+    //       console.log(
+    //         '>:',
+    //         'required_amount: ',
+    //         required_amount,
+    //         'amount_should_capture: ',
+    //         amount_should_capture,
+    //         'intent.client_secret:',
+    //         intent.client_secret,
+    //       );
+    //       console.log('text');
+    //     } else if (required_amount == intent.amount) {
+    //       amount_should_capture = intent.amount;
+    //       total_intent_should_capture.push({
+    //         id: intent.id,
+    //         client_secret_should_capture: `${intent.client_secret}`,
+    //         amount_should_capture: amount_should_capture,
+    //       });
+    //       required_amount = required_amount - intent.amount;
 
-  //         console.log(
-  //           '=:',
-  //           required_amount,
-  //           amount_should_capture,
-  //           intent.client_secret,
-  //         );
-  //       } else if (required_amount < intent.amount) {
-  //         let amount_should_remain = intent.amount - required_amount;
-  //         amount_should_capture = intent.amount - amount_should_remain;
-  //         total_intent_should_capture.push({
-  //           id: intent.id,
-  //           client_secret_should_capture: `${intent.client_secret}`,
-  //           amount_should_capture: amount_should_capture,
-  //         });
-  //         required_amount = 0;
-  //         console.log(
-  //           '<:',
-  //           'required_amount: ',
-  //           required_amount,
-  //           'amount_should_capture: ',
-  //           amount_should_capture,
-  //           'intent.client_secret:',
-  //           intent.client_secret,
-  //         );
-  //       }
+    //       console.log(
+    //         '=:',
+    //         required_amount,
+    //         amount_should_capture,
+    //         intent.client_secret,
+    //       );
+    //     } else if (required_amount < intent.amount) {
+    //       let amount_should_remain = intent.amount - required_amount;
+    //       amount_should_capture = intent.amount - amount_should_remain;
+    //       total_intent_should_capture.push({
+    //         id: intent.id,
+    //         client_secret_should_capture: `${intent.client_secret}`,
+    //         amount_should_capture: amount_should_capture,
+    //       });
+    //       required_amount = 0;
+    //       console.log(
+    //         '<:',
+    //         'required_amount: ',
+    //         required_amount,
+    //         'amount_should_capture: ',
+    //         amount_should_capture,
+    //         'intent.client_secret:',
+    //         intent.client_secret,
+    //       );
+    //     }
 
-  //       if (required_amount == 0) {
-  //         console.log('required_amount == 0');
-  //         break;
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  //   console.log('total_intent_should_capture:::', total_intent_should_capture);
-  //   console.log('After forLoop required_amount: ', required_amount);
-  //   let remain_capture = +updatePointsDto.bidPrice;
-  //   try {
-  //     for (let intent2 of total_intent_should_capture) {
-  //       remain_capture = remain_capture - intent2.amount_should_capture;
+    //     if (required_amount == 0) {
+    //       console.log('required_amount == 0');
+    //       break;
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
+    // console.log('total_intent_should_capture:::', total_intent_should_capture);
+    // console.log('After forLoop required_amount: ', required_amount);
+    // let remain_capture = +updatePointsDto.bidPrice;
+    // try {
+    //   for (let intent2 of total_intent_should_capture) {
+    //     remain_capture = remain_capture - intent2.amount_should_capture;
 
-  //       const result = await stripe.paymentIntents.capture(
-  //         intent2.client_secret_should_capture,
-  //         {
-  //           amount_to_capture: intent2.amount_should_capture * 100,
-  //         },
-  //       );
+    //     const result = await stripe.paymentIntents.capture(
+    //       intent2.client_secret_should_capture,
+    //       {
+    //         amount_to_capture: intent2.amount_should_capture * 100,
+    //       },
+    //     );
 
-  //       let captured_result = await this.knex('client_secrets')
-  //         .update('captured', true)
-  //         .where('client_secret', intent2.client_secret_should_capture);
-  //       console.log('remain_capture?:', remain_capture);
-  //       if (remain_capture == 0) {
-  //         break;
-  //       }
-  //     }
+    //     let captured_result = await this.knex('client_secrets')
+    //       .update('captured', true)
+    //       .where('client_secret', intent2.client_secret_should_capture);
+    //     console.log('remain_capture?:', remain_capture);
+    //     if (remain_capture == 0) {
+    //       break;
+    //     }
+    //   }
 
-  //     let intent_should_remain = held_intent.filter(
-  //       (objA) =>
-  //         total_intent_should_capture.filter((objB) => objA.id === objB.id)
-  //           .length === 0,
-  //     );
+    //   let intent_should_remain = held_intent.filter(
+    //     (objA) =>
+    //       total_intent_should_capture.filter((objB) => objA.id === objB.id)
+    //         .length === 0,
+    //   );
 
-  //     console.log('intent_should_remain', intent_should_remain);
-  //     let total_point_remain = 0;
-  //     for (let obj of intent_should_remain) {
-  //       total_point_remain += obj.amount;
-  //     }
+    //   console.log('intent_should_remain', intent_should_remain);
+    //   let total_point_remain = 0;
+    //   for (let obj of intent_should_remain) {
+    //     total_point_remain += obj.amount;
+    //   }
 
-  //     console.log('total_point_remain!!!!!!!!!', total_point_remain);
-  //     let deductResult = await this.knex('users')
-  //       .update('points', total_point_remain)
-  //       .where('id', +updatePointsDto.bidder_id);
+    //   console.log('total_point_remain!!!!!!!!!', total_point_remain);
+    //   let deductResult = await this.knex('users')
+    //     .update('points', total_point_remain)
+    //     .where('id', +updatePointsDto.bidder_id);
 
-  //     let changePostStatus = await this.knex('posts')
-  //       .update('status', 'sold&holding')
-  //       .where('id', +updatePointsDto.post_id);
+    //TODO for demo purpose without using stripe
+    // let pointRemain = await this.knex('users')
+    //   .select('points')
+    //   .where('id', +updatePointsDto.bidder_id);
 
-  //     let changeStorageStatus = await this.knex('storages')
-  //       .update({
-  //         buyer_id: +updatePointsDto.bidder_id,
-  //       })
-  //       .where('product_id', +updatePointsDto.post_id);
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw new Error(error);
-  //   }
+    // let remainPoints = pointRemain[0].points - +updatePointsDto.bidPrice;
 
-  //   return {
-  //     status: 200,
-  //     message: 'transaction complete',
-  //     message2: 'required_amount:',
-  //     required_amount,
-  //     message3: 'origin_points:',
-  //     buyer_origin_points,
-  //     message4: 'new_points',
-  //     new_points,
-  //   };
-  // }
+    // let deduction = await this.knex('users')
+    //   .update('points', remainPoints)
+    //   .where('id', +updatePointsDto.bidder_id);
+
+    // let all_bid_record = await this.knex('bid_records')
+    //   .select('*')
+    //   .where('post_id', +updatePointsDto.post_id);
+
+    // let bidderArray = [];
+
+    // for (let i = 0; i < all_bid_record.length; i++) {
+    //   bidderArray.push({
+    //     userId: all_bid_record[i].buyer_id,
+    //     bid_price: all_bid_record[i].bid_price,
+    //   });
+    // }
+
+    // let lossBidderArray = bidderArray.filter((obj) => {
+    //   obj.userId != +updatePointsDto.bidder_id;
+    // });
+
+    //////////TODO 分隔線
+
+    let changePostStatus = await this.knex('posts')
+      .update('status', 'sold&holding')
+      .where('id', +updatePointsDto.post_id);
+
+    let changeStorageStatus = await this.knex('storages')
+      .update({
+        buyer_id: +updatePointsDto.bidder_id,
+      })
+      .where('product_id', +updatePointsDto.post_id);
+    // } catch (error) {
+    //   console.log(error);
+    //   throw new Error(error);
+    // }
+
+    return {
+      status: 200,
+      // message: 'transaction complete',
+      // message2: 'required_amount:',
+      // required_amount,
+      // message3: 'origin_points:',
+      // buyer_origin_points,
+      // message4: 'new_points',
+      // new_points,
+    };
+  }
 
   stripeConfig() {
     return { key: env.PUBLIC_STRIPE_KEY };

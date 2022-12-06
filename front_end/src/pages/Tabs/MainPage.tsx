@@ -124,10 +124,10 @@ const MainPage: React.FC = () => {
           );
         }
       });
-      socket.on('ban', (msg)=> {
-        alert('您已被封鎖，如有疑問請聯絡管理員')
-        removeValue('Jwt')
-        removeValue('userId');
+      socket.on("ban", (msg) => {
+        alert("您已被封鎖，如有疑問請聯絡管理員");
+        removeValue("Jwt");
+        removeValue("userId");
         dispatch(
           updateJwt({
             jwtKey: null,
@@ -154,8 +154,8 @@ const MainPage: React.FC = () => {
             points: 0,
           })
         );
-        router.push(routes.tab.login, "forward",'replace')
-      })
+        router.push(routes.tab.login, "forward", "replace");
+      });
       return () => {};
     }, [])
   );

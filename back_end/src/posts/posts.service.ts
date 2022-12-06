@@ -291,6 +291,13 @@ export class PostsService {
         admin_comment: updateStatusDto.adminComment,
       })
       .where('id', id);
+
+    await this.knex('storages')
+      .update({
+        out_time: this.knex.fn.now(),
+      })
+      .where('product_id', updateStatusDto.product_id);
+
     return `product ${id} status has been change to ${updateStatusDto.status}`;
   }
 

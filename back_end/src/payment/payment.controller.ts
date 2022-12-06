@@ -21,10 +21,10 @@ export class PaymentController {
     return this.paymentService.paymentIntent(createPaymentDto);
   }
 
-  // @Patch('capturePaymentIntent')
-  // async capturePaymentIntent(@Body() updatePointsDto: UpdatePointsDto) {
-  //   return await this.paymentService.capturePaymentIntent(updatePointsDto);
-  // }
+  @Patch('capturePaymentIntent')
+  async capturePaymentIntent(@Body() updatePointsDto: UpdatePointsDto) {
+    return await this.paymentService.capturePaymentIntent(updatePointsDto);
+  }
 
   @Get('stripeConfig')
   stripeConfig() {
