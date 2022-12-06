@@ -21,6 +21,7 @@ import {
   IonSearchbar,
   IonTitle,
   IonToolbar,
+  useIonLoading,
   useIonRouter,
 } from "@ionic/react";
 import {
@@ -66,6 +67,20 @@ import { updateDot } from "../../updateDot";
 import { updateDots } from "../../redux/dots/actions";
 
 const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
+  const [present, dismiss] = useIonLoading();
+  const [isLoading, setIsLoading] = useState(false);
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   present({
+  //     message: "Loading...",
+  //     duration: 2000,
+  //     spinner: "crescent",
+  //   });
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 2000);
+  // }, []);
+
   let jwtState = useSelector((state: RootState) => state.jwt);
   let pointsState = useSelector((state: RootState) => state.points);
   let dotsState = useSelector((state: RootState) => state.dots);
@@ -157,13 +172,13 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
 
   useEffect(() => {
     const postsList = async () => {
-      // if (props.id) {
-      let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${params.id}`);
-      let result = await res.json();
-      setPostsList(result);
-      // } else {
-      let userId = await getValue("userId");
-      if (userId) {
+      if (props.id) {
+        let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${props.id}`);
+        let result = await res.json();
+        setPostsList(result);
+      } else {
+        // let userId = await getValue("userId");
+        let userId = jwtState.id;
         let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${userId}`);
         let result = await res.json();
         setPostsList(result);
@@ -174,6 +189,7 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
   }, [jwtState, isPostOpen, pointsState.points]);
 
   const postModal = useRef<HTMLIonModalElement>(null);
+  const loadingModal = useRef<HTMLIonModalElement>(null);
 
   function destroyUserInfo() {
     removeValue("Jwt");
@@ -214,6 +230,10 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
   function dismissPost() {
     postModal.current?.dismiss();
     setIsPostOpen(false);
+  }
+  function dismissLoading() {
+    loadingModal.current?.dismiss();
+    setIsLoading(false);
   }
 
   function goChat(id: number) {
@@ -450,6 +470,12 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
             />
           </IonContent>
         </IonModal>
+
+        <IonModal
+          id="loading-modal"
+          ref={loadingModal}
+          isOpen={isLoading}
+        ></IonModal>
       </IonPage>
     </>
   );
