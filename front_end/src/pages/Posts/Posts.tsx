@@ -11,6 +11,7 @@ import {
   useIonRouter,
   IonModal,
   useIonActionSheet,
+  IonBackdrop,
 } from "@ionic/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import moment from "moment";
@@ -27,8 +28,8 @@ import {
   checkmarkDoneCircleOutline,
   flame,
 } from "ionicons/icons";
-import "./Posts.module.css";
 import { routes } from "../../routes";
+import styles from "./Posts.module.scss";
 
 export type PostObj = {
   admin_comment: "";
@@ -289,7 +290,10 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
   }
 
   return (
-    <IonList className="post-modal">
+    <IonList className={styles.post_modal}>
+      {/* <IonBackdrop
+        visible={false}
+      ></IonBackdrop> */}
       {!props.post.admin_title ? (
         <>
           <h2 className="ion-padding">
@@ -368,7 +372,7 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
           </IonItem>
           {bidList.map((e: any, index) => {
             return (
-              <div className="ionCardContainer" key={index}>
+              <div className={styles.ionCardContainer} key={index}>
                 <IonCard>
                   {e.nickname}: $ {e.bid_price}
                 </IonCard>
@@ -422,13 +426,13 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
           </IonItem>
 
           <IonModal
-            id="adjustPriceConfirm-modal"
+            id={styles.adjustPriceConfirm_modal}
             ref={confirmModal}
             trigger="confirm"
           >
-            <IonContent className="ion-padding">
+            <IonContent className="ion-padding" scroll-y="false">
               <ul>
-                <li>
+                <li style={{margin: '3rem 0'}}>
                   如確定調整此貨品的底價，截至目前所有對此貨品的投標將會清空，所有已保留的預售權將會全數歸還給投標者。
                 </li>
               </ul>

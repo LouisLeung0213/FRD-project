@@ -217,7 +217,7 @@ const Chatroom: React.FC = () => {
       <IonContent className="ion-padding">
         <IonList>
           <IonItem>
-            <IonAvatar>
+            <IonAvatar onClick={()=>{alert('hi')}}>
               <img src={postDetail.json_agg[0]} />
             </IonAvatar>
             <IonLabel>{postDetail.post_title}</IonLabel>
@@ -244,6 +244,7 @@ const Chatroom: React.FC = () => {
                           <IonAvatar>
                             
                             <img src={realIcon(msg.icon_src)}></img>
+
                           </IonAvatar>
                           <IonLabel>{msg.content}</IonLabel>
                         </div>

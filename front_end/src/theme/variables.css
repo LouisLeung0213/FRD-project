@@ -361,7 +361,7 @@ ion-toolbar {
   }
 
   ion-header {
-    height: 8%;
+    height: 10%;
   }
   ion-button {
     --background-focused: #46b0e0;
