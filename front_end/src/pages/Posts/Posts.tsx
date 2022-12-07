@@ -30,6 +30,18 @@ import {
 } from "ionicons/icons";
 import { routes } from "../../routes";
 import styles from "./Posts.module.scss";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
+
+import "swiper/swiper.min.css";
+import "swiper/css/autoplay";
+import "swiper/css/keyboard";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import "swiper/css/zoom";
+import "@ionic/react/css/ionic-swiper.css";
+import "swiper/swiper.min.css";
+import "@ionic/react/css/ionic-swiper.css";
 
 export type PostObj = {
   admin_comment: "";
@@ -331,14 +343,25 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
           </h2>
         </>
       )}
-
-      {props.post.json_agg.map((e: any, index) => {
-        return (
-          <div className="imageDiv" key={index}>
-            <img className="image" src={e}></img>
-          </div>
-        );
-      })}
+      <Swiper
+        modules={[Autoplay, Keyboard, Pagination, Scrollbar, Zoom]}
+        autoplay={true}
+        keyboard={true}
+        pagination={true}
+        slidesPerView={1}
+        //scrollbar={true}
+        zoom={true}
+        effect={"fade"}
+        className={styles.slide}
+      >
+        {props.post.json_agg.map((e: any, index) => {
+          return (
+            <SwiperSlide className={styles.image_slide} key={index}>
+              <img className="image" src={e}></img>
+            </SwiperSlide>
+          );
+        })}
+      </Swiper>
       {!jwtState.id ? null : jwtState.id == props.post.user_id ? null : (
         <IonItem onClick={() => getChatDetail()}>
           <IonLabel>聯絡賣家 : {props.post.nickname}</IonLabel>
