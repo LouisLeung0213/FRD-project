@@ -84,7 +84,7 @@ export async function seed(knex: Knex): Promise<void> {
         status: 'pending_in',
         post_time: '2022-12-02 22:23:02.001428+08',
         priority: 0,
-        location_id: 1,
+        location_id: 2,
         auto_adjust_plan: true,
         bank_references: 1,
       },
