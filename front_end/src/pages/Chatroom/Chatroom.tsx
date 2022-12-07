@@ -38,6 +38,7 @@ import { updateDot } from "../../updateDot";
 import chatroomStyles from "./Chatroom.module.css";
 
 type PostDetail = {
+  post_id: number;
   post_title: string;
   original_price: string;
   max: number;
@@ -113,6 +114,7 @@ const Chatroom: React.FC = () => {
   //   { id: number; image: string; name: string; message: string }[]
   // >([]);
   const [postDetail, setPostDetail] = useState({
+    post_id: 0,
     post_title: "",
     original_price: "",
     max: 0,
@@ -189,6 +191,10 @@ const Chatroom: React.FC = () => {
     }
   }
 
+  function goToPost(postId: number){
+    router.push(routes.tab.mainPage(postId),'forward','pop')
+  }
+
   return (
     <IonPage className="ChatListTab">
       <IonHeader>
@@ -219,7 +225,9 @@ const Chatroom: React.FC = () => {
       <IonContent className="ion-padding">
         <IonList>
           <div className={chatroomStyles.productTitle}>
-            <IonAvatar style={{ width: "3rem", height: "3rem" }}>
+            <IonAvatar style={{ width: "3rem", height: "3rem" }} onClick={()=> {
+              goToPost(postDetail.post_id)
+            }}>
               <img src={postDetail.json_agg[0]} />
             </IonAvatar>
             <div
