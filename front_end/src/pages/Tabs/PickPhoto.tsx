@@ -771,7 +771,7 @@ const PickPhoto: React.FC = () => {
                     <IonLabel position="floating">請選擇銀行戶口:</IonLabel>
                   ),
                   renderContent: (props) => (
-                    <IonSelect {...props}>
+                    <IonSelect onChange={()=>{alert()}} {...props}>
                       {savedBanks.map((account: any) => (
                         <IonSelectOption key={account} value={account}>
                           {account.bankName}: {account.bankAccount}

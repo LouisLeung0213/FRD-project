@@ -16,6 +16,7 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
+  useIonLoading,
   useIonRouter,
 } from "@ionic/react";
 import { useCallback, useState } from "react";
@@ -52,6 +53,8 @@ const Login: React.FC = () => {
   const [isPasswordOk, setIsPasswordOk] = useState(true);
   const [isUserCorrect, setIsUserCorrect] = useState(true);
 
+  const [present, dismiss] = useIonLoading();
+
   let currentUserId: number = 0;
 
   // const [isBanned, setIsBanned] = useState(false);
@@ -69,6 +72,12 @@ const Login: React.FC = () => {
     } else {
       setIsPasswordOk(true);
     }
+
+    present({
+      message: 'Loading...',
+      duration: 3000,
+      cssClass: 'custom-loading'
+    })
 
     let res = await fetch(`${API_ORIGIN}/auth/login`, {
       method: "POST",
