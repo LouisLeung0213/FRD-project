@@ -36,6 +36,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { routes } from "../../routes";
 import { API_ORIGIN } from "../../api";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
+import styles from "./AdminPanel.module.scss";
+
+
 
 // const slideOpts = {
 //   initialSlide: 1,
@@ -199,8 +204,36 @@ const AdminPanel: React.FC = () => {
                       </IonInput>
                     </IonItem>
                     {/* {imageList.map((e: any) => {
-                      return <IonImg src={e} alt="user post image"></IonImg>;
+                      return <IonImg key={e} src={e} alt="user post image"></IonImg>;
                     })} */}
+                                   <Swiper
+                        modules={[
+                          Autoplay,
+                          Keyboard,
+                          Pagination,
+                          Scrollbar,
+                          Zoom,
+                        ]}
+                        autoplay={true}
+                        keyboard={true}
+                        pagination={true}
+                        slidesPerView={1}
+                        //scrollbar={true}
+                        zoom={true}
+                        effect={"fade"}
+                        className={styles.slide}
+                      >
+                        {imageList.map((e: any) => {
+                          return (
+                            <SwiperSlide
+                              className={styles.image_slide}
+                              key={e}
+                            >
+                              <img src={e} key={e} />
+                            </SwiperSlide>
+                          );
+                        })}
+                      </Swiper>
                     <IonButton color="success" onClick={() => acceptReq()}>
                       確認驗證
                     </IonButton>
