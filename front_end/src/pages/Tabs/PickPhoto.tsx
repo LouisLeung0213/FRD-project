@@ -769,7 +769,7 @@ const PickPhoto: React.FC = () => {
                   renderContent: (props) => (
                     <IonSelect {...props}>
                       {savedBanks.map((account: any) => (
-                        <IonSelectOption key={account} value={account}>
+                        <IonSelectOption key={account}>
                           {account.bankName}: {account.bankAccount}
                         </IonSelectOption>
                       ))}
