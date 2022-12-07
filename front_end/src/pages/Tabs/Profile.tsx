@@ -151,7 +151,7 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
     setUsername(jwtState.username);
     setPoints(pointsState.points);
     // setJoinTime(moment(jwtState.joinedTime).format("MMMM Do YYYY"));
-    setJoinTime((jwtState.joinedTime));
+    setJoinTime(jwtState.joinedTime);
   };
 
   const getOtherProfile = async (userId: number) => {
@@ -161,8 +161,7 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
     setNickname(userInfo.nickname);
     setUsername(userInfo.username);
     // setJoinTime(moment(userInfo.joinedTime).format("MMMM Do YYYY"));
-    setJoinTime((jwtState.joinedTime)?.split('T')[0]);
-
+    setJoinTime(jwtState.joinedTime?.split("T")[0]);
   };
 
   useEffect(() => {
@@ -178,12 +177,14 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
       if (props.id) {
         let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${props.id}`);
         let result = await res.json();
+
         setPostsList(result);
       } else {
         // let userId = await getValue("userId");
         let userId = jwtState.id;
         let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${userId}`);
         let result = await res.json();
+        console.log(result);
         setPostsList(result);
       }
     };
@@ -350,7 +351,7 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
                       style={{ color: "skyBlue", marginRight: "5px" }}
                       icon={calendar}
                     ></IonIcon>
-                    {joinTime}
+                    {moment(joinTime).format("MMMM Do YYYY")}
                   </IonLabel>
                 </div>
               </div>
@@ -416,7 +417,16 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
                                   key={index}
                                 >
                                   <img src={photo} key={index} />
-                                  {post.status.toString() != "selling" ? (
+                                  {post.status.toString() === "pending_in" ? (
+                                    <div className={profileStyles.sold}>
+                                      <span
+                                        className={profileStyles.pendingText}
+                                      >
+                                        即將上架
+                                      </span>
+                                    </div>
+                                  ) : null}
+                                  {post.status.toString() === "sold&holding" ? (
                                     <div className={profileStyles.sold}>
                                       <span className={profileStyles.soldText}>
                                         此貨品已售出

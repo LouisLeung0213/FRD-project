@@ -46,6 +46,7 @@ export type PostObj = {
   status: "";
   user_id: 0;
   username: "";
+  location: "";
 };
 
 const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
@@ -356,6 +357,9 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
           ? props.post.admin_comment
           : props.post.post_description}
       </h3>
+      {props.post.location !== "" && props.post.location != "notAvailable" ? (
+        <IonItem>取貨地點 : {props.post.location}</IonItem>
+      ) : null}
       <IonItem>
         <IonIcon style={{ color: "red" }} icon={flame}></IonIcon> 現價: $
         {nowPrice}
@@ -432,7 +436,7 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
           >
             <IonContent className="ion-padding" scroll-y="false">
               <ul>
-                <li style={{margin: '3rem 0'}}>
+                <li style={{ margin: "3rem 0" }}>
                   如確定調整此貨品的底價，截至目前所有對此貨品的投標將會清空，所有已保留的預售權將會全數歸還給投標者。
                 </li>
               </ul>

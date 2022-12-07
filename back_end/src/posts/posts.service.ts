@@ -174,12 +174,14 @@ export class PostsService {
         'username',
         'json_agg',
         'max',
+        'location',
       )
 
       .from('posts')
       .join('users', 'user_id', 'users.id')
       .fullOuterJoin('tem_imgs', 'tem_imgs.post_id', 'posts.id')
       .fullOuterJoin('tem_bid_records', 'tem_bid_records.post_id', 'posts.id')
+      .join('store_locations', 'store_locations.id', 'posts.location_id')
       .where('status', 'selling');
     return showAllList;
   }
@@ -234,6 +236,7 @@ export class PostsService {
           [id, 'selling'],
           [id, 'sold&holding'],
           [id, 'sold&out'],
+          [id, 'pending_in'],
         ],
       );
     return showSomeone;
