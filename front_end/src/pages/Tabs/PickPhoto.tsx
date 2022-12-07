@@ -23,6 +23,7 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import {
+  accessibilityOutline,
   add,
   arrowRedo,
   camera,
@@ -61,7 +62,6 @@ import { useIonFormState } from "react-use-ionic-form";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { API_ORIGIN } from "../../api";
-
 import { routes } from "../../routes";
 
 //firebase storage
@@ -771,9 +771,9 @@ const PickPhoto: React.FC = () => {
                     <IonLabel position="floating">請選擇銀行戶口:</IonLabel>
                   ),
                   renderContent: (props) => (
-                    <IonSelect onChange={()=>{alert()}} {...props}>
+                    <IonSelect interface="popover" {...props}>
                       {savedBanks.map((account: any) => (
-                        <IonSelectOption key={account} value={account}>
+                        <IonSelectOption key={account}>
                           {account.bankName}: {account.bankAccount}
                         </IonSelectOption>
                       ))}
@@ -787,7 +787,8 @@ const PickPhoto: React.FC = () => {
                   ),
                 })
               : null}
-            {state.qualityPlan === true && state.bankAccount.bankName == ""
+              
+            {state.qualityPlan === true && (state.bankAccount.bankName == "" || !state.bankAccount)
               ? item({
                   name: "newBankName",
                   renderLabel: () => (
@@ -804,7 +805,7 @@ const PickPhoto: React.FC = () => {
                   ),
                 })
               : null}
-            {state.qualityPlan === true && state.bankAccount.bankName == ""
+            {state.qualityPlan === true && (state.bankAccount?.bankName == "" || !state.bankAccount)
               ? item({
                   name: "newBankAccount",
                   renderLabel: () => (

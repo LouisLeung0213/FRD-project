@@ -41,7 +41,7 @@ ion-card {
 
 #adjustPriceConfirm_modal {
   &::part(backdrop){
-    background-color: red
+    // background-color: red
   }
   &::part(content){
     width: 95%;
@@ -53,6 +53,6 @@ ion-card {
 
 ion-backdrop {
   opacity: 0.5;
-  background: red;
+  // background: red;
   
 }

@@ -28,7 +28,7 @@
 
     padding: 4px 0;
 
-    color: red;
+    // color: red;
   }
 
   ion-modal #qualityPlan_modal .wrapper {
@@ -81,7 +81,7 @@
 
 #preview_modal {
   &::part(backdrop){
-    background-color: red
+    background-color: rgba(0,0,0,100)
   }
   &::part(content){
     width:80%;
