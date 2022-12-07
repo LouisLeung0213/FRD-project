@@ -52,6 +52,7 @@ import Profile from "./Profile";
 import { updatePoints } from "../../redux/points/actions";
 import { removeValue } from "../../service/localStorage";
 import { updateJwt } from "../../redux/user/actions";
+import { useParams } from "react-router";
 
 const MainPage: React.FC = () => {
   const [present, dismiss] = useIonLoading();
@@ -65,7 +66,7 @@ const MainPage: React.FC = () => {
   const [currentProfile, setCurrentProfile] = useState(0);
   // const [pingNumber, setPingNumber] = useState(0);
   const [noticeDots, setNoticeDots] = useState(dotState.noticeDot);
-
+  
   const dispatch = useDispatch();
 
   const router = useIonRouter();
@@ -235,16 +236,29 @@ const MainPage: React.FC = () => {
       return () => {};
     }, [])
   );
-
+  
+  
+  let paramPostId: any = useParams()
+  
   useEffect(() => {
-    const postsList = async () => {
-      let res = await fetch(`${API_ORIGIN}/posts/showAll`);
-      let result = await res.json();
-
-      setPostsList(result);
-      console.log("result", result);
-    };
-
+    if(paramPostId.id){
+      const postDetail = async () => {
+        let res = await fetch(`${API_ORIGIN}/posts/getOnePost/${paramPostId.id}`)
+        let result = await res.json()
+        console.log(result)
+        openPost(result)
+      }
+      postDetail()
+    }
+      const postsList = async () => {
+        let res = await fetch(`${API_ORIGIN}/posts/showAll`);
+        let result = await res.json();
+        
+        setPostsList(result);
+        console.log("result", result);
+      };
+    
+    
     const dotStatus = async () => {
       if (jwtState.id) {
         let res = await fetch(`${API_ORIGIN}/users/dots/${jwtState.id}`);
@@ -258,13 +272,14 @@ const MainPage: React.FC = () => {
             chatDot: result.chat_dots,
             noticeDot: result.notice_dots,
           })
-        );
+          );
+          
       } else {
         return;
       }
     };
+    postsList()
     dotStatus();
-    postsList();
   }, []);
 
   const postModal = useRef<HTMLIonModalElement>(null);
@@ -341,7 +356,7 @@ const MainPage: React.FC = () => {
   }
 
   function afterDeal() {
-    router.push(routes.tab.mainPage, "forward", "replace");
+    router.push(routes.tab.mainPage(), "forward", "replace");
     modelDismiss();
   }
 
@@ -365,6 +380,11 @@ const MainPage: React.FC = () => {
       alert("請先登入");
       return;
     }
+  }
+
+  function backToMainPage(){
+    router.push('/')
+    modelDismiss();
   }
 
   return (
@@ -519,7 +539,7 @@ const MainPage: React.FC = () => {
               <IonButton
                 style={{ color: "gold" }}
                 onClick={() => {
-                  modelDismiss();
+                  backToMainPage()
                 }}
               >
                 <IonIcon size="large" icon={chevronBackOutline}></IonIcon> Back
@@ -590,6 +610,7 @@ const MainPage: React.FC = () => {
 };
 
 export default MainPage;
+
 // function dispatch(arg0: {
 //   type: "update_Dots";
 //   dots: import("../../redux/dots/state").UpdateDotsState;

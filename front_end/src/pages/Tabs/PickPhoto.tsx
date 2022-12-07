@@ -20,6 +20,7 @@ import {
   IonTextarea,
   IonTitle,
   IonToolbar,
+  useIonLoading,
   useIonRouter,
 } from "@ionic/react";
 import {
@@ -87,7 +88,7 @@ const PickPhoto: React.FC = () => {
   //const [modalShow, setModalShow] = useState(false);
   const jwtState = useSelector((state: RootState) => state.jwt);
   const router = useIonRouter();
-  function dismiss() {
+  function dismissModal() {
     qualityModal.current?.dismiss();
     previewModal.current?.dismiss();
   }
@@ -105,6 +106,8 @@ const PickPhoto: React.FC = () => {
   const [banks, setBanks] = useState([]) as any;
   const [savedBanks, setSavedBanks] = useState() as any;
   const [blueTickModel, setBlueTickModel] = useState(false);
+
+  const [present, dismiss] = useIonLoading();
 
   const { state, item } = useIonFormState({
     title: "",
@@ -143,6 +146,7 @@ const PickPhoto: React.FC = () => {
           bankName: savedBankNameArr[i].bank_name,
           bankAccount: savedBankAccount[i].bank_account,
         });
+        console.log(savedBankArr);
       }
       //console.log("saved bank Array 2222222222:", savedBankArr);
       return savedBankArr;
@@ -197,6 +201,7 @@ const PickPhoto: React.FC = () => {
 
   function formAppend() {
     let data = state;
+    console.log(data);
     let formData = new FormData();
 
     formData.append("user_id", jwtState.id ? jwtState.id + "" : "");
@@ -281,7 +286,7 @@ const PickPhoto: React.FC = () => {
         setStartPriceOk(true);
       }
 
-      dismiss();
+      dismissModal();
       return;
     }
 
@@ -300,6 +305,9 @@ const PickPhoto: React.FC = () => {
     } else if (photos.length == 1) {
       photoQTY = photos.length;
     }
+
+
+
     let urls = [];
     function uploadBytesResumablePromise(photo: any): Promise<string> {
       return new Promise((resolve, reject) => {
@@ -334,6 +342,11 @@ const PickPhoto: React.FC = () => {
     }
 
     if (ok == true) {
+      present({
+        message: '發佈中...',
+        cssClass: 'custom-loading',
+        spinner: 'crescent'
+      })
       console.log("pass");
       for (let photo of photos) {
         let url = await uploadBytesResumablePromise(photo);
@@ -348,7 +361,6 @@ const PickPhoto: React.FC = () => {
       for (let url of urls) {
         formDataUpload.append("photo", url);
       }
-      // console.log(formDataUpload.getAll("photo"));
       let res = await fetch(`${API_ORIGIN}/posts/postItem`, {
         method: "POST",
 
@@ -357,7 +369,7 @@ const PickPhoto: React.FC = () => {
       let result = await res.json();
       // console.log(result);
       if (result.status == 200) {
-        router.push(routes.tab.mainPage);
+        router.push(routes.tab.mainPage());
         console.log("done");
       }
     }
@@ -407,8 +419,13 @@ const PickPhoto: React.FC = () => {
     //     }
     //   })
     //   .catch((err) => console.log("err", err));
-
-    dismiss();
+    dismiss()
+    if (state.qualityPlan){
+      alert(`發佈成功！貨品正在等待品質驗證，請䀆快把貨品送至存貨地點：${state.location}，待貨品送到及驗證後，貨品將會正式上架`)
+    } else {
+      alert(`發佈成功！`)
+    }
+    dismissModal();
   };
 
   // console.log("state.title =  ", state.title);
@@ -471,7 +488,6 @@ const PickPhoto: React.FC = () => {
             // id='preview_modal'
             ref={previewModal}
             trigger="preview_dialog"
-            
           >
             <IonContent className="ion-padding" scroll-y="false">
               <ul>
@@ -483,12 +499,10 @@ const PickPhoto: React.FC = () => {
             </IonContent>
 
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <IonButton onClick={dismiss}>返回</IonButton>
+              <IonButton onClick={dismissModal}>返回</IonButton>
               <IonButton onClick={() => submitForm(state)}>發佈</IonButton>
             </div>
           </IonModal>
-
-          
 
           <div>
             <div className={styles.photoButtonDiv}>
@@ -773,7 +787,7 @@ const PickPhoto: React.FC = () => {
                   renderContent: (props) => (
                     <IonSelect interface="popover" {...props}>
                       {savedBanks.map((account: any) => (
-                        <IonSelectOption key={account}>
+                        <IonSelectOption key={account} value={account}>
                           {account.bankName}: {account.bankAccount}
                         </IonSelectOption>
                       ))}
@@ -787,8 +801,9 @@ const PickPhoto: React.FC = () => {
                   ),
                 })
               : null}
-              
-            {state.qualityPlan === true && (state.bankAccount.bankName == "" || !state.bankAccount)
+
+            {state.qualityPlan === true &&
+            (state.bankAccount.bankName == "" || !state.bankAccount)
               ? item({
                   name: "newBankName",
                   renderLabel: () => (
@@ -805,7 +820,8 @@ const PickPhoto: React.FC = () => {
                   ),
                 })
               : null}
-            {state.qualityPlan === true && (state.bankAccount?.bankName == "" || !state.bankAccount)
+            {state.qualityPlan === true &&
+            (state.bankAccount?.bankName == "" || !state.bankAccount)
               ? item({
                   name: "newBankAccount",
                   renderLabel: () => (

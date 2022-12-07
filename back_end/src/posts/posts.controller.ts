@@ -90,6 +90,11 @@ export class PostsController {
     return this.postsService.showAll();
   }
 
+  @Get('getOnePost/:id')
+  getOne(@Param('id') id: string) {
+    return this.postsService.getOne(+id);
+  }
+
   @Get('showSomeOne/:id')
   showSomeOne(@Param('id') id: number) {
     return this.postsService.showSomeone(id);

@@ -245,7 +245,7 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
     dismissPost();
   }
   function afterDeal() {
-    router.push(routes.tab.mainPage);
+    router.push(routes.tab.mainPage());
     dismissPost();
   }
 

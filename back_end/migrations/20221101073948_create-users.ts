@@ -152,6 +152,7 @@ export async function up(knex: Knex): Promise<void> {
     table.integer('receiver_id').notNullable().references('users.id');
     table.text('content').notNullable();
     table.timestamp('receive_time').defaultTo(knex.fn.now());
+    table.integer('post_id').notNullable().references('posts.id');
   });
 }
 

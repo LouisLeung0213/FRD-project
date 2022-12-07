@@ -108,8 +108,9 @@ export class BidService {
             .insert({
               receiver_id: createBidDto.sellerId,
               content: `買家[${createBidDto.buyerNickname}]在[${createBidDto.postTitle}]出價:$${createBidDto.bidPrice}!`,
+              post_id: createBidDto.postId,
             })
-            .returning(['receiver_id', 'content']);
+            .returning(['receiver_id', 'content', 'post_id']);
 
           let newBidList = await this.knex
             .select('post_id', 'buyer_id', 'bid_price', 'nickname')
@@ -179,15 +180,17 @@ export class BidService {
             .insert({
               receiver_id: checkBid[0].buyer_id,
               content: `您在[${createBidDto.postTitle}]的出價被超越了！`,
+              post_id: createBidDto.postId,
             })
-            .returning(['receiver_id', 'content']);
+            .returning(['receiver_id', 'content', 'post_id']);
 
           let infoSeller = await this.knex('notifications')
             .insert({
               receiver_id: createBidDto.sellerId,
               content: `您的貨品[${createBidDto.postTitle}]，最新價錢為$${newBidList[0].bid_price}!`,
+              post_id: createBidDto.postId,
             })
-            .returning(['receiver_id', 'content']);
+            .returning(['receiver_id', 'content', 'post_id']);
 
           // let client_secret_amount_list = await this.knex('client_secrets')
           //   .select('*')
@@ -263,7 +266,7 @@ export class BidService {
       return { status: '77', message: 'The post id does not exist' };
     }
 
-    let content = `貨品[${newPrice[0].post_title}]的賣家已更改貨品底價為[${newPrice[0].original_price}]，您的預售權將會全數退回`;
+    let content = `貨品[${newPrice[0].post_title}]的賣家已更改貨品底價為[${newPrice[0].original_price}]，您的預授權將會全數退回`;
 
     let bidderList = await this.knex
       .select('buyer_id', this.knex.raw('max(bid_price)'))

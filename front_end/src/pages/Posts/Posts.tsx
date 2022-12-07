@@ -437,7 +437,7 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
             <IonContent className="ion-padding" scroll-y="false">
               <ul>
                 <li style={{ margin: "3rem 0" }}>
-                  如確定調整此貨品的底價，截至目前所有對此貨品的投標將會清空，所有已保留的預售權將會全數歸還給投標者。
+                  如確定調整此貨品的底價，截至目前所有對此貨品的投標將會清空，所有已保留的預授權將會全數歸還給投標者。
                 </li>
               </ul>
               <IonItem>
