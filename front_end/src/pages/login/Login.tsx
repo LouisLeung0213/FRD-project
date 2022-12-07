@@ -74,9 +74,9 @@ const Login: React.FC = () => {
     }
 
     present({
-      message: 'Loading...',
-      duration: 3000,
-      cssClass: 'custom-loading'
+      message: '驗證中...',
+      cssClass: 'custom-loading',
+      spinner: 'crescent'
     })
 
     let res = await fetch(`${API_ORIGIN}/auth/login`, {
@@ -97,6 +97,7 @@ const Login: React.FC = () => {
     console.log(token);
     if(result.banned_id){
       alert('此帳號已被封鎖')
+      dismiss()
       return
     }
     if (token) {
@@ -176,9 +177,11 @@ const Login: React.FC = () => {
       // history.push(`/tab/Profile`);
       socket.emit("join-TJroom", { userId: userInfo.id });
       router.push(routes.tab.profile(userInfo.id), "forward", "replace");
+      dismiss()
     } else {
       console.log("wrong username or password")
       setIsUserCorrect(false);
+      dismiss()
       // alert(JSON.stringify("冇人識你喎...", null, 2));
     }
   };

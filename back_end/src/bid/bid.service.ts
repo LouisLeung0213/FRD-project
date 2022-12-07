@@ -263,7 +263,7 @@ export class BidService {
       return { status: '77', message: 'The post id does not exist' };
     }
 
-    let content = `貨品[${newPrice[0].post_title}]的賣家已更改貨品底價為[${newPrice[0].original_price}]，您的預售權將會全數退回`;
+    let content = `貨品[${newPrice[0].post_title}]的賣家已更改貨品底價為[${newPrice[0].original_price}]，您的預授權將會全數退回`;
 
     let bidderList = await this.knex
       .select('buyer_id', this.knex.raw('max(bid_price)'))
