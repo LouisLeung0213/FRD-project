@@ -23,6 +23,7 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import {
+  accessibilityOutline,
   add,
   arrowRedo,
   camera,
@@ -61,7 +62,6 @@ import { useIonFormState } from "react-use-ionic-form";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { API_ORIGIN } from "../../api";
-
 import { routes } from "../../routes";
 
 //firebase storage
@@ -468,10 +468,12 @@ const PickPhoto: React.FC = () => {
         <>
           <IonModal
             id={styles.preview_modal}
+            // id='preview_modal'
             ref={previewModal}
             trigger="preview_dialog"
+            
           >
-            <IonContent className="ion-padding">
+            <IonContent className="ion-padding" scroll-y="false">
               <ul>
                 <li>請再次確認帖文內容。</li>
                 <br />
@@ -485,6 +487,8 @@ const PickPhoto: React.FC = () => {
               <IonButton onClick={() => submitForm(state)}>發佈</IonButton>
             </div>
           </IonModal>
+
+          
 
           <div>
             <div className={styles.photoButtonDiv}>
@@ -767,7 +771,7 @@ const PickPhoto: React.FC = () => {
                     <IonLabel position="floating">請選擇銀行戶口:</IonLabel>
                   ),
                   renderContent: (props) => (
-                    <IonSelect {...props}>
+                    <IonSelect interface="popover" {...props}>
                       {savedBanks.map((account: any) => (
                         <IonSelectOption key={account}>
                           {account.bankName}: {account.bankAccount}
@@ -783,7 +787,8 @@ const PickPhoto: React.FC = () => {
                   ),
                 })
               : null}
-            {state.qualityPlan === true && state.bankAccount.bankName == ""
+              
+            {state.qualityPlan === true && (state.bankAccount.bankName == "" || !state.bankAccount)
               ? item({
                   name: "newBankName",
                   renderLabel: () => (
@@ -800,7 +805,7 @@ const PickPhoto: React.FC = () => {
                   ),
                 })
               : null}
-            {state.qualityPlan === true && state.bankAccount.bankName == ""
+            {state.qualityPlan === true && (state.bankAccount?.bankName == "" || !state.bankAccount)
               ? item({
                   name: "newBankAccount",
                   renderLabel: () => (

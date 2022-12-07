@@ -28,23 +28,19 @@
 
     padding: 4px 0;
 
-    color: red;
+    // color: red;
   }
 
   ion-modal #qualityPlan_modal .wrapper {
     margin-bottom: 10px;
   }
 
-  #preview_modal {
-    --width: fit-content;
-    --min-width: 250px;
-    --height: fit-content;
-    --border-radius: 6px;
-    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
-  }
+
 
   ion-modal #preview_modal .wrapper {
-    margin-bottom: 10px;
+    margin-bottom: 100px;
+    --height: 50%!;
+
   }
 
   .photoButtonDiv {
@@ -80,5 +76,17 @@
   }
   .preview_box ion-icon {
     font-size: 1rem;
+  }
+}
+
+#preview_modal {
+  &::part(backdrop){
+    background-color: rgba(0,0,0,100)
+  }
+  &::part(content){
+    width:80%;
+    height: 30%;
+    margin: auto;
+    border-radius: 10px;
   }
 }

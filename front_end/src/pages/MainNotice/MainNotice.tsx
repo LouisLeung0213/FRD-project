@@ -11,10 +11,12 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
+import { connectStorageEmulator } from "firebase/storage";
 import { chevronBackOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { API_ORIGIN } from "../../api";
+import { routes } from "../../routes";
 import { RootState } from "../../store";
 
 type Notice = {
@@ -62,13 +64,14 @@ const MainNotice: React.FC = () => {
         {noticeList.length > 0 ? (
           <>
             {noticeList.map((notice: Notice, index) => {
-              return <IonItem>{notice.content}</IonItem>;
+              return <IonItem onClick={()=> console.log(notice)}>{notice.content}</IonItem>;
             })}
           </>
         ) : (
           <IonItem>暫時沒有任何通知喔</IonItem>
         )}
       </IonContent>
+      
     </IonPage>
   );
 };

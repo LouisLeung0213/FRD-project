@@ -262,6 +262,7 @@ const Chatroom: React.FC = () => {
                         >
                           <IonAvatar>
                             <img src={realIcon(msg.icon_src)}></img>
+
                           </IonAvatar>
                           <IonIcon
                             icon={caretForwardOutline}

@@ -8,7 +8,7 @@ export async function seed(knex: Knex): Promise<void> {
     await txn('users').del();
 
     // Inserts seed entries
-    let password_hash = await bcrypt.hash('123', 10);
+    let password_hash = await bcrypt.hash('hotbidadmin@2022', 10);
     let icon_src = await txn('users').insert([
       {
         username: 'caleb',
