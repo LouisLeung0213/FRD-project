@@ -165,7 +165,7 @@ ion-title {
 }
 
 ion-header {
-  height: 8%;
+  height: 15%;
 }
 ion-button {
   --background-focused: #46b0e0;

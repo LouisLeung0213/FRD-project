@@ -306,8 +306,6 @@ const PickPhoto: React.FC = () => {
       photoQTY = photos.length;
     }
 
-
-
     let urls = [];
     function uploadBytesResumablePromise(photo: any): Promise<string> {
       return new Promise((resolve, reject) => {
@@ -343,10 +341,10 @@ const PickPhoto: React.FC = () => {
 
     if (ok == true) {
       present({
-        message: '發佈中...',
-        cssClass: 'custom-loading',
-        spinner: 'crescent'
-      })
+        message: "發佈中...",
+        cssClass: "custom-loading",
+        spinner: "crescent",
+      });
       console.log("pass");
       for (let photo of photos) {
         let url = await uploadBytesResumablePromise(photo);
@@ -419,11 +417,13 @@ const PickPhoto: React.FC = () => {
     //     }
     //   })
     //   .catch((err) => console.log("err", err));
-    dismiss()
-    if (state.qualityPlan){
-      alert(`發佈成功！貨品正在等待品質驗證，請䀆快把貨品送至存貨地點：${state.location}，待貨品送到及驗證後，貨品將會正式上架`)
+    dismiss();
+    if (state.qualityPlan) {
+      alert(
+        `發佈成功！貨品正在等待品質驗證，請䀆快把貨品送至存貨地點：${state.location}，待貨品送到及驗證後，貨品將會正式上架`
+      );
     } else {
-      alert(`發佈成功！`)
+      alert(`發佈成功！`);
     }
     dismissModal();
   };
