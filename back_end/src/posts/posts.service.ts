@@ -274,8 +274,9 @@ export class PostsService {
         .insert({
           receiver_id: updatePostDto.ownerId,
           content: `您的貨品${updatePostDto.postTitle}現已上架`,
+          post_id: updatePostDto.postId,
         })
-        .returning(['receiver_id', 'content']);
+        .returning(['receiver_id', 'content', 'post_id']);
       return postNoti[0];
     }
     return `This action updates a #${id} post`;
@@ -303,5 +304,47 @@ export class PostsService {
 
   remove(id: number) {
     return `This action removes a #${id} post`;
+  }
+
+  async getOne(id: number) {
+    let oneDetail = await this.knex
+      .with(
+        'tem_imgs',
+        this.knex
+          .select('post_id', this.knex.raw('json_agg(src) as json_agg'))
+          .from('images')
+          .groupBy('post_id'),
+      )
+      .with(
+        'tem_bid_records',
+        this.knex
+          .select('post_id', this.knex.raw('max(bid_price) as max'))
+          .from('bid_records')
+          .groupBy('post_id'),
+      )
+      .select(
+        'posts.id',
+        'user_id',
+        'post_title',
+        'post_description',
+        'original_price',
+        'q_mark',
+        'admin_title',
+        'admin_comment',
+        'status',
+        'auto_adjust_plan',
+        'post_time',
+        'nickname',
+        'username',
+        'json_agg',
+        'max',
+      )
+
+      .from('posts')
+      .join('users', 'user_id', 'users.id')
+      .fullOuterJoin('tem_imgs', 'tem_imgs.post_id', 'posts.id')
+      .fullOuterJoin('tem_bid_records', 'tem_bid_records.post_id', 'posts.id')
+      .where('posts.id', id);
+    return oneDetail[0];
   }
 }
