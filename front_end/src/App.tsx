@@ -301,7 +301,7 @@ const App: React.FC = () => {
         {/*DeepLink Setup end */}
         <IonRouterOutlet>
           <Route path="/" exact={true}>
-            <Redirect to={routes.tab.mainPage} />
+            <Redirect to={routes.tab.mainPage()} />
           </Route>
           <Route
             path={routes.menu.accountSetting}
@@ -368,11 +368,15 @@ const App: React.FC = () => {
               <IonRouterOutlet>
                 <Switch>
                   <Route
-                    path={routes.tab.mainPage}
+                    path={routes.tab.mainPage()}
                     exact={true}
                     render={() => <MainPage />}
                   />
-
+                  <Route
+                    path={routes.tab.mainPage(":id")}
+                    exact={true}
+                    render={() => <MainPage />}
+                  />
                   <Route
                     path={routes.tab.pickPhoto}
                     exact={true}

@@ -357,7 +357,7 @@ const PickPhoto: React.FC = () => {
       let result = await res.json();
       // console.log(result);
       if (result.status == 200) {
-        router.push(routes.tab.mainPage);
+        router.push(routes.tab.mainPage());
         console.log("done");
       }
     }

@@ -1,6 +1,6 @@
 export let routes = {
   tab: {
-    mainPage: "/tab/MainPage",
+    mainPage:(id?: string | number) => id?  `/tab/MainPage/${id}` : `/tab/MainPage`,
     pickPhoto: "/tab/PickPhoto",
     notices: "/tab/Notices",
     profile: (id: string | number) => `/tab/Profile/${id}`,

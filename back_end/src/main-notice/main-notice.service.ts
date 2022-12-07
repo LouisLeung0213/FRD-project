@@ -17,7 +17,7 @@ export class MainNoticeService {
 
   async findOne(id: number) {
     let result = await this.knex
-      .select('content', 'receive_time')
+      .select('content', 'receive_time', 'post_id')
       .from('notifications')
       .where('receiver_id', id);
     return result;
