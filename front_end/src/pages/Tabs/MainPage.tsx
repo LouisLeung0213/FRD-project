@@ -285,7 +285,7 @@ const MainPage: React.FC = () => {
   const postModal = useRef<HTMLIonModalElement>(null);
   const profileModal = useRef<HTMLIonModalElement>(null);
   const reportModal = useRef<HTMLIonModalElement>(null);
-  function modelDismiss() {
+  function modalDismiss() {
     postModal.current?.dismiss();
     profileModal.current?.dismiss();
     reportModal.current?.dismiss();
@@ -350,14 +350,14 @@ const MainPage: React.FC = () => {
   }
 
   function goChat(id: number) {
-    modelDismiss();
+    modalDismiss();
     // router.push(routes.chatroom(id), "forward", "replace");
     router.push(routes.chatroom(id));
   }
 
   function afterDeal() {
     router.push(routes.tab.mainPage(), "forward", "replace");
-    modelDismiss();
+    modalDismiss();
   }
 
   async function goNotification() {
@@ -384,7 +384,7 @@ const MainPage: React.FC = () => {
 
   function backToMainPage(){
     router.push('/')
-    modelDismiss();
+    modalDismiss();
   }
 
   return (
@@ -578,7 +578,7 @@ const MainPage: React.FC = () => {
               <IonButton
                 style={{ color: "gold" }}
                 onClick={() => {
-                  modelDismiss();
+                  modalDismiss();
                 }}
               >
                 <IonIcon size="large" icon={chevronBackOutline}></IonIcon> Back
