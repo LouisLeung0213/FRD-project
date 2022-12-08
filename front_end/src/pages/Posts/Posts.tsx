@@ -335,7 +335,7 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
                 icon={checkmarkDoneCircleOutline}
               ></IonIcon>
             ) : null}
-            {props.post.status.toString() == "sold&holding" ? (
+            {props.post.status.toString() == "sold&holding" || props.post.status.toString() == "sold&out" ? (
               <span style={{ color: "red", marginLeft: "15px" }}>
                 貨品已售出
               </span>
