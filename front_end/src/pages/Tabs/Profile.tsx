@@ -439,12 +439,13 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
                           </Swiper>
 
                           {/* <img src={post.json_agg}></img> */}
-
-                          {!post.max ? (
-                            <h1>現價：${post.original_price}</h1>
-                          ) : (
-                            <h1>現價：${post.max}</h1>
-                          )}
+                          <div className={styles.priceContainer}>
+                            {!post.max ? (
+                              <h1>現價：${post.original_price}</h1>
+                            ) : (
+                              <h1>現價：${post.max}</h1>
+                            )}
+                          </div>
                         </IonCardContent>
                       </IonCard>
                     );

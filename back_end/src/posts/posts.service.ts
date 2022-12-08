@@ -176,13 +176,13 @@ export class PostsService {
         'max',
         'location',
       )
-
       .from('posts')
       .join('users', 'user_id', 'users.id')
       .fullOuterJoin('tem_imgs', 'tem_imgs.post_id', 'posts.id')
       .fullOuterJoin('tem_bid_records', 'tem_bid_records.post_id', 'posts.id')
       .join('store_locations', 'store_locations.id', 'posts.location_id')
-      .where('status', 'selling');
+      .where('status', 'selling')
+      .orderBy('post_time', 'desc');
     return showAllList;
   }
   async showSomeone(id: number) {
@@ -238,7 +238,8 @@ export class PostsService {
           [id, 'sold&out'],
           [id, 'pending_in'],
         ],
-      );
+      )
+      .orderBy('post_time', 'desc');
     return showSomeone;
   }
 
