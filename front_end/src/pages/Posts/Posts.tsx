@@ -14,7 +14,7 @@ import {
   IonBackdrop,
 } from "@ionic/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import moment from "moment";
+import moment, { now } from "moment";
 import { API_ORIGIN } from "../../api";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -73,10 +73,9 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
   const [bidList, setBidList] = useState([]);
   const [highestBidder, setHighestBidder] = useState("");
   const [highestBidder_id, setHighestBidder_id] = useState(0);
-  const [nowPrice, setNowPrice] = useState(0);
+  const [nowPrice, setNowPrice] = useState(+props.post.original_price);
   const [adjustedPrice, setAdjustedPrice] = useState("");
   const [bidStatus, setBidStatus] = useState(false);
-  const [highestIsMe, setHightestIsMe] = useState(false);
 
   let numReg = /^\d+$/;
   const router = useIonRouter();
@@ -126,14 +125,16 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
   };
 
   useEffect(() => {
-    console.log("props.post.json_agg", props.post.json_agg);
+    // console.log("props.post.json_agg", props.post.json_agg);
+    //console.log("props original price:", props.post.original_price);
+    //console.log("now price :", nowPrice);
 
-    console.log(jwtState.id);
+    //console.log(jwtState.id);
     const bidRecord = async () => {
       let res = await fetch(`${API_ORIGIN}/bid/bidList/${props.post.id}`);
       let result = await res.json();
-      console.log(props);
-      console.log(result);
+      // console.log(props);
+      // console.log(result);
       setBidList(result);
       if (!result[0]) {
         setHighestBidder("");
@@ -142,8 +143,11 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
         setHighestBidder_id(result[0].buyer_id);
       }
       if (!result[0]) {
-        setNowPrice(props.post.original_price);
-        setAdjustedPrice(props.post.original_price.toString());
+        if (nowPrice == props.post.original_price) {
+          setNowPrice(props.post.original_price);
+          setAdjustedPrice(props.post.original_price.toString());
+        }
+        setAdjustedPrice(nowPrice.toString());
       } else {
         setNowPrice(result[0].bid_price);
         setAdjustedPrice(result[0].bid_price.toString());
@@ -170,7 +174,7 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
       }
     );
     let result = await res.json();
-    console.log(result);
+    //console.log(result);
     if ("id" in result[0]) {
       props.goChat(result[0].id);
     } else {
@@ -219,7 +223,7 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
               }
             );
             let result = await dealRes.json();
-            console.log("deal: ", result);
+            // console.log("deal: ", result);
             if (result.status == 200) {
               goAfterDeal();
             }
@@ -256,7 +260,7 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
       }),
     });
     let result = await res.json();
-    console.log(result);
+    // console.log(result);
     if (result.status == "19") {
       alert("出價不可低過最高價");
       return;
@@ -289,13 +293,14 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
     let result = await res.json();
 
     setBidList([]);
-    setNowPrice(+adjustedPrice);
     setAdjustedPrice(nowPrice.toString());
+
+    setNowPrice(+adjustedPrice);
 
     confirmModal.current?.dismiss();
     alert("調整底價成功");
 
-    console.log("New adjusted price: ", adjustedPrice);
+    //console.log("New adjusted price: ", adjustedPrice);
   }
 
   function dismissConfirm() {
@@ -383,8 +388,8 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
       {props.post.location !== "" && props.post.location != "notAvailable" ? (
         <IonItem>取貨地點 : {props.post.location}</IonItem>
       ) : null}
-      <IonItem>
-        <IonIcon style={{ color: "red" }} icon={flame}></IonIcon> 現價: $
+      <IonItem style={{ color: "gold" }}>
+        <IonIcon style={{ color: "red" }} icon={flame}></IonIcon> 現價: ${"   "}
         {nowPrice}
       </IonItem>
       <IonItem>{props.post.q_mark}</IonItem>
