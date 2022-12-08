@@ -179,6 +179,11 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
         let result = await res.json();
 
         setPostsList(result);
+      } else if (params.id) {
+        let res = await fetch(`${API_ORIGIN}/posts/showSomeone/${params.id}`);
+        let result = await res.json();
+
+        setPostsList(result);
       } else {
         // let userId = await getValue("userId");
         let userId = jwtState.id;
