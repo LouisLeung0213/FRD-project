@@ -431,7 +431,7 @@ const Profile: React.FC<{ id?: number }> = (props: { id?: number }) => {
                                       </span>
                                     </div>
                                   ) : null}
-                                  {post.status.toString() === "sold&holding" ? (
+                                  {post.status.toString() === "sold&holding" || post.status.toString() === "sold&out" ? (
                                     <div className={profileStyles.sold}>
                                       <span className={profileStyles.soldText}>
                                         此貨品已售出
