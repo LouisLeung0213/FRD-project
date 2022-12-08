@@ -13,6 +13,8 @@
 
 .priceContainer {
   margin: 5px 20px;
+  color: rgb(9, 255, 222);
+  padding-bottom: 5px;
 }
 
 .nameContainer {

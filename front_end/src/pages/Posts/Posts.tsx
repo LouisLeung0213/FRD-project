@@ -383,8 +383,8 @@ const Post: React.FC<{ post: PostObj; goChat: any; afterDeal: any }> = (props: {
       {props.post.location !== "" && props.post.location != "notAvailable" ? (
         <IonItem>取貨地點 : {props.post.location}</IonItem>
       ) : null}
-      <IonItem>
-        <IonIcon style={{ color: "red" }} icon={flame}></IonIcon> 現價: $
+      <IonItem style={{ color: "gold" }}>
+        <IonIcon style={{ color: "red" }} icon={flame}></IonIcon> 現價: ${"   "}
         {nowPrice}
       </IonItem>
       <IonItem>{props.post.q_mark}</IonItem>
